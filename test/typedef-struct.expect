@@ -1,0 +1,24 @@
+.. c:type:: struct named
+
+   
+   named typedeffed struct
+   
+
+.. c:member:: int named.m
+
+   
+   named member
+   
+
+.. c:type:: typedef_struct
+
+   
+   unnamed typedeffed struct
+   
+
+.. c:member:: int typedef_struct.m
+
+   
+   unnamed member
+   
+
