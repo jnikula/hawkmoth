@@ -50,6 +50,15 @@ Doxygen_ style ``@tags``.
 
 .. _Doxygen: http://www.stack.nl/~dimitri/doxygen/
 
+Documentation
+-------------
+
+More documentation, with examples, is available in the ``doc`` directory in the
+source tree, obviously in Sphinx format and using the directive
+extension. `Pre-built results are available.`_
+
+.. _Pre-built results are available.: https://people.freedesktop.org/~jani/hawkmoth/index.html
+
 Dependencies
 ------------
 
