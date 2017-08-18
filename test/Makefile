@@ -17,6 +17,8 @@ HAWKMOTH:=../hawkmoth.py
 
 # Existence of .c defines the test, not .script.
 TEST:=$(wildcard *.c)
+CMDTEST_CLEAN=$(TEST:%.c=%.stderr-actual) $(TEST:%.c=%.stderr-diff)	\
+	$(TEST:%.c=%.stdout-actual) $(TEST:%.c=%.stdout-diff)
 
 # Use a shared .script.
 SCRIPT:=$(TEST:%.c=%.script)
@@ -28,4 +30,4 @@ check: $(SCRIPT)
 	@cmdtest .
 
 clean:
-	@rm -f $(SCRIPT)
+	@rm -f $(SCRIPT) $(CMDTEST_CLEAN)

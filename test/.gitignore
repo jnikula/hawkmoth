@@ -1,0 +1,4 @@
+*.stderr-actual
+*.stderr-diff
+*.stdout-actual
+*.stdout-diff
