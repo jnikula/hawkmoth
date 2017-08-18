@@ -35,13 +35,12 @@ class CAutoDocDirective(Directive):
     # FIXME: potentially need to pass clang options, such as -D etc. Should that
     # be per directive? Or global default and overrides?
     option_spec = {
-        # FIXME: figure out passing to parser, have a global default option
-        'compat': directives.unchanged,
+        'compat': directives.unchanged_required,
     }
     has_content = False
 
-    def parse(self, viewlist, filename):
-        comments = parse(filename)
+    def parse(self, viewlist, filename, compat):
+        comments = parse(filename, compat=compat)
 
         for (comment, meta) in comments:
             lineoffset = meta['line']
@@ -53,6 +52,8 @@ class CAutoDocDirective(Directive):
     def run(self):
         env = self.state.document.settings.env
 
+        compat = self.options.get('compat', env.config.cautodoc_compat)
+
         result = ViewList()
 
         for pattern in self.arguments[0].split():
@@ -62,7 +63,7 @@ class CAutoDocDirective(Directive):
                     # Tell Sphinx about the dependency
                     env.note_dependency(os.path.abspath(filename))
                     # FIXME: pass relevant options to parser
-                    self.parse(result, filename)
+                    self.parse(result, filename, compat)
 
         node = nodes.section()
         node.document = self.state.document
@@ -73,6 +74,7 @@ class CAutoDocDirective(Directive):
 def setup(app):
     app.require_sphinx('1.3')
     app.add_config_value('cautodoc_root', '.', 'env')
+    app.add_config_value('cautodoc_compat', None, 'env')
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
     return dict(version = __version__,
