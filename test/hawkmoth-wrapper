@@ -1,0 +1,8 @@
+#!/bin/bash
+# Simple wrapper to not duplicate .script files. Reads extra args from .stdin
+# file, and assumes the actual input file is .c.
+
+if [[ -e ${TESTNAME}.stdin ]]; then
+	read ARGS
+fi
+../hawkmoth.py ${ARGS} ${TESTNAME}.c

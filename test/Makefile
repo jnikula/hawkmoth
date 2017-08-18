@@ -1,32 +1,31 @@
 #
-# Dead simple test framework.
+# Tests based on cmdtest(1)
 #
-# Add a .c file with documentation comments, and an accompanying .stdout file
-# with the expected extracted documentation.
+# Deviations from standard cmdtest usage:
+# - Uses .script symlinks to shared hawkmoth-wrapper.
+# - Uses .c for input files.
+# - Uses .stdin for additional arguments to hawkmoth.
 #
 # FIXME: This is *completely* inadequate. Needs to take into account compat
 # options for Javadoc and check for different input. Needs more test data, in
 # particular more pathological real world test data. Needs a way to flag broken
-# tests for TDD. Needs a way to handle stderr and exit code. Needs to run the
-# directive extension too, not just the comment extraction part.
+# tests for TDD. Needs to run the directive extension too, not just the comment
+# extraction part.
 #
 
 HAWKMOTH:=../hawkmoth.py
 
-EXPECT:=$(wildcard *.stdout)
-OUTPUT:=$(EXPECT:%.stdout=%.output)
-DIFF:=$(EXPECT:%.stdout=%.diff)
+# Existence of .c defines the test, not .script.
+TEST:=$(wildcard *.c)
 
-.PRECIOUS: %.output
-%.output: %.c $(HAWKMOTH)
-	@$(HAWKMOTH) $< > $@
-
-%.diff: %.stdout %.output
-	@diff -u $^ > $@ || true
+# Use a shared .script.
+SCRIPT:=$(TEST:%.c=%.script)
+%.script:
+	@ln -sf hawkmoth-wrapper $@
 
 .PHONY: check
-check: $(DIFF)
-	@cat $(DIFF)
+check: $(SCRIPT)
+	@cmdtest .
 
 clean:
-	@rm -f $(OUTPUT) $(DIFF)
+	@rm -f $(SCRIPT)
