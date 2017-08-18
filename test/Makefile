@@ -1,7 +1,7 @@
 #
 # Dead simple test framework.
 #
-# Add a .c file with documentation comments, and an accompanying .expect file
+# Add a .c file with documentation comments, and an accompanying .stdout file
 # with the expected extracted documentation.
 #
 # FIXME: This is *completely* inadequate. Needs to take into account compat
@@ -13,15 +13,15 @@
 
 HAWKMOTH:=../hawkmoth.py
 
-EXPECT:=$(wildcard *.expect)
-OUTPUT:=$(EXPECT:%.expect=%.output)
-DIFF:=$(EXPECT:%.expect=%.diff)
+EXPECT:=$(wildcard *.stdout)
+OUTPUT:=$(EXPECT:%.stdout=%.output)
+DIFF:=$(EXPECT:%.stdout=%.diff)
 
 .PRECIOUS: %.output
 %.output: %.c $(HAWKMOTH)
 	@$(HAWKMOTH) $< > $@
 
-%.diff: %.expect %.output
+%.diff: %.stdout %.output
 	@diff -u $^ > $@ || true
 
 .PHONY: check
