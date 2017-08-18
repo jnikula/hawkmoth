@@ -54,25 +54,28 @@ def indent(string, prefix):
     return re.sub('(?m)^', prefix, string)
 
 # Basic Javadoc/Doxygen/kernel-doc import
-def compat_convert(comment):
+def compat_convert(comment, mode):
     # FIXME: try to preserve whitespace better
-    # FIXME: make all of this configurable
 
-    # Basic conversion of @param and @return.
-    comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                     "\n\\1:param\\2\\3:\\4", comment)
-    comment = re.sub(r"(?m)^([ \t]*)@return([ \t]+)",
-                     "\n\\1:return:\\2", comment)
+    if mode == 'javadoc-basic' or mode == 'javadoc-liberal':
+        # Basic conversion of @param and @return.
+        comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                         "\n\\1:param\\2\\3:\\4", comment)
+        comment = re.sub(r"(?m)^([ \t]*)@return([ \t]+)",
+                         "\n\\1:return:\\2", comment)
 
-    # Liberal conversion of any @tags, will fail for @code etc. but don't care.
-    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
-                     "\n\\1:\\2:\\3", comment)
+    if mode == 'javadoc-liberal':
+        # Liberal conversion of any @tags, will fail for @code etc. but don't
+        # care.
+        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
+                         "\n\\1:\\2:\\3", comment)
 
-    # Basic kernel-doc convert, will document struct members as params, etc.
-    comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+)",
-                     "\n\\1:return:\\3", comment)
-    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
-                     "\n\\1:param \\2:\\3", comment)
+    if mode == 'kernel-doc':
+        # Basic kernel-doc convert, will document struct members as params, etc.
+        comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+)",
+                         "\n\\1:return:\\3", comment)
+        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
+                         "\n\\1:param \\2:\\3", comment)
 
     return comment
 
@@ -220,7 +223,7 @@ def parse(filename, **options):
                 name=cursor.spelling)
 
         # FIXME: make configurable
-        doc_comment = compat_convert(doc_comment);
+        doc_comment = compat_convert(doc_comment, options.get('compat'))
 
         # FIXME: make sure the comment is ended by an empty unindented line
         cdom += '\n' + indent(doc_comment, '   ') + '\n'
@@ -298,13 +301,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hawkmoth.')
     parser.add_argument('file', metavar='FILE', type=str, action='store',
                         help='tiedosto')
+    parser.add_argument('--compat',
+                        choices=['none',
+                                 'javadoc-basic',
+                                 'javadoc-liberal',
+                                 'kernel-doc'],
+                        help='compatibility options')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='verbose output')
     args = parser.parse_args()
 
     filename = args.file
 
-    comments = parse(filename)
+    comments = parse(filename, compat=args.compat)
     for (comment, meta) in comments:
         if args.verbose:
             print('# ' + str(meta))
