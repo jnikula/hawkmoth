@@ -158,10 +158,14 @@ def parse(filename, **options):
     result = []
 
     for comment in top_level_comments:
-        if is_doc_comment(comment.spelling):
-            doc_comment = '\n' + strip_comment(comment.spelling) + '\n'
-            meta = { 'line': comment.extent.start.line }
-            result.append((doc_comment, meta))
+        if not is_doc_comment(comment.spelling):
+            continue
+
+        doc_comment = strip_comment(comment.spelling)
+        doc_comment = '\n' + doc_comment + '\n'
+        meta = { 'line': comment.extent.start.line }
+
+        result.append((doc_comment, meta))
 
     for cursor in tu.cursor.get_children():
         if cursor.hash not in comments:
