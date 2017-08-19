@@ -2,7 +2,7 @@
 # Simple wrapper to not duplicate .script files. Reads extra args from .stdin
 # file, and assumes the actual input file is .c.
 
-if [[ -e ${TESTNAME}.stdin ]]; then
+if [[ -e ${SRCDIR}/test/${TESTNAME}.stdin ]]; then
 	read ARGS
 fi
-../hawkmoth.py ${ARGS} ${TESTNAME}.c
+${SRCDIR}/hawkmoth.py ${ARGS} ${SRCDIR}/test/${TESTNAME}.c
