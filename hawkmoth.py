@@ -228,9 +228,10 @@ def parse(filename, **options):
                 name=cursor.spelling)
 
         doc_comment = compat_convert(doc_comment, options.get('compat'))
+        doc_comment = indent(doc_comment, '   ')
 
         # FIXME: make sure the comment is ended by an empty unindented line
-        cdom += '\n' + indent(doc_comment, '   ') + '\n'
+        cdom += '\n' + doc_comment + '\n'
 
         meta = { 'line': comment.extent.start.line }
         meta['cursor.kind'] = cursor.kind
@@ -268,8 +269,9 @@ def parse(filename, **options):
                     member=c.spelling)
 
                 doc_comment = compat_convert(doc_comment, options.get('compat'))
+                doc_comment = indent(doc_comment, '   ')
 
-                cdom += '\n' + indent(doc_comment, '   ') + '\n'
+                cdom += '\n' + doc_comment + '\n'
 
                 meta = { 'line': comment.extent.start.line }
                 meta['cursor.kind'] = c.kind
@@ -290,8 +292,9 @@ def parse(filename, **options):
                 cdom = '.. c:macro:: {name}\n'.format(name=c.spelling)
 
                 doc_comment = compat_convert(doc_comment, options.get('compat'))
+                doc_comment = indent(doc_comment, '   ')
 
-                cdom += '\n' + indent(doc_comment, '   ') + '\n'
+                cdom += '\n' + doc_comment + '\n'
 
                 meta = { 'line': comment.extent.start.line }
                 meta['cursor.kind'] = c.kind
