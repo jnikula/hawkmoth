@@ -13,8 +13,6 @@
 # extraction part.
 #
 
-HAWKMOTH:=../hawkmoth.py
-
 # Existence of .c defines the test, not .script.
 TEST:=$(wildcard *.c)
 CMDTEST_CLEAN=$(TEST:%.c=%.stderr-actual) $(TEST:%.c=%.stderr-diff)	\
