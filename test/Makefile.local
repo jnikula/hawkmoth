@@ -16,6 +16,9 @@
 
 dir := test
 
+CMDTEST := cmdtest
+LN := ln
+
 # Existence of .c defines the test, not .script.
 TEST:=$(wildcard $(dir)/*.c)
 CMDTEST_CLEAN=$(TEST:%.c=%.stderr-actual) $(TEST:%.c=%.stderr-diff)	\
@@ -24,10 +27,10 @@ CMDTEST_CLEAN=$(TEST:%.c=%.stderr-actual) $(TEST:%.c=%.stderr-diff)	\
 # Use a shared .script.
 SCRIPT:=$(TEST:%.c=%.script)
 %.script:
-	@ln -sf hawkmoth-wrapper $@
+	$(call quiet,LN) -sf hawkmoth-wrapper $@
 
 .PHONY: check
 check: $(SCRIPT)
-	@cmdtest test
+	$(call quiet,CMDTEST,CMDTEST) test
 
 CLEAN := $(CLEAN) $(SCRIPT) $(CMDTEST_CLEAN)

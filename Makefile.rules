@@ -1,5 +1,7 @@
 # -*- makefile -*-
 
+RM := rm
+
 # The user has not set any verbosity, default to quiet mode and inform the
 # user how to enable verbose compiles.
 ifeq ($(V),)
@@ -15,6 +17,6 @@ quiet ?= $($1)
 
 .PHONY: clean
 clean:
-	@rm -rf $(CLEAN)
+	$(call quiet,RM,CLEAN) -rf $(CLEAN)
 
 .SUFFIXES:
