@@ -30,5 +30,4 @@ SCRIPT:=$(TEST:%.c=%.script)
 check: $(SCRIPT)
 	@cmdtest test
 
-clean:
-	@rm -f $(SCRIPT) $(CMDTEST_CLEAN)
+CLEAN := $(CLEAN) $(SCRIPT) $(CMDTEST_CLEAN)
