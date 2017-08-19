@@ -162,6 +162,7 @@ def parse(filename, **options):
             continue
 
         doc_comment = strip_comment(comment.spelling)
+        doc_comment = compat_convert(doc_comment, options.get('compat'))
         doc_comment = '\n' + doc_comment + '\n'
         meta = { 'line': comment.extent.start.line }
 
@@ -226,7 +227,6 @@ def parse(filename, **options):
                 kind=str(cursor.kind),
                 name=cursor.spelling)
 
-        # FIXME: make configurable
         doc_comment = compat_convert(doc_comment, options.get('compat'))
 
         # FIXME: make sure the comment is ended by an empty unindented line
@@ -267,6 +267,8 @@ def parse(filename, **options):
                     sep='.',
                     member=c.spelling)
 
+                doc_comment = compat_convert(doc_comment, options.get('compat'))
+
                 cdom += '\n' + indent(doc_comment, '   ') + '\n'
 
                 meta = { 'line': comment.extent.start.line }
@@ -286,6 +288,9 @@ def parse(filename, **options):
 
                 # FIXME: parent enum name?
                 cdom = '.. c:macro:: {name}\n'.format(name=c.spelling)
+
+                doc_comment = compat_convert(doc_comment, options.get('compat'))
+
                 cdom += '\n' + indent(doc_comment, '   ') + '\n'
 
                 meta = { 'line': comment.extent.start.line }
