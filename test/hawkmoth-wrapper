@@ -5,4 +5,4 @@
 if [[ -e ${SRCDIR}/test/${TESTNAME}.stdin ]]; then
 	read ARGS
 fi
-${SRCDIR}/hawkmoth.py ${ARGS} ${SRCDIR}/test/${TESTNAME}.c
+${SRCDIR}/hawkmoth/hawkmoth.py ${ARGS} ${SRCDIR}/test/${TESTNAME}.c
