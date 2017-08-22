@@ -308,8 +308,7 @@ def parse(filename, **options):
 
     return result
 
-if __name__ == '__main__':
-
+def main():
     parser = argparse.ArgumentParser(description='Hawkmoth.')
     parser.add_argument('file', metavar='FILE', type=str, action='store',
                         help='tiedosto')
@@ -330,3 +329,6 @@ if __name__ == '__main__':
         if args.verbose:
             print('# ' + str(meta))
         print(comment)
+
+if __name__ == '__main__':
+    main()
