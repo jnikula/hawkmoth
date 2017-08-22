@@ -29,8 +29,8 @@ SCRIPT:=$(TEST:%.c=%.script)
 %.script:
 	$(call quiet,LN) -sf hawkmoth-wrapper $@
 
-.PHONY: check
-check: $(SCRIPT)
+.PHONY: test
+test: $(SCRIPT)
 	$(call quiet,CMDTEST,CMDTEST) test
 
 CLEAN := $(CLEAN) $(SCRIPT) $(CMDTEST_CLEAN)
