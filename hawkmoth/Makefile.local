@@ -1,0 +1,5 @@
+# -*- makefile -*-
+
+dir := hawkmoth
+
+CLEAN := $(CLEAN) $(dir)/hawkmoth.pyc $(dir)/cautodoc.pyc $(dir)/__init__.pyc
