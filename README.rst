@@ -70,8 +70,8 @@ Dependencies
 Installation
 ------------
 
-In Sphinx ``conf.py``, point ``sys.path`` at Hawkmoth, add ``cautodoc`` to
-``extensions``, and point ``cautodoc_root`` at the source tree.
+In Sphinx ``conf.py``, point ``sys.path`` at Hawkmoth, add ``hawkmoth.cautodoc``
+to ``extensions``, and point ``cautodoc_root`` at the source tree.
 
 (Did I say the project is in its early stages?)
 
