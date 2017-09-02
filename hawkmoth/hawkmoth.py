@@ -53,6 +53,9 @@ def strip_comment(comment):
 def indent(string, prefix):
     return re.sub('(?m)^', prefix, string)
 
+def wrap_blank_lines(string):
+    return '\n' + string + '\n'
+
 # Basic Javadoc/Doxygen/kernel-doc import
 def compat_convert(comment, mode):
     # FIXME: try to preserve whitespace better
@@ -169,7 +172,7 @@ def parse(filename, **options):
 
         doc_comment = strip_comment(comment.spelling)
         doc_comment = compat_convert(doc_comment, options.get('compat'))
-        doc_comment = '\n' + doc_comment + '\n'
+        doc_comment = wrap_blank_lines(doc_comment)
         meta = { 'line': comment.extent.start.line }
 
         result.append((doc_comment, meta))
@@ -235,9 +238,9 @@ def parse(filename, **options):
 
         doc_comment = compat_convert(doc_comment, options.get('compat'))
         doc_comment = indent(doc_comment, '   ')
+        doc_comment = wrap_blank_lines(doc_comment)
 
-        # FIXME: make sure the comment is ended by an empty unindented line
-        cdom += '\n' + doc_comment + '\n'
+        cdom += doc_comment
 
         meta = { 'line': comment.extent.start.line }
         meta['cursor.kind'] = cursor.kind
@@ -276,8 +279,9 @@ def parse(filename, **options):
 
                 doc_comment = compat_convert(doc_comment, options.get('compat'))
                 doc_comment = indent(doc_comment, '   ')
+                doc_comment = wrap_blank_lines(doc_comment)
 
-                cdom += '\n' + doc_comment + '\n'
+                cdom += doc_comment
 
                 meta = { 'line': comment.extent.start.line }
                 meta['cursor.kind'] = c.kind
@@ -299,8 +303,9 @@ def parse(filename, **options):
 
                 doc_comment = compat_convert(doc_comment, options.get('compat'))
                 doc_comment = indent(doc_comment, '   ')
+                doc_comment = wrap_blank_lines(doc_comment)
 
-                cdom += '\n' + doc_comment + '\n'
+                cdom += doc_comment
 
                 meta = { 'line': comment.extent.start.line }
                 meta['cursor.kind'] = c.kind
