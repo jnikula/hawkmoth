@@ -143,9 +143,15 @@ def get_macro_args(cursor):
 # options - dictionary with directive options
 def parse(filename, **options):
 
+    args = options.get('clang')
+    if args is not None:
+        args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
+        if len(args) == 0:
+            args = None
+
     index = Index.create()
 
-    tu = index.parse(filename, options=
+    tu = index.parse(filename, args=args, options=
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
@@ -318,13 +324,14 @@ def main():
                                  'javadoc-liberal',
                                  'kernel-doc'],
                         help='compatibility options')
+    parser.add_argument('--clang', metavar='PARAM[,PARAM,...]')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='verbose output')
     args = parser.parse_args()
 
     filename = args.file
 
-    comments = parse(filename, compat=args.compat)
+    comments = parse(filename, compat=args.compat, clang=args.clang)
     for (comment, meta) in comments:
         if args.verbose:
             print('# ' + str(meta))
