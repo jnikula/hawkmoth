@@ -82,6 +82,11 @@ def compat_convert(comment, mode):
         # Ignore @brief.
         comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
 
+        # Ignore groups
+        comment = re.sub(r"(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*",
+                         "\n\\1", comment)
+        comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
+
     if mode == 'javadoc-liberal':
         # Liberal conversion of any @tags, will fail for @code etc. but don't
         # care.
