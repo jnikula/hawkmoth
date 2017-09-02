@@ -1,3 +1,5 @@
+.. _extension:
+
 C Autodoc Extension
 ===================
 
@@ -7,7 +9,8 @@ source code comments into a document. This could be thought of as a version of
 `Python autodoc`_ for C.
 
 For this to work, the documentation comments must of course be written in
-correct reStructuredText. See syntax for details.
+correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
+details.
 
 .. _C Domain: http://www.sphinx-doc.org/en/stable/domains.html#the-c-domain
 
