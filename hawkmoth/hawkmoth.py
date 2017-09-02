@@ -48,6 +48,10 @@ def strip_comment(comment):
     comment = re.sub(r"\*/$", "", comment)
     # could look at first line of comment, and remove the leading stuff there from the rest
     comment = re.sub(r"(?m)^[ \t]*\*?[ \t]?", "", comment)
+    # Strip leading blank lines.
+    comment = re.sub(r"^[\n]*", "", comment)
+    # End in exactly one newline.
+    comment = re.sub(r"[\n]*$", "\n", comment)
     return comment
 
 def indent(string, prefix):
