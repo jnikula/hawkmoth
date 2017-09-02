@@ -68,7 +68,7 @@ def compat_convert(comment, mode):
         # Basic conversion of @param and @return.
         comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
                          "\n\\1:param\\2\\3:\\4", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@return([ \t]+)",
+        comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+)",
                          "\n\\1:return:\\2", comment)
 
     if mode == 'javadoc-liberal':
