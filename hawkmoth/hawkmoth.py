@@ -61,6 +61,12 @@ def wrap_blank_lines(string):
     return '\n' + string + '\n'
 
 # Basic Javadoc/Doxygen/kernel-doc import
+#
+# FIXME: One of the design goals of Hawkmoth is to keep things simple. There's a
+# fine balance between sticking to that goal and adding compat code to
+# facilitate any kind of migration to Hawkmoth. The compat code could be turned
+# into a fairly simple plugin architecture, with some basic compat builtins, and
+# the users could still extend the compat features to fit their specific needs.
 def compat_convert(comment, mode):
     # FIXME: try to preserve whitespace better
 
