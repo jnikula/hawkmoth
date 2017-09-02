@@ -68,7 +68,7 @@ def compat_convert(comment, mode):
         # Basic conversion of @param and @return.
         comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
                          "\n\\1:param\\2\\3:\\4", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+)",
+        comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
                          "\n\\1:return:\\2", comment)
 
     if mode == 'javadoc-liberal':
@@ -79,7 +79,7 @@ def compat_convert(comment, mode):
 
     if mode == 'kernel-doc':
         # Basic kernel-doc convert, will document struct members as params, etc.
-        comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+)",
+        comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
                          "\n\\1:return:\\3", comment)
         comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
                          "\n\\1:param \\2:\\3", comment)
