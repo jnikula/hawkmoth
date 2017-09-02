@@ -75,6 +75,8 @@ def compat_convert(comment, mode):
                          "\n::\n", comment)
         comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
                          "\n", comment)
+        # Ignore @brief.
+        comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
 
     if mode == 'javadoc-liberal':
         # Liberal conversion of any @tags, will fail for @code etc. but don't
