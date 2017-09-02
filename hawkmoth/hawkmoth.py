@@ -70,6 +70,11 @@ def compat_convert(comment, mode):
                          "\n\\1:param\\2\\3:\\4", comment)
         comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
                          "\n\\1:return:\\2", comment)
+        # @code/@endcode blocks. Works if the code is indented.
+        comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
+                         "\n::\n", comment)
+        comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
+                         "\n", comment)
 
     if mode == 'javadoc-liberal':
         # Liberal conversion of any @tags, will fail for @code etc. but don't
