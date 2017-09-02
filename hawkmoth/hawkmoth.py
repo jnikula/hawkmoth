@@ -65,9 +65,13 @@ def compat_convert(comment, mode):
     # FIXME: try to preserve whitespace better
 
     if mode == 'javadoc-basic' or mode == 'javadoc-liberal':
-        # Basic conversion of @param and @return.
+        # @param
         comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
                          "\n\\1:param\\2\\3:\\4", comment)
+        # @param[direction]
+        comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                         "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
+        # @return
         comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
                          "\n\\1:return:\\2", comment)
         # @code/@endcode blocks. Works if the code is indented.
