@@ -62,10 +62,14 @@ extension. `Pre-built results are available.`_
 Dependencies
 ------------
 
- * python-clang-3.8
- * libclang-3.8-dev
- * libclang1-3.8
- * Sphinx 1.3
+- Sphinx 1.3
+- python-clang-3.8
+- libclang-3.8-dev
+- libclang1-3.8
+
+Hawkmoth should be compatible with both Python 2 and 3, but due to lack of
+packaging of Clang Python Bindings for Python 3, it's currently being developed
+and tested on Python 2 only.
 
 Installation
 ------------
