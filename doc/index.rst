@@ -10,6 +10,7 @@ Contents:
    extension
    syntax
    example
+   cli
 
 Indices and tables
 ==================
