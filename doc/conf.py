@@ -29,7 +29,17 @@ needs_sphinx = '1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['hawkmoth.cautodoc']
+
+# Handle failing hawkmoth.cautodoc import gracefully to be able to build the
+# documentation on e.g. https://readthedocs.org/ which would otherwise fail due
+# to missing clang. This may not be a good example to follow in regular
+# documentation.
+try:
+    import hawkmoth.cautodoc
+    extensions = ['hawkmoth.cautodoc']
+    tags.add('have_hawkmoth')
+except ImportError:
+    sys.stderr.write('Warning: Failed to import hawkmoth.cautodoc.\n')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
