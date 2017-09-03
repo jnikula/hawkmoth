@@ -2,25 +2,28 @@ Hawkmoth
 ========
 
 Hawkmoth is a minimalistic Sphinx_ `C Domain`_ autodoc directive extension to
-incorporate formatted C source code comments into Sphinx based documentation. It
-generates C Domain directives automatically for C API documentation, but is not
-limited to that.
+incorporate formatted C source code comments written in reStructuredText_ into
+Sphinx based documentation. It uses Clang Python Bindings for parsing, and
+generates C Domain directives for C API documentation, and more. In short,
+Hawkmoth is Sphinx Autodoc for C.
+
+Hawkmoth aims to be a compelling alternative for documenting C projects using
+Sphinx, mainly through its simplicity of design, implementation and use.
 
 .. _Sphinx: http://www.sphinx-doc.org
 
 .. _C Domain: http://www.sphinx-doc.org/en/stable/domains.html
 
+.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+
 Larval Stage
 ------------
 
-Hawkmoth is a project very much in its infancy. The main goal is pretty clear:
-Use Clang Python Bindings to extract reStructuredText_ documentation comments
-from source into Sphinx, and keep it simple. The rough concept is there and
-functional, but there are bugs, documentation is lacking, testing is inadequate,
-there are no promises about backwards compatible changes, it's not packaged,
-etc.
-
-.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+Hawkmoth is a project very much in its infancy. The main idea is clear, the
+rough implementation is there and mostly working, even documentation is starting
+to shape up, but there are bugs, testing is inadequate, there are no promises
+about backwards compatible changes, it's not packaged, etc. But it's usable if
+you're not afraid to try software that might be a bit rough around the edges.
 
 Example
 -------
@@ -42,9 +45,9 @@ You can document functions, parameters, return values, structs, unions, their
 members, macros, function-like macros, enums, enumerations, typedefs, variables,
 as well as have generic documentation comments not attached to any symbols.
 
-reStructuredText style field lists are the native way of documenting parameters
-and return values and so on, but there's limited compatibility with Javadoc_ or
-Doxygen_ style ``@tags``.
+reStructuredText style field lists are the native way of documenting function
+parameters and return values and so on, but there's limited compatibility with
+Javadoc_ or Doxygen_ style ``@tags``.
 
 .. _Javadoc: http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html
 
