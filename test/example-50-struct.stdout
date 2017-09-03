@@ -1,0 +1,15 @@
+.. c:type:: struct list
+
+   Linked list node.
+   
+
+.. c:member:: struct list * list.next
+
+   Next node. 
+   
+
+.. c:member:: int list.data
+
+   Data. 
+   
+

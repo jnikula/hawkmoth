@@ -9,7 +9,7 @@ Contents:
    README
    extension
    syntax
-   example
+   examples
    cli
 
 Indices and tables
