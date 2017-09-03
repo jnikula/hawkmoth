@@ -14,9 +14,10 @@ This page showcases Hawkmoth in action.
 
 .. only:: not have_hawkmoth
 
-   .. note:: The documentation was built without Hawkmoth and/or its
-             dependencies (perhaps on https://readthedocs.org/). The output seen
-             below was not dynamically generated.
+   .. note:: The documentation you are viewing was built without Hawkmoth and/or
+             its dependencies (perhaps on https://readthedocs.org/). The output
+             seen below was pre-generated statically using Hawkmoth, and should
+             closely reflect actual results.
 
 Macro
 -----

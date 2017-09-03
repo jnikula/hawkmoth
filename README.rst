@@ -57,10 +57,8 @@ Documentation
 -------------
 
 More documentation, with examples, is available in the ``doc`` directory in the
-source tree, obviously in Sphinx format and using the directive extension.
-
-Pre-built documentation is available at `Read the Docs`_, but unfortunately
-without the directive output due to the missing dependency on Clang.
+source tree, obviously in Sphinx format and using the directive
+extension. Pre-built documentation is available at `Read the Docs`_.
 
 .. _Read the Docs: https://hawkmoth.readthedocs.io/
 
