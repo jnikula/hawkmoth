@@ -54,10 +54,23 @@ Documentation
 -------------
 
 More documentation, with examples, is available in the ``doc`` directory in the
-source tree, obviously in Sphinx format and using the directive
-extension. `Pre-built results are available.`_
+source tree, obviously in Sphinx format and using the directive extension.
 
-.. _Pre-built results are available.: https://people.freedesktop.org/~jani/hawkmoth/index.html
+Pre-built documentation is available at `Read the Docs`_, but unfortunately
+without the directive output due to the missing dependency on Clang.
+
+.. _Read the Docs: https://hawkmoth.readthedocs.io/
+
+Download
+--------
+
+Hawkmoth source code is available on GitHub_. The development version can be
+checked out via ``git`` using this command::
+
+  git clone https://github.com/jnikula/hawkmoth.git
+
+.. _GitHub: https://github.com/jnikula/hawkmoth
+
 
 Dependencies
 ------------
