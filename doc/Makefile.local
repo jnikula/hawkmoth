@@ -23,6 +23,10 @@ I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) $(docdir)
 
 CLEAN := $(CLEAN) $(BUILDDIR)
 
+.PHONY: update-examples
+update-examples:
+	$(docdir)/update-examples > $(docdir)/examples.rst
+
 .PHONY: help
 help:
 	@echo "Please use \`make <target>' where <target> is one of"

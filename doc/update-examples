@@ -1,0 +1,73 @@
+#!/bin/bash
+
+TESTDIR=test
+
+cat <<EOF
+
+.. Generated using update-examples, do not edit manually!
+
+Examples
+========
+
+This page showcases Hawkmoth in action.
+
+.. contents::
+   :local:
+   :depth: 1
+
+.. only:: not have_hawkmoth
+
+   .. note:: The documentation was built without Hawkmoth and/or its
+             dependencies (perhaps on https://readthedocs.org/). The output seen
+             below was not dynamically generated.
+
+EOF
+
+read_options()
+{
+	if [ -e "$1" ]; then
+		sed -n "s/ /\n/g;s/--\(compat\|clang\)=\([a-zA-Z0-9_,-]\+\)/:\1: \2/gp" < $1
+	fi
+}
+
+for f in $(find "$TESTDIR" -maxdepth 1 -name "example-*.c" | sort); do
+	options=$(read_options ${f/.c/.stdin})
+	input=examples/$(basename $f)
+	static_output=${input/.c/.stdout}
+	title=$(basename $f .c)
+	title=${title#example-}
+	title=${title#[0-9][0-9]-}
+	title=${title//-/ }
+	title=${title^?}
+	title_underline=${title//?/-}
+
+	cat <<EOF
+$title
+$title_underline
+
+Source
+~~~~~~
+
+.. literalinclude:: $input
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autodoc:: $input
+$(sed 's/^/      /' <<< $options)
+
+Output
+~~~~~~
+
+.. c:autodoc:: $input
+$(sed 's/^/   /' <<< $options)
+
+.. only:: not have_hawkmoth
+
+   .. include:: $static_output
+
+EOF
+done
