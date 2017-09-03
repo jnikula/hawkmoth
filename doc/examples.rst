@@ -1,6 +1,8 @@
 
 .. Generated using update-examples, do not edit manually!
 
+.. _examples:
+
 Examples
 ========
 

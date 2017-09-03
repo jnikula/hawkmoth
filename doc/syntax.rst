@@ -10,6 +10,9 @@ reStructuredText markup.
 Optionally, there's limited support for some Javadoc_ and Doxygen_ style
 constructs for compatibility.
 
+See :ref:`the examples section <examples>` for a quick tour of what's possible,
+and read on for documentation comment formatting details.
+
 Documentation Comments
 ----------------------
 
