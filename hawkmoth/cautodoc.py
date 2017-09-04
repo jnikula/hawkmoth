@@ -38,7 +38,12 @@ class CAutoDocDirective(Directive):
     }
     has_content = False
 
-    def parse(self, viewlist, filename, compat, clang):
+    def parse(self, viewlist, filename):
+        env = self.state.document.settings.env
+
+        compat = self.options.get('compat', env.config.cautodoc_compat)
+        clang = self.options.get('clang', env.config.cautodoc_clang)
+
         comments = parse(filename, compat=compat, clang=clang)
 
         for (comment, meta) in comments:
@@ -50,9 +55,6 @@ class CAutoDocDirective(Directive):
 
     def run(self):
         env = self.state.document.settings.env
-
-        compat = self.options.get('compat', env.config.cautodoc_compat)
-        clang = self.options.get('clang', env.config.cautodoc_clang)
 
         result = ViewList()
 
@@ -73,7 +75,7 @@ class CAutoDocDirective(Directive):
 
                 # Tell Sphinx about the dependency
                 env.note_dependency(os.path.abspath(filename))
-                self.parse(result, filename, compat, clang)
+                self.parse(result, filename)
 
         node = nodes.section()
         node.document = self.state.document
