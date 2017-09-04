@@ -190,6 +190,10 @@ def parse(filename, **options):
     # parse the file, get comments
     pass1(tu, top_level_comments, comments)
 
+    # FIXME: strip_comment, compat_convert, and the C Domain directive all
+    # change the number of lines in output. This impacts the error reporting via
+    # meta['line']. Adjust meta to take this into account.
+
     result = []
 
     for comment in top_level_comments:
