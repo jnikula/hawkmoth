@@ -18,6 +18,7 @@ from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
 from sphinx.ext.autodoc import AutodocReporter
 from sphinx.util.compat import Directive
+from sphinx.util.nodes import nested_parse_with_titles
 
 # The parser bits
 from hawkmoth import parse
@@ -78,8 +79,13 @@ class CAutoDocDirective(Directive):
                 self.parse(result, filename)
 
         node = nodes.section()
-        node.document = self.state.document
-        self.state.nested_parse(result, self.content_offset, node)
+        try:
+            old_reporter = self.state.memo.reporter
+            self.state.memo.reporter = AutodocReporter(result,
+                                                       self.state.memo.reporter)
+            nested_parse_with_titles(self.state, result, node)
+        finally:
+            self.state.memo.reporter = old_reporter
 
         return node.children
 
