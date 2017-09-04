@@ -48,7 +48,7 @@ class CAutoDocDirective(Directive):
         comments = parse(filename, compat=compat, clang=clang)
 
         for (comment, meta) in comments:
-            lineoffset = meta['line']
+            lineoffset = meta['line'] - 1
             lines = statemachine.string2lines(comment, 8, convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)
