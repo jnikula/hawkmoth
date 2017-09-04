@@ -30,7 +30,19 @@ set in ``conf.py``.
 ``cautodoc_root``
 ~~~~~~~~~~~~~~~~~
 
-Path to the root of the source files. Defaults to ``.``.
+Path to the root of the source files. Defaults to the `configuration
+directory`_, i.e. the directory containing ``conf.py``.
+
+To use paths relative to the configuration directory, use ``os.path.abspath()``,
+for example:
+
+.. code-block:: python
+
+   import os
+
+   cautodoc_root = os.path.abspath('..')
+
+.. _configuration directory: http://www.sphinx-doc.org/en/stable/glossary.html#term-configuration-directory
 
 ``cautodoc_compat``
 ~~~~~~~~~~~~~~~~~~~
