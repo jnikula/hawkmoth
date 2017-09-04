@@ -57,12 +57,23 @@ class CAutoDocDirective(Directive):
         result = ViewList()
 
         for pattern in self.arguments[0].split():
-            for filename in glob.iglob(env.config.cautodoc_root + '/' + pattern):
+            filenames = glob.glob(env.config.cautodoc_root + '/' + pattern)
+            if len(filenames) == 0:
+                env.app.warn('Pattern "%s" does not match any files.' %
+                             (pattern), location=(env.docname, self.lineno))
+                continue
+
+            for filename in filenames:
                 mode = os.stat(filename).st_mode
-                if not stat.S_ISDIR(mode):
-                    # Tell Sphinx about the dependency
-                    env.note_dependency(os.path.abspath(filename))
-                    self.parse(result, filename, compat, clang)
+                if stat.S_ISDIR(mode):
+                    env.app.warn('Path "%s" matching pattern "%s" is a directory.' %
+                                 (filename, pattern),
+                                 location=(env.docname, self.lineno))
+                    continue
+
+                # Tell Sphinx about the dependency
+                env.note_dependency(os.path.abspath(filename))
+                self.parse(result, filename, compat, clang)
 
         node = nodes.section()
         node.document = self.state.document
