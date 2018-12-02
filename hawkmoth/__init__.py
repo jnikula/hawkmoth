@@ -1,10 +1,13 @@
-# coding=utf-8
-"""Hawkmoth - Sphinx C Domain autodoc directive extension"""
+# Copyright (c) 2016-2017, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+"""
+Hawkmoth
+========
 
-__author__ = "Jani Nikula <jani@nikula.org>"
-__copyright__ = "Copyright (c) 2016-2017, Jani Nikula <jani@nikula.org>"
+Sphinx C Domain autodoc directive extension.
+"""
+
 __version__  = '0.1'
-__license__ = "BSD 2-Clause, see LICENSE for details"
 
 import glob
 import os
@@ -23,10 +26,8 @@ from sphinx.util.docutils import switch_source_input
 # The parser bits
 from . import hawkmoth
 
-# This is the part that interfaces with Sphinx. Do not depend on Clang here.
-
 class CAutoDocDirective(Directive):
-    """Extract documentation comments from the specified file"""
+    """Extract all documentation comments from the specified file"""
     required_argument = 1
     optional_arguments = 1
 
@@ -39,7 +40,7 @@ class CAutoDocDirective(Directive):
     }
     has_content = False
 
-    def parse(self, viewlist, filename):
+    def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
@@ -49,7 +50,8 @@ class CAutoDocDirective(Directive):
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
-            lines = statemachine.string2lines(comment, 8, convert_whitespace=True)
+            lines = statemachine.string2lines(comment, 8,
+                                              convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)
                 lineoffset += 1
@@ -62,21 +64,22 @@ class CAutoDocDirective(Directive):
         for pattern in self.arguments[0].split():
             filenames = glob.glob(env.config.cautodoc_root + '/' + pattern)
             if len(filenames) == 0:
-                env.app.warn('Pattern "%s" does not match any files.' %
-                             (pattern), location=(env.docname, self.lineno))
+                fmt = 'Pattern "{pat}" does not match any files.'
+                env.app.warn(fmt.format(pattern),
+                             location=(env.docname, self.lineno))
                 continue
 
             for filename in filenames:
                 mode = os.stat(filename).st_mode
                 if stat.S_ISDIR(mode):
-                    env.app.warn('Path "%s" matching pattern "%s" is a directory.' %
-                                 (filename, pattern),
+                    fmt = 'Path "{name}" matching pattern "{pat}" is a directory.'
+                    env.app.warn(fmt.format(name=filename, pat=pattern),
                                  location=(env.docname, self.lineno))
                     continue
 
-                # Tell Sphinx about the dependency
+                # Tell Sphinx about the dependency and parse the file
                 env.note_dependency(os.path.abspath(filename))
-                self.parse(result, filename)
+                self.__parse(result, filename)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
