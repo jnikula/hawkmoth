@@ -16,6 +16,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
+extensions = [
+    'sphinx.ext.intersphinx',
+]
 
 # -- Project information -----------------------------------------------------
 
@@ -43,7 +46,6 @@ release = version
 # documentation on e.g. https://readthedocs.org/ which would otherwise fail due
 # to missing clang. This may not be a good example to follow in regular
 # documentation.
-extensions = []
 try:
     import hawkmoth
     extensions.append('hawkmoth')
@@ -185,3 +187,11 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+
+# -- Cross project references ------------------------------------------------
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'sphinx': ('http://www.sphinx-doc.org/en/stable/', None)
+}
