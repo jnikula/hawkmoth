@@ -18,6 +18,7 @@ from docutils.parsers.rst import directives, Directive
 from docutils.statemachine import ViewList
 from sphinx.ext.autodoc import AutodocReporter
 from sphinx.util.nodes import nested_parse_with_titles
+from sphinx.util.docutils import switch_source_input
 
 # The parser bits
 from hawkmoth import parse
@@ -77,14 +78,10 @@ class CAutoDocDirective(Directive):
                 env.note_dependency(os.path.abspath(filename))
                 self.parse(result, filename)
 
-        node = nodes.section()
-        try:
-            old_reporter = self.state.memo.reporter
-            self.state.memo.reporter = AutodocReporter(result,
-                                                       self.state.memo.reporter)
+        # Parse the extracted reST
+        with switch_source_input(self.state, result):
+            node = nodes.section()
             nested_parse_with_titles(self.state, result, node)
-        finally:
-            self.state.memo.reporter = old_reporter
 
         return node.children
 
