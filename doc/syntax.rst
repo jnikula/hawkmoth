@@ -3,9 +3,9 @@
 Syntax
 ======
 
-For the ``c:autodoc`` directive to work, the C source code must be documented
-using specific documentation comment style, and the comments must follow
-reStructuredText markup.
+For the :any:`c:autodoc` directive to work, the C source code must be
+documented using specific documentation comment style, and the comments must
+follow reStructuredText markup.
 
 Optionally, there's limited support for some Javadoc_ and Doxygen_ style
 constructs for compatibility.
@@ -16,14 +16,14 @@ and read on for documentation comment formatting details.
 Documentation Comments
 ----------------------
 
-Documentation comments are C language block comments that begin with "/\*\*".
+Documentation comments are C language block comments that begin with ``/**``.
 
 Because reStructuredText is sensitive about indentation, it's strongly
 recommended, even if not strictly required, to follow a uniform style for
-multi-line comments. Place the opening delimeter "/\*\*" and closing delimeter
-"\*/" on lines of their own, and prefix the lines in between with " \* ". Indent
-the actual documentation at the third column, to let Hawkmoth consistently
-remove the enclosing comment markers:
+multi-line comments. Place the opening delimiter ``/**`` and closing delimiter
+``␣*/`` on lines of their own, and prefix the lines in between with ``␣*␣``.
+Indent the actual documentation at the third column, to let Hawkmoth
+consistently remove the enclosing comment markers:
 
 .. code-block:: c
 
@@ -87,14 +87,14 @@ enable the support.
 .. warning:: The compatibility support and its documentation are a
              work-in-progress.
 
-.. _Javadoc: http://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
+.. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
 
-.. _Doxygen: http://doxygen.org/
+.. _Doxygen: http://doxygen.nl/
 
 Cross-Referencing C Constructs
 ------------------------------
 
-Use the C Domain roles for `cross-referencing C constructs`_ as follows:
+Use :any:`sphinx:c-domain` roles for cross-referencing as follows:
 
 - ``:c:data:`name``` for variables.
 
@@ -106,12 +106,6 @@ Use the C Domain roles for `cross-referencing C constructs`_ as follows:
 
 - ``:c:member:`name.membername``` for struct and union members.
 
-See the Sphinx `domain documentation`_ and generic `cross-referencing syntax`_
-for further details on cross-referencing, and how to specify the default domain
-for brevity.
-
-.. _domain documentation: http://www.sphinx-doc.org/en/stable/domains.html
-
-.. _cross-referencing C constructs: http://www.sphinx-doc.org/en/stable/domains.html#cross-referencing-c-constructs
-
-.. _cross-referencing syntax: http://www.sphinx-doc.org/en/stable/markup/inline.html#xref-syntax
+See the Sphinx :any:`sphinx:basic-domain-markup` and generic
+:any:`sphinx:xref-syntax` for further details on cross-referencing, and how to
+specify the default domain for brevity.
