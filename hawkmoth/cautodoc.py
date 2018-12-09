@@ -21,7 +21,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
 
 # The parser bits
-from hawkmoth import parse
+from . import hawkmoth
 
 # This is the part that interfaces with Sphinx. Do not depend on Clang here.
 
@@ -45,7 +45,7 @@ class CAutoDocDirective(Directive):
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments = parse(filename, compat=compat, clang=clang)
+        comments = hawkmoth.parse(filename, compat=compat, clang=clang)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
