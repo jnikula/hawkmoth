@@ -34,12 +34,13 @@ needs_sphinx = '1.0'
 # documentation on e.g. https://readthedocs.org/ which would otherwise fail due
 # to missing clang. This may not be a good example to follow in regular
 # documentation.
+extensions = []
 try:
-    import hawkmoth.cautodoc
-    extensions = ['hawkmoth.cautodoc']
+    import hawkmoth
+    extensions.append('hawkmoth')
     tags.add('have_hawkmoth')
 except ImportError:
-    sys.stderr.write('Warning: Failed to import hawkmoth.cautodoc.\n')
+    sys.stderr.write('Warning: Failed to import hawkmoth.\n')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
