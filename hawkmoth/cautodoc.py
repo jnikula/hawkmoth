@@ -14,10 +14,9 @@ import subprocess
 import sys
 
 from docutils import nodes, statemachine
-from docutils.parsers.rst import directives
+from docutils.parsers.rst import Directive, directives
 from docutils.statemachine import ViewList
 from sphinx.ext.autodoc import AutodocReporter
-from sphinx.util.compat import Directive
 from sphinx.util.nodes import nested_parse_with_titles
 
 # The parser bits
