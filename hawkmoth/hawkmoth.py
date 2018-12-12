@@ -359,18 +359,22 @@ def parse_to_string(filename, verbose, **options):
     return s
 
 def main():
-    parser = argparse.ArgumentParser(description='Hawkmoth.')
+    parser = argparse.ArgumentParser(description="""
+    Hawkmoth parser debug tool. Print the documentation comments extracted
+    from FILE, along with the generated C Domain directives, to standard
+    output. Include metadata with verbose output.""")
     parser.add_argument('file', metavar='FILE', type=str, action='store',
-                        help='tiedosto')
+                        help='The C source or header file to parse.')
     parser.add_argument('--compat',
                         choices=['none',
                                  'javadoc-basic',
                                  'javadoc-liberal',
                                  'kernel-doc'],
-                        help='compatibility options')
-    parser.add_argument('--clang', metavar='PARAM[,PARAM,...]')
+                        help='Compatibility options. See cautodoc_compat.')
+    parser.add_argument('--clang', metavar='PARAM[,PARAM,...]',
+                        help='Arguments to pass to clang. See cautodoc_clang.')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
-                        help='verbose output')
+                        help='Verbose output.')
     args = parser.parse_args()
 
     filename = args.file
