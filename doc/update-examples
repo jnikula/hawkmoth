@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (c) 2017-2018, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 TESTDIR=test
 
@@ -29,12 +31,12 @@ EOF
 read_options()
 {
 	if [ -e "$1" ]; then
-		sed -n "s/ /\n/g;s/--\(compat\|clang\)=\([a-zA-Z0-9_,-]\+\)/:\1: \2/gp" < $1
+		sed -n "s/ /\n/g;s/\(compat\|clang\)=\([a-zA-Z0-9_,-]\+\)/:\1: \2/gp" < $1
 	fi
 }
 
 for f in $(find "$TESTDIR" -maxdepth 1 -name "example-*.c" | sort); do
-	options=$(read_options ${f/.c/.stdin})
+	options=$(read_options ${f/.c/.options})
 	input=examples/$(basename $f)
 	static_output=${input/.c/.stdout}
 	title=$(basename $f .c)

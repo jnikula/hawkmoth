@@ -16,19 +16,14 @@ def get_testcases(path):
             yield os.path.join(path, f)
 
 def get_testcase_options(testcase):
-    options_filename = modify_filename(testcase, ext='stdin')
+    options_filename = modify_filename(testcase, ext='options')
 
     # options are optional
     options = {}
     if os.path.isfile(options_filename):
         with open(options_filename, 'r') as file:
             for line in file.readlines():
-                line = line.strip()
-                # legacy
-                if line.startswith('--'):
-                    line = line[2:]
-
-                opt = line.split('=', 1)
+                opt = line.strip().split('=', 1)
                 options[opt[0]] = opt[1]
 
     return options
