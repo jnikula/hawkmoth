@@ -349,6 +349,15 @@ def parse(filename, **options):
 
     return result
 
+def parse_to_string(filename, verbose, **options):
+    s=''
+    comments = parse(filename, **options)
+    for (comment, meta) in comments:
+        if verbose:
+            s += ('# ' + str(meta) + '\n')
+        s += comment + '\n'
+    return s
+
 def main():
     parser = argparse.ArgumentParser(description='Hawkmoth.')
     parser.add_argument('file', metavar='FILE', type=str, action='store',
@@ -366,11 +375,9 @@ def main():
 
     filename = args.file
 
-    comments = parse(filename, compat=args.compat, clang=args.clang)
-    for (comment, meta) in comments:
-        if args.verbose:
-            print('# ' + str(meta))
-        print(comment)
+    comments = parse_to_string(filename, args.verbose,
+                               compat=args.compat, clang=args.clang)
+    sys.stdout.write(comments)
 
 if __name__ == '__main__':
     main()
