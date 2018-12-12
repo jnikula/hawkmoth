@@ -1,36 +1,14 @@
 # -*- makefile -*-
+# Copyright (c) 2017-2018, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 #
-# Tests based on cmdtest(1)
-#
-# Deviations from standard cmdtest usage:
-# - Uses .script symlinks to shared hawkmoth-wrapper.
-# - Uses .c for input files.
-# - Uses .stdin for additional arguments to hawkmoth.
-#
-# FIXME: This is *completely* inadequate. Needs to take into account compat
-# options for Javadoc and check for different input. Needs more test data, in
-# particular more pathological real world test data. Needs a way to flag broken
-# tests for TDD. Needs to run the directive extension too, not just the comment
-# extraction part.
+# FIXME: This is inadequate. Needs more test data, in particular more
+# pathological real world test data. Needs to run the directive extension too,
+# not just the comment extraction part.
 #
 
-dir := test
-
-CMDTEST := cmdtest
-LN := ln
-
-# Existence of .c defines the test, not .script.
-TEST:=$(wildcard $(dir)/*.c)
-CMDTEST_CLEAN=$(TEST:%.c=%.stderr-actual) $(TEST:%.c=%.stderr-diff)	\
-	$(TEST:%.c=%.stdout-actual) $(TEST:%.c=%.stdout-diff)
-
-# Use a shared .script.
-SCRIPT:=$(TEST:%.c=%.script)
-%.script:
-	$(call quiet,LN) -sf hawkmoth-wrapper $@
+test_dir := test
 
 .PHONY: test
-test: $(SCRIPT)
-	$(call quiet,CMDTEST,CMDTEST) test
-
-CLEAN := $(CLEAN) $(SCRIPT) $(CMDTEST_CLEAN)
+test:
+	python3 -m unittest discover -s $(test_dir)
