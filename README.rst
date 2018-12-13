@@ -76,20 +76,24 @@ checked out via ``git`` using this command::
 Dependencies
 ------------
 
-- Sphinx 1.3
-- python-clang-3.8
-- libclang-3.8-dev
-- libclang1-3.8
+- Python 3.4
+- Sphinx 1.8
+- Clang 6.0
+- Python 3 Bindings for Clang 6.0
 
-Hawkmoth should be compatible with both Python 2 and 3, but due to lack of
-packaging of Clang Python Bindings for Python 3, it's currently being developed
-and tested on Python 2 only.
+These are the versions Hawkmoth is currently being developed and tested
+against. Other versions might work, but no guarantees.
 
 Installation
 ------------
 
-In Sphinx ``conf.py``, point ``sys.path`` at Hawkmoth, add ``hawkmoth.cautodoc``
-to ``extensions``, and point ``cautodoc_root`` at the source tree.
+In Sphinx ``conf.py``, point ``sys.path`` at Hawkmoth, add ``hawkmoth`` to
+``extensions``, and point ``cautodoc_root`` at the source tree.
+
+You may need to set ``LD_LIBRARY_PATH`` so that the Clang library can be
+found. For example::
+
+  export LD_LIBRARY_PATH=$(llvm-config --libdir)
 
 (Did I say the project is in its early stages?)
 

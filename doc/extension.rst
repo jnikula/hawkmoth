@@ -3,10 +3,10 @@
 C Autodoc Extension
 ===================
 
-Hawkmoth provides ``hawkmoth.cautodoc`` Sphinx extension that adds a new
-``c:autodoc`` directive to the Sphinx `C Domain`_ to incorporate formatted C
-source code comments into a document. This could be thought of as a version of
-`Python autodoc`_ for C.
+Hawkmoth provides ``hawkmoth`` Sphinx extension that adds a new ``c:autodoc``
+directive to the Sphinx `C Domain`_ to incorporate formatted C source code
+comments into a document. This could be thought of as a version of `Python
+autodoc`_ for C.
 
 For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
@@ -19,13 +19,13 @@ details.
 Installation
 ------------
 
-Add ``hawkmoth.cautodoc`` to ``extensions`` in ``conf.py``.
+Add ``hawkmoth`` to ``extensions`` in ``conf.py``.
 
 Configuration
 -------------
 
-The ``hawkmoth.cautodoc`` extension has a few configuration options that can be
-set in ``conf.py``.
+The ``hawkmoth`` extension has a few configuration options that can be set in
+``conf.py``.
 
 ``cautodoc_root``
 ~~~~~~~~~~~~~~~~~
@@ -63,7 +63,7 @@ source, typically to define macros for conditional compilation, for example
 Directive
 ---------
 
-The single directive provided by ``hawkmoth.cautodoc`` is very simple.
+The single directive provided by ``hawkmoth`` is very simple.
 
 .. rst:directive:: .. c:autodoc:: filename-pattern [...]
 
