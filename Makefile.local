@@ -1,0 +1,36 @@
+# -*- makefile -*-
+# Copyright (c) 2018, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+#
+# Helpers for packaging and releasing.
+#
+# FIXME:
+#
+# * Add a single point of truth for version
+#   - hawkmoth/__init__.py
+#   - doc/conf.py
+#   - setup.py
+# * Add helpers for releasing
+#   - release checks
+#   - updating the version
+#   - tagging
+#   - uploading tagged versions to pypi
+#
+
+dir := .
+
+dist-tools:
+	python3 -m pip install --user --upgrade setuptools wheel twine
+
+dist:
+	python3 setup.py sdist bdist_wheel
+
+test-upload:
+	python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+upload:
+	python3 -m twine upload dist/*
+
+.PHONY: dist-tools dist test-upload upload
+
+CLEAN := $(CLEAN) build dist hawkmoth.egg-info
