@@ -1,9 +1,11 @@
 # Copyright (c) 2018, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
+import os
 import setuptools
 
-with open('README.rst', 'r') as file:
+readme = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.rst')
+with open(readme, 'r') as file:
     long_description = file.read()
 
 setuptools.setup(
