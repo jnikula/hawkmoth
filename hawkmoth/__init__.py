@@ -65,7 +65,7 @@ class CAutoDocDirective(Directive):
             filenames = glob.glob(env.config.cautodoc_root + '/' + pattern)
             if len(filenames) == 0:
                 fmt = 'Pattern "{pat}" does not match any files.'
-                env.app.warn(fmt.format(pattern),
+                env.app.warn(fmt.format(pat=pattern),
                              location=(env.docname, self.lineno))
                 continue
 
