@@ -51,7 +51,7 @@ def strip_comment(comment):
     # Strip leading blank lines.
     comment = re.sub(r"^[\n]*", "", comment)
     # End in exactly one newline.
-    comment = re.sub(r"[\n]*$", "\n", comment)
+    comment = re.sub(r"[\n]*$", "", comment) + "\n"
     return comment
 
 def indent(string, prefix):
