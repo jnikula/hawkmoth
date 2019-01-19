@@ -1,11 +1,37 @@
 #!/usr/bin/env python
-# coding=utf-8
-"""Hawkmoth - Documentation comment extractor based on Clang"""
+# Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+"""
+Documentation comment extractor
+===============================
 
-__author__ = "Jani Nikula <jani@nikula.org>"
-__copyright__ = "Copyright (c) 2016-2017, Jani Nikula <jani@nikula.org>"
-__version__  = '0.1'
-__license__ = "BSD 2-Clause, see LICENSE for details"
+This module extracts relevant documentation comments, optionally reformatting
+them in reST syntax.
+
+This is the part that uses Clang Python Bindings to extract documentation
+comments from C source code. This module does not depend on Sphinx.
+
+There are two passes:
+
+#. Pass over the tokens to find all the comments, including ones that aren't
+   attached to cursors.
+
+#. Pass over the cursors to document them.
+
+There is minimal syntax parsing or input conversion:
+
+* Identification of documentation comment blocks, and stripping the comment
+  delimiters (``/**`` and ``*/``) and continuation line prefixes (e.g. ``␣*␣``).
+
+* Identification of function-like macros.
+
+* Indentation for reST C Domain directive blocks.
+
+* Optional conversion of the simplest Javadoc tags to native reStructuredText
+  field lists.
+
+Otherwise, documentation comments are passed through verbatim.
+"""
 
 import argparse
 import itertools
@@ -17,28 +43,6 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-# This is the part that uses Clang Python Bindings to extract documentation
-# comments from C source code.
-#
-# Do not depend on Sphinx here.
-#
-# We have to do two passes. First pass over the tokens to find all the comments,
-# including ones that aren't attached to cursors. Second pass over the cursors
-# to document them.
-#
-# There is minimal syntax parsing or input conversion:
-#
-#   - Identification of documentation comment blocks, and stripping the comment
-#     delimiters ("/**" and "*/") and continuation line prefixes (e.g. " * ").
-#
-#   - Identification of function-like macros.
-#
-#   - Indentation for reStructuredText C Domain directive blocks.
-#
-#   - Optional conversion of the simplest Javadoc tags to native
-#     reStructuredText field lists.
-#
-# Otherwise, pass through the documentation comments verbatim.
 
 def is_doc_comment(comment):
     return comment.startswith('/**') and comment != '/**/'
