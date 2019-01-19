@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
+# Copyright (c) 2018-2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment extractor
@@ -133,9 +134,9 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    # FIXME: docstr.strip, doccompat.convert, and the C Domain directive all
-    # change the number of lines in output. This impacts the error reporting via
-    # meta['line']. Adjust meta to take this into account.
+    # FIXME: docstr.generate changes the number of lines in output. This impacts
+    # the error reporting via meta['line']. Adjust meta to take this into
+    # account.
 
     result = []
     compat = lambda x: doccompat.convert(x, options.get('compat'))
@@ -144,12 +145,9 @@ def parse(filename, **options):
         if not docstr.is_doc(comment.spelling):
             continue
 
-        doc_comment = docstr.strip(comment.spelling)
-        doc_comment = compat(doc_comment)
-        doc_comment = docstr.wrap_blank_lines(doc_comment)
-        meta = { 'line': comment.extent.start.line }
-
-        result.append((doc_comment, meta))
+        doc = docstr.generate(comment.spelling, transform=compat)
+        meta = {'line': comment.extent.start.line}
+        result.append((doc, meta))
 
     for cursor in tu.cursor.get_children():
         if cursor.hash not in comments:
@@ -158,62 +156,65 @@ def parse(filename, **options):
         if not docstr.is_doc(comment.spelling):
             continue
 
-        doc_comment = docstr.strip(comment.spelling)
+        text = comment.spelling
+        name = None
+        ttype = None
+        args = None
 
         if cursor.kind == CursorKind.MACRO_DEFINITION:
+            # FIXME: check args against doc_comment
             args = _get_macro_args(cursor)
-            if args is None:
-                cdom = '.. c:macro:: {name}\n'.format(name=cursor.spelling)
-            else:
-                # FIXME: check args against doc_comment
-                cdom = '.. c:function:: {name}({args})\n'.format(
-                    name=cursor.spelling,
-                    args=', '.join(args))
+            name = cursor.spelling
+            fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
+
         elif cursor.kind == CursorKind.VAR_DECL:
-            cdom = '.. c:var:: {type} {name}\n'.format(
-                type=cursor.type.spelling,
-                name=cursor.spelling)
+            fmt = docstr.Type.VAR
+            ttype = cursor.type.spelling
+            name = cursor.spelling
+
         elif cursor.kind == CursorKind.TYPEDEF_DECL:
-            cdom = '.. c:type:: {name}\n'.format(name=cursor.spelling)
+            fmt = docstr.Type.TYPE
+            name = cursor.spelling
 
         elif (cursor.kind == CursorKind.STRUCT_DECL or
               cursor.kind == CursorKind.UNION_DECL or
               cursor.kind == CursorKind.ENUM_DECL):
-            cdom = '.. c:type:: {name}\n'.format(name=cursor.type.spelling)
+            fmt = docstr.Type.TYPE
+            name = cursor.type.spelling
+
         elif cursor.kind == CursorKind.FUNCTION_DECL:
             # FIXME: check args against doc_comment
-
             # FIXME: children may contain extra stuff if the return type is a
             # typedef, for example
             # FIXME: handle ... params
             args = []
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    args.append('{type} {arg}'.format(
-                        type=c.type.spelling,
+                    args.append('{ttype} {arg}'.format(
+                        ttype=c.type.spelling,
                         arg=c.spelling))
 
-            cdom = '.. c:function:: {type} {name}({args})\n'.format(
-                type=cursor.result_type.spelling,
-                name=cursor.spelling,
-                args=', '.join(args))
+            fmt = docstr.Type.FUNC
+            name = cursor.spelling
+            ttype = cursor.result_type.spelling
+
         else:
-            cdom = 'warning: unhandled cursor {kind} {name}\n'.format(
+            fmt = docstr.Type.TEXT
+            text = 'warning: unhandled cursor {kind} {name}\n'.format(
                 kind=str(cursor.kind),
                 name=cursor.spelling)
 
-        doc_comment = compat(doc_comment)
-        doc_comment = docstr.nest(doc_comment, 1)
-        doc_comment = docstr.wrap_blank_lines(doc_comment)
+        doc = docstr.generate(text=text, fmt=fmt, name=name,
+                              ttype=ttype, args=args, transform=compat)
 
-        cdom += doc_comment
+        meta = {
+            'line':               comment.extent.start.line,
+            'cursor.kind':        cursor.kind,
+            'cursor.displayname': cursor.displayname,
+            'cursor.spelling':    cursor.spelling
+        }
 
-        meta = { 'line': comment.extent.start.line }
-        meta['cursor.kind'] = cursor.kind
-        meta['cursor.displayname'] = cursor.displayname
-        meta['cursor.spelling'] = cursor.spelling
-
-        result.append((cdom, meta))
+        result.append((doc, meta))
 
         # FIXME: Needs some code deduplication with the above.
         if (cursor.kind == CursorKind.STRUCT_DECL or
@@ -230,7 +231,7 @@ def parse(filename, **options):
                 comment = comments[c.hash]
                 if not docstr.is_doc(comment.spelling):
                     continue
-                doc_comment = docstr.strip(comment.spelling)
+                text = comment.spelling
 
                 # FIXME: this is sooo ugly, handles unnamed vs. named structs
                 # in typedefs
@@ -238,25 +239,24 @@ def parse(filename, **options):
                 if parent == '':
                     parent = cursor.type.spelling
                 # FIXME: do this recursively and smartly
-                # FIXME: back references to parent definition
-                cdom = '.. c:member:: {type} {parent}{sep}{member}\n'.format(
-                    type=c.type.spelling,
-                    parent=parent,
-                    sep='.',
-                    member=c.spelling)
 
-                doc_comment = compat(doc_comment)
-                doc_comment = docstr.nest(doc_comment, 1)
-                doc_comment = docstr.wrap_blank_lines(doc_comment)
+                fmt = docstr.Type.MEMBER
+                name = c.spelling
+                ttype = c.type.spelling
 
-                cdom += doc_comment
+                doc = docstr.generate(text=text, fmt=fmt, parent=parent,
+                                      name=name, ttype=ttype,
+                                      args=args, transform=compat)
 
-                meta = { 'line': comment.extent.start.line }
-                meta['cursor.kind'] = c.kind
-                meta['cursor.displayname'] = c.displayname
-                meta['cursor.spelling'] = c.spelling
+                meta = {
+                    'line':               comment.extent.start.line,
+                    'cursor.kind':        cursor.kind,
+                    'cursor.displayname': cursor.displayname,
+                    'cursor.spelling':    cursor.spelling
+                }
 
-                result.append((cdom, meta))
+                result.append((doc, meta))
+
         elif cursor.kind == CursorKind.ENUM_DECL:
             for c in cursor.get_children():
                 if c.hash not in comments:
@@ -264,23 +264,22 @@ def parse(filename, **options):
                 comment = comments[c.hash]
                 if not docstr.is_doc(comment.spelling):
                     continue
-                doc_comment = docstr.strip(comment.spelling)
 
-                # FIXME: parent enum name?
-                cdom = '.. c:macro:: {name}\n'.format(name=c.spelling)
+                text = comment.spelling
+                fmt = docstr.Type.ENUM_VAL
+                name = c.spelling
 
-                doc_comment = compat(doc_comment)
-                doc_comment = docstr.nest(doc_comment, 1)
-                doc_comment = docstr.wrap_blank_lines(doc_comment)
+                doc = docstr.generate(text=text, fmt=fmt, name=name,
+                                      ttype=ttype, args=args, transform=compat)
 
-                cdom += doc_comment
+                meta = {
+                    'line':               comment.extent.start.line,
+                    'cursor.kind':        cursor.kind,
+                    'cursor.displayname': cursor.displayname,
+                    'cursor.spelling':    cursor.spelling
+                }
 
-                meta = { 'line': comment.extent.start.line }
-                meta['cursor.kind'] = c.kind
-                meta['cursor.displayname'] = c.displayname
-                meta['cursor.spelling'] = c.spelling
-
-                result.append((cdom, meta))
+                result.append((doc, meta))
 
     # sort to interleave top level comments back in place
     result.sort(key=lambda r: r[1]['line'])
