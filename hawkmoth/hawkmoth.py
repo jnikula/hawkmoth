@@ -27,8 +27,8 @@ There is minimal syntax parsing or input conversion:
 
 * Indentation for reST C Domain directive blocks.
 
-* Optional conversion of the simplest Javadoc tags to native reStructuredText
-  field lists.
+* An optional external filter may be invoked to support different syntaxes.
+  These filters are expected to translate the comment into the reST format.
 
 Otherwise, documentation comments are passed through verbatim.
 """
@@ -43,6 +43,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
+from hawkmoth.util import doccompat
 
 def is_doc_comment(comment):
     return comment.startswith('/**') and comment != '/**/'
@@ -63,54 +64,6 @@ def indent(string, prefix):
 
 def wrap_blank_lines(string):
     return '\n' + string + '\n'
-
-# Basic Javadoc/Doxygen/kernel-doc import
-#
-# FIXME: One of the design goals of Hawkmoth is to keep things simple. There's a
-# fine balance between sticking to that goal and adding compat code to
-# facilitate any kind of migration to Hawkmoth. The compat code could be turned
-# into a fairly simple plugin architecture, with some basic compat builtins, and
-# the users could still extend the compat features to fit their specific needs.
-def compat_convert(comment, mode):
-    # FIXME: try to preserve whitespace better
-
-    if mode == 'javadoc-basic' or mode == 'javadoc-liberal':
-        # @param
-        comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                         "\n\\1:param\\2\\3:\\4", comment)
-        # @param[direction]
-        comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                         "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
-        # @return
-        comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
-                         "\n\\1:return:\\2", comment)
-        # @code/@endcode blocks. Works if the code is indented.
-        comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
-                         "\n::\n", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
-                         "\n", comment)
-        # Ignore @brief.
-        comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
-
-        # Ignore groups
-        comment = re.sub(r"(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*",
-                         "\n\\1", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
-
-    if mode == 'javadoc-liberal':
-        # Liberal conversion of any @tags, will fail for @code etc. but don't
-        # care.
-        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
-                         "\n\\1:\\2:\\3", comment)
-
-    if mode == 'kernel-doc':
-        # Basic kernel-doc convert, will document struct members as params, etc.
-        comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
-                         "\n\\1:return:\\3", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
-                         "\n\\1:param \\2:\\3", comment)
-
-    return comment
 
 def comment_extract(tu):
 
@@ -201,18 +154,19 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    # FIXME: strip_comment, compat_convert, and the C Domain directive all
+    # FIXME: strip_comment, doccompat.convert, and the C Domain directive all
     # change the number of lines in output. This impacts the error reporting via
     # meta['line']. Adjust meta to take this into account.
 
     result = []
+    compat = lambda x: doccompat.convert(x, options.get('compat'))
 
     for comment in top_level_comments:
         if not is_doc_comment(comment.spelling):
             continue
 
         doc_comment = strip_comment(comment.spelling)
-        doc_comment = compat_convert(doc_comment, options.get('compat'))
+        doc_comment = compat(doc_comment)
         doc_comment = wrap_blank_lines(doc_comment)
         meta = { 'line': comment.extent.start.line }
 
@@ -269,7 +223,7 @@ def parse(filename, **options):
                 kind=str(cursor.kind),
                 name=cursor.spelling)
 
-        doc_comment = compat_convert(doc_comment, options.get('compat'))
+        doc_comment = compat(doc_comment)
         doc_comment = indent(doc_comment, '   ')
         doc_comment = wrap_blank_lines(doc_comment)
 
@@ -312,7 +266,7 @@ def parse(filename, **options):
                     sep='.',
                     member=c.spelling)
 
-                doc_comment = compat_convert(doc_comment, options.get('compat'))
+                doc_comment = compat(doc_comment)
                 doc_comment = indent(doc_comment, '   ')
                 doc_comment = wrap_blank_lines(doc_comment)
 
@@ -336,7 +290,7 @@ def parse(filename, **options):
                 # FIXME: parent enum name?
                 cdom = '.. c:macro:: {name}\n'.format(name=c.spelling)
 
-                doc_comment = compat_convert(doc_comment, options.get('compat'))
+                doc_comment = compat(doc_comment)
                 doc_comment = indent(doc_comment, '   ')
                 doc_comment = wrap_blank_lines(doc_comment)
 
