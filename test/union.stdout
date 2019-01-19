@@ -4,17 +4,17 @@
    Union documentation.
 
 
-.. c:member:: int foo.foo
+   .. c:member:: int foo
 
-   int member 1.
-
-
-.. c:member:: int foo.bar
-
-   int member 2.
+      int member 1.
 
 
-.. c:member:: struct _baz foo._baz
+   .. c:member:: int bar
 
-   struct member.
+      int member 2.
+
+
+   .. c:member:: struct _baz _baz
+
+      struct member.
 

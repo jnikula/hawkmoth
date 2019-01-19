@@ -32,7 +32,7 @@ _doc_fmt = {
     Type.VAR:        (1, '\n.. c:var:: {ttype} {name}\n\n{text}\n'),
     Type.TYPE:       (1, '\n.. c:type:: {name}\n\n{text}\n'),
     Type.ENUM_VAL:   (1, '\n.. c:macro:: {name}\n\n{text}\n'),
-    Type.MEMBER:     (1, '\n.. c:member:: {ttype} {parent}.{name}\n\n{text}\n'),
+    Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
     Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
     Type.MACRO_FUNC: (1, '\n.. c:function:: {name}({args})\n\n{text}\n'),
     Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
@@ -67,7 +67,7 @@ def nest(text, nest):
     """
     return re.sub('(?m)^(?!$)', '   ' * nest, text)
 
-def generate(text, fmt=Type.TEXT, parent=None, name=None,
+def generate(text, fmt=Type.TEXT, name=None,
              ttype=None, args=None, transform=None):
     """
     Generate reST documentation string.
@@ -76,7 +76,6 @@ def generate(text, fmt=Type.TEXT, parent=None, name=None,
         text (str): Documentation body.
         fmt (enum :py:class:`Type`): Format type to use. Different formats
             require different arguments and ignores others if given.
-        parent (str): Name of the token's parent.
         name (str): Name of the documented token.
         ttype (str): Type of the documented token.
         args (list): List of arguments (str).
@@ -99,5 +98,4 @@ def generate(text, fmt=Type.TEXT, parent=None, name=None,
 
     (text_indent, fmt) = _doc_fmt[fmt]
     text = nest(text, text_indent)
-    return fmt.format(text=text, parent=parent,
-                      name=name, ttype=ttype, args=args)
+    return fmt.format(text=text, name=name, ttype=ttype, args=args)

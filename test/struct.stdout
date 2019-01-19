@@ -6,12 +6,12 @@
    Woohoo.
 
 
-.. c:member:: int sample_struct.jesh
+   .. c:member:: int jesh
 
-   member
+      member
 
 
-.. c:member:: struct sample_struct * sample_struct.next
+   .. c:member:: struct sample_struct * next
 
-   foo next
+      foo next
 

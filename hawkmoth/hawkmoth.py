@@ -235,18 +235,15 @@ def parse(filename, **options):
 
                 # FIXME: this is sooo ugly, handles unnamed vs. named structs
                 # in typedefs
-                parent = cursor.spelling
-                if parent == '':
-                    parent = cursor.type.spelling
                 # FIXME: do this recursively and smartly
 
                 fmt = docstr.Type.MEMBER
                 name = c.spelling
                 ttype = c.type.spelling
 
-                doc = docstr.generate(text=text, fmt=fmt, parent=parent,
-                                      name=name, ttype=ttype,
-                                      args=args, transform=compat)
+                doc = docstr.generate(text=text, fmt=fmt, name=name,
+                                      ttype=ttype, args=args, transform=compat)
+                doc = docstr.nest(doc, 1)
 
                 meta = {
                     'line':               comment.extent.start.line,
@@ -271,6 +268,7 @@ def parse(filename, **options):
 
                 doc = docstr.generate(text=text, fmt=fmt, name=name,
                                       ttype=ttype, args=args, transform=compat)
+                doc = docstr.nest(doc, 1)
 
                 meta = {
                     'line':               comment.extent.start.line,

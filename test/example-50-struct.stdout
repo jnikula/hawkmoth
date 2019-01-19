@@ -4,12 +4,12 @@
    Linked list node.
 
 
-.. c:member:: struct list * list.next
+   .. c:member:: struct list * next
 
-   Next node.
+      Next node.
 
 
-.. c:member:: int list.data
+   .. c:member:: int data
 
-   Data.
+      Data.
 

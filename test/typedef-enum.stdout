@@ -4,9 +4,9 @@
    named typedeffed enum
 
 
-.. c:macro:: damn
+   .. c:macro:: damn
 
-   named enumeration
+      named enumeration
 
 
 .. c:type:: unnamed_t
@@ -14,7 +14,7 @@
    unnamed typedeffed enum
 
 
-.. c:macro:: shit
+   .. c:macro:: shit
 
-   unnamed enumeration
+      unnamed enumeration
 

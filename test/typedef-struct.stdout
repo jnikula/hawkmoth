@@ -4,9 +4,9 @@
    named typedeffed struct
 
 
-.. c:member:: int named.m
+   .. c:member:: int m
 
-   named member
+      named member
 
 
 .. c:type:: typedef_struct
@@ -14,7 +14,7 @@
    unnamed typedeffed struct
 
 
-.. c:member:: int typedef_struct.m
+   .. c:member:: int m
 
-   unnamed member
+      unnamed member
 
