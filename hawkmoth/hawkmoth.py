@@ -35,7 +35,6 @@ Otherwise, documentation comments are passed through verbatim.
 
 import argparse
 import itertools
-import re
 import sys
 
 from clang.cindex import CursorKind
@@ -43,27 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import doccompat
-
-def is_doc_comment(comment):
-    return comment.startswith('/**') and comment != '/**/'
-
-def strip_comment(comment):
-    comment = re.sub(r"^/\*\*[ \t]?", "", comment)
-    comment = re.sub(r"\*/$", "", comment)
-    # could look at first line of comment, and remove the leading stuff there from the rest
-    comment = re.sub(r"(?m)^[ \t]*\*?[ \t]?", "", comment)
-    # Strip leading blank lines.
-    comment = re.sub(r"^[\n]*", "", comment)
-    # End in exactly one newline.
-    comment = re.sub(r"[\n]*$", "", comment) + "\n"
-    return comment
-
-def indent(string, prefix):
-    return re.sub('(?m)^', prefix, string)
-
-def wrap_blank_lines(string):
-    return '\n' + string + '\n'
+from hawkmoth.util import docstr, doccompat
 
 def comment_extract(tu):
 
@@ -154,7 +133,7 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    # FIXME: strip_comment, doccompat.convert, and the C Domain directive all
+    # FIXME: docstr.strip, doccompat.convert, and the C Domain directive all
     # change the number of lines in output. This impacts the error reporting via
     # meta['line']. Adjust meta to take this into account.
 
@@ -162,12 +141,12 @@ def parse(filename, **options):
     compat = lambda x: doccompat.convert(x, options.get('compat'))
 
     for comment in top_level_comments:
-        if not is_doc_comment(comment.spelling):
+        if not docstr.is_doc(comment.spelling):
             continue
 
-        doc_comment = strip_comment(comment.spelling)
+        doc_comment = docstr.strip(comment.spelling)
         doc_comment = compat(doc_comment)
-        doc_comment = wrap_blank_lines(doc_comment)
+        doc_comment = docstr.wrap_blank_lines(doc_comment)
         meta = { 'line': comment.extent.start.line }
 
         result.append((doc_comment, meta))
@@ -176,10 +155,10 @@ def parse(filename, **options):
         if cursor.hash not in comments:
             continue
         comment = comments[cursor.hash]
-        if not is_doc_comment(comment.spelling):
+        if not docstr.is_doc(comment.spelling):
             continue
 
-        doc_comment = strip_comment(comment.spelling)
+        doc_comment = docstr.strip(comment.spelling)
 
         if cursor.kind == CursorKind.MACRO_DEFINITION:
             args = _get_macro_args(cursor)
@@ -224,8 +203,8 @@ def parse(filename, **options):
                 name=cursor.spelling)
 
         doc_comment = compat(doc_comment)
-        doc_comment = indent(doc_comment, '   ')
-        doc_comment = wrap_blank_lines(doc_comment)
+        doc_comment = docstr.nest(doc_comment, 1)
+        doc_comment = docstr.wrap_blank_lines(doc_comment)
 
         cdom += doc_comment
 
@@ -249,9 +228,9 @@ def parse(filename, **options):
                 if c.hash not in comments:
                     continue
                 comment = comments[c.hash]
-                if not is_doc_comment(comment.spelling):
+                if not docstr.is_doc(comment.spelling):
                     continue
-                doc_comment = strip_comment(comment.spelling)
+                doc_comment = docstr.strip(comment.spelling)
 
                 # FIXME: this is sooo ugly, handles unnamed vs. named structs
                 # in typedefs
@@ -267,8 +246,8 @@ def parse(filename, **options):
                     member=c.spelling)
 
                 doc_comment = compat(doc_comment)
-                doc_comment = indent(doc_comment, '   ')
-                doc_comment = wrap_blank_lines(doc_comment)
+                doc_comment = docstr.nest(doc_comment, 1)
+                doc_comment = docstr.wrap_blank_lines(doc_comment)
 
                 cdom += doc_comment
 
@@ -283,16 +262,16 @@ def parse(filename, **options):
                 if c.hash not in comments:
                     continue
                 comment = comments[c.hash]
-                if not is_doc_comment(comment.spelling):
+                if not docstr.is_doc(comment.spelling):
                     continue
-                doc_comment = strip_comment(comment.spelling)
+                doc_comment = docstr.strip(comment.spelling)
 
                 # FIXME: parent enum name?
                 cdom = '.. c:macro:: {name}\n'.format(name=c.spelling)
 
                 doc_comment = compat(doc_comment)
-                doc_comment = indent(doc_comment, '   ')
-                doc_comment = wrap_blank_lines(doc_comment)
+                doc_comment = docstr.nest(doc_comment, 1)
+                doc_comment = docstr.wrap_blank_lines(doc_comment)
 
                 cdom += doc_comment
 
