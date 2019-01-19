@@ -112,7 +112,16 @@ def compat_convert(comment, mode):
 
     return comment
 
-def pass1(tu, top_level_comments, comments):
+def comment_extract(tu):
+
+    # FIXME: How to handle top level comments above a cursor that it does *not*
+    # describe? Parsing @file or @doc at this stage would not be a clean design.
+    # One idea is to use '/***' to denote them, but that might throw off editor
+    # highlighting. The workaround is to follow the top level comment with an
+    # empty '/**/' comment that gets attached to the cursor.
+
+    top_level_comments = []
+    comments = {}
     cursor = None
     current_comment = None
     for token in tu.get_tokens(extent=tu.cursor.extent):
@@ -126,10 +135,10 @@ def pass1(tu, top_level_comments, comments):
 
         # cursors that are 1) never documented themselves, and 2) allowed
         # between comment and the actual cursor being documented
-        if token.cursor.kind == CursorKind.INVALID_FILE or \
-           token.cursor.kind == CursorKind.TYPE_REF or \
-           token.cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE or \
-           token.cursor.kind == CursorKind.MACRO_INSTANTIATION:
+        if (token.cursor.kind == CursorKind.INVALID_FILE or
+            token.cursor.kind == CursorKind.TYPE_REF or
+            token.cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE or
+            token.cursor.kind == CursorKind.MACRO_INSTANTIATION):
             continue
 
         if cursor is not None and token.cursor == cursor:
@@ -146,16 +155,18 @@ def pass1(tu, top_level_comments, comments):
     if current_comment:
         top_level_comments.append(current_comment)
 
+    return top_level_comments, comments
+
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
-def get_macro_args(cursor):
+def _get_macro_args(cursor):
     if cursor.kind != CursorKind.MACRO_DEFINITION:
         return None
 
     # Use the first two tokens to make sure this starts with 'IDENTIFIER('
     x = [token for token in itertools.islice(cursor.get_tokens(), 2)]
-    if len(x) != 2 or x[0].spelling != cursor.spelling or \
-       x[1].spelling != '(' or x[0].extent.end != x[1].extent.start:
+    if (len(x) != 2 or x[0].spelling != cursor.spelling or
+        x[1].spelling != '(' or x[0].extent.end != x[1].extent.start):
         return None
 
     # Naïve parsing of macro arguments
@@ -188,11 +199,7 @@ def parse(filename, **options):
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
-    top_level_comments = []
-    comments = {}
-
-    # parse the file, get comments
-    pass1(tu, top_level_comments, comments)
+    top_level_comments, comments = comment_extract(tu)
 
     # FIXME: strip_comment, compat_convert, and the C Domain directive all
     # change the number of lines in output. This impacts the error reporting via
@@ -220,15 +227,8 @@ def parse(filename, **options):
 
         doc_comment = strip_comment(comment.spelling)
 
-        # FIXME: How to handle top level comments above a cursor that it does
-        # *not* describe? Parsing @file or @doc at this stage would not be a
-        # clean design. One idea is to use '/***' to denote them, but that might
-        # throw off editor highlighting. The workaround is to follow the top
-        # level comment with an empty '/**/' comment that gets attached to the
-        # cursor.
-
         if cursor.kind == CursorKind.MACRO_DEFINITION:
-            args = get_macro_args(cursor)
+            args = _get_macro_args(cursor)
             if args is None:
                 cdom = '.. c:macro:: {name}\n'.format(name=cursor.spelling)
             else:
@@ -242,11 +242,10 @@ def parse(filename, **options):
                 name=cursor.spelling)
         elif cursor.kind == CursorKind.TYPEDEF_DECL:
             cdom = '.. c:type:: {name}\n'.format(name=cursor.spelling)
-        elif cursor.kind == CursorKind.STRUCT_DECL:
-            cdom = '.. c:type:: {name}\n'.format(name=cursor.type.spelling)
-        elif cursor.kind == CursorKind.UNION_DECL:
-            cdom = '.. c:type:: {name}\n'.format(name=cursor.type.spelling)
-        elif cursor.kind == CursorKind.ENUM_DECL:
+
+        elif (cursor.kind == CursorKind.STRUCT_DECL or
+              cursor.kind == CursorKind.UNION_DECL or
+              cursor.kind == CursorKind.ENUM_DECL):
             cdom = '.. c:type:: {name}\n'.format(name=cursor.type.spelling)
         elif cursor.kind == CursorKind.FUNCTION_DECL:
             # FIXME: check args against doc_comment
@@ -284,12 +283,14 @@ def parse(filename, **options):
         result.append((cdom, meta))
 
         # FIXME: Needs some code deduplication with the above.
-        if cursor.kind == CursorKind.STRUCT_DECL or cursor.kind == CursorKind.UNION_DECL:
+        if (cursor.kind == CursorKind.STRUCT_DECL or
+                cursor.kind == CursorKind.UNION_DECL):
+
             for c in cursor.get_children():
                 if c.kind != CursorKind.FIELD_DECL:
                     # FIXME: handle nested unions
                     pass
-#                    continue
+                    # continue
 
                 if c.hash not in comments:
                     continue
@@ -354,7 +355,7 @@ def parse(filename, **options):
     return result
 
 def parse_to_string(filename, verbose, **options):
-    s=''
+    s = ''
     comments = parse(filename, **options)
     for (comment, meta) in comments:
         if verbose:
