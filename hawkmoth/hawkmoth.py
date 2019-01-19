@@ -90,6 +90,26 @@ def comment_extract(tu):
 
     return top_level_comments, comments
 
+def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
+            name=None, ttype=None, args=None, compat=None):
+
+    # FIXME: docstr.generate changes the number of lines in output. This impacts
+    # the error reporting via meta['line']. Adjust meta to take this into
+    # account.
+
+    doc = docstr.generate(text=comment.spelling, fmt=fmt,
+                          name=name, ttype=ttype, args=args, transform=compat)
+
+    doc = docstr.nest(doc, nest)
+
+    meta = {'line': comment.extent.start.line}
+    if cursor:
+        meta['cursor.kind']        = cursor.kind,
+        meta['cursor.displayname'] = cursor.displayname,
+        meta['cursor.spelling']    = cursor.spelling
+
+    return [(doc, meta)]
+
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
 def _get_macro_args(cursor):
@@ -116,6 +136,119 @@ def _get_macro_args(cursor):
 
     return None
 
+def _recursive_parse(comments, cursor, nest, compat):
+    comment = comments[cursor.hash]
+    name = cursor.spelling
+    ttype = cursor.type.spelling
+
+    if cursor.kind == CursorKind.MACRO_DEFINITION:
+        # FIXME: check args against comment
+        args = _get_macro_args(cursor)
+        fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
+
+        return _result(comment, cursor=cursor, fmt=fmt,
+                       nest=nest, name=name, args=args, compat=compat)
+
+    elif cursor.kind == CursorKind.VAR_DECL:
+        fmt = docstr.Type.VAR
+
+        return _result(comment, cursor=cursor, fmt=fmt,
+                       nest=nest, name=name, ttype=ttype, compat=compat)
+
+    elif cursor.kind == CursorKind.TYPEDEF_DECL:
+        # FIXME: function pointers typedefs.
+        fmt = docstr.Type.TYPE
+
+        return _result(comment, cursor=cursor, fmt=fmt,
+                       nest=nest, name=ttype, compat=compat)
+
+    elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL]:
+        fmt = docstr.Type.TYPE
+        result = _result(comment, cursor=cursor, fmt=fmt,
+                         nest=nest, name=ttype, compat=compat)
+
+        nest += 1
+        for c in cursor.get_children():
+            if c.kind != CursorKind.FIELD_DECL:
+                # FIXME: Recurse for new structure or union.
+                pass
+
+            if c.hash not in comments:
+                continue
+
+            comment = comments[c.hash]
+            if not docstr.is_doc(comment.spelling):
+                continue
+
+            fmt = docstr.Type.MEMBER
+            name = c.spelling
+            ttype = c.type.spelling
+
+            result.extend(_result(comment, cursor=cursor, fmt=fmt, nest=nest,
+                                  name=name, ttype=ttype, compat=compat))
+
+        return result
+
+    elif cursor.kind == CursorKind.ENUM_DECL:
+        # FIXME: Handle anonymous enumerators.
+        fmt = docstr.Type.TYPE
+        name = cursor.type.spelling
+        result = _result(comment, cursor=cursor, fmt=fmt, nest=nest,
+                         name=name, compat=compat)
+
+        nest += 1
+        for c in cursor.get_children():
+            if c.hash not in comments:
+                continue
+            comment = comments[c.hash]
+            if not docstr.is_doc(comment.spelling):
+                continue
+
+            fmt = docstr.Type.ENUM_VAL
+            name = c.spelling
+
+            result.extend(_result(comment, cursor=cursor, fmt=fmt,
+                                  nest=nest, name=name, compat=compat))
+
+        return result
+
+    elif cursor.kind == CursorKind.FUNCTION_DECL:
+        # FIXME: check args against comment
+        # FIXME: children may contain extra stuff if the return type is a
+        # typedef, for example
+        # FIXME: handle ... params
+        args = []
+        for c in cursor.get_children():
+            if c.kind == CursorKind.PARM_DECL:
+                args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
+                                                   arg=c.spelling))
+
+        fmt = docstr.Type.FUNC
+        ttype = cursor.result_type.spelling
+
+        return _result(comment, cursor=cursor, fmt=fmt, nest=nest,
+                       name=name, ttype=ttype, args=args, compat=compat)
+
+    # FIXME: If we reach here, nothing matched. This is a warning or even error
+    # and it should be logged, but it should also return an empty list so that
+    # it doesn't break. I.e. the parser needs to pass warnings and errors to the
+    # Sphinx extension instead of polluting the generated output.
+    fmt = docstr.Type.TEXT
+    text = 'warning: unhandled cursor {kind} {name}\n'.format(
+        kind=str(cursor.kind),
+        name=cursor.spelling)
+
+    doc = docstr.generate(text=text, fmt=fmt)
+
+    meta = {
+        'line':               comment.extent.start.line,
+        'cursor.kind':        cursor.kind,
+        'cursor.displayname': cursor.displayname,
+        'cursor.spelling':    cursor.spelling
+    }
+
+    return [(doc, meta)]
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
@@ -134,20 +267,12 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    # FIXME: docstr.generate changes the number of lines in output. This impacts
-    # the error reporting via meta['line']. Adjust meta to take this into
-    # account.
-
     result = []
     compat = lambda x: doccompat.convert(x, options.get('compat'))
 
     for comment in top_level_comments:
-        if not docstr.is_doc(comment.spelling):
-            continue
-
-        doc = docstr.generate(comment.spelling, transform=compat)
-        meta = {'line': comment.extent.start.line}
-        result.append((doc, meta))
+        if docstr.is_doc(comment.spelling):
+            result.extend(_result(comment, compat=compat))
 
     for cursor in tu.cursor.get_children():
         if cursor.hash not in comments:
@@ -156,130 +281,9 @@ def parse(filename, **options):
         if not docstr.is_doc(comment.spelling):
             continue
 
-        text = comment.spelling
-        name = None
-        ttype = None
-        args = None
+        result.extend(_recursive_parse(comments, cursor, 0, compat))
 
-        if cursor.kind == CursorKind.MACRO_DEFINITION:
-            # FIXME: check args against doc_comment
-            args = _get_macro_args(cursor)
-            name = cursor.spelling
-            fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
-
-        elif cursor.kind == CursorKind.VAR_DECL:
-            fmt = docstr.Type.VAR
-            ttype = cursor.type.spelling
-            name = cursor.spelling
-
-        elif cursor.kind == CursorKind.TYPEDEF_DECL:
-            fmt = docstr.Type.TYPE
-            name = cursor.spelling
-
-        elif (cursor.kind == CursorKind.STRUCT_DECL or
-              cursor.kind == CursorKind.UNION_DECL or
-              cursor.kind == CursorKind.ENUM_DECL):
-            fmt = docstr.Type.TYPE
-            name = cursor.type.spelling
-
-        elif cursor.kind == CursorKind.FUNCTION_DECL:
-            # FIXME: check args against doc_comment
-            # FIXME: children may contain extra stuff if the return type is a
-            # typedef, for example
-            # FIXME: handle ... params
-            args = []
-            for c in cursor.get_children():
-                if c.kind == CursorKind.PARM_DECL:
-                    args.append('{ttype} {arg}'.format(
-                        ttype=c.type.spelling,
-                        arg=c.spelling))
-
-            fmt = docstr.Type.FUNC
-            name = cursor.spelling
-            ttype = cursor.result_type.spelling
-
-        else:
-            fmt = docstr.Type.TEXT
-            text = 'warning: unhandled cursor {kind} {name}\n'.format(
-                kind=str(cursor.kind),
-                name=cursor.spelling)
-
-        doc = docstr.generate(text=text, fmt=fmt, name=name,
-                              ttype=ttype, args=args, transform=compat)
-
-        meta = {
-            'line':               comment.extent.start.line,
-            'cursor.kind':        cursor.kind,
-            'cursor.displayname': cursor.displayname,
-            'cursor.spelling':    cursor.spelling
-        }
-
-        result.append((doc, meta))
-
-        # FIXME: Needs some code deduplication with the above.
-        if (cursor.kind == CursorKind.STRUCT_DECL or
-                cursor.kind == CursorKind.UNION_DECL):
-
-            for c in cursor.get_children():
-                if c.kind != CursorKind.FIELD_DECL:
-                    # FIXME: handle nested unions
-                    pass
-                    # continue
-
-                if c.hash not in comments:
-                    continue
-                comment = comments[c.hash]
-                if not docstr.is_doc(comment.spelling):
-                    continue
-                text = comment.spelling
-
-                # FIXME: this is sooo ugly, handles unnamed vs. named structs
-                # in typedefs
-                # FIXME: do this recursively and smartly
-
-                fmt = docstr.Type.MEMBER
-                name = c.spelling
-                ttype = c.type.spelling
-
-                doc = docstr.generate(text=text, fmt=fmt, name=name,
-                                      ttype=ttype, args=args, transform=compat)
-                doc = docstr.nest(doc, 1)
-
-                meta = {
-                    'line':               comment.extent.start.line,
-                    'cursor.kind':        cursor.kind,
-                    'cursor.displayname': cursor.displayname,
-                    'cursor.spelling':    cursor.spelling
-                }
-
-                result.append((doc, meta))
-
-        elif cursor.kind == CursorKind.ENUM_DECL:
-            for c in cursor.get_children():
-                if c.hash not in comments:
-                    continue
-                comment = comments[c.hash]
-                if not docstr.is_doc(comment.spelling):
-                    continue
-
-                text = comment.spelling
-                fmt = docstr.Type.ENUM_VAL
-                name = c.spelling
-
-                doc = docstr.generate(text=text, fmt=fmt, name=name,
-                                      ttype=ttype, args=args, transform=compat)
-                doc = docstr.nest(doc, 1)
-
-                meta = {
-                    'line':               comment.extent.start.line,
-                    'cursor.kind':        cursor.kind,
-                    'cursor.displayname': cursor.displayname,
-                    'cursor.spelling':    cursor.spelling
-                }
-
-                result.append((doc, meta))
-
-    # sort to interleave top level comments back in place
+    # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
 
     return result
