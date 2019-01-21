@@ -1,17 +1,17 @@
+
 .. c:type:: struct sample_struct
 
    This is a sample struct
-   
+
    Woohoo.
-   
+
 
 .. c:member:: int sample_struct.jesh
 
    member
-   
+
 
 .. c:member:: struct sample_struct * sample_struct.next
 
    foo next
-   
 

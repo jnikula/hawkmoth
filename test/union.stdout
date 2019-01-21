@@ -1,20 +1,20 @@
+
 .. c:type:: union foo
 
    Union documentation.
-   
+
 
 .. c:member:: int foo.foo
 
    int member 1.
-   
+
 
 .. c:member:: int foo.bar
 
    int member 2.
-   
+
 
 .. c:member:: struct _baz foo._baz
 
    struct member.
-   
 

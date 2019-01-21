@@ -29,13 +29,13 @@ class Type(Enum):
 # directive lines.
 _doc_fmt = {
     Type.TEXT:       (0, '\n{text}\n'),
-    Type.VAR:        (1, '.. c:var:: {ttype} {name}\n\n{text}\n'),
-    Type.TYPE:       (1, '.. c:type:: {name}\n\n{text}\n'),
-    Type.ENUM_VAL:   (1, '.. c:macro:: {name}\n\n{text}\n'),
-    Type.MEMBER:     (1, '.. c:member:: {ttype} {parent}.{name}\n\n{text}\n'),
-    Type.MACRO:      (1, '.. c:macro:: {name}\n\n{text}\n'),
-    Type.MACRO_FUNC: (1, '.. c:function:: {name}({args})\n\n{text}\n'),
-    Type.FUNC:       (1, '.. c:function:: {ttype} {name}({args})\n\n{text}\n')
+    Type.VAR:        (1, '\n.. c:var:: {ttype} {name}\n\n{text}\n'),
+    Type.TYPE:       (1, '\n.. c:type:: {name}\n\n{text}\n'),
+    Type.ENUM_VAL:   (1, '\n.. c:macro:: {name}\n\n{text}\n'),
+    Type.MEMBER:     (1, '\n.. c:member:: {ttype} {parent}.{name}\n\n{text}\n'),
+    Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
+    Type.MACRO_FUNC: (1, '\n.. c:function:: {name}({args})\n\n{text}\n'),
+    Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
 }
 
 def _strip(comment):
@@ -47,9 +47,7 @@ def _strip(comment):
     comment = re.sub(r'(?m)^[ \t]*\*?[ \t]?', '', comment)
     # Strip leading blank lines.
     comment = re.sub(r'^[\n]*', '', comment)
-    # End in exactly one newline.
-    comment = re.sub(r'[\n]*$', '', comment) + '\n'
-    return comment
+    return comment.strip()
 
 def is_doc(comment):
     """Test if comment is a C documentation comment."""
@@ -67,7 +65,7 @@ def nest(text, nest):
     Returns:
         str: Indented reST documentation string.
     """
-    return re.sub('(?m)^', '   ' * nest, text)
+    return re.sub('(?m)^(?!$)', '   ' * nest, text)
 
 def generate(text, fmt=Type.TEXT, parent=None, name=None,
              ttype=None, args=None, transform=None):
