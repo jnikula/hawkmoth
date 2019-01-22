@@ -162,7 +162,20 @@ def _recursive_parse(comments, cursor, nest, compat):
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=ttype, compat=compat)
 
-    elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL]:
+    elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL,
+                         CursorKind.ENUM_DECL]:
+
+        # FIXME:
+        # Handle cases where variables are instantiated on type declaration,
+        # including anonymous cases. Idea is that if there is a variable
+        # instantiation, the documentation should be applied to the variable if
+        # the structure is anonymous or to the type otherwise.
+        #
+        # Due to the new recursiveness of the parser, fixing this here, _should_
+        # handle all cases (struct, union, enum).
+
+        # FIXME: Handle anonymous enumerators.
+
         fmt = docstr.Type.TYPE
         result = _result(comment, cursor=cursor, fmt=fmt,
                          nest=nest, name=ttype, compat=compat)
@@ -174,24 +187,11 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         return result
 
-    elif cursor.kind == CursorKind.ENUM_DECL:
-        # FIXME: Handle anonymous enumerators.
-        fmt = docstr.Type.TYPE
-        name = cursor.type.spelling
-        result = _result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                         name=name, compat=compat)
+    elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
+        fmt = docstr.Type.ENUM_VAL
 
-        nest += 1
-        for c in cursor.get_children():
-            if c.hash in comments:
-                comment = comments[c.hash]
-                fmt = docstr.Type.ENUM_VAL
-                name = c.spelling
-
-                result.extend(_result(comment, cursor=cursor, fmt=fmt,
-                                      nest=nest, name=name, compat=compat))
-
-        return result
+        return _result(comment, cursor=cursor, fmt=fmt,
+                       nest=nest, name=name, compat=compat)
 
     elif cursor.kind == CursorKind.FIELD_DECL:
         fmt = docstr.Type.MEMBER
