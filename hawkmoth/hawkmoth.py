@@ -61,7 +61,7 @@ def comment_extract(tu):
         # handle all comments we come across
         if token.kind == TokenKind.COMMENT:
             # if we already have a comment, it wasn't related to a cursor
-            if current_comment:
+            if current_comment and docstr.is_doc(current_comment.spelling):
                 top_level_comments.append(current_comment)
             current_comment = token
             continue
@@ -80,12 +80,12 @@ def comment_extract(tu):
         cursor = token.cursor
 
         # Note: current_comment may be None
-        if current_comment != None:
+        if current_comment != None and docstr.is_doc(current_comment.spelling):
             comments[cursor.hash] = current_comment
         current_comment = None
 
     # comment at the end of file
-    if current_comment:
+    if current_comment and docstr.is_doc(current_comment.spelling):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments
@@ -173,19 +173,14 @@ def _recursive_parse(comments, cursor, nest, compat):
                 # FIXME: Recurse for new structure or union.
                 pass
 
-            if c.hash not in comments:
-                continue
+            if c.hash in comments:
+                comment = comments[c.hash]
+                fmt = docstr.Type.MEMBER
+                name = c.spelling
+                ttype = c.type.spelling
 
-            comment = comments[c.hash]
-            if not docstr.is_doc(comment.spelling):
-                continue
-
-            fmt = docstr.Type.MEMBER
-            name = c.spelling
-            ttype = c.type.spelling
-
-            result.extend(_result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                                  name=name, ttype=ttype, compat=compat))
+                result.extend(_result(comment, cursor=cursor, fmt=fmt, nest=nest,
+                                      name=name, ttype=ttype, compat=compat))
 
         return result
 
@@ -198,17 +193,13 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         nest += 1
         for c in cursor.get_children():
-            if c.hash not in comments:
-                continue
-            comment = comments[c.hash]
-            if not docstr.is_doc(comment.spelling):
-                continue
+            if c.hash in comments:
+                comment = comments[c.hash]
+                fmt = docstr.Type.ENUM_VAL
+                name = c.spelling
 
-            fmt = docstr.Type.ENUM_VAL
-            name = c.spelling
-
-            result.extend(_result(comment, cursor=cursor, fmt=fmt,
-                                  nest=nest, name=name, compat=compat))
+                result.extend(_result(comment, cursor=cursor, fmt=fmt,
+                                      nest=nest, name=name, compat=compat))
 
         return result
 
@@ -271,17 +262,11 @@ def parse(filename, **options):
     compat = lambda x: doccompat.convert(x, options.get('compat'))
 
     for comment in top_level_comments:
-        if docstr.is_doc(comment.spelling):
-            result.extend(_result(comment, compat=compat))
+        result.extend(_result(comment, compat=compat))
 
     for cursor in tu.cursor.get_children():
-        if cursor.hash not in comments:
-            continue
-        comment = comments[cursor.hash]
-        if not docstr.is_doc(comment.spelling):
-            continue
-
-        result.extend(_recursive_parse(comments, cursor, 0, compat))
+        if cursor.hash in comments:
+            result.extend(_recursive_parse(comments, cursor, 0, compat))
 
     # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
