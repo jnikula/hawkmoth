@@ -14,7 +14,7 @@
       int member 2.
 
 
-   .. c:member:: struct _baz _baz
+   .. c:type:: struct _baz
 
       struct member.
 

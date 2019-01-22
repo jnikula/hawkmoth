@@ -169,18 +169,8 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         nest += 1
         for c in cursor.get_children():
-            if c.kind != CursorKind.FIELD_DECL:
-                # FIXME: Recurse for new structure or union.
-                pass
-
             if c.hash in comments:
-                comment = comments[c.hash]
-                fmt = docstr.Type.MEMBER
-                name = c.spelling
-                ttype = c.type.spelling
-
-                result.extend(_result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                                      name=name, ttype=ttype, compat=compat))
+                result.extend(_recursive_parse(comments, c, nest, compat))
 
         return result
 
@@ -202,6 +192,12 @@ def _recursive_parse(comments, cursor, nest, compat):
                                       nest=nest, name=name, compat=compat))
 
         return result
+
+    elif cursor.kind == CursorKind.FIELD_DECL:
+        fmt = docstr.Type.MEMBER
+
+        return _result(comment, cursor=cursor, fmt=fmt,
+                       nest=nest, name=name, ttype=ttype, compat=compat)
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
         # FIXME: check args against comment
