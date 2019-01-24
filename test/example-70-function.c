@@ -7,3 +7,11 @@
  * :since: v0.1
  */
 int frob(struct list *list, enum mode mode);
+
+/**
+ * variadic frobnicator
+ *
+ * :param fmt: the format
+ * :param ...: variadic
+ */
+int frobo(const char *fmt, ...);

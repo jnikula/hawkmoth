@@ -204,12 +204,14 @@ def _recursive_parse(comments, cursor, nest, compat):
         # FIXME: check args against comment
         # FIXME: children may contain extra stuff if the return type is a
         # typedef, for example
-        # FIXME: handle ... params
         args = []
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
                 args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
                                                    arg=c.spelling))
+
+        if cursor.type.is_function_variadic():
+            args.append('...')
 
         fmt = docstr.Type.FUNC
         ttype = cursor.result_type.spelling

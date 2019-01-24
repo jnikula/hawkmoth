@@ -8,3 +8,11 @@
    :return: 0 on success, non-zero error code on error.
    :since: v0.1
 
+
+.. c:function:: int frobo(const char * fmt, ...)
+
+   variadic frobnicator
+
+   :param fmt: the format
+   :param ...: variadic
+
