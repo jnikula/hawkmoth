@@ -3,12 +3,23 @@
 
 import sys
 import os
+import unittest
 
 testext = '.c'
 testdir = os.path.dirname(os.path.abspath(__file__))
 rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
+
+def _testcase_name(testcase):
+    """Convert a testcase filename into a test case identifier."""
+    name = os.path.splitext(os.path.basename(testcase))[0]
+    name = name.replace('-', '_')
+    name = 'test_{name}'.format(name=name)
+
+    assert name.isidentifier()
+
+    return name
 
 def get_testcases(path):
     for f in sorted(os.listdir(path)):
@@ -52,3 +63,21 @@ def read_file(filename, **kwargs):
         expected = file.read()
 
     return expected
+
+def _test_generator(get_output, get_expected, input_filename, **options):
+    """Return a function that compares output/expected results on input_filename."""
+    def test(self):
+        output = get_output(input_filename, **options)
+        expected = get_expected(input_filename, **options)
+
+        self.assertEqual(expected, output)
+
+    return test
+
+def assign_test_methods(cls, get_output, get_expected):
+    """Assign test case functions to the given class."""
+    for f in get_testcases(testdir):
+        options = get_testcase_options(f)
+        method = _test_generator(get_output, get_expected, f, **options)
+
+        setattr(cls, _testcase_name(f), method)
