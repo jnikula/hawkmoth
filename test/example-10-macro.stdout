@@ -18,3 +18,11 @@
    :param array: An array
    :return: Array size
 
+
+.. c:function:: VARIADIC_MACRO(foo, ...)
+
+   Variadic macros
+
+   :param foo: regular argument
+   :param ...: variable argument
+

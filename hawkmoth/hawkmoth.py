@@ -121,6 +121,7 @@ def _get_macro_args(cursor):
         return None
 
     # Naïve parsing of macro arguments
+    # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
     args = []
     for token in itertools.islice(cursor.get_tokens(), 2, None):
         if token.spelling == ')':
@@ -128,6 +129,8 @@ def _get_macro_args(cursor):
         elif token.spelling == ',':
             continue
         elif token.kind == TokenKind.IDENTIFIER:
+            args.append(token.spelling)
+        elif token.spelling == '...':
             args.append(token.spelling)
         else:
             break
