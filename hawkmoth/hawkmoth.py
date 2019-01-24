@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
 # Copyright (c) 2018-2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
@@ -34,7 +33,6 @@ There is minimal syntax parsing or input conversion:
 Otherwise, documentation comments are passed through verbatim.
 """
 
-import argparse
 import itertools
 import sys
 
@@ -277,31 +275,3 @@ def parse_to_string(filename, verbose, **options):
             s += ('# ' + str(meta) + '\n')
         s += comment + '\n'
     return s
-
-def main():
-    parser = argparse.ArgumentParser(description="""
-    Hawkmoth parser debug tool. Print the documentation comments extracted
-    from FILE, along with the generated C Domain directives, to standard
-    output. Include metadata with verbose output.""")
-    parser.add_argument('file', metavar='FILE', type=str, action='store',
-                        help='The C source or header file to parse.')
-    parser.add_argument('--compat',
-                        choices=['none',
-                                 'javadoc-basic',
-                                 'javadoc-liberal',
-                                 'kernel-doc'],
-                        help='Compatibility options. See cautodoc_compat.')
-    parser.add_argument('--clang', metavar='PARAM[,PARAM,...]',
-                        help='Arguments to pass to clang. See cautodoc_clang.')
-    parser.add_argument('--verbose', dest='verbose', action='store_true',
-                        help='Verbose output.')
-    args = parser.parse_args()
-
-    filename = args.file
-
-    comments = parse_to_string(filename, args.verbose,
-                               compat=args.compat, clang=args.clang)
-    sys.stdout.write(comments)
-
-if __name__ == '__main__':
-    main()
