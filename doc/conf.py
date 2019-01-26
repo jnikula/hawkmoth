@@ -27,7 +27,7 @@ copyright = '2017, Jani Nikula'
 author = 'Jani Nikula'
 
 # The short X.Y version
-version = '0.1'
+version = '0.2'
 # The full version, including alpha/beta/rc tags
 release = version
 

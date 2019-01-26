@@ -7,7 +7,7 @@ Hawkmoth
 Sphinx C Domain autodoc directive extension.
 """
 
-__version__  = '0.1'
+__version__  = '0.2'
 
 import glob
 import os

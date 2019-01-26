@@ -8,7 +8,7 @@ with open('README.rst', 'r') as file:
 
 setuptools.setup(
     name = 'hawkmoth',
-    version = '0.1',
+    version = '0.2',
     author = 'Jani Nikula',
     author_email = 'jani@nikula.org',
     license = '2-Clause BSD',
