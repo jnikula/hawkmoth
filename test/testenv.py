@@ -26,6 +26,11 @@ def get_testcases(path):
         if f.endswith(testext):
             yield os.path.join(path, f)
 
+directive_options = [
+    'compat',
+    'clang',
+]
+
 def get_testcase_options(testcase):
     options_filename = modify_filename(testcase, ext='options')
 
@@ -79,5 +84,8 @@ def assign_test_methods(cls, get_output, get_expected):
     for f in get_testcases(testdir):
         options = get_testcase_options(f)
         method = _test_generator(get_output, get_expected, f, **options)
+
+        if options.get('test-expected-failure') is not None:
+            method = unittest.expectedFailure(method)
 
         setattr(cls, _testcase_name(f), method)

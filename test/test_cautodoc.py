@@ -17,7 +17,7 @@ def _get_output(input_filename, app, status, warning, **options):
     with open(os.path.join(app.srcdir, 'index.rst'), 'w') as file:
         fmt = '.. c:autodoc:: {source}\n'
         file.write(fmt.format(source=os.path.basename(input_filename)))
-        for key in options.keys():
+        for key in [k for k in options.keys() if k in testenv.directive_options]:
             fmt = '   :{key}: {value}\n'
             file.write(fmt.format(key=key, value=options[key]))
 
