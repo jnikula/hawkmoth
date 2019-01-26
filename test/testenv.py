@@ -23,8 +23,12 @@ def get_testcase_options(testcase):
     if os.path.isfile(options_filename):
         with open(options_filename, 'r') as file:
             for line in file.readlines():
-                opt = line.strip().split('=', 1)
-                options[opt[0]] = opt[1]
+                opt = [x.strip() for x in line.split('=', 1)]
+                if opt[0] != '':
+                    if len(opt) == 2:
+                        options[opt[0]] = opt[1]
+                    else:
+                        options[opt[0]] = True
 
     return options
 
