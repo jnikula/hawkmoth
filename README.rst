@@ -1,5 +1,5 @@
-Hawkmoth
-========
+Hawkmoth - Sphinx Autodoc for C
+===============================
 
 Hawkmoth is a minimalistic Sphinx_ `C Domain`_ autodoc directive extension to
 incorporate formatted C source code comments written in reStructuredText_ into
@@ -15,15 +15,6 @@ Sphinx, mainly through its simplicity of design, implementation and use.
 .. _C Domain: http://www.sphinx-doc.org/en/stable/domains.html
 
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
-
-Larval Stage
-------------
-
-Hawkmoth is a project very much in its infancy. The main idea is clear, the
-rough implementation is there and mostly working, even documentation is starting
-to shape up, but there are bugs, testing is inadequate, there are no promises
-about backwards compatible changes, it's not packaged, etc. But it's usable if
-you're not afraid to try software that might be a bit rough around the edges.
 
 Example
 -------
@@ -41,37 +32,56 @@ and a directive in the Sphinx project::
 
 you can incorporate code documentation into Sphinx. It's as simple as that.
 
-You can document functions, parameters, return values, structs, unions, their
-members, macros, function-like macros, enums, enumerations, typedefs, variables,
-as well as have generic documentation comments not attached to any symbols.
-
-reStructuredText style field lists are the native way of documenting function
-parameters and return values and so on, but there's limited compatibility with
-Javadoc_ or Doxygen_ style ``@tags``.
-
-.. _Javadoc: http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html
-
-.. _Doxygen: http://www.stack.nl/~dimitri/doxygen/
+You can document functions, their parameters and return values, structs, unions,
+their members, macros, function-like macros, enums, enumeration constants,
+typedefs, variables, as well as have generic documentation comments not attached
+to any symbols.
 
 Documentation
 -------------
 
-More documentation, with examples, is available in the ``doc`` directory in the
-source tree, obviously in Sphinx format and using the directive
-extension. Pre-built documentation is available at `Read the Docs`_.
+Documentation on how to configure Hawkmoth and write documentation comments,
+with examples, is available in the ``doc`` directory in the source tree,
+obviously in Sphinx format and using the directive extension. Pre-built
+documentation `showcasing what Hawkmoth can do`_ is available at `Read the
+Docs`_.
+
+.. _showcasing what Hawkmoth can do: https://hawkmoth.readthedocs.io/en/latest/examples.html
 
 .. _Read the Docs: https://hawkmoth.readthedocs.io/
 
-Download
---------
+Installation
+------------
+
+You can install Hawkmoth from PyPI_ with::
+
+  pip install hawkmoth
+
+You'll additionally need to install Clang and Python 3 bindings for it through
+your distro's package manager; they are not available via PyPI. You may also
+need to set ``LD_LIBRARY_PATH`` so that the Clang library can be found. For
+example::
+
+  export LD_LIBRARY_PATH=$(llvm-config --libdir)
+
+In Sphinx ``conf.py``, add ``hawkmoth`` to ``extensions``, and point
+``cautodoc_root`` at the source tree. See the extension documentation for
+details.
+
+.. _PyPI: https://pypi.org/project/hawkmoth/
+
+Development and Contributing
+----------------------------
 
 Hawkmoth source code is available on GitHub_. The development version can be
 checked out via ``git`` using this command::
 
   git clone https://github.com/jnikula/hawkmoth.git
 
-.. _GitHub: https://github.com/jnikula/hawkmoth
+Please file bugs and feature requests as GitHub issues. Contributions are
+welcome both as emailed patches to the mailing list and as pull requests.
 
+.. _GitHub: https://github.com/jnikula/hawkmoth
 
 Dependencies
 ------------
@@ -80,22 +90,10 @@ Dependencies
 - Sphinx 1.8
 - Clang 6.0
 - Python 3 Bindings for Clang 6.0
+- sphinx-testing 1.0.0 (for development)
 
 These are the versions Hawkmoth is currently being developed and tested
 against. Other versions might work, but no guarantees.
-
-Installation
-------------
-
-In Sphinx ``conf.py``, point ``sys.path`` at Hawkmoth, add ``hawkmoth`` to
-``extensions``, and point ``cautodoc_root`` at the source tree.
-
-You may need to set ``LD_LIBRARY_PATH`` so that the Clang library can be
-found. For example::
-
-  export LD_LIBRARY_PATH=$(llvm-config --libdir)
-
-(Did I say the project is in its early stages?)
 
 License
 -------
