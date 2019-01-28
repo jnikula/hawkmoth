@@ -15,6 +15,9 @@ endif
 # Otherwise, print the full command line.
 quiet ?= $($1)
 
+%.html: %.rst
+	rst2html --strict --no-raw $< > $@
+
 .PHONY: clean
 clean:
 	$(call quiet,RM,CLEAN) -rf $(CLEAN)
