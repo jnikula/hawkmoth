@@ -7,8 +7,6 @@ Hawkmoth
 Sphinx C Domain autodoc directive extension.
 """
 
-__version__  = '0.2'
-
 import glob
 import os
 import re
@@ -25,6 +23,10 @@ from sphinx.util.docutils import switch_source_input
 
 # The parser bits
 from hawkmoth import hawkmoth
+
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                       'VERSION')) as version_file:
+    __version__ = version_file.read().strip()
 
 class CAutoDocDirective(Directive):
     """Extract all documentation comments from the specified file"""

@@ -23,14 +23,13 @@ extensions = [
 # -- Project information -----------------------------------------------------
 
 project = 'Hawkmoth'
-copyright = '2017, Jani Nikula'
+copyright = '2017-2019, Jani Nikula'
 author = 'Jani Nikula'
 
-# The short X.Y version
-version = '0.2'
-# The full version, including alpha/beta/rc tags
-release = version
-
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                       '../hawkmoth/VERSION')) as version_file:
+    version = version_file.read().strip()
+    release = version
 
 # -- General configuration ---------------------------------------------------
 

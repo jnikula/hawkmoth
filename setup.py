@@ -4,13 +4,17 @@
 import os
 import setuptools
 
-readme = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.rst')
-with open(readme, 'r') as file:
-    long_description = file.read()
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                       'hawkmoth/VERSION')) as version_file:
+    version = version_file.read().strip()
+
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                       'README.rst')) as readme_file:
+    long_description = readme_file.read()
 
 setuptools.setup(
     name = 'hawkmoth',
-    version = '0.2',
+    version = version,
     author = 'Jani Nikula',
     author_email = 'jani@nikula.org',
     license = '2-Clause BSD',
@@ -22,6 +26,9 @@ setuptools.setup(
         'hawkmoth',
         'hawkmoth.*',
     ]),
+    package_data = {
+        'hawkmoth': ['VERSION'],
+    },
     install_requires = [
         'sphinx',
         # 'clang', # depend on distro packaging
