@@ -25,7 +25,7 @@ setuptools.setup(
         'sphinx',
         # 'clang', # depend on distro packaging
     ],
-    extras_requires = {
+    extras_require = {
         'dev': [
             'sphinx-testing'
         ],
