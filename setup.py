@@ -18,9 +18,10 @@ setuptools.setup(
     long_description = long_description,
     long_description_content_type = 'text/x-rst',
     url = 'https://github.com/jnikula/hawkmoth',
-    packages = [
+    packages = setuptools.find_packages(include = [
         'hawkmoth',
-    ],
+        'hawkmoth.*',
+    ]),
     install_requires = [
         'sphinx',
         # 'clang', # depend on distro packaging
