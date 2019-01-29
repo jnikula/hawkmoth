@@ -24,7 +24,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
 
 # The parser bits
-from . import hawkmoth
+from hawkmoth import hawkmoth
 
 class CAutoDocDirective(Directive):
     """Extract all documentation comments from the specified file"""
