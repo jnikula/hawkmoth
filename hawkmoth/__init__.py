@@ -21,8 +21,7 @@ from sphinx.ext.autodoc import AutodocReporter
 from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
 
-# The parser bits
-from hawkmoth import hawkmoth
+from hawkmoth.parser import parse
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -48,7 +47,7 @@ class CAutoDocDirective(Directive):
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments = hawkmoth.parse(filename, compat=compat, clang=clang)
+        comments = parse(filename, compat=compat, clang=clang)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1

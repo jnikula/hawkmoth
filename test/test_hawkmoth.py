@@ -6,10 +6,10 @@ import os
 import unittest
 
 import testenv
-from hawkmoth import hawkmoth
+from hawkmoth.parser import parse_to_string
 
 def _get_output(input_filename, **options):
-    return hawkmoth.parse_to_string(input_filename, False, **options)
+    return parse_to_string(input_filename, False, **options)
 
 def _get_expected(input_filename, **options):
     return testenv.read_file(input_filename, ext='stdout')
