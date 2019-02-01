@@ -12,7 +12,7 @@ def _get_output(input_filename, **options):
     return parse_to_string(input_filename, False, **options)
 
 def _get_expected(input_filename, **options):
-    return testenv.read_file(input_filename, ext='stdout')
+    return testenv.read_file(input_filename, ext='rst')
 
 class ParserTest(unittest.TestCase):
     pass

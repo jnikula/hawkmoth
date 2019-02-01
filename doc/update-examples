@@ -38,7 +38,7 @@ read_options()
 for f in $(find "$TESTDIR" -maxdepth 1 -name "example-*.c" | sort); do
 	options=$(read_options ${f/.c/.options})
 	input=examples/$(basename $f)
-	static_output=${input/.c/.stdout}
+	static_output=${input/.c/.rst}
 	title=$(basename $f .c)
 	title=${title#example-}
 	title=${title#[0-9][0-9]-}

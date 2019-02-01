@@ -44,7 +44,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-10-macro.stdout
+   .. include:: examples/example-10-macro.rst
 
 Variable
 --------
@@ -71,7 +71,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-20-variable.stdout
+   .. include:: examples/example-20-variable.rst
 
 Typedef
 -------
@@ -98,7 +98,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-30-typedef.stdout
+   .. include:: examples/example-30-typedef.rst
 
 Enum
 ----
@@ -125,7 +125,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-40-enum.stdout
+   .. include:: examples/example-40-enum.rst
 
 Struct
 ------
@@ -152,7 +152,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-50-struct.stdout
+   .. include:: examples/example-50-struct.rst
 
 Function
 --------
@@ -179,7 +179,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-70-function.stdout
+   .. include:: examples/example-70-function.rst
 
 Compat
 ------
@@ -206,7 +206,7 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-80-compat.stdout
+   .. include:: examples/example-80-compat.rst
 
 Generic
 -------
@@ -233,5 +233,5 @@ Output
 
 .. only:: not have_hawkmoth
 
-   .. include:: examples/example-90-generic.stdout
+   .. include:: examples/example-90-generic.rst
 

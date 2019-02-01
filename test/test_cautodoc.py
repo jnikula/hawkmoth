@@ -27,7 +27,7 @@ def _get_output(input_filename, app, status, warning, **options):
 
 @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
 def _get_expected(input_filename, app, status, warning, **options):
-    shutil.copyfile(testenv.modify_filename(input_filename, ext='stdout'),
+    shutil.copyfile(testenv.modify_filename(input_filename, ext='rst'),
                     os.path.join(app.srcdir, 'index.rst'))
 
     app.build()
