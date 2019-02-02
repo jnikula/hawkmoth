@@ -181,6 +181,33 @@ Output
 
    .. include:: examples/example-70-function.rst
 
+Preprocessor
+------------
+
+Source
+~~~~~~
+
+.. literalinclude:: examples/example-70-preprocessor.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autodoc:: examples/example-70-preprocessor.c
+      :clang: -DDEEP_THOUGHT
+
+Output
+~~~~~~
+
+.. c:autodoc:: examples/example-70-preprocessor.c
+   :clang: -DDEEP_THOUGHT
+
+.. only:: not have_hawkmoth
+
+   .. include:: examples/example-70-preprocessor.rst
+
 Compat
 ------
 
