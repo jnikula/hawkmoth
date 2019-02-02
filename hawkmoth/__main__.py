@@ -10,7 +10,7 @@ python3 -m hawkmoth
 import argparse
 import sys
 
-from hawkmoth import hawkmoth
+from hawkmoth.parser import parse_to_string
 
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
@@ -31,8 +31,8 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    comments = hawkmoth.parse_to_string(args.file, args.verbose,
-                                        compat=args.compat, clang=args.clang)
+    comments = parse_to_string(args.file, args.verbose,
+                               compat=args.compat, clang=args.clang)
     sys.stdout.write(comments)
 
 main()
