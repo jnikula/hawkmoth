@@ -17,7 +17,6 @@ import sys
 from docutils import nodes, statemachine
 from docutils.parsers.rst import directives, Directive
 from docutils.statemachine import ViewList
-from sphinx.ext.autodoc import AutodocReporter
 from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
 
