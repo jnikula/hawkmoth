@@ -38,6 +38,15 @@ _doc_fmt = {
     Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
 }
 
+def has_group(comment, filterg):
+    # we parse the entire comment and use either '@' or '\'
+    v = re.compile(r".*\n.*[@|\\]ingroup\s(\w+).*", re.MULTILINE | re.DOTALL)
+    m = v.match(comment)
+    # groups() returns the tuple while group(1) returns the actual value matched
+    if m and m.group(1) == filterg:
+        return True
+    return False
+
 def _strip(comment):
     """Strip comment from comment markers."""
     comment = re.sub(r'^/\*\*[ \t]?', '', comment)

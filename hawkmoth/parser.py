@@ -43,7 +43,7 @@ from clang.cindex import TokenKind, TokenGroup
 
 from hawkmoth.util import docstr, doccompat
 
-def comment_extract(tu):
+def comment_extract(tu, filterg):
 
     # FIXME: How to handle top level comments above a cursor that it does *not*
     # describe? Parsing @file or @doc at this stage would not be a clean design.
@@ -79,7 +79,11 @@ def comment_extract(tu):
 
         # Note: current_comment may be None
         if current_comment != None and docstr.is_doc(current_comment.spelling):
-            comments[cursor.hash] = current_comment
+            if filterg is not None:
+                if docstr.has_group(current_comment.spelling, filterg):
+                    comments[cursor.hash] = current_comment
+            else:
+                comments[cursor.hash] = current_comment
         current_comment = None
 
     # comment at the end of file
@@ -249,13 +253,14 @@ def parse(filename, **options):
         if len(args) == 0:
             args = None
 
+    ingroup = options.get('ingroup')
     index = Index.create()
 
     tu = index.parse(filename, args=args, options=
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
-    top_level_comments, comments = comment_extract(tu)
+    top_level_comments, comments = comment_extract(tu, ingroup)
 
     result = []
     compat = lambda x: doccompat.convert(x, options.get('compat'))

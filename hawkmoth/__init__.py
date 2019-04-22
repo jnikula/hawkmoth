@@ -38,6 +38,7 @@ class CAutoDocDirective(Directive):
     option_spec = {
         'compat': directives.unchanged_required,
         'clang': directives.unchanged_required,
+        'ingroup': directives.unchanged_required,
     }
     has_content = False
 
@@ -46,8 +47,9 @@ class CAutoDocDirective(Directive):
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
+        ingroup = self.options.get('ingroup', env.config.cautodoc_ingroup)
 
-        comments = parse(filename, compat=compat, clang=clang)
+        comments = parse(filename, compat=compat, clang=clang, ingroup=ingroup)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
@@ -94,6 +96,7 @@ def setup(app):
     app.add_config_value('cautodoc_root', app.confdir, 'env')
     app.add_config_value('cautodoc_compat', None, 'env')
     app.add_config_value('cautodoc_clang', None, 'env')
+    app.add_config_value('cautodoc_ingroup', None, 'env')
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
     return dict(version = __version__,
