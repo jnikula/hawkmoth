@@ -55,6 +55,23 @@ The extension has a few configuration options that can be set in ``conf.py``:
    source, typically to define macros for conditional compilation, for example
    ``-DHAWKMOTH``. No arguments are passed by default.
 
+.. py:data:: cautodoc_ingroup
+
+   Filters the symbols hawkmoth will display. Use this to limit the ammount of
+   symbols hawkmoth will generate.
+
+   In your comment block add the following:
+
+   .. code-block:: python
+      @ingroup group_name
+
+
+   While in reST the following will only print those symbols tagged in comment
+   block:
+
+   .. code-block:: python
+      :ingroup: group_name
+
 Directive
 ---------
 
@@ -70,6 +87,9 @@ This module provides the following new directive:
    option.
 
    The ``clang`` option overrides the :data:`cautodoc_clang` configuration
+   option.
+
+   The ``ingroup`` option overrides the :data:`cautodoc_ingroup` configuration
    option.
 
 Examples
