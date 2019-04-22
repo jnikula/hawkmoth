@@ -27,12 +27,14 @@ def main():
                         help='Compatibility options. See cautodoc_compat.')
     parser.add_argument('--clang', metavar='PARAM[,PARAM,...]',
                         help='Arguments to pass to clang. See cautodoc_clang.')
+    parser.add_argument('--ingroup', metavar='PARAM',
+                        help='Only display the symbols matching ingroup. See cautodoc_ingroup.')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
     args = parser.parse_args()
 
     comments = parse_to_string(args.file, args.verbose,
-                               compat=args.compat, clang=args.clang)
+                               compat=args.compat, clang=args.clang, ingroup=args.ingroup)
     sys.stdout.write(comments)
 
 main()
