@@ -89,14 +89,15 @@ def comment_extract(tu):
     return top_level_comments, comments
 
 def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
-            name=None, ttype=None, args=None, compat=None):
+            name=None, ttype=None, args=None, compat=None, attr=None):
 
     # FIXME: docstr.generate changes the number of lines in output. This impacts
     # the error reporting via meta['line']. Adjust meta to take this into
     # account.
 
     doc = docstr.generate(text=comment.spelling, fmt=fmt,
-                          name=name, ttype=ttype, args=args, transform=compat)
+                          name=name, ttype=ttype, args=args, transform=compat,
+                          attributes=attr)
 
     doc = docstr.nest(doc, nest)
 
@@ -105,6 +106,7 @@ def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
         meta['cursor.kind']        = cursor.kind,
         meta['cursor.displayname'] = cursor.displayname,
         meta['cursor.spelling']    = cursor.spelling
+        meta['cursor.attributes']  = attr
 
     return [(doc, meta)]
 
@@ -136,6 +138,25 @@ def _get_macro_args(cursor):
             break
 
     return None
+
+# add more function attributes here
+def parse_attributes(attributes, cursor):
+    entry = {}
+
+    if cursor.kind == CursorKind.VISIBILITY_ATTR:
+        entry['Attribute'] = 'Visibility'
+    elif cursor.kind == CursorKind.PURE_ATTR:
+        entry['Attribute'] = 'Pure'
+    elif cursor.kind == CursorKind.CONST_ATTR:
+        entry['Attribute'] = 'Const'
+    elif cursor.kind == CursorKind.ANNOTATE_ATTR:
+        entry['Attribute'] = 'Annonate'
+
+    if 'Attribute' in entry and cursor.spelling:
+        entry['Value'] = cursor.spelling
+
+    if 'Attribute' in entry:
+        attributes.append(entry)
 
 def _recursive_parse(comments, cursor, nest, compat):
     comment = comments[cursor.hash]
@@ -205,10 +226,12 @@ def _recursive_parse(comments, cursor, nest, compat):
         # FIXME: children may contain extra stuff if the return type is a
         # typedef, for example
         args = []
+        attributes = []
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
                 args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
                                                    arg=c.spelling))
+            parse_attributes(attributes, c)
 
         if cursor.type.is_function_variadic():
             args.append('...')
@@ -217,7 +240,8 @@ def _recursive_parse(comments, cursor, nest, compat):
         ttype = cursor.result_type.spelling
 
         return _result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                       name=name, ttype=ttype, args=args, compat=compat)
+                       name=name, ttype=ttype, args=args, compat=compat,
+                       attr=attributes)
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error
     # and it should be logged, but it should also return an empty list so that

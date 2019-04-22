@@ -35,7 +35,7 @@ _doc_fmt = {
     Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
     Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
     Type.MACRO_FUNC: (1, '\n.. c:function:: {name}({args})\n\n{text}\n'),
-    Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
+    Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n{attr}')
 }
 
 def _strip(comment):
@@ -67,8 +67,22 @@ def nest(text, nest):
     """
     return re.sub('(?m)^(?!$)', '   ' * nest, text)
 
+# injects reST
+def generate_attributes(attributes):
+    attrs = ''
+    if attributes is not None:
+        for attr in attributes:
+            k = attr['Attribute']
+            if k:
+                # not all attributes have a value
+                if 'Value' in attr:
+                    attrs += '\n**{}** {}\n'.format(k, attr['Value'])
+                else:
+                    attrs += '\n**{}**\n'.format(k)
+    return attrs
+
 def generate(text, fmt=Type.TEXT, name=None,
-             ttype=None, args=None, transform=None):
+             ttype=None, args=None, transform=None, attributes=None):
     """
     Generate reST documentation string.
 
@@ -96,6 +110,8 @@ def generate(text, fmt=Type.TEXT, name=None,
     if args is not None:
         args = ', '.join(args)
 
+    attrs = generate_attributes(attributes)
+
     (text_indent, fmt) = _doc_fmt[fmt]
     text = nest(text, text_indent)
-    return fmt.format(text=text, name=name, ttype=ttype, args=args)
+    return fmt.format(text=text, name=name, ttype=ttype, args=args, attr=attrs)
