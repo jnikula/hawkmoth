@@ -239,6 +239,15 @@ def _recursive_parse(comments, cursor, nest, compat):
 
     return [(doc, meta)]
 
+def _clang_diagnostics(tu):
+    errors = []
+    for d in tu.diagnostics:
+        # Filter for warnings and errors
+        if d.severity >= 2:
+            errors.extend([(d.location.file.name, d.location.line, d.spelling)])
+
+    return errors
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
@@ -255,6 +264,8 @@ def parse(filename, **options):
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
+    errors = _clang_diagnostics(tu)
+
     top_level_comments, comments = comment_extract(tu)
 
     result = []
@@ -270,7 +281,7 @@ def parse(filename, **options):
     # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
 
-    return result
+    return result, errors
 
 def parse_to_string(filename, verbose, **options):
     s = ''

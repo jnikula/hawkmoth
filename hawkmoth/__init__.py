@@ -46,7 +46,10 @@ class CAutoDocDirective(Directive):
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments = parse(filename, compat=compat, clang=clang)
+        comments, errors = parse(filename, compat=compat, clang=clang)
+
+        for (ffile, line, msg) in errors:
+            env.app.warn(_err_fmt.format(msg, location=(ffile, line)))
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
