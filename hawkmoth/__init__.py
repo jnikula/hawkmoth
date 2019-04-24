@@ -19,6 +19,7 @@ from docutils.parsers.rst import directives, Directive
 from docutils.statemachine import ViewList
 from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
+from sphinx.util import logging
 
 from hawkmoth.parser import parse
 
@@ -30,6 +31,7 @@ class CAutoDocDirective(Directive):
     """Extract all documentation comments from the specified file"""
     required_argument = 1
     optional_arguments = 1
+    logger = logging.getLogger(__name__)
 
     # Allow passing a variable number of file patterns as arguments
     final_argument_whitespace = True
@@ -65,16 +67,16 @@ class CAutoDocDirective(Directive):
             filenames = glob.glob(env.config.cautodoc_root + '/' + pattern)
             if len(filenames) == 0:
                 fmt = 'Pattern "{pat}" does not match any files.'
-                env.app.warn(fmt.format(pat=pattern),
-                             location=(env.docname, self.lineno))
+                self.logger.warning(fmt.format(pat=pattern),
+                                    location=(env.docname, self.lineno))
                 continue
 
             for filename in filenames:
                 mode = os.stat(filename).st_mode
                 if stat.S_ISDIR(mode):
                     fmt = 'Path "{name}" matching pattern "{pat}" is a directory.'
-                    env.app.warn(fmt.format(name=filename, pat=pattern),
-                                 location=(env.docname, self.lineno))
+                    self.logger.warning(fmt.format(name=filename, pat=pattern),
+                                        location=(env.docname, self.lineno))
                     continue
 
                 # Tell Sphinx about the dependency and parse the file
