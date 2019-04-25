@@ -34,7 +34,7 @@ Otherwise, documentation comments are passed through verbatim.
 """
 
 import itertools
-import sys
+import sys, re
 
 from clang.cindex import CursorKind
 from clang.cindex import Index, TranslationUnit
@@ -239,10 +239,29 @@ def _recursive_parse(comments, cursor, nest, compat):
 
     return [(doc, meta)]
 
+def extract_filename_line(source_loc):
+    valid = re.compile(r".*file\s'(.*)',\sline\s(\d+).*")
+    match = valid.match(source_loc)
+    filename = ''
+    line = -1
+    if match:
+        filename = match.group(1)
+        line = int(match.group(2))
+
+    return filename, line
+
+def parse_gather_diagnostics(severity, errors, diagnostics):
+    for diag in diagnostics:
+        if diag.severity >= severity:
+            filename, line = extract_filename_line(str(diag.location))
+            errors.extend([(diag.severity, filename, line, diag.spelling)])
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
 
+    parser_errors = []
+    severity_diag = 2
     args = options.get('clang')
     if args is not None:
         args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
@@ -254,6 +273,8 @@ def parse(filename, **options):
     tu = index.parse(filename, args=args, options=
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
+
+    parse_gather_diagnostics(severity_diag, parser_errors, tu.diagnostics)
 
     top_level_comments, comments = comment_extract(tu)
 
@@ -270,13 +291,13 @@ def parse(filename, **options):
     # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
 
-    return result
+    return result, parser_errors
 
 def parse_to_string(filename, verbose, **options):
     s = ''
-    comments = parse(filename, **options)
+    comments, parser_errors = parse(filename, **options)
     for (comment, meta) in comments:
         if verbose:
             s += ('# ' + str(meta) + '\n')
         s += comment + '\n'
-    return s
+    return s, parser_errors

@@ -31,8 +31,13 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    comments = parse_to_string(args.file, args.verbose,
-                               compat=args.compat, clang=args.clang)
+    comments, errors = parse_to_string(args.file, args.verbose,
+                                        compat=args.compat, clang=args.clang)
+    if errors:
+        for diag in errors:
+            severity, filename = diag[0], diag[1]
+            lineno, reason = diag[2], diag[3]
+            sys.stderr.write("{}:{}, {}\n".format(filename, lineno, reason))
     sys.stdout.write(comments)
 
 main()

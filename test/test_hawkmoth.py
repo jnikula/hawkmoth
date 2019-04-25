@@ -9,7 +9,9 @@ import testenv
 from hawkmoth.parser import parse_to_string
 
 def _get_output(input_filename, **options):
-    return parse_to_string(input_filename, False, **options)
+    output, errors = parse_to_string(input_filename, False, **options)
+    # FIXME: should handle errors
+    return output
 
 def _get_expected(input_filename, **options):
     return testenv.read_file(input_filename, ext='rst')

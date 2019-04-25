@@ -42,13 +42,29 @@ class CAutoDocDirective(Directive):
     }
     has_content = False
 
+    def __display_parser_diagnostics(self, errors):
+        env = self.state.document.settings.env
+        for diag in errors:
+            severity, filename = diag[0], diag[1]
+            lineno, reason = diag[2], diag[3]
+            toprint = '{}:{}, {}'.format(filename, lineno, reason)
+            if severity == 2:
+                self.logger.warning(toprint, location(env.docname, self.lineno))
+            elif severity == 3:
+                self.logger.critical(toprint, location(env.docname, self.lineno))
+            else:
+                self.logger.error(toprint, location=(env.docname, self.lineno))
+
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments = parse(filename, compat=compat, clang=clang)
+        comments, errors = parse(filename, compat=compat, clang=clang)
+        # at least -v
+        if errors and env.app.verbosity:
+            self.__display_parser_diagnostics(errors)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
