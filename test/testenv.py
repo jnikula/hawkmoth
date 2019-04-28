@@ -37,8 +37,8 @@ def get_testcase_options(testcase):
     # options are optional
     options = {}
     if os.path.isfile(options_filename):
-        with open(options_filename, 'r') as file:
-            for line in file.readlines():
+        with open(options_filename, 'r') as f:
+            for line in f.readlines():
                 opt = [x.strip() for x in line.split('=', 1)]
                 if opt[0] != '':
                     if len(opt) == 2:
@@ -64,8 +64,8 @@ def modify_filename(filename, **kwargs):
 def read_file(filename, **kwargs):
     filename = modify_filename(filename, **kwargs)
 
-    with open(filename, 'r') as file:
-        expected = file.read()
+    with open(filename, 'r') as f:
+        expected = f.read()
 
     return expected
 

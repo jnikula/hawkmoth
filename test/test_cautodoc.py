@@ -14,12 +14,12 @@ def _get_output(input_filename, app, status, warning, **options):
     shutil.copyfile(input_filename,
                     testenv.modify_filename(input_filename, dir=app.srcdir))
 
-    with open(os.path.join(app.srcdir, 'index.rst'), 'w') as file:
+    with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
         fmt = '.. c:autodoc:: {source}\n'
-        file.write(fmt.format(source=os.path.basename(input_filename)))
+        f.write(fmt.format(source=os.path.basename(input_filename)))
         for key in [k for k in options.keys() if k in testenv.directive_options]:
             fmt = '   :{key}: {value}\n'
-            file.write(fmt.format(key=key, value=options[key]))
+            f.write(fmt.format(key=key, value=options[key]))
 
     app.build()
 
