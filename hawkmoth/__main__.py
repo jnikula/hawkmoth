@@ -31,11 +31,15 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    docs = parse(args.file, compat=args.compat, clang=args.clang)
+    docs, errors = parse(args.file, compat=args.compat, clang=args.clang)
 
     for (doc, meta) in docs:
         if args.verbose:
             print('# {}'.format(meta))
         print(doc)
+
+    for (severity, filename, lineno, msg) in errors:
+        print('{}: {}:{}: {}'.format(severity.name,
+                                     filename, lineno, msg), file=sys.stderr)
 
 main()

@@ -21,7 +21,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input
 from sphinx.util import logging
 
-from hawkmoth.parser import parse
+from hawkmoth.parser import parse, ErrorLevel
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -42,13 +42,31 @@ class CAutoDocDirective(Directive):
     }
     has_content = False
 
+    # Map verbosity levels to logger levels.
+    _log_lvl = {ErrorLevel.ERROR: logging.LEVEL_NAMES['ERROR'],
+                ErrorLevel.WARNING: logging.LEVEL_NAMES['WARNING'],
+                ErrorLevel.INFO: logging.LEVEL_NAMES['INFO'],
+                ErrorLevel.DEBUG: logging.LEVEL_NAMES['DEBUG']}
+
+    def __display_parser_diagnostics(self, errors):
+        env = self.state.document.settings.env
+
+        for (severity, filename, lineno, msg) in errors:
+            toprint = '{}:{}: {}'.format(filename, lineno, msg)
+
+            if severity.value <= env.app.verbosity:
+                self.logger.log(self._log_lvl[severity], toprint,
+                                location=(env.docname, self.lineno))
+
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments = parse(filename, compat=compat, clang=clang)
+        comments, errors = parse(filename, compat=compat, clang=clang)
+
+        self.__display_parser_diagnostics(errors)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1

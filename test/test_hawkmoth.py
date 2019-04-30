@@ -11,7 +11,7 @@ from hawkmoth.parser import parse
 def _get_output(input_filename, **options):
     docs_str = ''
 
-    docs = parse(input_filename, **options)
+    docs, errors = parse(input_filename, **options)
 
     for (doc, meta) in docs:
         docs_str += doc + '\n'

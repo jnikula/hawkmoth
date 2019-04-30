@@ -33,6 +33,7 @@ There is minimal syntax parsing or input conversion:
 Otherwise, documentation comments are passed through verbatim.
 """
 
+import enum
 import itertools
 import sys
 
@@ -42,6 +43,16 @@ from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
 from hawkmoth.util import docstr, doccompat
+
+class ErrorLevel(enum.Enum):
+    """
+    Supported error levels in inverse numerical order of severity. The values
+    are chosen so that they map directly to a 'verbosity level'.
+    """
+    ERROR = 0
+    WARNING = 1
+    INFO = 2
+    DEBUG = 3
 
 def comment_extract(tu):
 
@@ -239,10 +250,22 @@ def _recursive_parse(comments, cursor, nest, compat):
 
     return [(doc, meta)]
 
+def clang_diagnostics(errors, diagnostics):
+    sev = {0: ErrorLevel.DEBUG,
+           1: ErrorLevel.DEBUG,
+           2: ErrorLevel.WARNING,
+           3: ErrorLevel.ERROR,
+           4: ErrorLevel.ERROR}
+
+    for diag in diagnostics:
+        errors.extend([(sev[diag.severity], diag.location.file.name,
+                        diag.location.line, diag.spelling)])
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
 
+    errors = []
     args = options.get('clang')
     if args is not None:
         args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
@@ -254,6 +277,8 @@ def parse(filename, **options):
     tu = index.parse(filename, args=args, options=
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
+
+    clang_diagnostics(errors, tu.diagnostics)
 
     top_level_comments, comments = comment_extract(tu)
 
@@ -270,4 +295,4 @@ def parse(filename, **options):
     # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
 
-    return result
+    return result, errors
