@@ -6,10 +6,17 @@ import os
 import unittest
 
 import testenv
-from hawkmoth.parser import parse_to_string
+from hawkmoth.parser import parse
 
 def _get_output(input_filename, **options):
-    return parse_to_string(input_filename, False, **options)
+    docs_str = ''
+
+    docs = parse(input_filename, **options)
+
+    for (doc, meta) in docs:
+        docs_str += doc + '\n'
+
+    return docs_str
 
 def _get_expected(input_filename, **options):
     return testenv.read_file(input_filename, ext='rst')

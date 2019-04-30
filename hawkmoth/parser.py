@@ -271,12 +271,3 @@ def parse(filename, **options):
     result.sort(key=lambda r: r[1]['line'])
 
     return result
-
-def parse_to_string(filename, verbose, **options):
-    s = ''
-    comments = parse(filename, **options)
-    for (comment, meta) in comments:
-        if verbose:
-            s += ('# ' + str(meta) + '\n')
-        s += comment + '\n'
-    return s
