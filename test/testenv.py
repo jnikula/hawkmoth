@@ -64,18 +64,21 @@ def modify_filename(filename, **kwargs):
 def read_file(filename, **kwargs):
     filename = modify_filename(filename, **kwargs)
 
-    with open(filename, 'r') as f:
-        expected = f.read()
+    if not os.path.isfile(filename):
+        # Emulate empty file.
+        return ''
 
-    return expected
+    with open(filename, 'r') as f:
+        return f.read()
 
 def _test_generator(get_output, get_expected, input_filename, **options):
     """Return a function that compares output/expected results on input_filename."""
     def test(self):
-        output = get_output(input_filename, **options)
-        expected = get_expected(input_filename, **options)
+        output_docs, output_errors = get_output(input_filename, **options)
+        expect_docs, expect_errors = get_expected(input_filename, **options)
 
-        self.assertEqual(expected, output)
+        self.assertEqual(expect_docs, output_docs)
+        self.assertEqual(expect_errors, output_errors)
 
     return test
 

@@ -10,16 +10,21 @@ from hawkmoth.parser import parse
 
 def _get_output(input_filename, **options):
     docs_str = ''
+    errors_str = ''
 
     docs, errors = parse(input_filename, **options)
 
     for (doc, meta) in docs:
         docs_str += doc + '\n'
 
-    return docs_str
+    for (severity, filename, lineno, msg) in errors:
+        errors_str += '{}: {}: {}\n'.format(severity.name, lineno, msg)
+
+    return docs_str, errors_str
 
 def _get_expected(input_filename, **options):
-    return testenv.read_file(input_filename, ext='rst')
+    return testenv.read_file(input_filename, ext='rst'), \
+        testenv.read_file(input_filename, ext='stderr')
 
 class ParserTest(unittest.TestCase):
     pass

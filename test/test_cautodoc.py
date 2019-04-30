@@ -23,7 +23,7 @@ def _get_output(input_filename, app, status, warning, **options):
 
     app.build()
 
-    return testenv.read_file(os.path.join(app.outdir, 'index.txt'))
+    return testenv.read_file(os.path.join(app.outdir, 'index.txt')), None
 
 @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
 def _get_expected(input_filename, app, status, warning, **options):
@@ -32,7 +32,7 @@ def _get_expected(input_filename, app, status, warning, **options):
 
     app.build()
 
-    return testenv.read_file(os.path.join(app.outdir, 'index.txt'))
+    return testenv.read_file(os.path.join(app.outdir, 'index.txt')), None
 
 class DirectiveTest(unittest.TestCase):
     pass
