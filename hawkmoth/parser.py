@@ -37,7 +37,7 @@ import enum
 import itertools
 import sys
 
-from clang.cindex import CursorKind
+from clang.cindex import CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
@@ -216,13 +216,16 @@ def _recursive_parse(comments, cursor, nest, compat):
         # FIXME: children may contain extra stuff if the return type is a
         # typedef, for example
         args = []
-        for c in cursor.get_children():
-            if c.kind == CursorKind.PARM_DECL:
-                args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
-                                                   arg=c.spelling))
 
-        if cursor.type.is_function_variadic():
-            args.append('...')
+        # Only fully prototyped functions will have argument lists to process.
+        if cursor.type.kind == TypeKind.FUNCTIONPROTO:
+            for c in cursor.get_children():
+                if c.kind == CursorKind.PARM_DECL:
+                    args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
+                                                    arg=c.spelling))
+
+            if cursor.type.is_function_variadic():
+                args.append('...')
 
         fmt = docstr.Type.FUNC
         ttype = cursor.result_type.spelling
