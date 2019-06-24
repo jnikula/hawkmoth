@@ -45,6 +45,10 @@ def _strip(comment):
     # Could look at first line of comment, and remove the leading stuff there
     # from the rest.
     comment = re.sub(r'(?m)^[ \t]*\*?[ \t]?', '', comment)
+
+    # Standardize newlines
+    comment = comment.replace('\r\n', '\n')
+
     # Strip leading blank lines.
     comment = re.sub(r'^[\n]*', '', comment)
     return comment.strip()

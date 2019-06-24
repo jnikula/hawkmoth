@@ -277,15 +277,8 @@ def parse(filename, **options):
 
     index = Index.create()
 
-    # In order to let python standardize line endings across operating systems
-    # by reading in the file contents and sending that to libclang as an
-    # `unsaved_file`.
-    with open(filename, 'r') as f:
-        contents = f.read()
-        unsaved_files = [(filename, contents)]
-
-    tu = index.parse(filename, args=args, unsaved_files=unsaved_files,
-                     options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
+    tu = index.parse(filename, args=args, options=
+                     TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
     clang_diagnostics(errors, tu.diagnostics)
