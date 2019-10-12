@@ -34,7 +34,6 @@ Otherwise, documentation comments are passed through verbatim.
 """
 
 import enum
-import itertools
 import sys
 
 from clang.cindex import CursorKind, TypeKind
@@ -129,16 +128,18 @@ def _get_macro_args(cursor):
     if cursor.kind != CursorKind.MACRO_DEFINITION:
         return None
 
+    tokens = cursor.get_tokens()
+
     # Use the first two tokens to make sure this starts with 'IDENTIFIER('
-    x = [token for token in itertools.islice(cursor.get_tokens(), 2)]
-    if (len(x) != 2 or x[0].spelling != cursor.spelling or
-        x[1].spelling != '(' or x[0].extent.end != x[1].extent.start):
+    one = next(tokens)
+    two = next(tokens, None)
+    if two is None or one.extent.end != two.extent.start or two.spelling != '(':
         return None
 
     # Naïve parsing of macro arguments
     # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
     args = []
-    for token in itertools.islice(cursor.get_tokens(), 2, None):
+    for token in tokens:
         if token.spelling == ')':
             return args
         elif token.spelling == ',':
