@@ -40,7 +40,7 @@ setuptools.setup(
     },
     python_requires = '~=3.4',
     classifiers = [
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Framework :: Sphinx :: Extension',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
