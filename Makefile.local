@@ -6,10 +6,6 @@
 #
 # FIXME:
 #
-# * Add a single point of truth for version
-#   - hawkmoth/__init__.py
-#   - doc/conf.py
-#   - setup.py
 # * Add helpers for releasing
 #   - release checks
 #   - updating the version
