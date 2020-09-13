@@ -17,6 +17,9 @@ class Type(Enum):
     TEXT = auto()
     VAR = auto()
     TYPE = auto()
+    STRUCT = auto()
+    UNION = auto()
+    ENUM = auto()
     ENUM_VAL = auto()
     MEMBER = auto()
     MACRO = auto()
@@ -31,6 +34,9 @@ _doc_fmt = {
     Type.TEXT:       (0, '\n{text}\n'),
     Type.VAR:        (1, '\n.. c:var:: {ttype} {name}\n\n{text}\n'),
     Type.TYPE:       (1, '\n.. c:type:: {name}\n\n{text}\n'),
+    Type.STRUCT:     (1, '\n.. c:struct:: {name}\n\n{text}\n'),
+    Type.UNION:      (1, '\n.. c:union:: {name}\n\n{text}\n'),
+    Type.ENUM:       (1, '\n.. c:enum:: {name}\n\n{text}\n'),
     Type.ENUM_VAL:   (1, '\n.. c:enumerator:: {name}\n\n{text}\n'),
     Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
     Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),

@@ -1,5 +1,5 @@
 
-.. c:type:: struct list
+.. c:struct:: list
 
    Linked list node.
 

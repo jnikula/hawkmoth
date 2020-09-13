@@ -1,5 +1,5 @@
 
-.. c:type:: union foo
+.. c:union:: foo
 
    Union documentation.
 
@@ -14,7 +14,7 @@
       int member 2.
 
 
-   .. c:type:: struct _baz
+   .. c:struct:: _baz
 
       struct member.
 

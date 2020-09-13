@@ -1,5 +1,5 @@
 
-.. c:type:: struct named
+.. c:struct:: named
 
    named typedeffed struct
 
@@ -9,7 +9,7 @@
       named member
 
 
-.. c:type:: typedef_struct
+.. c:struct:: typedef_struct
 
    unnamed typedeffed struct
 

@@ -1,5 +1,5 @@
 
-.. c:type:: enum mode
+.. c:enum:: mode
 
    Frobnication modes for :c:func:`frob`.
 
