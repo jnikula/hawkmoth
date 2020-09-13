@@ -4,14 +4,14 @@
    Failure status.
 
 
-.. c:function:: DIE()
+.. c:macro:: DIE()
 
    Terminate immediately with failure status.
 
    See :c:macro:`FAILURE`.
 
 
-.. c:function:: ARRAY_SIZE(array)
+.. c:macro:: ARRAY_SIZE(array)
 
    Get the number of elements in an array.
 
@@ -19,7 +19,7 @@
    :return: Array size
 
 
-.. c:function:: VARIADIC_MACRO(foo, ...)
+.. c:macro:: VARIADIC_MACRO(foo, ...)
 
    Variadic macros
 
