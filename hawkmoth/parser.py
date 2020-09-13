@@ -169,6 +169,12 @@ def _recursive_parse(comments, cursor, nest, compat):
     elif cursor.kind == CursorKind.VAR_DECL:
         fmt = docstr.Type.VAR
 
+        # The dimensions should be applied to the name, not the type.
+        dims = ttype.rsplit(' ', 1)[-1]
+        if dims.startswith('[') and dims.endswith(']'):
+            ttype = ttype.rsplit(' ', 1)[0]
+            name = name + dims
+
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=name, ttype=ttype, compat=compat)
 
