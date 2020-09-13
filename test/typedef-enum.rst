@@ -1,5 +1,5 @@
 
-.. c:type:: enum named
+.. c:enum:: named
 
    named typedeffed enum
 
@@ -9,7 +9,7 @@
       named enumeration
 
 
-.. c:type:: unnamed_t
+.. c:enum:: unnamed_t
 
    unnamed typedeffed enum
 

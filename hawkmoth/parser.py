@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment extractor
@@ -199,9 +199,15 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         # FIXME: Handle anonymous enumerators.
 
-        fmt = docstr.Type.TYPE
+        fmts = {CursorKind.STRUCT_DECL: docstr.Type.STRUCT,
+                CursorKind.UNION_DECL: docstr.Type.UNION,
+                CursorKind.ENUM_DECL: docstr.Type.ENUM}
+
+        fmt = fmts[cursor.kind]
+
+        # name may be empty for typedefs
         result = _result(comment, cursor=cursor, fmt=fmt,
-                         nest=nest, name=ttype, compat=compat)
+                         nest=nest, name=name if name else ttype, compat=compat)
 
         nest += 1
         for c in cursor.get_children():

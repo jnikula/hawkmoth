@@ -1,5 +1,5 @@
 
-.. c:type:: struct sample_struct
+.. c:struct:: sample_struct
 
    This is a sample struct
 

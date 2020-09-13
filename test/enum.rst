@@ -1,5 +1,5 @@
 
-.. c:type:: enum foo
+.. c:enum:: foo
 
    Enum doc.
 
