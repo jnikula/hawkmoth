@@ -1,10 +1,10 @@
 
-.. c:function:: FOO(bar, baz)
+.. c:macro:: FOO(bar, baz)
 
    A function-like macro.
 
 
-.. c:function:: BAR()
+.. c:macro:: BAR()
 
    Another
 

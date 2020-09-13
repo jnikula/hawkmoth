@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2020 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation strings manipulation library
@@ -34,7 +34,7 @@ _doc_fmt = {
     Type.ENUM_VAL:   (1, '\n.. c:enumerator:: {name}\n\n{text}\n'),
     Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
     Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
-    Type.MACRO_FUNC: (1, '\n.. c:function:: {name}({args})\n\n{text}\n'),
+    Type.MACRO_FUNC: (1, '\n.. c:macro:: {name}({args})\n\n{text}\n'),
     Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
 }
 
