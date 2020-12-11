@@ -27,6 +27,19 @@ test-upload:
 upload:
 	python3 -m twine upload dist/*
 
-.PHONY: dist-tools dist test-upload upload
+DOCKER_SRC_MOUNT = --mount type=bind,src=$(PWD),dst=/src,readonly=true
+DOCKER_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
+
+docker-build:
+	docker build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --tag hawkmoth .
+
+docker-test: docker-build
+	docker run $(DOCKER_SRC_MOUNT) hawkmoth make test
+
+docker-html: docker-build
+	mkdir -p doc/_build
+	docker run $(DOCKER_SRC_MOUNT) $(DOCKER_OUT_MOUNT) hawkmoth make BUILDDIR=/out html
+
+.PHONY: dist-tools dist test-upload upload docker-build docker-test docker-html
 
 CLEAN := $(CLEAN) build dist hawkmoth.egg-info
