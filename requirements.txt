@@ -14,8 +14,13 @@ pytz==2020.4
 requests==2.25.0
 six==1.15.0
 snowballstemmer==2.0.0
-Sphinx==1.8.5
+Sphinx==3.3.1
 sphinx-testing==1.0.1
+sphinxcontrib-applehelp==1.0.2
+sphinxcontrib-devhelp==1.0.2
+sphinxcontrib-htmlhelp==1.0.3
+sphinxcontrib-jsmath==1.0.1
+sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.4
 sphinxcontrib-websupport==1.2.4
 urllib3==1.26.2
