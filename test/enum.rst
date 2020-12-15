@@ -4,12 +4,12 @@
    Enum doc.
 
 
-   .. c:macro:: bar
+   .. c:enumerator:: bar
 
       Enumeration comment.
 
 
-   .. c:macro:: baz
+   .. c:enumerator:: baz
 
       Another.
 
