@@ -42,10 +42,6 @@ Output
 .. c:autodoc:: examples/example-10-macro.c
    
 
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-10-macro.rst
-
 Variable
 --------
 
@@ -68,10 +64,6 @@ Output
 
 .. c:autodoc:: examples/example-20-variable.c
    
-
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-20-variable.rst
 
 Typedef
 -------
@@ -96,10 +88,6 @@ Output
 .. c:autodoc:: examples/example-30-typedef.c
    
 
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-30-typedef.rst
-
 Enum
 ----
 
@@ -122,10 +110,6 @@ Output
 
 .. c:autodoc:: examples/example-40-enum.c
    
-
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-40-enum.rst
 
 Struct
 ------
@@ -150,10 +134,6 @@ Output
 .. c:autodoc:: examples/example-50-struct.c
    
 
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-50-struct.rst
-
 Function
 --------
 
@@ -176,10 +156,6 @@ Output
 
 .. c:autodoc:: examples/example-70-function.c
    
-
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-70-function.rst
 
 Preprocessor
 ------------
@@ -204,10 +180,6 @@ Output
 .. c:autodoc:: examples/example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
 
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-70-preprocessor.rst
-
 Compat
 ------
 
@@ -231,10 +203,6 @@ Output
 .. c:autodoc:: examples/example-80-compat.c
    :compat: javadoc-liberal
 
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-80-compat.rst
-
 Generic
 -------
 
@@ -257,8 +225,4 @@ Output
 
 .. c:autodoc:: examples/example-90-generic.c
    
-
-.. only:: not have_hawkmoth
-
-   .. include:: examples/example-90-generic.rst
 

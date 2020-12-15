@@ -70,9 +70,5 @@ Output
 .. c:autodoc:: $input
 $(sed 's/^/   /' <<< $options)
 
-.. only:: not have_hawkmoth
-
-   .. include:: $static_output
-
 EOF
 done
