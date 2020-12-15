@@ -6,5 +6,5 @@ struct list {
 	struct list *next;
 
 	/** Data. */
-	list_data_t data;
+	int data;
 };
