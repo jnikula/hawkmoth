@@ -30,7 +30,7 @@ setuptools.setup(
         'hawkmoth': ['VERSION'],
     },
     install_requires = [
-        'sphinx',
+        'sphinx>=3',
         # 'clang', # depend on distro packaging
     ],
     extras_require = {
