@@ -93,7 +93,7 @@ Dependencies
 ------------
 
 - Python 3.4
-- Sphinx 1.8
+- Sphinx 3
 - Clang 6.0
 - Python 3 Bindings for Clang 6.0
 - sphinx-testing 1.0.0 (for development)
