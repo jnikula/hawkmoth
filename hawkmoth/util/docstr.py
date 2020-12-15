@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
+# Copyright (c) 2016-2020 Jani Nikula <jani@nikula.org>
 # Copyright (c) 2018-2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
@@ -31,7 +31,7 @@ _doc_fmt = {
     Type.TEXT:       (0, '\n{text}\n'),
     Type.VAR:        (1, '\n.. c:var:: {ttype} {name}\n\n{text}\n'),
     Type.TYPE:       (1, '\n.. c:type:: {name}\n\n{text}\n'),
-    Type.ENUM_VAL:   (1, '\n.. c:macro:: {name}\n\n{text}\n'),
+    Type.ENUM_VAL:   (1, '\n.. c:enumerator:: {name}\n\n{text}\n'),
     Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
     Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
     Type.MACRO_FUNC: (1, '\n.. c:function:: {name}({args})\n\n{text}\n'),

@@ -4,7 +4,7 @@
    named typedeffed enum
 
 
-   .. c:macro:: damn
+   .. c:enumerator:: damn
 
       named enumeration
 
@@ -14,7 +14,7 @@
    unnamed typedeffed enum
 
 
-   .. c:macro:: shit
+   .. c:enumerator:: shit
 
       unnamed enumeration
 
