@@ -22,6 +22,7 @@ from sphinx.util.docutils import switch_source_input
 from sphinx.util import logging
 
 from hawkmoth.parser import parse, ErrorLevel
+from hawkmoth.util import doccompat
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -67,7 +68,9 @@ class CAutoDocDirective(Directive):
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        comments, errors = parse(filename, compat=compat, clang=clang)
+        transform = lambda comment: doccompat.convert(comment, compat)
+
+        comments, errors = parse(filename, transform=transform, clang=clang)
 
         self.__display_parser_diagnostics(errors)
 
