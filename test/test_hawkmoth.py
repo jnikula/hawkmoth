@@ -7,11 +7,16 @@ import os
 import pytest
 
 from hawkmoth.parser import parse
+from hawkmoth.util import doccompat
 from test import testenv
 
 def _get_output(input_filename, **options):
     docs_str = ''
     errors_str = ''
+
+    transform = options.pop('compat', None)
+    if transform is not None:
+        options['transform'] = lambda comment: doccompat.convert(comment, transform)
 
     docs, errors = parse(input_filename, **options)
 
