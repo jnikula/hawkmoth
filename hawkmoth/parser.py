@@ -42,7 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import docstr, doccompat
+from hawkmoth.util import docstr
 
 class ErrorLevel(enum.Enum):
     """
@@ -311,7 +311,7 @@ def parse(filename, **options):
     top_level_comments, comments = comment_extract(tu)
 
     result = []
-    transform = lambda x: doccompat.convert(x, options.get('compat'))
+    transform = options.get('transform')
 
     for comment in top_level_comments:
         result.extend(_result(comment, transform=transform))

@@ -11,6 +11,7 @@ import argparse
 import sys
 
 from hawkmoth.parser import parse
+from hawkmoth.util import doccompat
 
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
@@ -31,7 +32,9 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    docs, errors = parse(args.file, compat=args.compat, clang=args.clang)
+    transform = lambda x: doccompat.convert(x, args.compat)
+
+    docs, errors = parse(args.file, transform=transform, clang=args.clang)
 
     for (doc, meta) in docs:
         if args.verbose:

@@ -7,10 +7,15 @@ import unittest
 
 import testenv
 from hawkmoth.parser import parse
+from hawkmoth.util import doccompat
 
 def _get_output(input_filename, **options):
     docs_str = ''
     errors_str = ''
+
+    compat = options.pop('compat', None)
+    if compat is not None:
+        options['transform'] = lambda x: doccompat.convert(x, compat)
 
     docs, errors = parse(input_filename, **options)
 
