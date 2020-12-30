@@ -15,17 +15,19 @@
 
 dir := .
 
+# assume virtual environment is used for dist and upload
 dist-tools:
-	python3 -m pip install --user --upgrade setuptools wheel twine
+	pip install --upgrade setuptools wheel twine
 
 dist:
+	rm -rf build dist hawkmoth.egg-info
 	python3 setup.py sdist bdist_wheel
 
 test-upload:
-	python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 upload:
-	python3 -m twine upload dist/*
+	twine upload dist/*
 
 DOCKER_SRC_MOUNT = --mount type=bind,src=$(PWD),dst=/src,readonly=true
 DOCKER_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
