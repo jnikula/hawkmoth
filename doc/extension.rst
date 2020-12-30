@@ -25,6 +25,7 @@ Configuration
 The extension has a few configuration options that can be set in ``conf.py``:
 
 .. py:data:: cautodoc_root
+   :type: str
 
    Path to the root of the source files. Defaults to the
    :term:`sphinx:configuration directory`, i.e. the directory containing
@@ -39,6 +40,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
       cautodoc_root = os.path.abspath('my/sources/dir')
 
 .. py:data:: cautodoc_compat
+   :type: str
 
    Compatibility option. One of ``none`` (default), ``javadoc-basic``,
    ``javadoc-liberal``, and ``kernel-doc``. This can be used to perform a
@@ -50,6 +52,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
       are likely to change.
 
 .. py:data:: cautodoc_clang
+   :type: str
 
    A comma separated list of arguments to pass to ``clang`` while parsing the
    source, typically to define macros for conditional compilation, for example
