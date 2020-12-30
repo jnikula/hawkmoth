@@ -66,11 +66,17 @@ This module provides the following new directive:
    separated list of filename patterns given as arguments. The patterns are
    interpreted relative to the :data:`cautodoc_root` configuration option.
 
-   The ``compat`` option overrides the :data:`cautodoc_compat` configuration
-   option.
+   .. rst:directive:option:: compat
+      :type: text
 
-   The ``clang`` option overrides the :data:`cautodoc_clang` configuration
-   option.
+      The ``compat`` option overrides the :data:`cautodoc_compat` configuration
+      option.
+
+   .. rst:directive:option:: clang
+      :type: text
+
+      The ``clang`` option overrides the :data:`cautodoc_clang` configuration
+      option.
 
 Examples
 --------
