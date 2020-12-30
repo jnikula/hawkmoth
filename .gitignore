@@ -1,2 +1,6 @@
 *.pyc
 *~
+.venv
+build
+dist
+hawkmoth.egg-info
