@@ -14,8 +14,9 @@ Please see the `Hawkmoth project GitHub page`_ (or README.rst in the source
 repository) for information on how to obtain, install, and contribute to
 Hawkmoth, as well as how to contact the developers.
 
-Read on for information about Hawkmoth usage; how to configure and use the
-extension and how to write documentation comments, with examples.
+Read on for information about Hawkmoth installation details and usage; how to
+configure and use the extension and how to write documentation comments, with
+examples.
 
 .. _Sphinx: http://www.sphinx-doc.org
 
@@ -30,6 +31,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
    extension
    syntax
    examples

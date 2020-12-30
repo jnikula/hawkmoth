@@ -40,9 +40,9 @@ to any symbols.
 Documentation
 -------------
 
-Documentation on how to configure Hawkmoth and write documentation comments,
-with examples, is available in the ``doc`` directory in the source tree,
-obviously in Sphinx format and using the directive extension. Pre-built
+Documentation on how to install and configure Hawkmoth, and write documentation
+comments, with examples, is available in the ``doc`` directory in the source
+tree, obviously in Sphinx format and using the directive extension. Pre-built
 documentation `showcasing what Hawkmoth can do`_ is available at `Read the
 Docs`_.
 
@@ -58,11 +58,8 @@ You can install Hawkmoth from PyPI_ with::
   pip install hawkmoth
 
 You'll additionally need to install Clang and Python 3 bindings for it through
-your distro's package manager; they are not available via PyPI. You may also
-need to set ``LD_LIBRARY_PATH`` so that the Clang library can be found. For
-example::
-
-  export LD_LIBRARY_PATH=$(llvm-config --libdir)
+your distro's package manager; they are not available via PyPI. For further
+details, see the documentation.
 
 Alternatively, installation packages are available for:
 

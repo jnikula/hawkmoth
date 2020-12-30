@@ -12,8 +12,11 @@ For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
 details.
 
-Installation
-------------
+See :ref:`installation` on how to install the Hawkmoth package and its
+dependencies.
+
+Usage
+-----
 
 Add ``hawkmoth`` to :data:`sphinx:extensions` in ``conf.py``. Note that
 depending on the packaging and installation directory, this may require
