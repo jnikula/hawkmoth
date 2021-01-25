@@ -2,3 +2,18 @@
  * This is a variable document.
  */
 static int sheesh;
+
+/**
+ * function pointer variable
+ */
+int (*function_pointer_variable)(int *param_name_ignored);
+
+/**
+ * pointer to function pointer variable
+ */
+int (**pointer_to_function_pointer_variable)(int);
+
+/**
+ * array of function pointers
+ */
+void (*function_pointer_array[5])(void);
