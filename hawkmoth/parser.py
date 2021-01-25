@@ -278,7 +278,8 @@ def clang_diagnostics(errors, diagnostics):
            4: ErrorLevel.ERROR}
 
     for diag in diagnostics:
-        errors.extend([(sev[diag.severity], diag.location.file.name,
+        filename = diag.location.file.name if diag.location.file else None
+        errors.extend([(sev[diag.severity], filename,
                         diag.location.line, diag.spelling)])
 
 # return a list of (comment, metadata) tuples

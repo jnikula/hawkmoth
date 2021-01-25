@@ -39,7 +39,10 @@ def main():
         print(doc)
 
     for (severity, filename, lineno, msg) in errors:
-        print('{}: {}:{}: {}'.format(severity.name,
-                                     filename, lineno, msg), file=sys.stderr)
+        if filename:
+            print('{}: {}:{}: {}'.format(severity.name,
+                                         filename, lineno, msg), file=sys.stderr)
+        else:
+            print('{}: {}'.format(severity.name, msg), file=sys.stderr)
 
 main()

@@ -52,7 +52,10 @@ class CAutoDocDirective(Directive):
         env = self.state.document.settings.env
 
         for (severity, filename, lineno, msg) in errors:
-            toprint = '{}:{}: {}'.format(filename, lineno, msg)
+            if filename:
+                toprint = '{}:{}: {}'.format(filename, lineno, msg)
+            else:
+                toprint = '{}'.format(msg)
 
             if severity.value <= env.app.verbosity:
                 self.logger.log(self._log_lvl[severity], toprint,
