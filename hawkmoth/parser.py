@@ -34,6 +34,7 @@ Otherwise, documentation comments are passed through verbatim.
 """
 
 import enum
+import re
 import sys
 
 from clang.cindex import CursorKind, TypeKind
@@ -172,11 +173,20 @@ def _recursive_parse(comments, cursor, nest, compat):
         else:
             fmt = docstr.Type.MEMBER
 
-        # The dimensions should be applied to the name, not the type.
+        # If this is an array, the dimensions should be applied to the name, not
+        # the type.
         dims = ttype.rsplit(' ', 1)[-1]
         if dims.startswith('[') and dims.endswith(']'):
             ttype = ttype.rsplit(' ', 1)[0]
             name = name + dims
+
+        # If this is a function pointer, or an array of function pointers, the
+        # name should be within the parenthesis as in (*name) or (*name[N]).
+        fptr_type = re.sub(r'\((\*+)(\[[^]]*\])?\)', r'(\1{}\2)'.format(name),
+                           ttype, count=1)
+        if fptr_type != ttype:
+            name = fptr_type
+            ttype = ''
 
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=name, ttype=ttype, compat=compat)
