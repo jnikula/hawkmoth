@@ -9,6 +9,10 @@ struct sample_struct {
 	 */
 	int jesh;
 	/**
+	 * array member
+	 */
+	int array_member[5];
+	/**
 	 * foo next
 	 */
 	struct sample_struct *next;

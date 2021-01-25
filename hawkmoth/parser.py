@@ -166,8 +166,11 @@ def _recursive_parse(comments, cursor, nest, compat):
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=name, args=args, compat=compat)
 
-    elif cursor.kind == CursorKind.VAR_DECL:
-        fmt = docstr.Type.VAR
+    elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
+        if cursor.kind == CursorKind.VAR_DECL:
+            fmt = docstr.Type.VAR
+        else:
+            fmt = docstr.Type.MEMBER
 
         # The dimensions should be applied to the name, not the type.
         dims = ttype.rsplit(' ', 1)[-1]
@@ -221,12 +224,6 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=name, compat=compat)
-
-    elif cursor.kind == CursorKind.FIELD_DECL:
-        fmt = docstr.Type.MEMBER
-
-        return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, ttype=ttype, compat=compat)
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
         # FIXME: check args against comment

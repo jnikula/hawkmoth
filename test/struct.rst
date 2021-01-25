@@ -11,6 +11,11 @@
       member
 
 
+   .. c:member:: int array_member[5]
+
+      array member
+
+
    .. c:member:: struct sample_struct * next
 
       foo next
