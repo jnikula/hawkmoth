@@ -21,6 +21,12 @@ import re
 # FIXME: try to preserve whitespace better
 #
 
+from sphinx.ext.napoleon import docstring, Config
+
+def napo(comment, **options):
+    config = Config(napoleon_use_rtype=False)
+    return str(docstring.GoogleDocstring(comment, config))
+
 def javadoc(comment, **options):
     """Basic javadoc conversion to reStructuredText"""
 
@@ -79,6 +85,7 @@ def convert(comment, **options):
         'javadoc-basic': javadoc,
         'javadoc-liberal': javadoc_liberal,
         'kernel-doc': kerneldoc,
+        'napoleon': napo,
     }
 
     if mode in transformations:
