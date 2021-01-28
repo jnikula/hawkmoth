@@ -87,3 +87,32 @@ look at the ``Dockerfile`` in the `Hawkmoth source repository`_ for a starting
 point; the file is used for testing during Hawkmoth development.
 
 .. _Hawkmoth source repository: https://github.com/jnikula/hawkmoth
+
+Read the Docs
+-------------
+
+It's possible to set up Hawkmoth based documentation on `Read the Docs`_ (RTD),
+and Hawkmoth provides a helper for configuration. There's a caveat, though: This
+is not based on the official RTD documentation, and might cease to work at any
+time.
+
+First, add a ``requirements.txt`` file to your project according to RTD
+`dependency documentation`_ to have RTD install some required dependencies::
+
+  clang>=6
+  hawkmoth>=0.7
+
+Next, add this snippet to your ``conf.py``:
+
+.. code-block:: python
+
+   from hawkmoth.util import readthedocs
+
+   readthedocs.clang_setup()
+
+This will try to find ``libclang`` on RTD, and configure Clang Python Bindings
+to use it.
+
+.. _Read the Docs: https://readthedocs.org/
+
+.. _dependency documentation: https://docs.readthedocs.io/en/stable/guides/specifying-dependencies.html
