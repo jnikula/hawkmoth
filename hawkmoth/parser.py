@@ -104,14 +104,14 @@ def comment_extract(tu):
     return top_level_comments, comments
 
 def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
-            name=None, ttype=None, args=None, compat=None):
+            name=None, ttype=None, args=None, transform=None):
 
     # FIXME: docstr.generate changes the number of lines in output. This impacts
     # the error reporting via meta['line']. Adjust meta to take this into
     # account.
 
     doc = docstr.generate(text=comment.spelling, fmt=fmt,
-                          name=name, ttype=ttype, args=args, transform=compat)
+                          name=name, ttype=ttype, args=args, transform=transform)
 
     doc = docstr.nest(doc, nest)
 
@@ -183,7 +183,7 @@ def _function_pointer_fixup(ttype, name):
 
     return ttype, name
 
-def _recursive_parse(comments, cursor, nest, compat):
+def _recursive_parse(comments, cursor, nest, transform):
     comment = comments[cursor.hash]
     name = cursor.spelling
     ttype = cursor.type.spelling
@@ -194,7 +194,7 @@ def _recursive_parse(comments, cursor, nest, compat):
         fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
 
         return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, args=args, compat=compat)
+                       nest=nest, name=name, args=args, transform=transform)
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         if cursor.kind == CursorKind.VAR_DECL:
@@ -211,14 +211,14 @@ def _recursive_parse(comments, cursor, nest, compat):
         ttype, name = _function_pointer_fixup(ttype, name)
 
         return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, ttype=ttype, compat=compat)
+                       nest=nest, name=name, ttype=ttype, transform=transform)
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
         fmt = docstr.Type.TYPE
 
         return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=ttype, compat=compat)
+                       nest=nest, name=ttype, transform=transform)
 
     elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL,
                          CursorKind.ENUM_DECL]:
@@ -242,12 +242,12 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         # name may be empty for typedefs
         result = _result(comment, cursor=cursor, fmt=fmt,
-                         nest=nest, name=name if name else ttype, compat=compat)
+                         nest=nest, name=name if name else ttype, transform=transform)
 
         nest += 1
         for c in cursor.get_children():
             if c.hash in comments:
-                result.extend(_recursive_parse(comments, c, nest, compat))
+                result.extend(_recursive_parse(comments, c, nest, transform))
 
         return result
 
@@ -255,7 +255,7 @@ def _recursive_parse(comments, cursor, nest, compat):
         fmt = docstr.Type.ENUM_VAL
 
         return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, compat=compat)
+                       nest=nest, name=name, transform=transform)
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
         # FIXME: check args against comment
@@ -280,7 +280,7 @@ def _recursive_parse(comments, cursor, nest, compat):
         ttype = cursor.result_type.spelling
 
         return _result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                       name=name, ttype=ttype, args=args, compat=compat)
+                       name=name, ttype=ttype, args=args, transform=transform)
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error
     # and it should be logged, but it should also return an empty list so that
@@ -336,14 +336,14 @@ def parse(filename, **options):
     top_level_comments, comments = comment_extract(tu)
 
     result = []
-    compat = lambda x: doccompat.convert(x, options.get('compat'))
+    transform = lambda x: doccompat.convert(x, options.get('compat'))
 
     for comment in top_level_comments:
-        result.extend(_result(comment, compat=compat))
+        result.extend(_result(comment, transform=transform))
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
-            result.extend(_recursive_parse(comments, cursor, 0, compat))
+            result.extend(_recursive_parse(comments, cursor, 0, transform))
 
     # Sort all elements by order of appearance.
     result.sort(key=lambda r: r[1]['line'])
