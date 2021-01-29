@@ -6,11 +6,21 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Hawkmoth `0.7.0`_
+-----------------
+
+:Date: 2021-01-29
+
 Added
 ~~~~~
 
 * Retroactively written changelog
 * Helper and documentation for using Hawkmoth on Read the Docs
+
+Changed
+~~~~~~~
+
+* Switched to semantic versioning
 
 Fixed
 ~~~~~
@@ -117,7 +127,8 @@ Changed
 * Parser refactoring
 * Testing overhaul, switch to sphinx_testing
 
-.. _master: https://github.com/jnikula/hawkmoth/compare/v0.6..master
+.. _master: https://github.com/jnikula/hawkmoth/compare/v0.7.0..master
+.. _0.7.0: https://github.com/jnikula/hawkmoth/compare/v0.6..v0.7.0
 .. _0.6: https://github.com/jnikula/hawkmoth/compare/v0.5..v0.6
 .. _0.5: https://github.com/jnikula/hawkmoth/compare/v0.4..v0.5
 .. _0.4: https://github.com/jnikula/hawkmoth/compare/v0.3..v0.4
