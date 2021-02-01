@@ -4,7 +4,6 @@
 
 import os
 import shutil
-import unittest
 
 from sphinx_testing import with_app
 
@@ -35,10 +34,7 @@ def _get_expected(input_filename, app, status, warning, **options):
 
     return testenv.read_file(os.path.join(app.outdir, 'index.txt')), None
 
-class DirectiveTest(unittest.TestCase):
+class TestDirective:
     pass
 
-testenv.assign_test_methods(DirectiveTest, _get_output, _get_expected)
-
-if __name__ == '__main__':
-    unittest.main()
+testenv.assign_test_methods(TestDirective, _get_output, _get_expected)

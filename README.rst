@@ -93,6 +93,7 @@ Dependencies
 - Sphinx 3
 - Clang 6.0
 - Python 3 Bindings for Clang 6.0
+- pytest (for development)
 - sphinx-testing 1.0.0 (for development)
 
 These are the versions Hawkmoth is currently being developed and tested

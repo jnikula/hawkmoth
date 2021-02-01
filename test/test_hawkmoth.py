@@ -3,7 +3,6 @@
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 import os
-import unittest
 
 from hawkmoth.parser import parse
 from test import testenv
@@ -26,10 +25,7 @@ def _get_expected(input_filename, **options):
     return testenv.read_file(input_filename, ext='rst'), \
         testenv.read_file(input_filename, ext='stderr')
 
-class ParserTest(unittest.TestCase):
+class TestParser:
     pass
 
-testenv.assign_test_methods(ParserTest, _get_output, _get_expected)
-
-if __name__ == '__main__':
-    unittest.main()
+testenv.assign_test_methods(TestParser, _get_output, _get_expected)
