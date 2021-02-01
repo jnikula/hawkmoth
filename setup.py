@@ -35,6 +35,7 @@ setuptools.setup(
     ],
     extras_require = {
         'dev': [
+            'pytest',
             'sphinx-testing'
         ],
     },

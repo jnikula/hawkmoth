@@ -1,9 +1,10 @@
 # Copyright (c) 2018, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
-import sys
 import os
-import unittest
+import sys
+
+import pytest
 
 testext = '.c'
 testdir = os.path.dirname(os.path.abspath(__file__))
@@ -77,8 +78,8 @@ def _test_generator(get_output, get_expected, input_filename, **options):
         output_docs, output_errors = get_output(input_filename, **options)
         expect_docs, expect_errors = get_expected(input_filename, **options)
 
-        self.assertEqual(expect_docs, output_docs)
-        self.assertEqual(expect_errors, output_errors)
+        assert expect_docs == output_docs
+        assert expect_errors == output_errors
 
     return test
 
@@ -89,6 +90,6 @@ def assign_test_methods(cls, get_output, get_expected):
         method = _test_generator(get_output, get_expected, f, **options)
 
         if options.get('test-expected-failure') is not None:
-            method = unittest.expectedFailure(method)
+            method = pytest.mark.xfail(method)
 
         setattr(cls, _testcase_name(f), method)

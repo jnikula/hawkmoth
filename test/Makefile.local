@@ -10,4 +10,4 @@ test_dir := test
 
 .PHONY: test
 test:
-	python3 -m unittest discover -s $(test_dir)
+	pytest $(test_dir)
