@@ -5,8 +5,8 @@
 import os
 import unittest
 
-import testenv
 from hawkmoth.parser import parse
+from test import testenv
 
 def _get_output(input_filename, **options):
     docs_str = ''
