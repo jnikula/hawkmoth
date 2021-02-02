@@ -6,8 +6,9 @@ import os
 import shutil
 import unittest
 
-import testenv
 from sphinx_testing import with_app
+
+from test import testenv
 
 @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
 def _get_output(input_filename, app, status, warning, **options):
