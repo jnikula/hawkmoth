@@ -68,7 +68,7 @@ class CAutoDocDirective(Directive):
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        transform = lambda x: doccompat.convert(x, compat)
+        transform = lambda x: doccompat.convert(x, mode=compat)
 
         comments, errors = parse(filename, transform=transform, clang=clang)
 

@@ -15,7 +15,7 @@ def _get_output(input_filename, **options):
 
     compat = options.pop('compat', None)
     if compat is not None:
-        options['transform'] = lambda x: doccompat.convert(x, compat)
+        options['transform'] = lambda x: doccompat.convert(x, mode=compat)
 
     docs, errors = parse(input_filename, **options)
 

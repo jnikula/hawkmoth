@@ -17,9 +17,11 @@ import re
 # facilitate any kind of migration to Hawkmoth. The compat code could be turned
 # into a fairly simple plugin architecture, with some basic compat builtins, and
 # the users could still extend the compat features to fit their specific needs.
-def convert(comment, mode):
+def convert(comment, **options):
     """Convert documentation from a supported syntax into reST."""
     # FIXME: try to preserve whitespace better
+
+    mode = options.get('mode')
 
     if mode == 'javadoc-basic' or mode == 'javadoc-liberal':
         # @param

@@ -32,7 +32,7 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    transform = lambda x: doccompat.convert(x, args.compat)
+    transform = lambda x: doccompat.convert(x, mode=args.compat)
 
     docs, errors = parse(args.file, transform=transform, clang=args.clang)
 
