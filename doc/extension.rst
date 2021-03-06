@@ -48,6 +48,23 @@ The extension has a few configuration options that can be set in ``conf.py``:
       import os
       cautodoc_root = os.path.abspath('my/sources/dir')
 
+.. py:data:: cautodoc_transformations
+   :type: dict
+
+   Transformation options for the :data:`cautodoc_compat` option and the
+   :rst:dir:`c:autodoc` directive ``compat`` option. This is a dictionary that
+   maps names to functions. The functions are expected to take a (multi-line)
+   string as parameter and return the transformed string.
+
+   .. code-block:: python
+
+      from hawkmoth.util import doccompat
+      cautodoc_transformations = {
+          'javadoc-basic': doccompat.javadoc,
+          'javadoc-liberal': doccompat.javadoc_liberal,
+          'kernel-doc': doccompat.kerneldoc,
+      }
+
 .. py:data:: cautodoc_compat
    :type: str
 

@@ -49,6 +49,13 @@ try:
     import hawkmoth
     extensions.append('hawkmoth')
     tags.add('have_hawkmoth')
+
+    from hawkmoth.util import doccompat
+    cautodoc_transformations = {
+        'javadoc-basic': doccompat.javadoc,
+        'javadoc-liberal': doccompat.javadoc_liberal,
+    }
+
 except ImportError:
     sys.stderr.write('Warning: Failed to import hawkmoth. Mocking results.\n')
     sys.path.insert(0, os.path.abspath('ext'))

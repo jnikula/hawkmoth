@@ -67,8 +67,20 @@ class CAutoDocDirective(Directive):
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
+        transformations = env.config.cautodoc_transformations
 
-        transform = lambda x: doccompat.convert(x, mode=compat)
+        if transformations is not None:
+            # compat == 'none' works by coincidence if there is no 'none'
+            fn = transformations.get(compat, None)
+            if fn is not None:
+                transform = lambda x: fn(x, mode=compat)
+            else:
+                transform = None
+        elif compat is not None:
+            # FIXME: deprecated fallback
+            transform = lambda x: doccompat.convert(x, mode=compat)
+        else:
+            transform = None
 
         comments, errors = parse(filename, transform=transform, clang=clang)
 
@@ -118,6 +130,7 @@ def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env')
     app.add_config_value('cautodoc_compat', None, 'env')
+    app.add_config_value('cautodoc_transformations', None, 'env')
     app.add_config_value('cautodoc_clang', None, 'env')
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 

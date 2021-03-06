@@ -42,6 +42,13 @@ extensions = [
     'hawkmoth'
 ]
 
+from hawkmoth.util import doccompat
+cautodoc_transformations = {
+    'javadoc-basic': doccompat.javadoc,
+    'javadoc-liberal': doccompat.javadoc_liberal,
+    'kernel-doc': doccompat.kerneldoc,
+}
+
 # Add any paths that contain templates here, relative to this directory.
 #templates_path = ['_templates']
 
