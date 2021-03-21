@@ -17,11 +17,13 @@ import re
 # facilitate any kind of migration to Hawkmoth. The compat code could be turned
 # into a fairly simple plugin architecture, with some basic compat builtins, and
 # the users could still extend the compat features to fit their specific needs.
-def convert(comment, mode):
+def convert(comment, **options):
     """Convert documentation from a supported syntax into reST."""
     # FIXME: try to preserve whitespace better
 
-    if mode == 'javadoc-basic' or mode == 'javadoc-liberal':
+    transform = options.get('transform')
+
+    if transform == 'javadoc-basic' or transform == 'javadoc-liberal':
         # @param
         comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
                          "\n\\1:param\\2\\3:\\4", comment)
@@ -44,13 +46,13 @@ def convert(comment, mode):
                          "\n\\1", comment)
         comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
 
-    if mode == 'javadoc-liberal':
+    if transform == 'javadoc-liberal':
         # Liberal conversion of any @tags, will fail for @code etc. but don't
         # care.
         comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
                          "\n\\1:\\2:\\3", comment)
 
-    if mode == 'kernel-doc':
+    if transform == 'kernel-doc':
         # Basic kernel-doc convert, will document struct members as params, etc.
         comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
                          "\n\\1:return:\\3", comment)
