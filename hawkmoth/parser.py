@@ -162,6 +162,15 @@ def _array_fixup(ttype, name):
 
     return ttype, name
 
+def _function_pointer_fixup(ttype, name):
+    fptr_type = re.sub(r'\((\*+)(\[[^]]*\])?\)', r'(\1{}\2)'.format(name),
+                       ttype, count=1)
+    if fptr_type != ttype:
+        ttype = ''
+        name = fptr_type
+
+    return ttype, name
+
 def _recursive_parse(comments, cursor, nest, compat):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -187,11 +196,7 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         # If this is a function pointer, or an array of function pointers, the
         # name should be within the parenthesis as in (*name) or (*name[N]).
-        fptr_type = re.sub(r'\((\*+)(\[[^]]*\])?\)', r'(\1{}\2)'.format(name),
-                           ttype, count=1)
-        if fptr_type != ttype:
-            name = fptr_type
-            ttype = ''
+        ttype, name = _function_pointer_fixup(ttype, name)
 
         return _result(comment, cursor=cursor, fmt=fmt,
                        nest=nest, name=name, ttype=ttype, compat=compat)
