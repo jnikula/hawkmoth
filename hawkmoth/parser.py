@@ -250,8 +250,10 @@ def _recursive_parse(comments, cursor, nest, compat):
         if cursor.type.kind == TypeKind.FUNCTIONPROTO:
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    args.append('{ttype} {arg}'.format(ttype=c.type.spelling,
-                                                    arg=c.spelling))
+                    arg_ttype, arg_name = _array_fixup(c.type.spelling, c.spelling)
+
+                    args.append('{ttype} {name}'.format(ttype=arg_ttype,
+                                                        name=arg_name))
 
             if cursor.type.is_function_variadic():
                 args.append('...')
