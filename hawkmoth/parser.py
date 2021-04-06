@@ -154,6 +154,14 @@ def _get_macro_args(cursor):
 
     return None
 
+def _array_fixup(ttype, name):
+    dims = ttype.rsplit(' ', 1)[-1]
+    if dims.startswith('[') and dims.endswith(']'):
+        ttype = ttype.rsplit(' ', 1)[0]
+        name = name + dims
+
+    return ttype, name
+
 def _recursive_parse(comments, cursor, nest, compat):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -175,10 +183,7 @@ def _recursive_parse(comments, cursor, nest, compat):
 
         # If this is an array, the dimensions should be applied to the name, not
         # the type.
-        dims = ttype.rsplit(' ', 1)[-1]
-        if dims.startswith('[') and dims.endswith(']'):
-            ttype = ttype.rsplit(' ', 1)[0]
-            name = name + dims
+        ttype, name = _array_fixup(ttype, name)
 
         # If this is a function pointer, or an array of function pointers, the
         # name should be within the parenthesis as in (*name) or (*name[N]).
