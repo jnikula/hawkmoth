@@ -18,3 +18,8 @@
 
    array of function pointers
 
+
+.. c:var::  const char *(*const function_pointer_with_qualifier)(const char *)
+
+   function pointer with lots of const qualifiers
+
