@@ -163,21 +163,22 @@ def _array_fixup(ttype, name):
     return ttype, name
 
 def _function_pointer_fixup(ttype, name):
-    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)
+    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)
     if mo is None:
         return ttype, name
 
     begin = mo.group('begin')
     stars = mo.group('stars')
+    qual = mo.group('qual') + ' ' if mo.group('qual') is not None else ''
     brackets = mo.group('brackets') if mo.group('brackets') is not None else ''
     end = mo.group('end')
 
-    name = '{begin}({stars}{name}{brackets}){end}'.format(begin=begin,
-                                                          stars=stars,
-                                                          name=name,
-                                                          brackets=brackets,
-                                                          end=end)
-
+    name = '{begin}({stars}{qual}{name}{brackets}){end}'.format(begin=begin,
+                                                                stars=stars,
+                                                                qual=qual,
+                                                                name=name,
+                                                                brackets=brackets,
+                                                                end=end)
     ttype = ''
 
     return ttype, name

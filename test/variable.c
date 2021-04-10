@@ -17,3 +17,8 @@ int (**pointer_to_function_pointer_variable)(int);
  * array of function pointers
  */
 void (*function_pointer_array[5])(void);
+
+/**
+ * function pointer with lots of const qualifiers
+ */
+const char* (*const function_pointer_with_qualifier)(const char *in);
