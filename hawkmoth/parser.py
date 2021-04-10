@@ -42,7 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import docstr, doccompat
+from hawkmoth.util import compiler, docstr, doccompat
 
 class ErrorLevel(enum.Enum):
     """
@@ -295,6 +295,16 @@ def _get_user_args(args, errors, **options):
         user_args = [s.strip() for s in user_args.split(',') if len(s.strip()) > 0]
         args.extend(user_args)
 
+def _get_cc_args(args, errors, **options):
+    # FIXME: This should really be run only once and cached.
+    if options.get('cc_use_system_include_path'):
+        cc_path = options.get('cc_path')
+        try:
+            include_args = compiler.get_include_args(cc_path)
+            args.extend(include_args)
+        except OSError as e:
+            errors.extend([(ErrorLevel.WARNING, None, None, str(e))])
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
@@ -302,6 +312,8 @@ def parse(filename, **options):
     errors = []
 
     _get_user_args(args, errors, **options)
+
+    _get_cc_args(args, errors, **options)
 
     if len(args) == 0:
         args = None

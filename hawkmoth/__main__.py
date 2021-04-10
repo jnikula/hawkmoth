@@ -27,11 +27,15 @@ def main():
                         help='Compatibility options. See cautodoc_compat.')
     parser.add_argument('--clang', metavar='PARAM[,PARAM,...]',
                         help='Arguments to pass to clang. See cautodoc_clang.')
+    parser.add_argument('--cc-use-system-include-path', action='store_true')
+    parser.add_argument('--cc-path', type=str, default='clang')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
     args = parser.parse_args()
 
-    docs, errors = parse(args.file, compat=args.compat, clang=args.clang)
+    docs, errors = parse(args.file, compat=args.compat, clang=args.clang,
+                         cc_use_system_include_path=args.cc_use_system_include_path,
+                         cc_path=args.cc_path)
 
     for (doc, meta) in docs:
         if args.verbose:

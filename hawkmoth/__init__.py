@@ -66,8 +66,12 @@ class CAutoDocDirective(Directive):
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         clang = self.options.get('clang', env.config.cautodoc_clang)
+        cc_path = env.config.cautodoc_cc_path
+        cc_use_system_include_path = env.config.cautodoc_cc_use_system_include_path
 
-        comments, errors = parse(filename, compat=compat, clang=clang)
+        comments, errors = parse(filename, compat=compat, clang=clang,
+                                 cc_path=cc_path,
+                                 cc_use_system_include_path=cc_use_system_include_path)
 
         self.__display_parser_diagnostics(errors)
 
@@ -116,6 +120,8 @@ def setup(app):
     app.add_config_value('cautodoc_root', app.confdir, 'env')
     app.add_config_value('cautodoc_compat', None, 'env')
     app.add_config_value('cautodoc_clang', None, 'env')
+    app.add_config_value('cautodoc_cc_path', 'clang', 'env')
+    app.add_config_value('cautodoc_cc_use_system_include_path', False, 'env')
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
     return dict(version = __version__,

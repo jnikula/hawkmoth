@@ -67,6 +67,20 @@ The extension has a few configuration options that can be set in ``conf.py``:
    source, typically to define macros for conditional compilation, for example
    ``-DHAWKMOTH``. No arguments are passed by default.
 
+.. py:data:: cautodoc_cc_use_system_include_path
+   :type: bool
+
+   Try to use the compiler specified by :data:`cautodoc_cc_path` to figure out
+   the system include paths, and pass them as ``-I`` options for parsing the
+   source code comments. False by default.
+
+.. py:data:: cautodoc_cc_path
+   :type: str
+
+   Compiler to use for figuring out the system include paths if
+   :data:`cautodoc_cc_use_system_include_path` is enabled. This is not used for
+   parsing the source code comments. Defaults to ``clang``.
+
 Directive
 ---------
 
