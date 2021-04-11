@@ -62,13 +62,21 @@ class CAutoDocDirective(Directive):
                 self.logger.log(self._log_lvl[severity], toprint,
                                 location=(env.docname, self.lineno))
 
-    def __parse(self, viewlist, filename):
+    def __get_transform(self):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
+        if compat is None:
+            return None
+
+        return lambda comment: doccompat.convert(comment, transform=compat)
+
+    def __parse(self, viewlist, filename):
+        env = self.state.document.settings.env
+
         clang = self.options.get('clang', env.config.cautodoc_clang)
 
-        transform = lambda comment: doccompat.convert(comment, transform=compat)
+        transform = self.__get_transform()
 
         comments, errors = parse(filename, transform=transform, clang=clang)
 
