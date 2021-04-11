@@ -96,7 +96,7 @@ def generate(text, fmt=Type.TEXT, name=None,
 
     text = _strip(text)
 
-    if transform:
+    if transform is not None:
         text = transform(text)
 
     if args is not None:

@@ -48,6 +48,39 @@ The extension has a few configuration options that can be set in ``conf.py``:
       import os
       cautodoc_root = os.path.abspath('my/sources/dir')
 
+.. py:data:: cautodoc_transformations
+   :type: dict
+
+   Transformation functions for the :rst:dir:`c:autodoc` directive ``transform``
+   option. This is a dictionary that maps names to functions. The names can be
+   used in the directive ``transform`` option. The functions are expected to
+   take a (multi-line) comment string and options as parameters, and return the
+   transformed string. This can be used to perform custom conversions of the
+   comments, including, but not limited to, Javadoc-style compat conversions.
+
+   The special name ``default``, if present, is used to convert everything,
+   unless overridden in the directive ``transform`` option. The special name
+   ``none`` can be used in the ``transform`` option to bypass the default.
+
+   This is an example of a no-op transformation:
+
+   .. code-block:: python
+
+      def noop(comment, **options):
+          return comment
+
+   The example below shows how to use Hawkmoth's existing compat functions in
+   ``conf.py``.
+
+   .. code-block:: python
+
+      from hawkmoth.util import doccompat
+      cautodoc_transformations = {
+          'javadoc-basic': doccompat.javadoc,
+          'javadoc-liberal': doccompat.javadoc_liberal,
+          'kernel-doc': doccompat.kerneldoc,
+      }
+
 .. py:data:: cautodoc_compat
    :type: str
 
@@ -57,8 +90,9 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
    .. warning::
 
-      The compatibility options and the subset of supported syntax elements
-      are likely to change.
+      The cautodoc_compat option has been deprecated in favour of the
+      :data:`cautodoc_transformations` option and the :rst:dir:`c:autodoc`
+      directive ``transform`` option, and will be removed in the future.
 
 .. py:data:: cautodoc_clang
    :type: str
@@ -78,11 +112,25 @@ This module provides the following new directive:
    separated list of filename patterns given as arguments. The patterns are
    interpreted relative to the :data:`cautodoc_root` configuration option.
 
+   .. rst:directive:option:: transform
+      :type: text
+
+      Name of the transformation function specified in
+      :data:`cautodoc_transformations` to use for converting the comments.
+
+      If set to ``none``, the default is overriden.
+
    .. rst:directive:option:: compat
       :type: text
 
       The ``compat`` option overrides the :data:`cautodoc_compat` configuration
       option.
+
+      .. warning::
+
+	 The compat option has been deprecated in favour of the
+	 :data:`cautodoc_transformations` option and the :rst:dir:`c:autodoc`
+	 directive ``transform`` option, and will be removed in the future.
 
    .. rst:directive:option:: clang
       :type: text

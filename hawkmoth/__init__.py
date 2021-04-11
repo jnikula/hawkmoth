@@ -38,6 +38,7 @@ class CAutoDocDirective(Directive):
     final_argument_whitespace = True
 
     option_spec = {
+        'transform': directives.unchanged_required,
         'compat': directives.unchanged_required,
         'clang': directives.unchanged_required,
     }
@@ -62,14 +63,53 @@ class CAutoDocDirective(Directive):
                 self.logger.log(self._log_lvl[severity], toprint,
                                 location=(env.docname, self.lineno))
 
-    def __get_transform(self):
+    def __get_compat_transform(self):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         if compat is None:
             return None
 
+        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'
+        self.logger.warning(fmt, location=(env.docname, self.lineno))
+
         return lambda comment: doccompat.convert(comment, transform=compat)
+
+    def __get_transform(self):
+        env = self.state.document.settings.env
+
+        # Special case values for transform.
+        OPT_NONE = 'none'
+        OPT_DEFAULT = 'default'
+
+        # Handle deprecated compat. To be removed.
+        transform = self.__get_compat_transform()
+        if transform is not None:
+            return transform
+
+        transformations = env.config.cautodoc_transformations
+        tropt = self.options.get('transform', OPT_DEFAULT)
+
+        # Local option to skip transformation.
+        if tropt == OPT_NONE:
+            return None
+
+        if transformations is None:
+            if tropt != OPT_DEFAULT:
+                self.logger.warning('transform specified without cautodoc_transformations config.',
+                                    location=(env.docname, self.lineno))
+
+            return None
+
+        transform = transformations.get(tropt)
+
+        if transform is None:
+            if tropt != OPT_DEFAULT:
+                self.logger.warning(f'unknown transformation "{tropt}".',
+                                    location=(env.docname, self.lineno))
+            return None
+
+        return lambda comment: transform(comment, transform=tropt)
 
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
@@ -124,6 +164,7 @@ def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env')
     app.add_config_value('cautodoc_compat', None, 'env')
+    app.add_config_value('cautodoc_transformations', None, 'env')
     app.add_config_value('cautodoc_clang', None, 'env')
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
