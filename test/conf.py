@@ -42,6 +42,16 @@ extensions = [
     'hawkmoth'
 ]
 
+from sphinx.ext.napoleon import docstring, Config
+
+def napoleon_transform(comment, **options):
+    config = Config(napoleon_use_rtype=False)
+    return str(docstring.GoogleDocstring(comment, config))
+
+cautodoc_transformations = {
+    'napoleon': napoleon_transform,
+}
+
 # Add any paths that contain templates here, relative to this directory.
 #templates_path = ['_templates']
 
