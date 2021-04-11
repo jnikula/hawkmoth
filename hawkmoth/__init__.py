@@ -38,6 +38,7 @@ class CAutoDocDirective(Directive):
     final_argument_whitespace = True
 
     option_spec = {
+        'transform': directives.unchanged_required,
         'compat': directives.unchanged_required,
         'clang': directives.unchanged_required,
     }
@@ -71,14 +72,45 @@ class CAutoDocDirective(Directive):
 
         return clang_args
 
-    def __get_transform(self):
+    def __get_compat_transform(self):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
         if compat is None:
             return None
 
+        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'
+        self.logger.warning(fmt, location=(env.docname, self.lineno))
+
         return lambda comment: doccompat.convert(comment, transform=compat)
+
+    def __get_transform(self):
+        env = self.state.document.settings.env
+
+        # Handle deprecated compat. To be removed.
+        transform = self.__get_compat_transform()
+        if transform is not None:
+            return transform
+
+        transformations = env.config.cautodoc_transformations
+        tropt = self.options.get('transform')
+
+        if transformations is None:
+            if tropt is not None:
+                self.logger.warning('transform specified without cautodoc_transformations config.',
+                                    location=(env.docname, self.lineno))
+
+            return None
+
+        # Note: None is a valid key for default.
+        if tropt not in transformations:
+            if tropt is not None:
+                self.logger.warning(f'unknown transformation "{tropt}".',
+                                    location=(env.docname, self.lineno))
+            return None
+
+        # Note: None is a valid value for no transformation.
+        return transformations.get(tropt)
 
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
@@ -132,6 +164,7 @@ def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
     app.add_config_value('cautodoc_compat', None, 'env', [str])
+    app.add_config_value('cautodoc_transformations', None, 'env', [dict])
     app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
