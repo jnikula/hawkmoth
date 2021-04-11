@@ -17,46 +17,71 @@ import re
 # facilitate any kind of migration to Hawkmoth. The compat code could be turned
 # into a fairly simple plugin architecture, with some basic compat builtins, and
 # the users could still extend the compat features to fit their specific needs.
+#
+# FIXME: try to preserve whitespace better
+#
+
+def javadoc(comment, **options):
+    """Basic javadoc conversion to reStructuredText"""
+
+    # @param
+    comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:param\\2\\3:\\4", comment)
+    # @param[direction]
+    comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
+    # @return
+    comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
+                     "\n\\1:return:\\2", comment)
+    # @code/@endcode blocks. Works if the code is indented.
+    comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
+                     "\n::\n", comment)
+    comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
+                     "\n", comment)
+    # Ignore @brief.
+    comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
+
+    # Ignore groups
+    comment = re.sub(r"(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*",
+                     "\n\\1", comment)
+    comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
+
+    return comment
+
+def javadoc_liberal(comment, **options):
+    """Liberal javadoc conversion to reStructuredText"""
+
+    comment = javadoc(comment)
+
+    # Liberal conversion of any @tags, will fail for @code etc. but don't
+    # care.
+    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
+                     "\n\\1:\\2:\\3", comment)
+
+    return comment
+
+def kerneldoc(comment, **options):
+    """Basic kernel-doc conversion to reStructuredText"""
+
+    comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
+                     "\n\\1:return:\\3", comment)
+    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
+                     "\n\\1:param \\2:\\3", comment)
+
+    return comment
+
 def convert(comment, **options):
     """Convert documentation from a supported syntax into reST."""
-    # FIXME: try to preserve whitespace better
 
     transform = options.get('transform')
 
-    if transform == 'javadoc-basic' or transform == 'javadoc-liberal':
-        # @param
-        comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                         "\n\\1:param\\2\\3:\\4", comment)
-        # @param[direction]
-        comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                         "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
-        # @return
-        comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
-                         "\n\\1:return:\\2", comment)
-        # @code/@endcode blocks. Works if the code is indented.
-        comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
-                         "\n::\n", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
-                         "\n", comment)
-        # Ignore @brief.
-        comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
+    transformations = {
+        'javadoc-basic': javadoc,
+        'javadoc-liberal': javadoc_liberal,
+        'kernel-doc': kerneldoc,
+    }
 
-        # Ignore groups
-        comment = re.sub(r"(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*",
-                         "\n\\1", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
-
-    if transform == 'javadoc-liberal':
-        # Liberal conversion of any @tags, will fail for @code etc. but don't
-        # care.
-        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
-                         "\n\\1:\\2:\\3", comment)
-
-    if transform == 'kernel-doc':
-        # Basic kernel-doc convert, will document struct members as params, etc.
-        comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
-                         "\n\\1:return:\\3", comment)
-        comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
-                         "\n\\1:param \\2:\\3", comment)
+    if transform in transformations:
+        comment = transformations[transform](comment, **options)
 
     return comment
