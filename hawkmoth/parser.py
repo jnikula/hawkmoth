@@ -289,16 +289,22 @@ def clang_diagnostics(errors, diagnostics):
         errors.extend([(sev[diag.severity], filename,
                         diag.location.line, diag.spelling)])
 
+def _get_user_args(args, errors, **options):
+    user_args = options.get('clang')
+    if user_args is not None:
+        user_args = [s.strip() for s in user_args.split(',') if len(s.strip()) > 0]
+        args.extend(user_args)
+
 # return a list of (comment, metadata) tuples
 # options - dictionary with directive options
 def parse(filename, **options):
-
+    args = []
     errors = []
-    args = options.get('clang')
-    if args is not None:
-        args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
-        if len(args) == 0:
-            args = None
+
+    _get_user_args(args, errors, **options)
+
+    if len(args) == 0:
+        args = None
 
     index = Index.create()
 
