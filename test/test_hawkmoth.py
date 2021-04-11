@@ -8,7 +8,7 @@ import pytest
 
 from hawkmoth.parser import parse
 from hawkmoth.util import doccompat
-from test import testenv
+from test import conf, testenv
 
 def _get_output(input_filename, **options):
     docs_str = ''
@@ -17,6 +17,10 @@ def _get_output(input_filename, **options):
     transform = options.pop('compat', None)
     if transform is not None:
         options['transform'] = lambda comment: doccompat.convert(comment, transform=transform)
+    else:
+        transform = options.pop('transform', None)
+        if transform is not None:
+            options['transform'] = conf.cautodoc_transformations[transform]
 
     docs, errors = parse(input_filename, **options)
 

@@ -31,7 +31,7 @@ EOF
 read_options()
 {
 	if [ -e "$1" ]; then
-		sed -n "s/ /\n/g;s/\(compat\|clang\)=\([a-zA-Z0-9_,-]\+\)/:\1: \2/gp" < $1
+		sed -n "s/ /\n/g;s/\(compat\|clang\|transform\)=\([a-zA-Z0-9_,-]\+\)/:\1: \2/gp" < $1
 	fi
 }
 

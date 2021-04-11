@@ -26,6 +26,7 @@ def get_testcases(path):
 directive_options = [
     'compat',
     'clang',
+    'transform',
 ]
 
 def get_testcase_options(testcase):
