@@ -268,6 +268,7 @@ def _recursive_parse(comments, cursor, nest, compat):
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
                     arg_ttype, arg_name = _array_fixup(c.type.spelling, c.spelling)
+                    arg_ttype, arg_name = _function_pointer_fixup(arg_ttype, arg_name)
 
                     args.append('{ttype} {name}'.format(ttype=arg_ttype,
                                                         name=arg_name))
