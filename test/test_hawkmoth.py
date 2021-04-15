@@ -4,6 +4,8 @@
 
 import os
 
+import pytest
+
 from hawkmoth.parser import parse
 from test import testenv
 
@@ -25,7 +27,8 @@ def _get_expected(input_filename, **options):
     return testenv.read_file(input_filename, ext='rst'), \
         testenv.read_file(input_filename, ext='stderr')
 
-class TestParser:
-    pass
+@pytest.mark.parametrize('input_filename', testenv.get_testcases(testenv.testdir),
+                         ids=testenv.get_testid)
+def test_parser(input_filename):
+    testenv.run_test(input_filename, _get_output, _get_expected)
 
-testenv.assign_test_methods(TestParser, _get_output, _get_expected)
