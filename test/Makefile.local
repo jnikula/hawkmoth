@@ -1,10 +1,6 @@
 # -*- makefile -*-
 # Copyright (c) 2017-2018, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
-#
-# FIXME: This is inadequate. Needs more test data, in particular more
-# pathological real world test data.
-#
 
 test_dir := test
 
