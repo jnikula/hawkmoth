@@ -5,6 +5,7 @@
 import os
 import shutil
 
+import pytest
 from sphinx_testing import with_app
 
 from test import testenv
@@ -34,7 +35,7 @@ def _get_expected(input_filename, app, status, warning, **options):
 
     return testenv.read_file(os.path.join(app.outdir, 'index.txt')), None
 
-class TestDirective:
-    pass
-
-testenv.assign_test_methods(TestDirective, _get_output, _get_expected)
+@pytest.mark.parametrize('input_filename', testenv.get_testcases(testenv.testdir),
+                         ids=testenv.get_testid)
+def test_directive(input_filename):
+    testenv.run_test(input_filename, _get_output, _get_expected)

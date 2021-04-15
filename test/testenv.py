@@ -12,13 +12,9 @@ rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
 
-def _testcase_name(testcase):
+def get_testid(testcase):
     """Convert a testcase filename into a test case identifier."""
     name = os.path.splitext(os.path.basename(testcase))[0]
-    name = name.replace('-', '_')
-    name = 'test_{name}'.format(name=name)
-
-    assert name.isidentifier()
 
     return name
 
@@ -72,24 +68,14 @@ def read_file(filename, **kwargs):
     with open(filename, 'r') as f:
         return f.read()
 
-def _test_generator(get_output, get_expected, input_filename, **options):
-    """Return a function that compares output/expected results on input_filename."""
-    def test(self):
-        output_docs, output_errors = get_output(input_filename, **options)
-        expect_docs, expect_errors = get_expected(input_filename, **options)
+def run_test(input_filename, get_output, get_expected):
+    options = get_testcase_options(input_filename)
 
-        assert expect_docs == output_docs
-        assert expect_errors == output_errors
+    if options.get('test-expected-failure') is not None:
+        pytest.xfail()
 
-    return test
+    output_docs, output_errors = get_output(input_filename, **options)
+    expect_docs, expect_errors = get_expected(input_filename, **options)
 
-def assign_test_methods(cls, get_output, get_expected):
-    """Assign test case functions to the given class."""
-    for f in get_testcases(testdir):
-        options = get_testcase_options(f)
-        method = _test_generator(get_output, get_expected, f, **options)
-
-        if options.get('test-expected-failure') is not None:
-            method = pytest.mark.xfail(method)
-
-        setattr(cls, _testcase_name(f), method)
+    assert expect_docs == output_docs
+    assert expect_errors == output_errors
