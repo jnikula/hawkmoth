@@ -313,10 +313,8 @@ def parse(filename, **options):
 
     errors = []
     args = options.get('clang')
-    if args is not None:
+    if isinstance(args, str):
         args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
-        if len(args) == 0:
-            args = None
 
     index = Index.create()
 
