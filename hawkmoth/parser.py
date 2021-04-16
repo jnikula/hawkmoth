@@ -42,7 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import docstr, doccompat
+from hawkmoth.util import docstr, doccompat, strutil
 
 class ErrorLevel(enum.Enum):
     """
@@ -319,9 +319,7 @@ def clang_diagnostics(errors, diagnostics):
 def parse(filename, **options):
 
     errors = []
-    args = options.get('clang')
-    if isinstance(args, str):
-        args = [s.strip() for s in args.split(',') if len(s.strip()) > 0]
+    args = strutil.args_as_list(options.get('clang'))
 
     index = Index.create()
 
