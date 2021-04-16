@@ -94,7 +94,7 @@ This module provides the following new directive:
    .. rst:directive:option:: clang
       :type: text
 
-      The ``clang`` option overrides the :data:`cautodoc_clang` configuration
+      The ``clang`` option extends the :data:`cautodoc_clang` configuration
       option.
 
 Examples
