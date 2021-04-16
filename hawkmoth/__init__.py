@@ -22,7 +22,7 @@ from sphinx.util.docutils import switch_source_input
 from sphinx.util import logging
 
 from hawkmoth.parser import parse, ErrorLevel
-from hawkmoth.util import doccompat
+from hawkmoth.util import doccompat, strutil
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -65,7 +65,9 @@ class CAutoDocDirective(Directive):
     def __get_clang_args(self):
         env = self.state.document.settings.env
 
-        clang_args = self.options.get('clang', env.config.cautodoc_clang)
+        clang_args = strutil.args_as_list(env.config.cautodoc_clang)
+
+        clang_args.extend(strutil.args_as_list(self.options.get('clang')))
 
         return clang_args
 
