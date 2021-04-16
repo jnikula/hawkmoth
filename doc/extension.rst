@@ -61,11 +61,18 @@ The extension has a few configuration options that can be set in ``conf.py``:
       are likely to change.
 
 .. py:data:: cautodoc_clang
-   :type: str
+   :type: list, str
 
-   A comma separated list of arguments to pass to ``clang`` while parsing the
-   source, typically to define macros for conditional compilation, for example
-   ``-DHAWKMOTH``. No arguments are passed by default.
+   A list of arguments to pass to ``clang`` while parsing the source, typically
+   to add directories to include file search path, or to define macros for
+   conditional compilation. May be specified as a Python list, or as a string
+   with arguments separated by commas. No arguments are passed by default.
+
+   Example:
+
+   .. code-block:: python
+
+      cautodoc_clang = ['-I/path/to/include', '-DHAWKMOTH' ]
 
 Directive
 ---------
