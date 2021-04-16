@@ -73,6 +73,18 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
       cautodoc_clang = ['-I/path/to/include', '-DHAWKMOTH']
 
+   Hawkmoth provides a convenience helper for querying the include path from the
+   compiler, and providing them as ``-I`` options:
+
+   .. code-block:: python
+
+      from hawkmoth.util import compiler
+
+      cautodoc_clang = compiler.get_include_args()
+
+   You can also pass in the compiler to use, for example
+   ``get_include_args('gcc')``.
+
 Directive
 ---------
 
