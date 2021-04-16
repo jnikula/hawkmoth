@@ -61,13 +61,20 @@ class CAutoDocDirective(Directive):
                 self.logger.log(self._log_lvl[severity], toprint,
                                 location=(env.docname, self.lineno))
 
+    def __get_clang_args(self):
+        env = self.state.document.settings.env
+
+        clang_args = self.options.get('clang', env.config.cautodoc_clang)
+
+        return clang_args
+
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
 
         compat = self.options.get('compat', env.config.cautodoc_compat)
-        clang = self.options.get('clang', env.config.cautodoc_clang)
+        clang_args = self.__get_clang_args()
 
-        comments, errors = parse(filename, compat=compat, clang=clang)
+        comments, errors = parse(filename, compat=compat, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
