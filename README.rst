@@ -89,7 +89,7 @@ welcome both as emailed patches to the mailing list and as pull requests.
 Dependencies
 ------------
 
-- Python 3.4
+- Python 3.6
 - Sphinx 3
 - Clang 6.0
 - Python 3 Bindings for Clang 6.0

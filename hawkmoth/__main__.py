@@ -38,14 +38,14 @@ def main():
 
     for (doc, meta) in docs:
         if args.verbose:
-            print('# {}'.format(meta))
+            print(f'# {meta}'
         print(doc)
 
     for (severity, filename, lineno, msg) in errors:
         if filename:
-            print('{}: {}:{}: {}'.format(severity.name,
-                                         filename, lineno, msg), file=sys.stderr)
+            print('f{severity.name}: {filename}:{lineno}: {msg}',
+                  file=sys.stderr)
         else:
-            print('{}: {}'.format(severity.name, msg), file=sys.stderr)
+            print(f'{severity.name}: {msg}', file=sys.stderr)
 
 main()
