@@ -16,12 +16,12 @@
 dir := .
 
 # assume virtual environment is used for dist and upload
-dist-tools:
-	pip install --upgrade setuptools wheel twine
+build-tools:
+	pip install --upgrade build twine
 
-dist:
+build:
 	rm -rf build dist hawkmoth.egg-info
-	python3 setup.py sdist bdist_wheel
+	python3 -m build
 
 test-upload:
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
