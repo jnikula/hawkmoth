@@ -54,9 +54,9 @@ class CAutoDocDirective(Directive):
 
         for (severity, filename, lineno, msg) in errors:
             if filename:
-                toprint = '{}:{}: {}'.format(filename, lineno, msg)
+                toprint = f'{filename}:{lineno}: {msg}'
             else:
-                toprint = '{}'.format(msg)
+                toprint = f'{msg}'
 
             if severity.value <= env.app.verbosity:
                 self.logger.log(self._log_lvl[severity], toprint,
@@ -98,16 +98,14 @@ class CAutoDocDirective(Directive):
         for pattern in self.arguments[0].split():
             filenames = glob.glob(env.config.cautodoc_root + '/' + pattern)
             if len(filenames) == 0:
-                fmt = 'Pattern "{pat}" does not match any files.'
-                self.logger.warning(fmt.format(pat=pattern),
+                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
                                     location=(env.docname, self.lineno))
                 continue
 
             for filename in filenames:
                 mode = os.stat(filename).st_mode
                 if stat.S_ISDIR(mode):
-                    fmt = 'Path "{name}" matching pattern "{pat}" is a directory.'
-                    self.logger.warning(fmt.format(name=filename, pat=pattern),
+                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
                                         location=(env.docname, self.lineno))
                     continue
 

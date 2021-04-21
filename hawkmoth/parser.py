@@ -173,12 +173,7 @@ def _function_pointer_fixup(ttype, name):
     brackets = mo.group('brackets') if mo.group('brackets') is not None else ''
     end = mo.group('end')
 
-    name = '{begin}({stars}{qual}{name}{brackets}){end}'.format(begin=begin,
-                                                                stars=stars,
-                                                                qual=qual,
-                                                                name=name,
-                                                                brackets=brackets,
-                                                                end=end)
+    name = f'{begin}({stars}{qual}{name}{brackets}){end}'
     ttype = ''
 
     return ttype, name
@@ -270,8 +265,7 @@ def _recursive_parse(comments, cursor, nest, transform):
                     arg_ttype, arg_name = _array_fixup(c.type.spelling, c.spelling)
                     arg_ttype, arg_name = _function_pointer_fixup(arg_ttype, arg_name)
 
-                    args.append('{ttype} {name}'.format(ttype=arg_ttype,
-                                                        name=arg_name))
+                    args.append(f'{arg_ttype} {arg_name}')
 
             if cursor.type.is_function_variadic():
                 args.append('...')
@@ -287,9 +281,8 @@ def _recursive_parse(comments, cursor, nest, transform):
     # it doesn't break. I.e. the parser needs to pass warnings and errors to the
     # Sphinx extension instead of polluting the generated output.
     fmt = docstr.Type.TEXT
-    text = 'warning: unhandled cursor {kind} {name}\n'.format(
-        kind=str(cursor.kind),
-        name=cursor.spelling)
+    kind = str(cursor.kind)
+    text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
 
     doc = docstr.generate(text=text, fmt=fmt)
 

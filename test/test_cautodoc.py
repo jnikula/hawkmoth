@@ -16,11 +16,10 @@ def _get_output(input_filename, app, status, warning, **options):
                     testenv.modify_filename(input_filename, dir=app.srcdir))
 
     with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
-        fmt = '.. c:autodoc:: {source}\n'
-        f.write(fmt.format(source=os.path.basename(input_filename)))
+        source = os.path.basename(input_filename)
+        f.write(f'.. c:autodoc:: {source}\n')
         for key in [k for k in options.keys() if k in testenv.directive_options]:
-            fmt = '   :{key}: {value}\n'
-            f.write(fmt.format(key=key, value=options[key]))
+            f.write(f'   :{key}: {options[key]}\n')
 
     app.build()
 
