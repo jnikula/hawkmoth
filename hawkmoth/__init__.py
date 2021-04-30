@@ -65,7 +65,7 @@ class CAutoDocDirective(Directive):
     def __get_clang_args(self):
         env = self.state.document.settings.env
 
-        clang_args = strutil.args_as_list(env.config.cautodoc_clang)
+        clang_args = env.config.cautodoc_clang.copy()
 
         clang_args.extend(strutil.args_as_list(self.options.get('clang')))
 
@@ -132,7 +132,7 @@ def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
     app.add_config_value('cautodoc_compat', None, 'env', [str])
-    app.add_config_value('cautodoc_clang', None, 'env', [str])
+    app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
     return dict(version = __version__,
