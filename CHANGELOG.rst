@@ -6,6 +6,28 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Helper for discovering and configuring system include path
+* Transform functionality for comment conversion
+
+Changed
+~~~~~~~
+
+* Extension `cautodoc_clang` configuration option must now be a Python list
+* Directive `clang` option now extends instead of overrides `cautodoc_clang`
+* Bumped Python dependency requirement to v3.6 for f-strings
+* Switched to pytest for testing
+* Switched to static packaging metadata
+* Deprecated compat functionality in favour of transformations
+
+Fixed
+~~~~~
+
+* Array function parameter documentation
+* Function pointers with qualifiers such as const
+
 Hawkmoth `0.7.0`_
 -----------------
 
