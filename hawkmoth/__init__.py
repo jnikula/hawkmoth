@@ -122,9 +122,9 @@ class CAutoDocDirective(Directive):
 
 def setup(app):
     app.require_sphinx('3.0')
-    app.add_config_value('cautodoc_root', app.confdir, 'env')
-    app.add_config_value('cautodoc_compat', None, 'env')
-    app.add_config_value('cautodoc_clang', None, 'env')
+    app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
+    app.add_config_value('cautodoc_compat', None, 'env', [str])
+    app.add_config_value('cautodoc_clang', None, 'env', [str])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
 
     return dict(version = __version__,
