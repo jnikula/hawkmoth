@@ -62,6 +62,13 @@ class CAutoDocDirective(Directive):
                 self.logger.log(self._log_lvl[severity], toprint,
                                 location=(env.docname, self.lineno))
 
+    def __get_clang_args(self):
+        env = self.state.document.settings.env
+
+        clang_args = self.options.get('clang', env.config.cautodoc_clang)
+
+        return clang_args
+
     def __get_transform(self):
         env = self.state.document.settings.env
 
@@ -74,11 +81,10 @@ class CAutoDocDirective(Directive):
     def __parse(self, viewlist, filename):
         env = self.state.document.settings.env
 
-        clang = self.options.get('clang', env.config.cautodoc_clang)
-
+        clang_args = self.__get_clang_args()
         transform = self.__get_transform()
 
-        comments, errors = parse(filename, transform=transform, clang=clang)
+        comments, errors = parse(filename, transform=transform, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
