@@ -38,7 +38,7 @@ def main():
 
     for (doc, meta) in docs:
         if args.verbose:
-            print(f'# {meta}'
+            print(f'# {meta}')
         print(doc)
 
     for (severity, filename, lineno, msg) in errors:
