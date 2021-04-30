@@ -26,8 +26,8 @@ def main():
                                  'javadoc-liberal',
                                  'kernel-doc'],
                         help='Compatibility options. See cautodoc_compat.')
-    parser.add_argument('--clang', metavar='PARAM[,PARAM,...]',
-                        help='Arguments to pass to clang. See cautodoc_clang.')
+    parser.add_argument('--clang', metavar='PARAM', action='append',
+                        help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
     args = parser.parse_args()
