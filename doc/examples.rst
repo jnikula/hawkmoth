@@ -218,13 +218,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-80-compat.c
-      :compat: javadoc-liberal
+      :transform: javadoc-liberal
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-80-compat.c
-   :compat: javadoc-liberal
+   :transform: javadoc-liberal
 
 Generic
 -------

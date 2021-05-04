@@ -43,6 +43,7 @@ extensions = [
 ]
 
 from sphinx.ext.napoleon import docstring, Config
+from hawkmoth.util import doccompat
 
 def napoleon_transform(comment, **options):
     config = Config(napoleon_use_rtype=False)
@@ -50,6 +51,7 @@ def napoleon_transform(comment, **options):
 
 cautodoc_transformations = {
     'napoleon': napoleon_transform,
+    'javadoc-liberal': doccompat.javadoc_liberal,
 }
 
 # Add any paths that contain templates here, relative to this directory.

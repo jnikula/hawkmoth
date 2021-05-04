@@ -1,5 +1,9 @@
 /**
- * List frobnicator.
+ * Compat comment transformations.
+ *
+ * Transformations require ``cautodoc_transformations`` configuration in
+ * ``conf.py``. In this example, a transformation is used to support
+ * Javadoc-style documentation comments.
  *
  * @param list The list to frob.
  * @param mode The frobnication mode.
