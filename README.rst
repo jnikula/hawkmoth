@@ -82,7 +82,8 @@ checked out via ``git`` using this command::
   git clone https://github.com/jnikula/hawkmoth.git
 
 Please file bugs and feature requests as GitHub issues. Contributions are
-welcome both as emailed patches to the mailing list and as pull requests.
+welcome both as GitHub pull requests (preferred) and as emailed patches to the
+mailing list.
 
 .. _GitHub: https://github.com/jnikula/hawkmoth
 
@@ -109,11 +110,11 @@ Hawkmoth is free software, released under the `2-Clause BSD License`_.
 Contact
 -------
 
-IRC channel ``#hawkmoth`` on freenode_.
+IRC channel ``#hawkmoth`` on `OFTC IRC network`_.
 
 Mailing list hawkmoth@freelists.org. Subscription information at the `list home
 page`_.
 
-.. _freenode: https://freenode.net/
+.. _OFTC IRC network: https://www.oftc.net/
 
 .. _list home page: https://www.freelists.org/list/hawkmoth
