@@ -86,6 +86,10 @@ class _AutoBaseDirective(SphinxDirective):
             text = transform(text)
             lines[:] = [line for line in text.splitlines()]
 
+        transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
+
+        self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
+
     def __parse(self, filename):
         # Always pass `-xc++` to the compiler on 'cpp' domain as the first
         # option so that the user can override it.
@@ -304,6 +308,8 @@ def setup(app):
         'env', [list]
     )
 
+    app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
+
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
     app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
     app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
@@ -322,6 +328,8 @@ def setup(app):
     app.add_directive_to_domain('cpp', 'automacro', CppAutoMacroDirective)
     app.add_directive_to_domain('cpp', 'autofunction', CppAutoFunctionDirective)
     app.add_directive_to_domain('cpp', 'autoclass', CppAutoClassDirective)
+
+    app.add_event('hawkmoth-process-docstring')
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
