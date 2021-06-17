@@ -85,6 +85,10 @@ class _AutoBaseDirective(SphinxDirective):
             text = transform(text)
             lines[:] = [line for line in text.splitlines()]
 
+        transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
+
+        self.env.app.emit('hawkmoth-process-docstring', transform, self.options, lines)
+
     def __parse(self, filename):
         clang_args = self.__get_clang_args()
 
@@ -257,6 +261,8 @@ def setup(app):
         'env', [list]
     )
 
+    app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
+
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
     app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
     app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
@@ -265,6 +271,8 @@ def setup(app):
     app.add_directive_to_domain('c', 'autoenum', CAutoEnumDirective)
     app.add_directive_to_domain('c', 'automacro', CAutoMacroDirective)
     app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
+
+    app.add_event('hawkmoth-process-docstring')
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
