@@ -23,6 +23,7 @@ from sphinx.util import logging
 
 from hawkmoth.parser import parse, ErrorLevel
 from hawkmoth.util import doccompat, strutil
+from hawkmoth.util.docstr import Type
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -140,7 +141,7 @@ class CAutoBaseDirective(SphinxDirective):
         result = ViewList()
 
         for filename in self._get_filenames():
-            self.__get_comments(result, filename)
+            self.__get_comments(result, filename, self.doctypes, self._get_names())
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
@@ -155,6 +156,8 @@ class CAutoDocDirective(CAutoBaseDirective):
     # Allow passing a variable number of file patterns as arguments
     required_arguments = 1
     optional_arguments = 100 # arbitrary limit
+
+    doctypes = None
 
     def _get_filenames(self):
         for pattern in self.arguments:
@@ -173,6 +176,45 @@ class CAutoDocDirective(CAutoBaseDirective):
 
                 yield os.path.abspath(filename)
 
+    def _get_names(self):
+        return None
+
+# Base class for named stuff
+class CAutoSymbolDirective(CAutoBaseDirective):
+    """Extract specified documentation comments from the specified file"""
+
+    required_arguments = 2
+    optional_arguments = 0
+
+    doctypes = None
+
+    def _get_filenames(self):
+        return [os.path.abspath(os.path.join(self.env.config.cautodoc_root, self.arguments[0]))]
+
+    def _get_names(self):
+        return [self.arguments[1]]
+
+class CAutoVarDirective(CAutoSymbolDirective):
+    doctypes = [Type.VAR]
+
+class CAutoTypeDirective(CAutoSymbolDirective):
+    doctypes = [Type.TYPE]
+
+class CAutoStructDirective(CAutoSymbolDirective):
+    doctypes = [Type.STRUCT]
+
+class CAutoUnionDirective(CAutoSymbolDirective):
+    doctypes = [Type.UNION]
+
+class CAutoEnumDirective(CAutoSymbolDirective):
+    doctypes = [Type.ENUM]
+
+class CAutoMacroDirective(CAutoSymbolDirective):
+    doctypes = [Type.MACRO, Type.MACRO_FUNC]
+
+class CAutoFunctionDirective(CAutoSymbolDirective):
+    doctypes = [Type.FUNC]
+
 def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
@@ -180,6 +222,13 @@ def setup(app):
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
     app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
+    app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
+    app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
+    app.add_directive_to_domain('c', 'autostruct', CAutoStructDirective)
+    app.add_directive_to_domain('c', 'autounion', CAutoUnionDirective)
+    app.add_directive_to_domain('c', 'autoenum', CAutoEnumDirective)
+    app.add_directive_to_domain('c', 'automacro', CAutoMacroDirective)
+    app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
 
     return dict(version = __version__,
                 parallel_read_safe = True, parallel_write_safe = True)
