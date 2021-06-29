@@ -139,10 +139,16 @@ class CAutoDocDirective(SphinxDirective):
 
         return comments
 
-    def __get_comments(self, viewlist, filename):
+    def __get_comments(self, viewlist, filename, doctypes=None, names=None):
         comments = self.__parse(filename)
 
         for (comment, meta) in comments:
+            if doctypes and meta['doctype'] not in doctypes:
+                continue
+
+            if names and meta['name'] not in names:
+                continue
+
             lineoffset = meta['line'] - 1
             lines = statemachine.string2lines(comment, 8,
                                               convert_whitespace=True)
