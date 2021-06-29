@@ -23,6 +23,7 @@ from sphinx.util import logging
 
 from hawkmoth.parser import parse, ErrorLevel
 from hawkmoth.util import doccompat, strutil
+from hawkmoth import docstring
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
@@ -37,6 +38,8 @@ class CAutoBaseDirective(SphinxDirective):
         'clang': strutil.string_list,
     }
     has_content = False
+
+    _docstring_types = None
 
     # Map verbosity levels to logger levels.
     _log_lvl = {ErrorLevel.ERROR: logging.LEVEL_NAMES['ERROR'],
@@ -125,13 +128,16 @@ class CAutoBaseDirective(SphinxDirective):
         transform = self.__get_transform()
         docstrings = self.__parse(filename)
 
-        for docstr in docstrings.walk():
+        for docstr in docstrings.walk(filter_types=self._docstring_types, filter_names=self._get_names()):
             lineoffset = docstr.get_line() - 1
             lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
                                               convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)
                 lineoffset += 1
+
+    def _get_names(self):
+        return None
 
     def run(self):
         result = ViewList()
@@ -170,6 +176,56 @@ class CAutoDocDirective(CAutoBaseDirective):
 
                 yield os.path.abspath(filename)
 
+# Base class for named stuff
+class CAutoSymbolDirective(CAutoBaseDirective):
+    """Extract specified documentation comments from the specified file"""
+
+    required_arguments = 1
+    optional_arguments = 0
+
+    option_spec = CAutoBaseDirective.option_spec.copy()
+    option_spec.update({
+        'file': directives.unchanged_required,
+    })
+
+    def _get_filenames(self):
+        filename = self.options.get('file')
+
+        # Note: For the time being the file option is mandatory (sic).
+        if not filename:
+            self.logger.warning(f':file: option missing.',
+                                location=(self.env.docname, self.lineno))
+            return []
+
+        return [os.path.abspath(os.path.join(self.env.config.cautodoc_root, filename))]
+
+    def _get_names(self):
+        return [self.arguments[0]]
+
+class CAutoVarDirective(CAutoSymbolDirective):
+    _docstring_types = [docstring.VarDocstring]
+
+class CAutoTypeDirective(CAutoSymbolDirective):
+    _docstring_types = [docstring.TypeDocstring]
+
+class CAutoMacroDirective(CAutoSymbolDirective):
+    _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
+
+class CAutoFunctionDirective(CAutoSymbolDirective):
+    _docstring_types = [docstring.FunctionDocstring]
+
+class CAutoCompoundDirective(CAutoSymbolDirective):
+    pass
+
+class CAutoStructDirective(CAutoCompoundDirective):
+    _docstring_types = [docstring.StructDocstring]
+
+class CAutoUnionDirective(CAutoCompoundDirective):
+    _docstring_types = [docstring.UnionDocstring]
+
+class CAutoEnumDirective(CAutoCompoundDirective):
+    _docstring_types = [docstring.EnumDocstring]
+
 def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
@@ -177,6 +233,13 @@ def setup(app):
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
     app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
+    app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
+    app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
+    app.add_directive_to_domain('c', 'autostruct', CAutoStructDirective)
+    app.add_directive_to_domain('c', 'autounion', CAutoUnionDirective)
+    app.add_directive_to_domain('c', 'autoenum', CAutoEnumDirective)
+    app.add_directive_to_domain('c', 'automacro', CAutoMacroDirective)
+    app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
 
     return dict(version = __version__,
                 parallel_read_safe = True, parallel_write_safe = True)
