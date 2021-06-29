@@ -30,12 +30,9 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 
 class CAutoDocDirective(SphinxDirective):
     """Extract all documentation comments from the specified file"""
-    required_argument = 1
-    optional_arguments = 1
+    required_arguments = 1
+    optional_arguments = 100 # arbitrary limit
     logger = logging.getLogger(__name__)
-
-    # Allow passing a variable number of file patterns as arguments
-    final_argument_whitespace = True
 
     option_spec = {
         'transform': directives.unchanged_required,
@@ -123,7 +120,7 @@ class CAutoDocDirective(SphinxDirective):
     def run(self):
         result = ViewList()
 
-        for pattern in self.arguments[0].split():
+        for pattern in self.arguments:
             filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
             if len(filenames) == 0:
                 self.logger.warning(f'Pattern "{pattern}" does not match any files.',
