@@ -115,7 +115,11 @@ def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
 
     doc = docstr.nest(doc, nest)
 
-    meta = {'line': comment.extent.start.line}
+    meta = {
+        'line': comment.extent.start.line,
+        'doctype': fmt,
+        'name': name,
+    }
     if cursor:
         meta['cursor.kind']        = cursor.kind,
         meta['cursor.displayname'] = cursor.displayname,
