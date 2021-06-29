@@ -28,10 +28,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
     __version__ = version_file.read().strip()
 
-class CAutoDocDirective(SphinxDirective):
-    """Extract all documentation comments from the specified file"""
-    required_arguments = 1
-    optional_arguments = 100 # arbitrary limit
+class CAutoBaseDirective(SphinxDirective):
     logger = logging.getLogger(__name__)
 
     option_spec = {
@@ -101,23 +98,6 @@ class CAutoDocDirective(SphinxDirective):
         # Note: None is a valid value for no transformation.
         return transformations.get(tropt)
 
-    def __get_filenames(self):
-        for pattern in self.arguments:
-            filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
-            if len(filenames) == 0:
-                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
-                                    location=(self.env.docname, self.lineno))
-                continue
-
-            for filename in filenames:
-                mode = os.stat(filename).st_mode
-                if stat.S_ISDIR(mode):
-                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
-                                        location=(self.env.docname, self.lineno))
-                    continue
-
-                yield os.path.abspath(filename)
-
     def __parse(self, filename):
         clang_args = self.__get_clang_args()
         transform = self.__get_transform()
@@ -159,7 +139,7 @@ class CAutoDocDirective(SphinxDirective):
     def run(self):
         result = ViewList()
 
-        for filename in self.__get_filenames():
+        for filename in self._get_filenames():
             self.__get_comments(result, filename)
 
         # Parse the extracted reST
@@ -168,6 +148,30 @@ class CAutoDocDirective(SphinxDirective):
             nested_parse_with_titles(self.state, result, node)
 
         return node.children
+
+class CAutoDocDirective(CAutoBaseDirective):
+    """Extract all documentation comments from the specified files"""
+
+    # Allow passing a variable number of file patterns as arguments
+    required_arguments = 1
+    optional_arguments = 100 # arbitrary limit
+
+    def _get_filenames(self):
+        for pattern in self.arguments:
+            filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
+            if len(filenames) == 0:
+                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
+                                    location=(self.env.docname, self.lineno))
+                continue
+
+            for filename in filenames:
+                mode = os.stat(filename).st_mode
+                if stat.S_ISDIR(mode):
+                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
+                                        location=(self.env.docname, self.lineno))
+                    continue
+
+                yield os.path.abspath(filename)
 
 def setup(app):
     app.require_sphinx('3.0')
