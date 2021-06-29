@@ -118,7 +118,7 @@ class CAutoDocDirective(SphinxDirective):
 
                 yield os.path.abspath(filename)
 
-    def __parse(self, viewlist, filename):
+    def __parse(self, filename):
         clang_args = self.__get_clang_args()
         transform = self.__get_transform()
 
@@ -128,6 +128,11 @@ class CAutoDocDirective(SphinxDirective):
         comments, errors = parse(filename, transform=transform, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
+
+        return comments
+
+    def __get_comments(self, viewlist, filename):
+        comments = self.__parse(filename)
 
         for (comment, meta) in comments:
             lineoffset = meta['line'] - 1
@@ -141,7 +146,7 @@ class CAutoDocDirective(SphinxDirective):
         result = ViewList()
 
         for filename in self.__get_filenames():
-            self.__parse(result, filename)
+            self.__get_comments(result, filename)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
