@@ -122,6 +122,9 @@ class CAutoDocDirective(SphinxDirective):
         clang_args = self.__get_clang_args()
         transform = self.__get_transform()
 
+        # Tell Sphinx about the dependency
+        self.env.note_dependency(filename)
+
         comments, errors = parse(filename, transform=transform, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
@@ -138,8 +141,6 @@ class CAutoDocDirective(SphinxDirective):
         result = ViewList()
 
         for filename in self.__get_filenames():
-            # Tell Sphinx about the dependency and parse the file
-            self.env.note_dependency(filename)
             self.__parse(result, filename)
 
         # Parse the extracted reST
