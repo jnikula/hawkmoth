@@ -101,6 +101,23 @@ class CAutoDocDirective(SphinxDirective):
         # Note: None is a valid value for no transformation.
         return transformations.get(tropt)
 
+    def __get_filenames(self):
+        for pattern in self.arguments:
+            filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
+            if len(filenames) == 0:
+                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
+                                    location=(self.env.docname, self.lineno))
+                continue
+
+            for filename in filenames:
+                mode = os.stat(filename).st_mode
+                if stat.S_ISDIR(mode):
+                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
+                                        location=(self.env.docname, self.lineno))
+                    continue
+
+                yield os.path.abspath(filename)
+
     def __parse(self, viewlist, filename):
         clang_args = self.__get_clang_args()
         transform = self.__get_transform()
@@ -120,23 +137,10 @@ class CAutoDocDirective(SphinxDirective):
     def run(self):
         result = ViewList()
 
-        for pattern in self.arguments:
-            filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
-            if len(filenames) == 0:
-                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
-                                    location=(self.env.docname, self.lineno))
-                continue
-
-            for filename in filenames:
-                mode = os.stat(filename).st_mode
-                if stat.S_ISDIR(mode):
-                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
-                                        location=(self.env.docname, self.lineno))
-                    continue
-
-                # Tell Sphinx about the dependency and parse the file
-                self.env.note_dependency(os.path.abspath(filename))
-                self.__parse(result, filename)
+        for filename in self.__get_filenames():
+            # Tell Sphinx about the dependency and parse the file
+            self.env.note_dependency(filename)
+            self.__parse(result, filename)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
