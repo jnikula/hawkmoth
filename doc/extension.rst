@@ -3,10 +3,10 @@
 C Autodoc Extension
 ===================
 
-Hawkmoth provides a Sphinx extension that adds a new directive to the Sphinx
-:any:`C domain <sphinx:c-domain>` to incorporate formatted C source code
-comments into a document. Hawkmoth is Sphinx :any:`sphinx:sphinx.ext.autodoc`
-for C.
+Hawkmoth provides a Sphinx extension that adds :ref:`new directives
+<directives>` to the Sphinx :any:`C domain <sphinx:c-domain>` to incorporate
+formatted C source code comments into a document. Hawkmoth is Sphinx
+:any:`sphinx:sphinx.ext.autodoc` for C.
 
 For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
@@ -126,56 +126,3 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
-
-Directive
----------
-
-This module provides the following new directive:
-
-.. rst:directive:: .. c:autodoc:: filename-pattern [...]
-
-   Incorporate documentation comments from the files specified by the space
-   separated list of filename patterns given as arguments. The patterns are
-   interpreted relative to the :data:`cautodoc_root` configuration option.
-
-   .. rst:directive:option:: transform
-      :type: text
-
-      Name of the transformation function specified in
-      :data:`cautodoc_transformations` to use for converting the comments. This
-      value overrides the default in :data:`cautodoc_transformations`.
-
-   .. rst:directive:option:: compat
-      :type: text
-
-      The ``compat`` option overrides the :data:`cautodoc_compat` configuration
-      option.
-
-      .. warning::
-
-	 The compat option has been deprecated in favour of the
-	 :data:`cautodoc_transformations` option and the :rst:dir:`c:autodoc`
-	 directive ``transform`` option, and will be removed in the future.
-
-   .. rst:directive:option:: clang
-      :type: text
-
-      The ``clang`` option extends the :data:`cautodoc_clang` configuration
-      option.
-
-Examples
---------
-
-The basic usage is:
-
-.. code-block:: rst
-
-   .. c:autodoc:: interface.h
-
-Several files with compatibility and compiler options:
-
-.. code-block:: rst
-
-   .. c:autodoc:: api/*.[ch] interface.h
-      :compat: javadoc-basic
-      :clang: -DHAWKMOTH
