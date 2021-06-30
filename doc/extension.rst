@@ -3,7 +3,7 @@
 C Autodoc Extension
 ===================
 
-Hawkmoth provides a Sphinx extension that adds a new directive to the Sphinx
+Hawkmoth provides a Sphinx extension that adds new directives to the Sphinx
 :any:`C domain <sphinx:c-domain>` to incorporate formatted C source code
 comments into a document. Hawkmoth is Sphinx :any:`sphinx:sphinx.ext.autodoc`
 for C.
@@ -127,10 +127,13 @@ The extension has a few configuration options that can be set in ``conf.py``:
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
 
-Directive
----------
+Directives
+----------
 
-This module provides the following new directive:
+Hawkmoth provides several new directives for incorporating documentation
+comments from C sources into the reStructuredText document. The
+:rst:dir:`c:autodoc` directive simply includes all the comments from any number
+of files, while the rest are for including documentation for specific symbols.
 
 .. rst:directive:: .. c:autodoc:: filename-pattern [...]
 
@@ -163,6 +166,56 @@ This module provides the following new directive:
       The ``clang`` option extends the :data:`cautodoc_clang` configuration
       option.
 
+.. rst:directive:: .. c:autovar:: name
+
+   .. rst:directive:option:: file
+      :type: text
+
+      The ``file`` option specifies to file to parse. The filename is
+      interpreted relative to the :data:`cautodoc_root` configuration
+      option. (For the time being, this option is mandatory.)
+
+   Incorporate the documentation comment for the variable ``name`` in the file
+   ``file``.
+
+.. rst:directive:: .. c:autotype:: name
+
+   Same as :rst:dir:`c:autovar` but for typedefs.
+
+.. rst:directive:: .. c:automacro:: name
+
+   Same as :rst:dir:`c:autovar` but for macros, including function-like macros.
+
+.. rst:directive:: .. c:autofunction:: name
+
+   Same as :rst:dir:`c:autovar` but for functions. (Use :rst:dir:`c:automacro`
+   for function-like macros.)
+
+.. rst:directive:: .. c:autostruct:: name
+
+   .. rst:directive:option:: members
+      :type: text
+
+      The ``members`` option specifies the struct members to include. If
+      ``members`` is not specified, do not include member documentation. If
+      ``members`` is specified without arguments, include all member
+      documentation recursively. If ``members`` is specified with a
+      comma-separated list of arguments, include all specified member
+      documentation recursively.
+
+   Same as :rst:dir:`c:autovar` but for structs. Additionally, filter by
+   ``members``.
+
+.. rst:directive:: .. c:autounion:: name
+
+   Same as :rst:dir:`c:autostruct` but for unions.
+
+.. rst:directive:: .. c:autoenum:: name
+
+   Same as :rst:dir:`c:autostruct` but for enums. The enumeration constants are
+   considered ``members`` and are filtered accordingly.
+
+
 Examples
 --------
 
@@ -171,6 +224,16 @@ The basic usage is:
 .. code-block:: rst
 
    .. c:autodoc:: interface.h
+
+Individual symbols:
+
+.. code-block:: rst
+
+   .. c:autofunction:: foo
+      :file: interface.h
+
+   .. c:autostruct:: bar
+      :file: interface.h
 
 Several files with compatibility and compiler options:
 
