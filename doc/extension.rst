@@ -3,7 +3,7 @@
 C Autodoc Extension
 ===================
 
-Hawkmoth provides a Sphinx extension that adds a new directive to the Sphinx
+Hawkmoth provides a Sphinx extension that adds new directives to the Sphinx
 :any:`C domain <sphinx:c-domain>` to incorporate formatted C source code
 comments into a document. Hawkmoth is Sphinx :any:`sphinx:sphinx.ext.autodoc`
 for C.
@@ -127,10 +127,13 @@ The extension has a few configuration options that can be set in ``conf.py``:
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
 
-Directive
----------
+Directives
+----------
 
-This module provides the following new directive:
+Hawkmoth provides several new directives for incorporating documentation
+comments from C sources into the reStructuredText document. The
+:rst:dir:`c:autodoc` directive simply includes all the comments from any number
+of files, while the rest are for including documentation for specific symbols.
 
 .. rst:directive:: .. c:autodoc:: filename-pattern [...]
 
@@ -163,6 +166,37 @@ This module provides the following new directive:
       The ``clang`` option extends the :data:`cautodoc_clang` configuration
       option.
 
+.. rst:directive:: .. c:autovar:: filename name
+
+   Incorporate the documentation comment for the variable ``name`` in the file
+   ``filename``. The filename is interpreted relative to the
+   :data:`cautodoc_root` configuration option.
+
+.. rst:directive:: .. c:autotype:: filename name
+
+   Same as :rst:dir:`c:autovar` but for typedefs.
+
+.. rst:directive:: .. c:autostruct:: filename name
+
+   Same as :rst:dir:`c:autovar` but for structs.
+
+.. rst:directive:: .. c:autounion:: filename name
+
+   Same as :rst:dir:`c:autovar` but for unions.
+
+.. rst:directive:: .. c:autoenum:: filename name
+
+   Same as :rst:dir:`c:autovar` but for enums.
+
+.. rst:directive:: .. c:automacro:: filename name
+
+   Same as :rst:dir:`c:autovar` but for macros, including function-like macros.
+
+.. rst:directive:: .. c:autofunction:: filename name
+
+   Same as :rst:dir:`c:autovar` but for functions. (Use :rst:dir:`c:automacro`
+   for function-like macros.)
+
 Examples
 --------
 
@@ -171,6 +205,14 @@ The basic usage is:
 .. code-block:: rst
 
    .. c:autodoc:: interface.h
+
+Individual symbols:
+
+.. code-block:: rst
+
+   .. c:autofunction:: interface.h foo
+
+   .. c:autostruct:: interface.h bar
 
 Several files with compatibility and compiler options:
 
