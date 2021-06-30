@@ -122,12 +122,20 @@ class CAutoDocDirective(SphinxDirective):
         clang_args = self.__get_clang_args()
         transform = self.__get_transform()
 
+        parsed_files = self.env.temp_data.setdefault('cautodoc_parsed_files', {})
+
+        # FIXME: the output depends on transform and clang args
+        if filename in parsed_files:
+            return parsed_files[filename]
+
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
         comments, errors = parse(filename, transform=transform, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
+
+        parsed_files[filename] = comments
 
         return comments
 
