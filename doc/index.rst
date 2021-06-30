@@ -33,6 +33,7 @@ Contents:
 
    installation
    extension
+   directives
    syntax
    examples
 
