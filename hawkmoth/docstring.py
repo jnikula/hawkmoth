@@ -4,7 +4,8 @@
 from hawkmoth.util import docstr
 
 class Docstring():
-    _fmt = docstr.Type.TEXT
+    _indent = 0
+    _fmt = ''
 
     def __init__(self, text, name=None, ttype=None, args=None, meta=None, nest=0):
         self._text = text
@@ -19,7 +20,7 @@ class Docstring():
         # impacts the error reporting via meta['line']. Adjust meta to take this
         # into account.
 
-        rst = docstr.generate(text=self._text, fmt=self._fmt, name=self._name, ttype=self._ttype,
+        rst = docstr.generate(text=self._text, indent=self._indent, fmt=self._fmt, name=self._name, ttype=self._ttype,
                               args=self._args, transform=transform)
 
         rst = docstr.nest(rst, self._nest)
@@ -33,34 +34,45 @@ class Docstring():
         return self._meta['line']
 
 class TextDocstring(Docstring):
-    _fmt = docstr.Type.TEXT
+    _indent = 0
+    _fmt = '\n{text}\n'
 
 class VarDocstring(Docstring):
-    _fmt = docstr.Type.VAR
+    _indent = 1
+    _fmt = '\n.. c:var:: {ttype} {name}\n\n{text}\n'
 
 class TypeDocstring(Docstring):
-    _fmt = docstr.Type.TYPE
+    _indent = 1
+    _fmt = '\n.. c:type:: {name}\n\n{text}\n'
 
 class StructDocstring(Docstring):
-    _fmt = docstr.Type.STRUCT
+    _indent = 1
+    _fmt = '\n.. c:struct:: {name}\n\n{text}\n'
 
 class UnionDocstring(Docstring):
-    _fmt = docstr.Type.UNION
+    _indent = 1
+    _fmt = '\n.. c:union:: {name}\n\n{text}\n'
 
 class EnumDocstring(Docstring):
-    _fmt = docstr.Type.ENUM
+    _indent = 1
+    _fmt = '\n.. c:enum:: {name}\n\n{text}\n'
 
 class EnumeratorDocstring(Docstring):
-    _fmt = docstr.Type.ENUM_VAL
+    _indent = 1
+    _fmt = '\n.. c:enumerator:: {name}\n\n{text}\n'
 
 class MemberDocstring(Docstring):
-    _fmt = docstr.Type.MEMBER
+    _indent = 1
+    _fmt = '\n.. c:member:: {ttype} {name}\n\n{text}\n'
 
 class MacroDocstring(Docstring):
-    _fmt = docstr.Type.MACRO
+    _indent = 1
+    _fmt = '\n.. c:macro:: {name}\n\n{text}\n'
 
 class MacroFunctionDocstring(Docstring):
-    _fmt = docstr.Type.MACRO_FUNC
+    _indent = 1
+    _fmt = '\n.. c:macro:: {name}({args})\n\n{text}\n'
 
 class FunctionDocstring(Docstring):
-    _fmt = docstr.Type.FUNC
+    _indent = 1
+    _fmt = '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n'

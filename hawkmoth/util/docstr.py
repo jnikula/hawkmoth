@@ -10,39 +10,6 @@ construct.
 """
 
 import re
-from enum import Enum, auto
-
-class Type(Enum):
-    """Enumeration of supported formats."""
-    TEXT = auto()
-    VAR = auto()
-    TYPE = auto()
-    STRUCT = auto()
-    UNION = auto()
-    ENUM = auto()
-    ENUM_VAL = auto()
-    MEMBER = auto()
-    MACRO = auto()
-    MACRO_FUNC = auto()
-    FUNC = auto()
-
-# Dictionary of tuples (text indentation level, format string).
-#
-# Text indentation is required for indenting the documentation body relative to
-# directive lines.
-_doc_fmt = {
-    Type.TEXT:       (0, '\n{text}\n'),
-    Type.VAR:        (1, '\n.. c:var:: {ttype} {name}\n\n{text}\n'),
-    Type.TYPE:       (1, '\n.. c:type:: {name}\n\n{text}\n'),
-    Type.STRUCT:     (1, '\n.. c:struct:: {name}\n\n{text}\n'),
-    Type.UNION:      (1, '\n.. c:union:: {name}\n\n{text}\n'),
-    Type.ENUM:       (1, '\n.. c:enum:: {name}\n\n{text}\n'),
-    Type.ENUM_VAL:   (1, '\n.. c:enumerator:: {name}\n\n{text}\n'),
-    Type.MEMBER:     (1, '\n.. c:member:: {ttype} {name}\n\n{text}\n'),
-    Type.MACRO:      (1, '\n.. c:macro:: {name}\n\n{text}\n'),
-    Type.MACRO_FUNC: (1, '\n.. c:macro:: {name}({args})\n\n{text}\n'),
-    Type.FUNC:       (1, '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n')
-}
 
 def _strip(comment):
     """Strip comment from comment markers."""
@@ -73,7 +40,7 @@ def nest(text, nest):
     """
     return re.sub('(?m)^(?!$)', '   ' * nest, text)
 
-def generate(text, fmt=Type.TEXT, name=None,
+def generate(text, indent, fmt, name=None,
              ttype=None, args=None, transform=None):
     """
     Generate reST documentation string.
@@ -102,6 +69,5 @@ def generate(text, fmt=Type.TEXT, name=None,
     if args is not None:
         args = ', '.join(args)
 
-    (text_indent, fmt) = _doc_fmt[fmt]
-    text = nest(text, text_indent)
+    text = nest(text, indent)
     return fmt.format(text=text, name=name, ttype=ttype, args=args)
