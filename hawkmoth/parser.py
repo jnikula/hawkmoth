@@ -104,14 +104,18 @@ def comment_extract(tu):
 
     return top_level_comments, comments
 
-def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
-            name=None, ttype=None, args=None):
+def _get_meta(comment, cursor=None):
     meta = {'line': comment.extent.start.line}
     if cursor:
-        meta['cursor.kind']        = cursor.kind,
-        meta['cursor.displayname'] = cursor.displayname,
-        meta['cursor.spelling']    = cursor.spelling
+        meta['cursor.kind'] = cursor.kind
+        meta['cursor.displayname'] = cursor.displayname
+        meta['cursor.spelling'] = cursor.spelling
 
+    return meta
+
+def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
+            name=None, ttype=None, args=None):
+    meta = _get_meta(comment, cursor)
     ds = Docstring(text=comment.spelling, fmt=fmt, name=name, ttype=ttype, args=args,
                    meta=meta, nest=nest)
 
@@ -277,13 +281,7 @@ def _recursive_parse(comments, cursor, nest):
     fmt = docstr.Type.TEXT
     kind = str(cursor.kind)
     text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
-
-    meta = {
-        'line':               comment.extent.start.line,
-        'cursor.kind':        cursor.kind,
-        'cursor.displayname': cursor.displayname,
-        'cursor.spelling':    cursor.spelling
-    }
+    meta = _get_meta(comment, cursor)
 
     ds = Docstring(text=text, fmt=fmt, meta=meta)
 
