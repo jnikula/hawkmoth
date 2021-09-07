@@ -43,7 +43,7 @@ def main():
 
     for (severity, filename, lineno, msg) in errors:
         if filename:
-            print('f{severity.name}: {filename}:{lineno}: {msg}',
+            print(f'{severity.name}: {filename}:{lineno}: {msg}',
                   file=sys.stderr)
         else:
             print(f'{severity.name}: {msg}', file=sys.stderr)
