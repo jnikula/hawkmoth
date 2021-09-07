@@ -17,7 +17,7 @@ class Comment():
         # impacts the error reporting via meta['line']. Adjust meta to take this
         # into account.
 
-        rst = docstr.generate(text=self.text, fmt=self.fmt, name=self.name, ttype=self.ttype,
+        rst = docstr.generate(text=self.text, indent=self.indent, fmt=self.fmt, name=self.name, ttype=self.ttype,
                               args=self.args, transform=transform)
 
         rst = docstr.nest(rst, self.nest)
@@ -31,34 +31,45 @@ class Comment():
         return self.meta['line']
 
 class TextComment(Comment):
-    fmt = docstr.Type.TEXT
+    indent = 0
+    fmt = '\n{text}\n'
 
 class VarComment(Comment):
-    fmt = docstr.Type.VAR
+    indent = 1
+    fmt = '\n.. c:var:: {ttype} {name}\n\n{text}\n'
 
 class TypeComment(Comment):
-    fmt = docstr.Type.TYPE
+    indent = 1
+    fmt = '\n.. c:type:: {name}\n\n{text}\n'
 
 class StructComment(Comment):
-    fmt = docstr.Type.STRUCT
+    indent = 1
+    fmt = '\n.. c:struct:: {name}\n\n{text}\n'
 
 class UnionComment(Comment):
-    fmt = docstr.Type.UNION
+    indent = 1
+    fmt = '\n.. c:union:: {name}\n\n{text}\n'
 
 class EnumComment(Comment):
-    fmt = docstr.Type.ENUM
+    indent = 1
+    fmt = '\n.. c:enum:: {name}\n\n{text}\n'
 
 class EnumValComment(Comment):
-    fmt = docstr.Type.ENUM_VAL
+    indent = 1
+    fmt = '\n.. c:enumerator:: {name}\n\n{text}\n'
 
 class MemberComment(Comment):
-    fmt = docstr.Type.MEMBER
+    indent = 1
+    fmt = '\n.. c:member:: {ttype} {name}\n\n{text}\n'
 
 class MacroComment(Comment):
-    fmt = docstr.Type.MACRO
+    indent = 1
+    fmt = '\n.. c:macro:: {name}\n\n{text}\n'
 
 class MacroFuncComment(Comment):
-    fmt = docstr.Type.MACRO_FUNC
+    indent = 1
+    fmt = '\n.. c:macro:: {name}({args})\n\n{text}\n'
 
 class FuncComment(Comment):
-    fmt = docstr.Type.FUNC
+    indent = 1
+    fmt = '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n'
