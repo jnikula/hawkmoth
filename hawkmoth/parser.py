@@ -113,14 +113,6 @@ def _get_meta(comment, cursor=None):
 
     return meta
 
-def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
-            name=None, ttype=None, args=None):
-    meta = _get_meta(comment, cursor)
-    ds = Docstring(text=comment.spelling, fmt=fmt, name=name, ttype=ttype, args=args,
-                   meta=meta, nest=nest)
-
-    return [ds]
-
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
 def _get_macro_args(cursor):
@@ -180,14 +172,17 @@ def _recursive_parse(comments, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
     ttype = cursor.type.spelling
+    text = comment.spelling
+    meta = _get_meta(comment, cursor)
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         # FIXME: check args against comment
         args = _get_macro_args(cursor)
         fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
 
-        return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, args=args)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, args=args, meta=meta)
+
+        return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         if cursor.kind == CursorKind.VAR_DECL:
@@ -203,15 +198,17 @@ def _recursive_parse(comments, cursor, nest):
         # name should be within the parenthesis as in (*name) or (*name[N]).
         ttype, name = _function_pointer_fixup(ttype, name)
 
-        return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name, ttype=ttype)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, ttype=ttype, meta=meta)
+
+        return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
         fmt = docstr.Type.TYPE
 
-        return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=ttype)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=ttype, meta=meta)
+
+        return [ds]
 
     elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL,
                          CursorKind.ENUM_DECL]:
@@ -234,8 +231,9 @@ def _recursive_parse(comments, cursor, nest):
         fmt = fmts[cursor.kind]
 
         # name may be empty for typedefs
-        result = _result(comment, cursor=cursor, fmt=fmt,
-                         nest=nest, name=name if name else ttype)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name if name else ttype,
+                       meta=meta)
+        result = [ds]
 
         nest += 1
         for c in cursor.get_children():
@@ -247,8 +245,9 @@ def _recursive_parse(comments, cursor, nest):
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
         fmt = docstr.Type.ENUM_VAL
 
-        return _result(comment, cursor=cursor, fmt=fmt,
-                       nest=nest, name=name)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, meta=meta)
+
+        return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
         # FIXME: check args against comment
@@ -271,8 +270,9 @@ def _recursive_parse(comments, cursor, nest):
         fmt = docstr.Type.FUNC
         ttype = cursor.result_type.spelling
 
-        return _result(comment, cursor=cursor, fmt=fmt, nest=nest,
-                       name=name, ttype=ttype, args=args)
+        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, ttype=ttype, args=args,
+                       meta=meta)
+        return [ds]
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error
     # and it should be logged, but it should also return an empty list so that
@@ -319,7 +319,10 @@ def parse(filename, **options):
     result = []
 
     for comment in top_level_comments:
-        result.extend(_result(comment))
+        text = comment.spelling
+        meta = _get_meta(comment)
+        ds = Docstring(text=text, meta=meta)
+        result.append(ds)
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
