@@ -129,9 +129,9 @@ class CAutoDocDirective(SphinxDirective):
 
         self.__display_parser_diagnostics(errors)
 
-        for (comment, meta) in comments:
-            lineoffset = meta['line'] - 1
-            lines = statemachine.string2lines(comment, 8,
+        for comment in comments:
+            lineoffset = comment.get_line() - 1
+            lines = statemachine.string2lines(comment.get_docstring(), 8,
                                               convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)

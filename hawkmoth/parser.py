@@ -43,6 +43,7 @@ from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
 from hawkmoth.util import docstr, doccompat, strutil
+from hawkmoth.docstring import Docstring
 
 class ErrorLevel(enum.Enum):
     """
@@ -121,7 +122,7 @@ def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
         meta['cursor.displayname'] = cursor.displayname,
         meta['cursor.spelling']    = cursor.spelling
 
-    return [(doc, meta)]
+    return [Docstring(doc, meta)]
 
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
@@ -293,7 +294,7 @@ def _recursive_parse(comments, cursor, nest, transform):
         'cursor.spelling':    cursor.spelling
     }
 
-    return [(doc, meta)]
+    return [Docstring(doc, meta)]
 
 def clang_diagnostics(errors, diagnostics):
     sev = {0: ErrorLevel.DEBUG,
@@ -335,6 +336,6 @@ def parse(filename, **options):
             result.extend(_recursive_parse(comments, cursor, 0, transform))
 
     # Sort all elements by order of appearance.
-    result.sort(key=lambda r: r[1]['line'])
+    result.sort(key=lambda comment: comment.get_line())
 
     return result, errors
