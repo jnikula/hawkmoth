@@ -14,18 +14,20 @@ def _get_output(input_filename, **options):
     docs_str = ''
     errors_str = ''
 
-    transform = options.pop('compat', None)
-    if transform is not None:
-        options['transform'] = lambda comment: doccompat.convert(comment, transform=transform)
+    tropt = options.pop('compat', None)
+    if tropt is not None:
+        transform = lambda comment: doccompat.convert(comment, transform=tropt)
     else:
-        transform = options.pop('transform', None)
-        if transform is not None:
-            options['transform'] = conf.cautodoc_transformations[transform]
+        tropt = options.pop('transform', None)
+        if tropt is not None:
+            transform = conf.cautodoc_transformations[tropt]
+        else:
+            transform = None
 
     comments, errors = parse(input_filename, **options)
 
     for comment in comments:
-        docs_str += comment.get_rst() + '\n'
+        docs_str += comment.get_rst(transform=transform) + '\n'
 
     for (severity, filename, lineno, msg) in errors:
         errors_str += f'{severity.name}: {os.path.basename(filename)}:{lineno}: {msg}\n'
