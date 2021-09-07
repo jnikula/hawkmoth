@@ -34,12 +34,12 @@ def main():
 
     transform = lambda comment: doccompat.convert(comment, transform=args.compat)
 
-    docs, errors = parse(args.file, transform=transform, clang=args.clang)
+    comments, errors = parse(args.file, transform=transform, clang=args.clang)
 
-    for (doc, meta) in docs:
+    for comment in comments:
         if args.verbose:
-            print(f'# {meta}')
-        print(doc)
+            print(f'# {comment.get_meta()}')
+        print(comment.get_rst())
 
     for (severity, filename, lineno, msg) in errors:
         if filename:
