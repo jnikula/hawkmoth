@@ -43,7 +43,7 @@ from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
 from hawkmoth.util import docstr, doccompat, strutil
-from hawkmoth.docstring import Docstring
+from hawkmoth.docstring import *
 
 class ErrorLevel(enum.Enum):
     """
@@ -178,18 +178,15 @@ def _recursive_parse(comments, cursor, nest):
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         # FIXME: check args against comment
         args = _get_macro_args(cursor)
-        fmt = docstr.Type.MACRO if args is None else docstr.Type.MACRO_FUNC
 
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, args=args, meta=meta)
+        if args is None:
+            ds = MacroDocstring(text=text, nest=nest, name=name, meta=meta)
+        else:
+            ds = MacroFunctionDocstring(text=text, nest=nest, name=name, args=args, meta=meta)
 
         return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
-        if cursor.kind == CursorKind.VAR_DECL:
-            fmt = docstr.Type.VAR
-        else:
-            fmt = docstr.Type.MEMBER
-
         # If this is an array, the dimensions should be applied to the name, not
         # the type.
         ttype, name = _array_fixup(ttype, name)
@@ -198,15 +195,17 @@ def _recursive_parse(comments, cursor, nest):
         # name should be within the parenthesis as in (*name) or (*name[N]).
         ttype, name = _function_pointer_fixup(ttype, name)
 
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, ttype=ttype, meta=meta)
+        if cursor.kind == CursorKind.VAR_DECL:
+            ds = VarDocstring(text=text, nest=nest, name=name, ttype=ttype, meta=meta)
+        else:
+            ds = MemberDocstring(text=text, nest=nest, name=name, ttype=ttype, meta=meta)
 
         return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
-        fmt = docstr.Type.TYPE
 
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=ttype, meta=meta)
+        ds = TypeDocstring(text=text, nest=nest, name=ttype, meta=meta)
 
         return [ds]
 
@@ -224,15 +223,16 @@ def _recursive_parse(comments, cursor, nest):
 
         # FIXME: Handle anonymous enumerators.
 
-        fmts = {CursorKind.STRUCT_DECL: docstr.Type.STRUCT,
-                CursorKind.UNION_DECL: docstr.Type.UNION,
-                CursorKind.ENUM_DECL: docstr.Type.ENUM}
-
-        fmt = fmts[cursor.kind]
-
         # name may be empty for typedefs
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name if name else ttype,
-                       meta=meta)
+        name = name if name else ttype
+
+        if cursor.kind == CursorKind.STRUCT_DECL:
+            ds = StructDocstring(text=text, nest=nest, name=name, meta=meta)
+        elif cursor.kind == CursorKind.UNION_DECL:
+            ds = UnionDocstring(text=text, nest=nest, name=name, meta=meta)
+        else:
+            ds = EnumDocstring(text=text, nest=nest, name=name, meta=meta)
+
         result = [ds]
 
         nest += 1
@@ -243,9 +243,7 @@ def _recursive_parse(comments, cursor, nest):
         return result
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        fmt = docstr.Type.ENUM_VAL
-
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, meta=meta)
+        ds = EnumeratorDocstring(text=text, nest=nest, name=name, meta=meta)
 
         return [ds]
 
@@ -267,23 +265,21 @@ def _recursive_parse(comments, cursor, nest):
             if cursor.type.is_function_variadic():
                 args.append('...')
 
-        fmt = docstr.Type.FUNC
         ttype = cursor.result_type.spelling
 
-        ds = Docstring(text=text, fmt=fmt, nest=nest, name=name, ttype=ttype, args=args,
-                       meta=meta)
+        ds = FunctionDocstring(text=text, nest=nest, name=name, ttype=ttype, args=args,
+                               meta=meta)
         return [ds]
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error
     # and it should be logged, but it should also return an empty list so that
     # it doesn't break. I.e. the parser needs to pass warnings and errors to the
     # Sphinx extension instead of polluting the generated output.
-    fmt = docstr.Type.TEXT
     kind = str(cursor.kind)
     text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
     meta = _get_meta(comment, cursor)
 
-    ds = Docstring(text=text, fmt=fmt, meta=meta)
+    ds = TextDocstring(text=text, meta=meta)
 
     return [ds]
 
@@ -321,7 +317,7 @@ def parse(filename, **options):
     for comment in top_level_comments:
         text = comment.spelling
         meta = _get_meta(comment)
-        ds = Docstring(text=text, meta=meta)
+        ds = TextDocstring(text=text, meta=meta)
         result.append(ds)
 
     for cursor in tu.cursor.get_children():
