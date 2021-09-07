@@ -1,7 +1,8 @@
-# Copyright (c) 2021 Jani Nikula <jani@nikula.org>
+# Copyright (c) 2016-2021 Jani Nikula <jani@nikula.org>
+# Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
-from hawkmoth.util import docstr
+import re
 
 class Docstring():
     def __init__(self, text, name=None, ttype=None, args=None, meta=None, nest=0):
@@ -12,15 +13,50 @@ class Docstring():
         self._meta = meta
         self._nest = nest
 
+    @staticmethod
+    def _strip(comment):
+        """Strip comment from comment markers."""
+        comment = re.sub(r'^/\*\*[ \t]?', '', comment)
+        comment = re.sub(r'\*/$', '', comment)
+        # Could look at first line of comment, and remove the leading stuff there
+        # from the rest.
+        comment = re.sub(r'(?m)^[ \t]*\*?[ \t]?', '', comment)
+        # Strip leading blank lines.
+        comment = re.sub(r'^[\n]*', '', comment)
+        return comment.strip()
+
+    @staticmethod
+    def _nest(text, nest):
+        """
+        Indent documentation block for nesting.
+
+        Args:
+            text (str): Documentation body.
+            nest (int): Nesting level. For each level, the final block is indented
+                one level. Useful for (e.g.) declaring structure members.
+
+        Returns:
+            str: Indented reST documentation string.
+        """
+        return re.sub('(?m)^(?!$)', '   ' * nest, text)
+
     def get_docstring(self, transform=None):
-        # FIXME: docstr.generate changes the number of lines in output. This
-        # impacts the error reporting via meta['line']. Adjust meta to take this
-        # into account.
+        # FIXME: This changes the number of lines in output. This impacts the
+        # error reporting via meta['line']. Adjust meta to take this into
+        # account.
 
-        rst = docstr.generate(text=self._text, indent=self._indent, fmt=self._fmt, name=self._name, ttype=self._ttype,
-                              args=self._args, transform=transform)
+        text = Docstring._strip(self._text)
 
-        rst = docstr.nest(rst, self._nest)
+        if transform is not None:
+            text = transform(text)
+
+        text = Docstring._nest(text, self._indent)
+
+        args = ', '.join(self._args) if self._args is not None else None
+
+        rst = self._fmt.format(text=text, name=self._name, ttype=self._ttype, args=args)
+
+        rst = Docstring._nest(rst, self._nest)
 
         return rst
 
