@@ -22,10 +22,10 @@ def _get_output(input_filename, **options):
         if transform is not None:
             options['transform'] = conf.cautodoc_transformations[transform]
 
-    docs, errors = parse(input_filename, **options)
+    comments, errors = parse(input_filename, **options)
 
-    for (doc, meta) in docs:
-        docs_str += doc + '\n'
+    for comment in comments:
+        docs_str += comment.get_rst() + '\n'
 
     for (severity, filename, lineno, msg) in errors:
         errors_str += f'{severity.name}: {os.path.basename(filename)}:{lineno}: {msg}\n'
