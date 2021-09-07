@@ -13,12 +13,20 @@ class Comment():
         self.nest = nest
 
     def get_rst(self, transform=None):
-        # FIXME: docstr.generate changes the number of lines in output. This
-        # impacts the error reporting via meta['line']. Adjust meta to take this
-        # into account.
+        # FIXME: This changes the number of lines in output. This impacts the
+        # error reporting via meta['line']. Adjust meta to take this into
+        # account.
 
-        rst = docstr.generate(text=self.text, indent=self.indent, fmt=self.fmt, name=self.name, ttype=self.ttype,
-                              args=self.args, transform=transform)
+        text = docstr.strip(self.text)
+
+        if transform is not None:
+            text = transform(text)
+
+        text = docstr.nest(text, self.indent)
+
+        args = ', '.join(self.args) if self.args is not None else None
+
+        rst = self.fmt.format(text=text, name=self.name, ttype=self.ttype, args=args)
 
         rst = docstr.nest(rst, self.nest)
 
