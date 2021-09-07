@@ -4,9 +4,8 @@
 from hawkmoth.util import docstr
 
 class Comment():
-    def __init__(self, text, fmt=docstr.Type.TEXT, name=None, ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, text, name=None, ttype=None, args=None, meta=None, nest=0):
         self.text = text
-        self.fmt = fmt
         self.name = name
         self.ttype = ttype
         self.args = args
@@ -30,3 +29,36 @@ class Comment():
 
     def get_line(self):
         return self.meta['line']
+
+class TextComment(Comment):
+    fmt = docstr.Type.TEXT
+
+class VarComment(Comment):
+    fmt = docstr.Type.VAR
+
+class TypeComment(Comment):
+    fmt = docstr.Type.TYPE
+
+class StructComment(Comment):
+    fmt = docstr.Type.STRUCT
+
+class UnionComment(Comment):
+    fmt = docstr.Type.UNION
+
+class EnumComment(Comment):
+    fmt = docstr.Type.ENUM
+
+class EnumValComment(Comment):
+    fmt = docstr.Type.ENUM_VAL
+
+class MemberComment(Comment):
+    fmt = docstr.Type.MEMBER
+
+class MacroComment(Comment):
+    fmt = docstr.Type.MACRO
+
+class MacroFuncComment(Comment):
+    fmt = docstr.Type.MACRO_FUNC
+
+class FuncComment(Comment):
+    fmt = docstr.Type.FUNC
