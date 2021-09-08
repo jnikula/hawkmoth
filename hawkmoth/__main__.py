@@ -48,4 +48,5 @@ def main():
         else:
             print(f'{severity.name}: {msg}', file=sys.stderr)
 
-main()
+if __name__ == '__main__':
+    main()
