@@ -118,20 +118,25 @@ class CAutoDocDirective(SphinxDirective):
 
                 yield os.path.abspath(filename)
 
-    def __parse(self, viewlist, filename):
+    def __parse(self, filename):
         clang_args = self.__get_clang_args()
-        transform = self.__get_transform()
 
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        comments, errors = parse(filename, clang_args=clang_args)
+        docstrings, errors = parse(filename, clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
-        for comment in comments.recursive_walk():
-            lineoffset = comment.get_line() - 1
-            lines = statemachine.string2lines(comment.get_docstring(transform=transform), 8,
+        return docstrings
+
+    def __get_docstrings(self, viewlist, filename):
+        transform = self.__get_transform()
+        docstrings = self.__parse(filename)
+
+        for docstr in docstrings.recursive_walk():
+            lineoffset = docstr.get_line() - 1
+            lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
                                               convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)
@@ -141,7 +146,7 @@ class CAutoDocDirective(SphinxDirective):
         result = ViewList()
 
         for filename in self.__get_filenames():
-            self.__parse(result, filename)
+            self.__get_docstrings(result, filename)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
