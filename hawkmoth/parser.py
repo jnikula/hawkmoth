@@ -231,13 +231,11 @@ def _recursive_parse(comments, cursor, nest):
         else:
             co = EnumComment(text=text, nest=nest, name=name, meta=meta)
 
-        result = [co]
-
         for c in cursor.get_children():
             if c.hash in comments:
-                result.extend(_recursive_parse(comments, c, nest + 1))
+                co.add_children(_recursive_parse(comments, c, nest + 1))
 
-        return result
+        return [co]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
         co = EnumValComment(text=text, nest=nest, name=name, meta=meta)
@@ -308,19 +306,17 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    result = []
+    # Empty comment with just children
+    result = Comment()
 
     for comment in top_level_comments:
         text = comment.spelling
         meta = _get_meta(comment)
         co = TextComment(text=text, meta=meta)
-        result.append(co)
+        result.add_child(co)
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
-            result.extend(_recursive_parse(comments, cursor, 0))
-
-    # Sort all elements by order of appearance.
-    result.sort(key=lambda comment: comment.get_line())
+            result.add_children(_recursive_parse(comments, cursor, 0))
 
     return result, errors

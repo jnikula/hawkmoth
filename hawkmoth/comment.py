@@ -4,13 +4,30 @@
 from hawkmoth.util import docstr
 
 class Comment():
-    def __init__(self, text, name=None, ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, text=None, name=None, ttype=None, args=None, meta=None, nest=0):
         self.text = text
         self.name = name
         self.ttype = ttype
         self.args = args
         self.meta = meta
         self.nest = nest
+        self.children = []
+
+    def add_child(self, comment):
+        self.children.append(comment)
+
+    def add_children(self, comments):
+        self.children.extend(comments)
+
+    def recursive_walk(self):
+        # The contents of the parent will always be before children.
+        if self.text:
+            yield self
+
+        # Sort the children by order of appearance. We may add other sort
+        # options later.
+        for comment in sorted(self.children, key=lambda c: c.get_line()):
+            yield from comment.recursive_walk()
 
     def get_rst(self, transform=None):
         # FIXME: This changes the number of lines in output. This impacts the
