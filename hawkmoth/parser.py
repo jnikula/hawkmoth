@@ -235,10 +235,9 @@ def _recursive_parse(comments, cursor, nest):
 
         result = [ds]
 
-        nest += 1
         for c in cursor.get_children():
             if c.hash in comments:
-                result.extend(_recursive_parse(comments, c, nest))
+                result.extend(_recursive_parse(comments, c, nest + 1))
 
         return result
 
