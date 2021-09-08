@@ -129,7 +129,7 @@ class CAutoDocDirective(SphinxDirective):
 
         self.__display_parser_diagnostics(errors)
 
-        for comment in comments:
+        for comment in comments.recursive_walk():
             lineoffset = comment.get_line() - 1
             lines = statemachine.string2lines(comment.get_rst(transform=transform), 8,
                                               convert_whitespace=True)

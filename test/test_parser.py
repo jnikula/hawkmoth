@@ -28,7 +28,7 @@ def _get_output(input_filename, **options):
 
     comments, errors = parse(input_filename, **options)
 
-    for comment in comments:
+    for comment in comments.recursive_walk():
         docs_str += comment.get_rst(transform=transform) + '\n'
 
     for (severity, filename, lineno, msg) in errors:
