@@ -106,23 +106,16 @@ def comment_extract(tu):
 
 def _result(comment, cursor=None, fmt=docstr.Type.TEXT, nest=0,
             name=None, ttype=None, args=None, transform=None):
-
-    # FIXME: docstr.generate changes the number of lines in output. This impacts
-    # the error reporting via meta['line']. Adjust meta to take this into
-    # account.
-
-    doc = docstr.generate(text=comment.spelling, fmt=fmt,
-                          name=name, ttype=ttype, args=args, transform=transform)
-
-    doc = docstr.nest(doc, nest)
-
     meta = {'line': comment.extent.start.line}
     if cursor:
         meta['cursor.kind']        = cursor.kind,
         meta['cursor.displayname'] = cursor.displayname,
         meta['cursor.spelling']    = cursor.spelling
 
-    return [Docstring(doc, meta)]
+    ds = Docstring(text=comment.spelling, fmt=fmt, name=name, ttype=ttype, args=args,
+                   transform=transform, meta=meta, nest=nest)
+
+    return [ds]
 
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
@@ -285,8 +278,6 @@ def _recursive_parse(comments, cursor, nest, transform):
     kind = str(cursor.kind)
     text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
 
-    doc = docstr.generate(text=text, fmt=fmt)
-
     meta = {
         'line':               comment.extent.start.line,
         'cursor.kind':        cursor.kind,
@@ -294,7 +285,9 @@ def _recursive_parse(comments, cursor, nest, transform):
         'cursor.spelling':    cursor.spelling
     }
 
-    return [Docstring(doc, meta)]
+    ds = Docstring(text=text, fmt=fmt, meta=meta)
+
+    return [ds]
 
 def clang_diagnostics(errors, diagnostics):
     sev = {0: ErrorLevel.DEBUG,
