@@ -69,14 +69,14 @@ def read_file(filename, **kwargs):
     with open(filename, 'r') as f:
         return f.read()
 
-def run_test(input_filename, get_output, get_expected):
+def run_test(input_filename, get_output, get_expected, monkeypatch=None, capsys=None):
     options = get_testcase_options(input_filename)
 
     if options.get('test-expected-failure') is not None:
         pytest.xfail()
 
-    output_docs, output_errors = get_output(input_filename, **options)
-    expect_docs, expect_errors = get_expected(input_filename, **options)
+    output_docs, output_errors = get_output(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
+    expect_docs, expect_errors = get_expected(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
 
     assert expect_docs == output_docs
     assert expect_errors == output_errors
