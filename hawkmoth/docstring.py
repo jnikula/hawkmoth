@@ -5,13 +5,30 @@
 import re
 
 class Docstring():
-    def __init__(self, text, name=None, ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, text=None, name=None, ttype=None, args=None, meta=None, nest=0):
         self._text = text
         self._name = name
         self._ttype = ttype
         self._args = args
         self._meta = meta
         self._nest = nest
+        self._children = []
+
+    def add_child(self, comment):
+        self._children.append(comment)
+
+    def add_children(self, comments):
+        self._children.extend(comments)
+
+    def recursive_walk(self):
+        # The contents of the parent will always be before children.
+        if self._text:
+            yield self
+
+        # Sort the children by order of appearance. We may add other sort
+        # options later.
+        for comment in sorted(self._children, key=lambda c: c.get_line()):
+            yield from comment.recursive_walk()
 
     @staticmethod
     def _strip(comment):
