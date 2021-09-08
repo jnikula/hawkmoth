@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# Copyright (c) 2021, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+
+import os
+import re
+
+import pytest
+
+from hawkmoth.__main__ import main
+from hawkmoth.util import strutil
+from test import testenv
+
+# Mock sys.argv for cli
+def _mock_args(monkeypatch, args):
+    monkeypatch.setattr('sys.argv', ['dummy'] + args)
+
+# Replace full filename in a stderr line with basename
+def _basename(line):
+    mo = re.match(r'(?P<severity>[^:]+): (?P<filename>[^:]+):(?P<lineno>[^:]+):(?P<msg>.*)', line)
+    if mo is None:
+        return line
+
+    severity = mo.group('severity')
+    filename = mo.group('filename')
+    lineno = mo.group('lineno')
+    msg = mo.group('msg')
+
+    return f'{severity}: {os.path.basename(filename)}:{lineno}:{msg}'
+
+# Replace full filenames in stderr with basenames
+def _stderr_basename(errors_str):
+    if errors_str:
+        errors_str = '\n'.join([_basename(line) for line in errors_str.splitlines()]) + '\n'
+
+    return errors_str
+
+# Capture stdout, stderr from cli
+def _capture(capsys):
+    captured = capsys.readouterr()
+
+    return captured.out, _stderr_basename(captured.err)
+
+def _get_output(input_filename, monkeypatch, capsys, **options):
+    args = [input_filename]
+
+    transform = options.get('compat', None)
+    if transform is not None:
+        args += [f'--compat={transform}']
+    else:
+        transform = options.get('transform', None)
+        if transform is not None:
+            pytest.skip('cli does not support generic transformations')
+
+    clang = options.get('clang', None)
+    if clang:
+        args += [f'--clang={arg}' for arg in strutil.args_as_list(clang)]
+
+    _mock_args(monkeypatch, args)
+
+    main()
+
+    docs_str, errors_str = _capture(capsys)
+
+    return docs_str, errors_str
+
+def _get_expected(input_filename, monkeypatch, **options):
+    return testenv.read_file(input_filename, ext='rst'), \
+        testenv.read_file(input_filename, ext='stderr')
+
+@pytest.mark.full
+@pytest.mark.parametrize('input_filename', testenv.get_testcases(testenv.testdir),
+                         ids=testenv.get_testid)
+def test_cli(input_filename, monkeypatch, capsys):
+    monkeypatch.setattr('sys.argv', ['dummy'])
+    testenv.run_test(input_filename, _get_output, _get_expected, monkeypatch, capsys)
