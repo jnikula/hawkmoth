@@ -28,7 +28,7 @@ def _get_output(input_filename, **options):
         docs_str += doc + '\n'
 
     for (severity, filename, lineno, msg) in errors:
-        errors_str += f'{severity.name}: {lineno}: {msg}\n'
+        errors_str += f'{severity.name}: {os.path.basename(filename)}:{lineno}: {msg}\n'
 
     return docs_str, errors_str
 
