@@ -1,1 +1,1 @@
-test-expected-failure
+{ "expected-failure": true }

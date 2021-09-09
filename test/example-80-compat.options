@@ -1,1 +1,1 @@
-transform=javadoc-liberal
+{ "directive-options": { "transform": "javadoc-liberal" } }

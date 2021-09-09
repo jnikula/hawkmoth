@@ -1,1 +1,1 @@
-transform=napoleon
+{ "directive-options": { "transform": "napoleon" } }
