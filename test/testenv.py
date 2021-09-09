@@ -25,7 +25,7 @@ def get_testcases(path):
             yield os.path.join(path, f)
 
 def get_testcase_options(testcase):
-    options_filename = modify_filename(testcase, ext='options')
+    options_filename = modify_filename(testcase, ext='json')
 
     # options are optional
     options = {}
