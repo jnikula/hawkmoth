@@ -49,11 +49,11 @@ def print_example(testcase):
     title = get_title(testcase)
     basename = os.path.basename(testcase)
     input_filename = f'examples/{basename}'
-    options_dict = testenv.get_testcase_options(testcase).get('directive-options', {})
-    options = ''
-    for key, value in options_dict.items():
-        options += f':{key}: {value}\n'
-    options = options.strip()
+    options = testenv.get_testcase_options(testcase).get('directive-options', {})
+    directive_options_str = ''
+    for key, value in options.items():
+        directive_options_str += f':{key}: {value}\n'
+    directive_options_str = directive_options_str.strip()
 
     print(f'''{title}
 {get_title_underline(title)}
@@ -70,13 +70,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: {input_filename}
-{indent(options, '      ')}
+{indent(directive_options_str, '      ')}
 
 Output
 ~~~~~~
 
 .. c:autodoc:: {input_filename}
-{indent(options, '   ')}
+{indent(directive_options_str, '   ')}
 ''')
 
 if __name__ == '__main__':
