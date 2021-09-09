@@ -1,0 +1,5 @@
+directive: autostruct
+directive-arguments: list
+directive-options:
+  file:
+  members:

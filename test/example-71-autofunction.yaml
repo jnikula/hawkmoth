@@ -1,0 +1,4 @@
+directive: autofunction
+directive-arguments: frob
+directive-options:
+  file:

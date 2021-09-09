@@ -1,0 +1,4 @@
+directive: automacro
+directive-arguments: DIE
+directive-options:
+  file:

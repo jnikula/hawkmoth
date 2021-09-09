@@ -1,0 +1,5 @@
+directive: autoenum
+directive-arguments: mode
+directive-options:
+  file:
+  members:
