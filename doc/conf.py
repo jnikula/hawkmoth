@@ -43,12 +43,25 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 
 # Handle failing hawkmoth import gracefully to be able to build the
 # documentation on e.g. https://readthedocs.org/ which would otherwise fail due
-# to missing clang. This may not be a good example to follow in regular
-# documentation.
+# to missing clang.
+
+# This is not a good example to follow in regular documentation.
 try:
     import hawkmoth
+    from hawkmoth.util import doccompat
+    from sphinx.ext.napoleon import docstring, Config
+
     extensions.append('hawkmoth')
     tags.add('have_hawkmoth')
+
+    def napoleon_transform(comment):
+        config = Config(napoleon_use_rtype=False)
+        return str(docstring.GoogleDocstring(comment, config))
+
+    cautodoc_transformations = {
+        'napoleon': napoleon_transform,
+        'javadoc-liberal': doccompat.javadoc_liberal,
+    }
 except ImportError:
     sys.stderr.write('Warning: Failed to import hawkmoth. Mocking results.\n')
     sys.path.insert(0, os.path.abspath('ext'))
@@ -56,17 +69,6 @@ except ImportError:
     # into the documentation instead of generating.
     extensions.append('automock')
 
-from sphinx.ext.napoleon import docstring, Config
-from hawkmoth.util import doccompat
-
-def napoleon_transform(comment):
-    config = Config(napoleon_use_rtype=False)
-    return str(docstring.GoogleDocstring(comment, config))
-
-cautodoc_transformations = {
-    'napoleon': napoleon_transform,
-    'javadoc-liberal': doccompat.javadoc_liberal,
-}
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
