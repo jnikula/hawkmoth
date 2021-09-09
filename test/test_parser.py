@@ -14,6 +14,10 @@ def _get_output(input_filename, **options):
     docs_str = ''
     errors_str = ''
 
+    directive = options.get('directive')
+    if directive:
+        pytest.skip(f'{directive} directive test')
+
     options = options.get('directive-options', {})
 
     tropt = options.pop('compat', None)
