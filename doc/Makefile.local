@@ -25,7 +25,7 @@ CLEAN := $(CLEAN) $(BUILDDIR)
 
 .PHONY: update-examples
 update-examples:
-	$(docdir)/update-examples > $(docdir)/examples.rst
+	python3 $(test_dir)/update-examples.py > $(docdir)/examples.rst
 
 .PHONY: help
 help:
