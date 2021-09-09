@@ -34,7 +34,7 @@ options_schema = strictyaml.Map({
 })
 
 def get_testcase_options(testcase):
-    options_filename = modify_filename(testcase, ext='options')
+    options_filename = modify_filename(testcase, ext='yaml')
 
     # options are optional
     options = {}
