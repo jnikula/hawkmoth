@@ -1,1 +1,2 @@
-clang=-DDEEP_THOUGHT
+directive-options:
+  clang: -DDEEP_THOUGHT

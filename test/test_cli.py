@@ -44,6 +44,8 @@ def _capture(capsys):
 def _get_output(input_filename, monkeypatch, capsys, **options):
     args = [input_filename]
 
+    options = options.get('directive-options', {})
+
     transform = options.get('compat', None)
     if transform is not None:
         args += [f'--compat={transform}']

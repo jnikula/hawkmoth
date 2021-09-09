@@ -1,1 +1,2 @@
-compat=javadoc-basic
+directive-options:
+  compat: javadoc-basic

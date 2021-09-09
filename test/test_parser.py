@@ -14,6 +14,8 @@ def _get_output(input_filename, **options):
     docs_str = ''
     errors_str = ''
 
+    options = options.get('directive-options', {})
+
     transform = options.pop('compat', None)
     if transform is not None:
         options['transform'] = lambda comment: doccompat.convert(comment, transform=transform)

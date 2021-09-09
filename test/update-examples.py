@@ -49,7 +49,7 @@ def print_example(testcase):
     title = get_title(testcase)
     basename = os.path.basename(testcase)
     input_filename = f'examples/{basename}'
-    options_dict = testenv.get_testcase_options(testcase)
+    options_dict = testenv.get_testcase_options(testcase).get('directive-options', {})
     options = ''
     for key, value in options_dict.items():
         options += f':{key}: {value}\n'

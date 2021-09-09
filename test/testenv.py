@@ -5,6 +5,7 @@ import os
 import sys
 
 import pytest
+import strictyaml
 
 testext = '.c'
 testdir = os.path.dirname(os.path.abspath(__file__))
@@ -23,12 +24,6 @@ def get_testcases(path):
         if f.endswith(testext):
             yield os.path.join(path, f)
 
-directive_options = [
-    'compat',
-    'clang',
-    'transform',
-]
-
 def get_testcase_options(testcase):
     options_filename = modify_filename(testcase, ext='options')
 
@@ -36,13 +31,7 @@ def get_testcase_options(testcase):
     options = {}
     if os.path.isfile(options_filename):
         with open(options_filename, 'r') as f:
-            for line in f.readlines():
-                opt = [x.strip() for x in line.split('=', 1)]
-                if opt[0] != '':
-                    if len(opt) == 2:
-                        options[opt[0]] = opt[1]
-                    else:
-                        options[opt[0]] = True
+            options = strictyaml.load(f.read()).data
 
     return options
 
@@ -72,7 +61,7 @@ def read_file(filename, **kwargs):
 def run_test(input_filename, get_output, get_expected, monkeypatch=None, capsys=None):
     options = get_testcase_options(input_filename)
 
-    if options.get('test-expected-failure') is not None:
+    if options.get('expected-failure'):
         pytest.xfail()
 
     output_docs, output_errors = get_output(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)

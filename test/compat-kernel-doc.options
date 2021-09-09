@@ -1,1 +1,2 @@
-compat=kernel-doc
+directive-options:
+  compat: kernel-doc
