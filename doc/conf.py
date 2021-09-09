@@ -48,8 +48,10 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 # This is not a good example to follow in regular documentation.
 try:
     import hawkmoth
-    from hawkmoth.util import doccompat
+    from hawkmoth.util import doccompat, readthedocs
     from sphinx.ext.napoleon import docstring, Config
+
+    readthedocs.clang_setup()
 
     extensions.append('hawkmoth')
     tags.add('have_hawkmoth')
