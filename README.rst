@@ -111,7 +111,11 @@ Please file bugs and feature requests as GitHub issues. Contributions are
 welcome both as GitHub pull requests (preferred) and as emailed patches to the
 mailing list.
 
+See `CONTRIBUTING.rst`_ for more details.
+
 .. _GitHub: https://github.com/jnikula/hawkmoth
+
+.. _CONTRIBUTING.rst: https://github.com/jnikula/hawkmoth/blob/master/CONTRIBUTING.rst
 
 Dependencies
 ------------
