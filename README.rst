@@ -1,15 +1,21 @@
 
-.. image:: https://img.shields.io/github/v/tag/jnikula/hawkmoth
-   :alt: GitHub tag (latest SemVer)
+|badge-tag| |badge-license| |badge-rtd| |badge-pypi|
 
-.. image:: https://img.shields.io/github/license/jnikula/hawkmoth
-   :alt: GitHub
+.. |badge-tag| image:: https://img.shields.io/github/v/tag/jnikula/hawkmoth
+		       :target: https://github.com/jnikula/hawkmoth/blob/master/CHANGELOG.rst
+		       :alt: GitHub tag (latest SemVer)
 
-.. image:: https://img.shields.io/readthedocs/hawkmoth
-   :alt: Read the Docs
+.. |badge-license| image:: https://img.shields.io/github/license/jnikula/hawkmoth
+			   :target: https://opensource.org/licenses/BSD-2-Clause
+			   :alt: BSD-2-Clause
 
-.. image:: https://img.shields.io/pypi/dm/hawkmoth
-   :alt: PyPI - Downloads
+.. |badge-rtd| image:: https://img.shields.io/readthedocs/hawkmoth
+		       :target: https://hawkmoth.readthedocs.io/en/latest/
+		       :alt: Read the Docs
+
+.. |badge-pypi| image:: https://img.shields.io/pypi/dm/hawkmoth
+			:target: https://pypi.org/project/hawkmoth/
+			:alt: PyPI Downloads
 
 Hawkmoth - Sphinx Autodoc for C
 ===============================
