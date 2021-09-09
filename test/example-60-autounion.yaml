@@ -1,0 +1,7 @@
+directive: autounion
+directive-arguments:
+- onion
+directive-options:
+  file: example-60-autounion.c
+  members:
+

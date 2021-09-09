@@ -1,0 +1,5 @@
+directive: automacro
+directive-arguments:
+- DIE
+directive-options:
+  file: example-11-automacro.c

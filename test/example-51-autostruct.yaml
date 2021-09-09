@@ -1,0 +1,6 @@
+directive: autostruct
+directive-arguments:
+- list
+directive-options:
+  file: example-51-autostruct.c
+  members:

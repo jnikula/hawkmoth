@@ -1,0 +1,5 @@
+directive: autotype
+directive-arguments:
+- list_data_t
+directive-options:
+  file: example-31-autotype.c
