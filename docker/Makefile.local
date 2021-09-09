@@ -4,6 +4,7 @@
 
 docker_dir := docker
 
+# Containers for local testing
 DOCKER_TEST_SRC_MOUNT = --mount type=bind,src=$(PWD),dst=/src,readonly=true
 DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
 DOCKER_TEST_TAG = hawkmoth
@@ -18,3 +19,28 @@ docker-test: docker-test-build
 docker-test-html: docker-test-build
 	mkdir -p doc/_build
 	docker run $(DOCKER_TEST_SRC_MOUNT) $(DOCKER_TEST_OUT_MOUNT) $(DOCKER_TEST_TAG) make BUILDDIR=/out html
+
+# Containers for release
+DOCKER_MAIN_REPO = jnikula/hawkmoth
+DOCKER_LATEXPDF_REPO = jnikula/hawkmoth-latexpdf
+HAWKMOTH_VERSION = 0.8.0
+
+.PHONY: docker-build docker-push
+docker-build:
+	docker build --build-arg HAWKMOTH_VERSION=$(HAWKMOTH_VERSION) --file $(docker_dir)/base/Dockerfile --tag $(DOCKER_MAIN_REPO) --tag $(DOCKER_MAIN_REPO):$(HAWKMOTH_VERSION) $(docker_dir)/base
+
+docker-push: docker-build
+	docker push --all-tags $(DOCKER_MAIN_REPO)
+
+docker-latexpdf-build:
+	docker build --build-arg HAWKMOTH_VERSION=$(HAWKMOTH_VERSION) --file $(docker_dir)/latexpdf/Dockerfile --tag $(DOCKER_LATEXPDF_REPO) --tag $(DOCKER_LATEXPDF_REPO):$(HAWKMOTH_VERSION) $(docker_dir)/latexpdf
+
+docker-latexpdf-push: docker-latexpdf-build
+	docker push --all-tags $(DOCKER_LATEXPDF_REPO)
+
+# Build Hawkmoth documentation using the container
+docker-html: docker-build
+	docker run --rm -v $(PWD):/docs $(DOCKER_MAIN_REPO) make html
+
+docker-latexpdf: docker-latexpdf-build
+	docker run --rm -v $(PWD):/docs $(DOCKER_LATEXPDF_REPO) make latexpdf
