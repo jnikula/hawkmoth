@@ -125,13 +125,13 @@ class CAutoDocDirective(SphinxDirective):
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        comments, errors = parse(filename, transform=transform, clang=clang_args)
+        comments, errors = parse(filename, clang=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
         for comment in comments:
             lineoffset = comment.get_line() - 1
-            lines = statemachine.string2lines(comment.get_docstring(), 8,
+            lines = statemachine.string2lines(comment.get_docstring(transform=transform), 8,
                                               convert_whitespace=True)
             for line in lines:
                 viewlist.append(line, filename, lineoffset)
