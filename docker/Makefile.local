@@ -1,0 +1,20 @@
+# -*- makefile -*-
+# Copyright (c) 2021, Jani Nikula <jani@nikula.org>
+# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+
+docker_dir := docker
+
+DOCKER_TEST_SRC_MOUNT = --mount type=bind,src=$(PWD),dst=/src,readonly=true
+DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
+DOCKER_TEST_TAG = hawkmoth
+
+.PHONY: docker-test-build docker-test docker-test-html
+docker-test-build:
+	docker build --file $(docker_dir)/test/Dockerfile --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --tag $(DOCKER_TEST_TAG) .
+
+docker-test: docker-test-build
+	docker run $(DOCKER_TEST_SRC_MOUNT) $(DOCKER_TEST_TAG) make test
+
+docker-test-html: docker-test-build
+	mkdir -p doc/_build
+	docker run $(DOCKER_TEST_SRC_MOUNT) $(DOCKER_TEST_OUT_MOUNT) $(DOCKER_TEST_TAG) make BUILDDIR=/out html
