@@ -24,6 +24,15 @@ def get_testcases(path):
         if f.endswith(testext):
             yield os.path.join(path, f)
 
+options_schema = strictyaml.Map({
+    strictyaml.Optional('directive-options'): strictyaml.Map({
+        strictyaml.Optional('clang'): strictyaml.Str(),
+        strictyaml.Optional('compat'): strictyaml.Str(),
+        strictyaml.Optional('transform'): strictyaml.Str(),
+    }),
+    strictyaml.Optional('expected-failure'): strictyaml.Bool(),
+})
+
 def get_testcase_options(testcase):
     options_filename = modify_filename(testcase, ext='options')
 
@@ -31,7 +40,7 @@ def get_testcase_options(testcase):
     options = {}
     if os.path.isfile(options_filename):
         with open(options_filename, 'r') as f:
-            options = strictyaml.load(f.read()).data
+            options = strictyaml.load(f.read(), options_schema).data
 
     return options
 
