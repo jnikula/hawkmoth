@@ -42,7 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import docstr, strutil
+from hawkmoth.util import strutil
 from hawkmoth.docstring import *
 
 class ErrorLevel(enum.Enum):
@@ -71,7 +71,7 @@ def comment_extract(tu):
         # handle all comments we come across
         if token.kind == TokenKind.COMMENT:
             # if we already have a comment, it wasn't related to a cursor
-            if current_comment and docstr.is_doc(current_comment.spelling):
+            if current_comment and Docstring.is_doc(current_comment.spelling):
                 top_level_comments.append(current_comment)
             current_comment = token
             continue
@@ -94,12 +94,12 @@ def comment_extract(tu):
         cursor = token_cursor
 
         # Note: current_comment may be None
-        if current_comment != None and docstr.is_doc(current_comment.spelling):
+        if current_comment != None and Docstring.is_doc(current_comment.spelling):
             comments[cursor.hash] = current_comment
         current_comment = None
 
     # comment at the end of file
-    if current_comment and docstr.is_doc(current_comment.spelling):
+    if current_comment and Docstring.is_doc(current_comment.spelling):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments
