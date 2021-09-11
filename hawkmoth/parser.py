@@ -42,7 +42,7 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import docstr, doccompat, strutil
+from hawkmoth.util import docstr, strutil
 from hawkmoth.docstring import *
 
 class ErrorLevel(enum.Enum):
