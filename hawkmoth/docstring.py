@@ -31,6 +31,11 @@ class Docstring():
             yield from comment.recursive_walk()
 
     @staticmethod
+    def is_doc(comment):
+        """Test if comment is a C documentation comment."""
+        return comment.startswith('/**') and comment != '/**/'
+
+    @staticmethod
     def _strip(comment):
         """Strip comment from comment markers."""
         comment = re.sub(r'^/\*\*[ \t]?', '', comment)
