@@ -51,6 +51,14 @@ def print_example(testcase):
     literal_include = f'../test/{input_filename}'
     options = testenv.get_testcase_options(testcase)
 
+    directive = options.get('directive')
+    if directive:
+        namespace_push = f'.. c:namespace-push:: {title}\n\n'
+        namespace_pop = '\n.. c:namespace-pop::\n'
+    else:
+        namespace_push = ''
+        namespace_pop = ''
+
     directive_str = testenv.get_directive_string(options)
 
     print(f'''{title}
@@ -72,7 +80,7 @@ Directive
 Output
 ~~~~~~
 
-{directive_str}
+{namespace_push}{directive_str}{namespace_pop}
 ''')
 
 if __name__ == '__main__':
