@@ -6,7 +6,7 @@ test_dir := test
 
 .PHONY: test
 test:
-	pytest $(test_dir)
+	pytest -n auto $(test_dir)
 
 quick-test:
-	pytest -m "not full" $(test_dir)
+	pytest -n auto -m "not full" $(test_dir)

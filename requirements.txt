@@ -1,4 +1,5 @@
 pytest
+pytest-xdist
 sphinx
 sphinx-testing
 strictyaml
