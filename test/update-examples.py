@@ -49,7 +49,14 @@ def print_example(testcase):
     title = get_title(testcase)
     basename = os.path.basename(testcase)
     input_filename = f'examples/{basename}'
-    options = testenv.get_testcase_options(testcase).get('directive-options', {})
+    options = testenv.get_testcase_options(testcase)
+
+    directive = options.get('directive', 'autodoc')
+    arguments = options.get('directive-arguments', '')
+    sep = ' ' if arguments else ''
+
+    options = options.get('directive-options', {})
+
     directive_options_str = ''
     for key, value in options.items():
         directive_options_str += f':{key}: {value}\n'
@@ -69,13 +76,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: {input_filename}
+   .. c:{directive}:: {input_filename}{sep}{arguments}
 {indent(directive_options_str, '      ')}
 
 Output
 ~~~~~~
 
-.. c:autodoc:: {input_filename}
+.. c:{directive}:: {input_filename}{sep}{arguments}
 {indent(directive_options_str, '   ')}
 ''')
 
