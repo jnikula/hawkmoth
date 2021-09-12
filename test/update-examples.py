@@ -51,7 +51,14 @@ def print_example(testcase):
     input_filename = f'examples/{basename}'
     options = testenv.get_testcase_options(testcase)
 
-    directive = options.get('directive', 'autodoc')
+    directive = options.get('directive')
+    if directive:
+        namespace_push = f'.. c:namespace-push:: {title}'
+        namespace_pop = '.. c:namespace-pop::'
+    else:
+        directive = 'autodoc'
+        namespace_push = ''
+        namespace_pop = ''
     arguments = options.get('directive-arguments', '')
     sep = ' ' if arguments else ''
 
@@ -82,8 +89,13 @@ Directive
 Output
 ~~~~~~
 
+{namespace_push}
+
 .. c:{directive}:: {input_filename}{sep}{arguments}
 {indent(directive_options_str, '   ')}
+
+{namespace_pop}
+
 ''')
 
 if __name__ == '__main__':
