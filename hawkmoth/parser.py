@@ -233,13 +233,11 @@ def _recursive_parse(comments, cursor, nest):
         else:
             ds = EnumDocstring(text=text, nest=nest, name=name, meta=meta)
 
-        result = [ds]
-
         for c in cursor.get_children():
             if c.hash in comments:
-                result.extend(_recursive_parse(comments, c, nest + 1))
+                ds.add_children(_recursive_parse(comments, c, nest + 1))
 
-        return result
+        return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
         ds = EnumeratorDocstring(text=text, nest=nest, name=name, meta=meta)
@@ -311,19 +309,17 @@ def parse(filename, **options):
 
     top_level_comments, comments = comment_extract(tu)
 
-    result = []
+    # Empty comment with just children
+    result = Docstring()
 
     for comment in top_level_comments:
         text = comment.spelling
         meta = _get_meta(comment)
         ds = TextDocstring(text=text, meta=meta)
-        result.append(ds)
+        result.add_child(ds)
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
-            result.extend(_recursive_parse(comments, cursor, 0))
-
-    # Sort all elements by order of appearance.
-    result.sort(key=lambda comment: comment.get_line())
+            result.add_children(_recursive_parse(comments, cursor, 0))
 
     return result, errors
