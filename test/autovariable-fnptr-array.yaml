@@ -1,0 +1,5 @@
+directive: autovar
+directive-arguments:
+- function_pointer_array
+directive-options:
+  file: autovariable-fnptr-array.c
