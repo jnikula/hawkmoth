@@ -23,7 +23,20 @@ class Docstring():
     def add_children(self, comments):
         self._children.extend(comments)
 
-    def recursive_walk(self):
+    def _match(self, filter_types=None, filter_names=None):
+        if filter_types and type(self) not in filter_types:
+            return False
+
+        if filter_names and self.get_name() not in filter_names:
+            return False
+
+        return True
+
+    def recursive_walk(self, filter_types=None, filter_names=None):
+        # Note: The filtering is pretty specialized for our use case here. It
+        # only filters the immediate children, not this comment, nor
+        # grandchildren.
+
         # The contents of the parent will always be before children.
         if self._text:
             yield self
@@ -31,7 +44,8 @@ class Docstring():
         # Sort the children by order of appearance. We may add other sort
         # options later.
         for comment in sorted(self._children, key=lambda c: c.get_line()):
-            yield from comment.recursive_walk()
+            if comment._match(filter_types=filter_types, filter_names=filter_names):
+                yield from comment.recursive_walk()
 
     @staticmethod
     def is_doc(comment):
@@ -87,6 +101,10 @@ class Docstring():
 
     def get_meta(self):
         return self._meta
+
+    def get_name(self):
+        # FIXME: This needs to return the pretty name.
+        return self._name
 
     def get_line(self):
         return self._meta['line']
