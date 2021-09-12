@@ -139,6 +139,8 @@ def _get_macro_args(cursor):
 
     return None
 
+# If this is an array, the dimensions should be applied to the name, not
+# the type.
 def _array_fixup(ttype, name):
     dims = ttype.rsplit(' ', 1)[-1]
     if dims.startswith('[') and dims.endswith(']'):
@@ -147,6 +149,8 @@ def _array_fixup(ttype, name):
 
     return ttype, name
 
+# If this is a function pointer, or an array of function pointers, the
+# name should be within the parenthesis as in (*name) or (*name[N]).
 def _function_pointer_fixup(ttype, name):
     mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)
     if mo is None:
@@ -160,6 +164,13 @@ def _function_pointer_fixup(ttype, name):
 
     name = f'{begin}({stars}{qual}{name}{brackets}){end}'
     ttype = ''
+
+    return ttype, name
+
+def _decl_fixup(ttype, name):
+    ttype, name = _array_fixup(ttype, name)
+
+    ttype, name = _function_pointer_fixup(ttype, name)
 
     return ttype, name
 
@@ -182,13 +193,7 @@ def _recursive_parse(comments, cursor, nest):
         return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
-        # If this is an array, the dimensions should be applied to the name, not
-        # the type.
-        ttype, name = _array_fixup(ttype, name)
-
-        # If this is a function pointer, or an array of function pointers, the
-        # name should be within the parenthesis as in (*name) or (*name[N]).
-        ttype, name = _function_pointer_fixup(ttype, name)
+        ttype, name = _decl_fixup(ttype, name)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = VarDocstring(text=text, nest=nest, name=name, ttype=ttype, meta=meta)
@@ -249,8 +254,7 @@ def _recursive_parse(comments, cursor, nest):
         if cursor.type.kind == TypeKind.FUNCTIONPROTO:
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    arg_ttype, arg_name = _array_fixup(c.type.spelling, c.spelling)
-                    arg_ttype, arg_name = _function_pointer_fixup(arg_ttype, arg_name)
+                    arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling)
 
                     args.append(f'{arg_ttype} {arg_name}')
 
