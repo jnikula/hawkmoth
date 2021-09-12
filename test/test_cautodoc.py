@@ -24,6 +24,8 @@ def _get_output(input_filename, app, status, warning, output_suffix, **options):
         source = os.path.basename(input_filename)
         f.write(f'.. c:{directive}:: {source}{sep}{arguments}\n')
         for key, value in options.items():
+            if isinstance(value, list):
+                value = ', '.join(value)
             f.write(f'   :{key}: {value}\n')
 
     app.build()

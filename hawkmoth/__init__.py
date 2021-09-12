@@ -114,7 +114,7 @@ class CAutoBaseDirective(SphinxDirective):
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        docstrings, errors = parse(filename, clang=clang_args)
+        docstrings, errors = parse(filename, clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
 

@@ -1,2 +1,3 @@
 directive-options:
-  clang: -DDEEP_THOUGHT
+  clang:
+  - -DDEEP_THOUGHT

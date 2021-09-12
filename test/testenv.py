@@ -28,7 +28,7 @@ options_schema = strictyaml.Map({
     strictyaml.Optional('directive'): strictyaml.Str(),
     strictyaml.Optional('directive-arguments'): strictyaml.Str(),
     strictyaml.Optional('directive-options'): strictyaml.Map({
-        strictyaml.Optional('clang'): strictyaml.Str(),
+        strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
         strictyaml.Optional('compat'): strictyaml.Str(),
         strictyaml.Optional('transform'): strictyaml.Str(),
     }),

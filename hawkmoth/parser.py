@@ -42,7 +42,6 @@ from clang.cindex import Index, TranslationUnit
 from clang.cindex import SourceLocation, SourceRange
 from clang.cindex import TokenKind, TokenGroup
 
-from hawkmoth.util import strutil
 from hawkmoth.docstring import *
 
 class ErrorLevel(enum.Enum):
@@ -301,13 +300,10 @@ def clang_diagnostics(diagnostics):
     return errors
 
 # return a list of (comment, metadata) tuples
-# options - dictionary with directive options
-def parse(filename, **options):
-    args = strutil.args_as_list(options.get('clang'))
-
+def parse(filename, clang_args=[]):
     index = Index.create()
 
-    tu = index.parse(filename, args=args, options=
+    tu = index.parse(filename, args=clang_args, options=
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 

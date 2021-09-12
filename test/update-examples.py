@@ -66,6 +66,8 @@ def print_example(testcase):
 
     directive_options_str = ''
     for key, value in options.items():
+        if isinstance(value, list):
+            value = ', '.join(value)
         directive_options_str += f':{key}: {value}\n'
     directive_options_str = directive_options_str.strip()
 

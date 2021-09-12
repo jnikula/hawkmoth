@@ -34,7 +34,7 @@ def main():
 
     transform = lambda comment: doccompat.convert(comment, transform=args.compat)
 
-    comments, errors = parse(args.file, clang=args.clang)
+    comments, errors = parse(args.file, clang_args=args.clang)
 
     for comment in comments.recursive_walk():
         if args.verbose:
