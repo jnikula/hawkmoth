@@ -121,12 +121,23 @@ class CAutoDocDirective(SphinxDirective):
     def __parse(self, filename):
         clang_args = self.__get_clang_args()
 
+        # Cached parse results per rst document
+        parsed_files = self.env.temp_data.setdefault('cautodoc_parsed_files', {})
+
+        # The output depends on clang args
+        key = (filename, tuple(clang_args))
+
+        if key in parsed_files:
+            return parsed_files[key]
+
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
         docstrings, errors = parse(filename, clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
+
+        parsed_files[key] = docstrings
 
         return docstrings
 
