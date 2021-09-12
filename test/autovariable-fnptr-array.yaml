@@ -1,0 +1,3 @@
+directive: autovar
+directive-arguments: function_pointer_array
+expected-failure: true
