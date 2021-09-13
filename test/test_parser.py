@@ -51,4 +51,3 @@ def _get_expected(testcase, **options):
                          ids=testenv.get_testid)
 def test_parser(testcase):
     testenv.run_test(testcase, _get_output, _get_expected)
-
