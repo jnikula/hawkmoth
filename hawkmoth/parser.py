@@ -310,8 +310,8 @@ def _clang_diagnostics(diagnostics):
 def parse(filename, clang_args=None):
     index = Index.create()
 
-    tu = index.parse(filename, args=clang_args, options=
-                     TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
+    tu = index.parse(filename, args=clang_args,
+                     options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
     errors = _clang_diagnostics(tu.diagnostics)

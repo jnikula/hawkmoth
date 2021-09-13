@@ -255,5 +255,5 @@ def setup(app):
     app.add_directive_to_domain('c', 'automacro', CAutoMacroDirective)
     app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
 
-    return dict(version = __version__,
-                parallel_read_safe = True, parallel_write_safe = True)
+    return dict(version=__version__,
+                parallel_read_safe=True, parallel_write_safe=True)
