@@ -87,7 +87,7 @@ def _comment_extract(tu):
         cursor = token_cursor
 
         # Note: current_comment may be None
-        if current_comment != None and Docstring.is_doc(current_comment.spelling):
+        if current_comment is not None and Docstring.is_doc(current_comment.spelling):
             comments[cursor.hash] = current_comment
         current_comment = None
 
