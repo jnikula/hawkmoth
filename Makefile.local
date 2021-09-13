@@ -15,6 +15,27 @@
 
 dir := .
 
+FLAKE8_IGNORE=\
+	E129,\
+	E251,\
+	E261,\
+	E265,\
+	E302,\
+	E305,\
+	E402,\
+	E501,\
+	E711,\
+	E731,\
+	F401,\
+	F403,\
+	F405,\
+	F541,\
+	W391
+
+# Static analysis
+check:
+	flake8 --extend-ignore="$(FLAKE8_IGNORE)" hawkmoth test
+
 # assume virtual environment is used for dist and upload
 build-tools:
 	pip install --upgrade build twine
