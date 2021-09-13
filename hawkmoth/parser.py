@@ -75,10 +75,10 @@ def _comment_extract(tu):
 
         # cursors that are 1) never documented themselves, and 2) allowed
         # between comment and the actual cursor being documented
-        if (token_cursor.kind == CursorKind.INVALID_FILE or
-            token_cursor.kind == CursorKind.TYPE_REF or
-            token_cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE or
-            token_cursor.kind == CursorKind.MACRO_INSTANTIATION):
+        if token_cursor.kind in [CursorKind.INVALID_FILE,
+                                 CursorKind.TYPE_REF,
+                                 CursorKind.PREPROCESSING_DIRECTIVE,
+                                 CursorKind.MACRO_INSTANTIATION]:
             continue
 
         if cursor is not None and token_cursor == cursor:
