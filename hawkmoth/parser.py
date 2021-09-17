@@ -193,12 +193,13 @@ def _recursive_parse(comments, cursor, nest):
         return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
-        ttype, name = _decl_fixup(ttype, name)
+        # Note: Preserve original name
+        ttype, decl_name = _decl_fixup(ttype, name)
 
         if cursor.kind == CursorKind.VAR_DECL:
-            ds = VarDocstring(text=text, nest=nest, name=name, ttype=ttype, meta=meta)
+            ds = VarDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
         else:
-            ds = MemberDocstring(text=text, nest=nest, name=name, ttype=ttype, meta=meta)
+            ds = MemberDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
 
         return [ds]
 

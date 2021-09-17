@@ -28,9 +28,10 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, text=None, name=None, ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, text=None, name=None, decl_name=None, ttype=None, args=None, meta=None, nest=0):
         self._text = text
         self._name = name
+        self._decl_name = decl_name if decl_name else name
         self._ttype = ttype
         self._args = args
         self._meta = meta
@@ -99,7 +100,7 @@ class Docstring():
 
         args = ', '.join(self._args) if self._args is not None else None
 
-        rst = self._fmt.format(text=text, name=self._name, ttype=self._ttype, args=args)
+        rst = self._fmt.format(text=text, name=self._decl_name, ttype=self._ttype, args=args)
 
         rst = Docstring._nest(rst, self._nest)
 
@@ -107,6 +108,9 @@ class Docstring():
 
     def get_meta(self):
         return self._meta
+
+    def get_name(self):
+        return self._name
 
     def get_line(self):
         return self._meta['line']
