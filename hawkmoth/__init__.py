@@ -37,7 +37,7 @@ class CAutoDocDirective(SphinxDirective):
     option_spec = {
         'transform': directives.unchanged_required,
         'compat': directives.unchanged_required,
-        'clang': directives.unchanged_required,
+        'clang': strutil.string_list,
     }
     has_content = False
 
@@ -61,7 +61,7 @@ class CAutoDocDirective(SphinxDirective):
     def __get_clang_args(self):
         clang_args = self.env.config.cautodoc_clang.copy()
 
-        clang_args.extend(strutil.args_as_list(self.options.get('clang')))
+        clang_args.extend(self.options.get('clang', []))
 
         return clang_args
 
