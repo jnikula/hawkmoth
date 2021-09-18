@@ -130,11 +130,11 @@ class CAutoDocDirective(SphinxDirective):
 
         return docstrings
 
-    def __get_docstrings(self, viewlist, filename):
+    def __get_docstrings(self, viewlist, filename, filter_types=None, filter_names=None):
         transform = self.__get_transform()
         docstrings = self.__parse(filename)
 
-        for docstr in docstrings.walk():
+        for docstr in docstrings.walk(filter_types=filter_types, filter_names=filter_names):
             lineoffset = docstr.get_line() - 1
             lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
                                               convert_whitespace=True)
