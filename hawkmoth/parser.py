@@ -50,7 +50,7 @@ class ErrorLevel(enum.Enum):
     INFO = 2
     DEBUG = 3
 
-def comment_extract(tu):
+def _comment_extract(tu):
 
     # FIXME: How to handle top level comments above a cursor that it does *not*
     # describe? Parsing @file or @doc at this stage would not be a clean design.
@@ -275,7 +275,7 @@ def _recursive_parse(comments, cursor, nest):
 
     return [ds]
 
-def clang_diagnostics(diagnostics):
+def _clang_diagnostics(diagnostics):
     errors = []
     sev = {0: ErrorLevel.DEBUG,
            1: ErrorLevel.DEBUG,
@@ -301,9 +301,9 @@ def parse(filename, **options):
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
-    errors = clang_diagnostics(tu.diagnostics)
+    errors = _clang_diagnostics(tu.diagnostics)
 
-    top_level_comments, comments = comment_extract(tu)
+    top_level_comments, comments = _comment_extract(tu)
 
     # Empty comment with just children
     result = Docstring()
