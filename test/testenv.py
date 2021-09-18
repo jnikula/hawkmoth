@@ -44,6 +44,15 @@ def get_testcase_options(testcase):
 
     return options
 
+def get_directive_string(options, filename):
+    directive_options = options.get('directive-options', {})
+
+    directive_str = f'.. c:autodoc:: {filename}\n'
+    for key, value in directive_options.items():
+        directive_str += f'   :{key}: {value}\n'
+
+    return directive_str
+
 def modify_filename(filename, **kwargs):
     ext = kwargs.get('ext')
     if ext is not None:
