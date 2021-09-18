@@ -34,13 +34,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-10-macro.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-10-macro.c
-   
+
 
 Variable
 --------
@@ -57,13 +57,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-20-variable.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-20-variable.c
-   
+
 
 Typedef
 -------
@@ -80,13 +80,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-30-typedef.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-30-typedef.c
-   
+
 
 Enum
 ----
@@ -103,13 +103,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-40-enum.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-40-enum.c
-   
+
 
 Struct
 ------
@@ -126,13 +126,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-50-struct.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-50-struct.c
-   
+
 
 Function
 --------
@@ -149,13 +149,13 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-70-function.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-70-function.c
-   
+
 
 Preprocessor
 ------------
@@ -173,12 +173,14 @@ Directive
 
    .. c:autodoc:: examples/example-70-preprocessor.c
       :clang: -DDEEP_THOUGHT
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
+
 
 Transform
 ---------
@@ -196,12 +198,14 @@ Directive
 
    .. c:autodoc:: examples/example-75-transform.c
       :transform: napoleon
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-75-transform.c
    :transform: napoleon
+
 
 Compat
 ------
@@ -219,12 +223,14 @@ Directive
 
    .. c:autodoc:: examples/example-80-compat.c
       :transform: javadoc-liberal
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-80-compat.c
    :transform: javadoc-liberal
+
 
 Generic
 -------
@@ -241,11 +247,11 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: examples/example-90-generic.c
-      
+   
 
 Output
 ~~~~~~
 
 .. c:autodoc:: examples/example-90-generic.c
-   
+
 
