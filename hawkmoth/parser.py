@@ -37,10 +37,8 @@ import enum
 import re
 import sys
 
-from clang.cindex import CursorKind, TypeKind
+from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
-from clang.cindex import SourceLocation, SourceRange
-from clang.cindex import TokenKind, TokenGroup
 
 from hawkmoth.util import strutil
 from hawkmoth.docstring import *
