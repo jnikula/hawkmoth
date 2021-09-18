@@ -16,6 +16,9 @@ def _get_output(input_filename, **options):
 
     options = options.get('directive-options', {})
 
+    clang_args = options.get('clang')
+    comments, errors = parse(input_filename, clang_args=clang_args)
+
     tropt = options.pop('compat', None)
     if tropt is not None:
         transform = lambda comment: doccompat.convert(comment, transform=tropt)
@@ -25,8 +28,6 @@ def _get_output(input_filename, **options):
             transform = conf.cautodoc_transformations[tropt]
         else:
             transform = None
-
-    comments, errors = parse(input_filename, **options)
 
     for comment in comments.recursive_walk():
         docs_str += comment.get_docstring(transform=transform) + '\n'
