@@ -1,6 +1,26 @@
 # Copyright (c) 2016-2021 Jani Nikula <jani@nikula.org>
 # Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+"""
+Documentation comment storage and converter
+===========================================
+
+Class hierarchy for storing a tree of different types of documentation
+comments.
+
+The documentation comments from C source are stored verbatim. There are methods
+for walking the documentation comment tree and returning the documentation with
+conversions:
+
+* Stripping the comment delimiters (``/**`` and ``*/``) and continuation
+  line prefixes (e.g. ``␣*␣``).
+
+* Optional transformation of the documentation comments to support different
+  syntaxes. These filters are expected to translate the comment into
+  reStructuredText.
+
+* Generation of Sphinx C Domain directives with appropriate indentation.
+"""
 
 import re
 
