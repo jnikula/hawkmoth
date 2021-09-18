@@ -43,6 +43,10 @@ def _capture(capsys):
 def _get_output(input_filename, monkeypatch, capsys, **options):
     args = [input_filename]
 
+    directive = options.get('directive')
+    if directive:
+        pytest.skip(f'{directive} directive test')
+
     options = options.get('directive-options', {})
 
     transform = options.get('compat', None)
