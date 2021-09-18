@@ -25,9 +25,13 @@ def get_testcases(path):
             yield os.path.join(path, f)
 
 options_schema = strictyaml.Map({
+    strictyaml.Optional('directive'): strictyaml.Str(),
+    strictyaml.Optional('directive-arguments'): strictyaml.Str(),
     strictyaml.Optional('directive-options'): strictyaml.Map({
         strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
         strictyaml.Optional('compat'): strictyaml.Str(),
+        strictyaml.Optional('file'): strictyaml.Str(),
+        strictyaml.Optional('members'): strictyaml.Str(),
         strictyaml.Optional('transform'): strictyaml.Str(),
     }),
     strictyaml.Optional('expected-failure'): strictyaml.Bool(),
@@ -45,12 +49,22 @@ def get_testcase_options(testcase):
     return options
 
 def get_directive_string(options, filename):
+    directive = options.get('directive')
+    if directive:
+        arguments = options.get('directive-arguments', '')
+        sep = ' ' if arguments else ''
+        directive_str = f'.. c:{directive}::{sep}{arguments}\n'
+    else:
+        directive_str = f'.. c:autodoc:: {filename}\n'
+
     directive_options = options.get('directive-options', {})
 
-    directive_str = f'.. c:autodoc:: {filename}\n'
     for key, value in directive_options.items():
         if isinstance(value, list):
             value = ', '.join(value)
+        elif key == 'file' and value == '':
+            # Special case to avoid lots of duplication.
+            value = filename
         directive_str += f'   :{key}: {value}\n'
 
     return directive_str
