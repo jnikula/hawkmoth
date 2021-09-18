@@ -5,8 +5,7 @@
 Documentation comment extractor
 ===============================
 
-This module extracts relevant documentation comments, optionally reformatting
-them in reST syntax.
+This module extracts relevant documentation comments.
 
 This is the part that uses Clang Python Bindings to extract documentation
 comments from C source code. This module does not depend on Sphinx.
@@ -20,17 +19,15 @@ There are two passes:
 
 There is minimal syntax parsing or input conversion:
 
-* Identification of documentation comment blocks, and stripping the comment
-  delimiters (``/**`` and ``*/``) and continuation line prefixes (e.g. ``␣*␣``).
+* Identification of documentation comment blocks, i.e. comments that start
+  with ``/**``.
 
 * Identification of function-like macros.
 
-* Indentation for reST C Domain directive blocks.
+* Identification of array and function pointer variables, members and
+  arguments, and conversion to a format suitable for Sphinx C Domain.
 
-* An optional external filter may be invoked to support different syntaxes.
-  These filters are expected to translate the comment into the reST format.
-
-Otherwise, documentation comments are passed through verbatim.
+The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
 import enum
@@ -290,7 +287,7 @@ def clang_diagnostics(errors, diagnostics):
         errors.extend([(sev[diag.severity], filename,
                         diag.location.line, diag.spelling)])
 
-# return a list of (comment, metadata) tuples
+# Parse a file and return a tree of Docstring objects.
 # options - dictionary with directive options
 def parse(filename, **options):
 
