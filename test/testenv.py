@@ -26,7 +26,7 @@ def get_testcases(path):
 
 options_schema = strictyaml.Map({
     strictyaml.Optional('directive-options'): strictyaml.Map({
-        strictyaml.Optional('clang'): strictyaml.Str(),
+        strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
         strictyaml.Optional('compat'): strictyaml.Str(),
         strictyaml.Optional('transform'): strictyaml.Str(),
     }),
@@ -49,6 +49,8 @@ def get_directive_string(options, filename):
 
     directive_str = f'.. c:autodoc:: {filename}\n'
     for key, value in directive_options.items():
+        if isinstance(value, list):
+            value = ', '.join(value)
         directive_str += f'   :{key}: {value}\n'
 
     return directive_str

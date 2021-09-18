@@ -8,7 +8,6 @@ import re
 import pytest
 
 from hawkmoth.__main__ import main
-from hawkmoth.util import strutil
 from test import testenv
 
 # Mock sys.argv for cli
@@ -54,9 +53,9 @@ def _get_output(input_filename, monkeypatch, capsys, **options):
         if transform is not None:
             pytest.skip('cli does not support generic transformations')
 
-    clang = options.get('clang', None)
-    if clang:
-        args += [f'--clang={arg}' for arg in strutil.args_as_list(clang)]
+    clang_args = options.get('clang')
+    if clang_args:
+        args += [f'--clang={clang_arg}' for clang_arg in clang_args]
 
     _mock_args(monkeypatch, args)
 

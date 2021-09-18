@@ -125,7 +125,7 @@ class CAutoDocDirective(SphinxDirective):
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        comments, errors = parse(filename, clang=clang_args)
+        comments, errors = parse(filename, clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
