@@ -36,7 +36,7 @@ def main():
 
     comments, errors = parse(args.file, clang_args=args.clang)
 
-    for comment in comments.recursive_walk():
+    for comment in comments.walk():
         if args.verbose:
             print(f'# {comment.get_meta()}')
         print(comment.get_docstring(transform=transform))

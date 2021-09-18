@@ -29,7 +29,7 @@ def _get_output(input_filename, **options):
         else:
             transform = None
 
-    for comment in comments.recursive_walk():
+    for comment in comments.walk():
         docs_str += comment.get_docstring(transform=transform) + '\n'
 
     for (severity, filename, lineno, msg) in errors:

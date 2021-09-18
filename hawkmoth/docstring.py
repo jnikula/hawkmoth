@@ -44,7 +44,7 @@ class Docstring():
     def add_children(self, comments):
         self._children.extend(comments)
 
-    def recursive_walk(self):
+    def walk(self, recurse=True):
         # The contents of the parent will always be before children.
         if self._text:
             yield self
@@ -52,7 +52,10 @@ class Docstring():
         # Sort the children by order of appearance. We may add other sort
         # options later.
         for comment in sorted(self._children, key=lambda c: c.get_line()):
-            yield from comment.recursive_walk()
+            if recurse:
+                yield from comment.walk()
+            else:
+                yield comment
 
     @staticmethod
     def is_doc(comment):

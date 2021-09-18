@@ -134,7 +134,7 @@ class CAutoDocDirective(SphinxDirective):
         transform = self.__get_transform()
         docstrings = self.__parse(filename)
 
-        for docstr in docstrings.recursive_walk():
+        for docstr in docstrings.walk():
             lineoffset = docstr.get_line() - 1
             lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
                                               convert_whitespace=True)
