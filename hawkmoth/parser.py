@@ -275,7 +275,8 @@ def _recursive_parse(comments, cursor, nest):
 
     return [ds]
 
-def clang_diagnostics(errors, diagnostics):
+def clang_diagnostics(diagnostics):
+    errors = []
     sev = {0: ErrorLevel.DEBUG,
            1: ErrorLevel.DEBUG,
            2: ErrorLevel.WARNING,
@@ -287,11 +288,11 @@ def clang_diagnostics(errors, diagnostics):
         errors.extend([(sev[diag.severity], filename,
                         diag.location.line, diag.spelling)])
 
+    return errors
+
 # Parse a file and return a tree of Docstring objects.
 # options - dictionary with directive options
 def parse(filename, **options):
-
-    errors = []
     args = strutil.args_as_list(options.get('clang'))
 
     index = Index.create()
@@ -300,7 +301,7 @@ def parse(filename, **options):
                      TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
-    clang_diagnostics(errors, tu.diagnostics)
+    errors = clang_diagnostics(tu.diagnostics)
 
     top_level_comments, comments = comment_extract(tu)
 
