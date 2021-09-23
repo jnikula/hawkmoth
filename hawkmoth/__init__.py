@@ -126,17 +126,21 @@ class CAutoBaseDirective(SphinxDirective):
 
     def __get_docstrings(self, viewlist, filename):
         transform = self.__get_transform()
-        docstrings = self.__parse(filename)
+        root = self.__parse(filename)
 
-        for docstr in docstrings.walk(filter_types=self._docstring_types, filter_names=self._get_names()):
-            lineoffset = docstr.get_line() - 1
-            lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
-                                              convert_whitespace=True)
-            for line in lines:
-                viewlist.append(line, filename, lineoffset)
-                lineoffset += 1
+        for docstrings in root.walk(recurse=False, filter_types=self._docstring_types, filter_names=self._get_names()):
+            for docstr in docstrings.walk(filter_names=self._get_members()):
+                lineoffset = docstr.get_line() - 1
+                lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
+                                                  convert_whitespace=True)
+                for line in lines:
+                    viewlist.append(line, filename, lineoffset)
+                    lineoffset += 1
 
     def _get_names(self):
+        return None
+
+    def _get_members(self):
         return None
 
     def run(self):
@@ -214,8 +218,21 @@ class CAutoMacroDirective(CAutoSymbolDirective):
 class CAutoFunctionDirective(CAutoSymbolDirective):
     _docstring_types = [docstring.FunctionDocstring]
 
+def members_filter(argument):
+    # Use None for members option without an argument to not filter.
+    if argument is None:
+        return None
+    return strutil.string_list(argument)
+
 class CAutoCompoundDirective(CAutoSymbolDirective):
-    pass
+    option_spec = CAutoSymbolDirective.option_spec.copy()
+    option_spec.update({
+        'members': members_filter,
+    })
+
+    def _get_members(self):
+        # By default use [] as a filter that does not match any members.
+        return self.options.get('members', [])
 
 class CAutoStructDirective(CAutoCompoundDirective):
     _docstring_types = [docstring.StructDocstring]
