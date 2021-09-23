@@ -1,0 +1,8 @@
+directive: autoenum
+directive-arguments:
+- foo
+directive-options:
+  file: autoenum.c
+  members:
+  - bar
+
