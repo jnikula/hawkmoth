@@ -1,2 +1,4 @@
+directive-arguments:
+- example-75-transform.c
 directive-options:
   transform: napoleon

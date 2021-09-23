@@ -48,12 +48,9 @@ def get_testcase_options(testcase):
 
     return options
 
-def get_directive_string(options, filename):
-    directive = options.get('directive')
+def get_directive_string(options):
+    directive = options.get('directive', 'autodoc')
     arguments = options.get('directive-arguments', [])
-    if not directive:
-        directive = 'autodoc'
-        arguments.insert(0, filename)
     arguments_str = ' '.join(arguments)
 
     directive_str = f'.. c:{directive}:: {arguments_str}\n'

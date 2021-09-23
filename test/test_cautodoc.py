@@ -14,8 +14,7 @@ def _get_output(input_filename, app, status, warning, output_suffix, **options):
     shutil.copyfile(input_filename,
                     testenv.modify_filename(input_filename, dir=app.srcdir))
 
-    source = os.path.basename(input_filename)
-    directive_str = testenv.get_directive_string(options, source)
+    directive_str = testenv.get_directive_string(options)
 
     with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
         f.write(directive_str)

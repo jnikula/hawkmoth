@@ -51,7 +51,7 @@ def print_example(testcase):
     literal_include = f'../test/{input_filename}'
     options = testenv.get_testcase_options(testcase)
 
-    directive_str = testenv.get_directive_string(options, input_filename)
+    directive_str = testenv.get_directive_string(options)
 
     print(f'''{title}
 {get_title_underline(title)}
