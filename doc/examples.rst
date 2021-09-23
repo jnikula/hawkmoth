@@ -25,7 +25,7 @@ Macro
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-10-macro.c
+.. literalinclude:: ../test/example-10-macro.c
    :language: C
 
 Directive
@@ -33,13 +33,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-10-macro.c
+   .. c:autodoc:: example-10-macro.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-10-macro.c
+.. c:autodoc:: example-10-macro.c
 
 
 Variable
@@ -48,7 +48,7 @@ Variable
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-20-variable.c
+.. literalinclude:: ../test/example-20-variable.c
    :language: C
 
 Directive
@@ -56,13 +56,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-20-variable.c
+   .. c:autodoc:: example-20-variable.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-20-variable.c
+.. c:autodoc:: example-20-variable.c
 
 
 Typedef
@@ -71,7 +71,7 @@ Typedef
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-30-typedef.c
+.. literalinclude:: ../test/example-30-typedef.c
    :language: C
 
 Directive
@@ -79,13 +79,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-30-typedef.c
+   .. c:autodoc:: example-30-typedef.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-30-typedef.c
+.. c:autodoc:: example-30-typedef.c
 
 
 Enum
@@ -94,7 +94,7 @@ Enum
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-40-enum.c
+.. literalinclude:: ../test/example-40-enum.c
    :language: C
 
 Directive
@@ -102,13 +102,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-40-enum.c
+   .. c:autodoc:: example-40-enum.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-40-enum.c
+.. c:autodoc:: example-40-enum.c
 
 
 Struct
@@ -117,7 +117,7 @@ Struct
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-50-struct.c
+.. literalinclude:: ../test/example-50-struct.c
    :language: C
 
 Directive
@@ -125,13 +125,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-50-struct.c
+   .. c:autodoc:: example-50-struct.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-50-struct.c
+.. c:autodoc:: example-50-struct.c
 
 
 Function
@@ -140,7 +140,7 @@ Function
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-70-function.c
+.. literalinclude:: ../test/example-70-function.c
    :language: C
 
 Directive
@@ -148,13 +148,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-70-function.c
+   .. c:autodoc:: example-70-function.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-70-function.c
+.. c:autodoc:: example-70-function.c
 
 
 Preprocessor
@@ -163,7 +163,7 @@ Preprocessor
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-70-preprocessor.c
+.. literalinclude:: ../test/example-70-preprocessor.c
    :language: C
 
 Directive
@@ -171,14 +171,14 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-70-preprocessor.c
+   .. c:autodoc:: example-70-preprocessor.c
       :clang: -DDEEP_THOUGHT
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-70-preprocessor.c
+.. c:autodoc:: example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
 
 
@@ -188,7 +188,7 @@ Transform
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-75-transform.c
+.. literalinclude:: ../test/example-75-transform.c
    :language: C
 
 Directive
@@ -196,14 +196,14 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-75-transform.c
+   .. c:autodoc:: example-75-transform.c
       :transform: napoleon
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-75-transform.c
+.. c:autodoc:: example-75-transform.c
    :transform: napoleon
 
 
@@ -213,7 +213,7 @@ Compat
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-80-compat.c
+.. literalinclude:: ../test/example-80-compat.c
    :language: C
 
 Directive
@@ -221,14 +221,14 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-80-compat.c
+   .. c:autodoc:: example-80-compat.c
       :transform: javadoc-liberal
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-80-compat.c
+.. c:autodoc:: example-80-compat.c
    :transform: javadoc-liberal
 
 
@@ -238,7 +238,7 @@ Generic
 Source
 ~~~~~~
 
-.. literalinclude:: examples/example-90-generic.c
+.. literalinclude:: ../test/example-90-generic.c
    :language: C
 
 Directive
@@ -246,12 +246,12 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: examples/example-90-generic.c
+   .. c:autodoc:: example-90-generic.c
    
 
 Output
 ~~~~~~
 
-.. c:autodoc:: examples/example-90-generic.c
+.. c:autodoc:: example-90-generic.c
 
 

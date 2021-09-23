@@ -47,8 +47,8 @@ This page showcases Hawkmoth in action.
 
 def print_example(testcase):
     title = get_title(testcase)
-    basename = os.path.basename(testcase)
-    input_filename = f'examples/{basename}'
+    input_filename = os.path.basename(testcase)
+    literal_include = f'../test/{input_filename}'
     options = testenv.get_testcase_options(testcase)
 
     directive_str = testenv.get_directive_string(options, input_filename)
@@ -59,7 +59,7 @@ def print_example(testcase):
 Source
 ~~~~~~
 
-.. literalinclude:: {input_filename}
+.. literalinclude:: {literal_include}
    :language: C
 
 Directive
