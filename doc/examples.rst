@@ -42,6 +42,35 @@ Output
 .. c:autodoc:: example-10-macro.c
 
 
+Automacro
+---------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-11-automacro.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:automacro:: DIE
+      :file: example-11-automacro.c
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Automacro
+
+.. c:automacro:: DIE
+   :file: example-11-automacro.c
+
+.. c:namespace-pop::
+
+
 Variable
 --------
 
@@ -63,6 +92,35 @@ Output
 ~~~~~~
 
 .. c:autodoc:: example-20-variable.c
+
+
+Autovar
+-------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-21-autovar.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autovar:: meaning_of_life
+      :file: example-21-autovar.c
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autovar
+
+.. c:autovar:: meaning_of_life
+   :file: example-21-autovar.c
+
+.. c:namespace-pop::
 
 
 Typedef
@@ -88,6 +146,35 @@ Output
 .. c:autodoc:: example-30-typedef.c
 
 
+Autotype
+--------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-31-autotype.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autotype:: list_data_t
+      :file: example-31-autotype.c
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autotype
+
+.. c:autotype:: list_data_t
+   :file: example-31-autotype.c
+
+.. c:namespace-pop::
+
+
 Enum
 ----
 
@@ -111,6 +198,37 @@ Output
 .. c:autodoc:: example-40-enum.c
 
 
+Autoenum
+--------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-41-autoenum.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autoenum:: mode
+      :file: example-41-autoenum.c
+      :members: 
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autoenum
+
+.. c:autoenum:: mode
+   :file: example-41-autoenum.c
+   :members: 
+
+.. c:namespace-pop::
+
+
 Struct
 ------
 
@@ -132,6 +250,68 @@ Output
 ~~~~~~
 
 .. c:autodoc:: example-50-struct.c
+
+
+Autostruct
+----------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-51-autostruct.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autostruct:: list
+      :file: example-51-autostruct.c
+      :members: 
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autostruct
+
+.. c:autostruct:: list
+   :file: example-51-autostruct.c
+   :members: 
+
+.. c:namespace-pop::
+
+
+Autounion
+---------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-60-autounion.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autounion:: onion
+      :file: example-60-autounion.c
+      :members: 
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autounion
+
+.. c:autounion:: onion
+   :file: example-60-autounion.c
+   :members: 
+
+.. c:namespace-pop::
 
 
 Function
@@ -180,6 +360,35 @@ Output
 
 .. c:autodoc:: example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
+
+
+Autofunction
+------------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-71-autofunction.c
+   :language: C
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autofunction:: frob
+      :file: example-71-autofunction.c
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autofunction
+
+.. c:autofunction:: frob
+   :file: example-71-autofunction.c
+
+.. c:namespace-pop::
 
 
 Transform
