@@ -48,7 +48,7 @@ Automacro
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-11-automacro.c
+.. literalinclude:: ../test/example-10-macro.c
    :language: C
 
 Directive
@@ -57,7 +57,7 @@ Directive
 .. code-block:: rest
 
    .. c:automacro:: DIE
-      :file: example-11-automacro.c
+      :file: example-10-macro.c
    
 
 Output
@@ -66,7 +66,7 @@ Output
 .. c:namespace-push:: Automacro
 
 .. c:automacro:: DIE
-   :file: example-11-automacro.c
+   :file: example-10-macro.c
 
 .. c:namespace-pop::
 
@@ -100,7 +100,7 @@ Autovar
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-21-autovar.c
+.. literalinclude:: ../test/example-20-variable.c
    :language: C
 
 Directive
@@ -109,7 +109,7 @@ Directive
 .. code-block:: rest
 
    .. c:autovar:: meaning_of_life
-      :file: example-21-autovar.c
+      :file: example-20-variable.c
    
 
 Output
@@ -118,7 +118,7 @@ Output
 .. c:namespace-push:: Autovar
 
 .. c:autovar:: meaning_of_life
-   :file: example-21-autovar.c
+   :file: example-20-variable.c
 
 .. c:namespace-pop::
 
@@ -152,7 +152,7 @@ Autotype
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-31-autotype.c
+.. literalinclude:: ../test/example-30-typedef.c
    :language: C
 
 Directive
@@ -161,7 +161,7 @@ Directive
 .. code-block:: rest
 
    .. c:autotype:: list_data_t
-      :file: example-31-autotype.c
+      :file: example-30-typedef.c
    
 
 Output
@@ -170,7 +170,7 @@ Output
 .. c:namespace-push:: Autotype
 
 .. c:autotype:: list_data_t
-   :file: example-31-autotype.c
+   :file: example-30-typedef.c
 
 .. c:namespace-pop::
 
@@ -204,7 +204,7 @@ Autoenum
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-41-autoenum.c
+.. literalinclude:: ../test/example-40-enum.c
    :language: C
 
 Directive
@@ -213,7 +213,7 @@ Directive
 .. code-block:: rest
 
    .. c:autoenum:: mode
-      :file: example-41-autoenum.c
+      :file: example-40-enum.c
       :members: 
    
 
@@ -223,7 +223,7 @@ Output
 .. c:namespace-push:: Autoenum
 
 .. c:autoenum:: mode
-   :file: example-41-autoenum.c
+   :file: example-40-enum.c
    :members: 
 
 .. c:namespace-pop::
@@ -258,7 +258,7 @@ Autostruct
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-51-autostruct.c
+.. literalinclude:: ../test/example-50-struct.c
    :language: C
 
 Directive
@@ -267,7 +267,7 @@ Directive
 .. code-block:: rest
 
    .. c:autostruct:: list
-      :file: example-51-autostruct.c
+      :file: example-50-struct.c
       :members: 
    
 
@@ -277,7 +277,7 @@ Output
 .. c:namespace-push:: Autostruct
 
 .. c:autostruct:: list
-   :file: example-51-autostruct.c
+   :file: example-50-struct.c
    :members: 
 
 .. c:namespace-pop::
@@ -368,7 +368,7 @@ Autofunction
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-71-autofunction.c
+.. literalinclude:: ../test/example-70-function.c
    :language: C
 
 Directive
@@ -377,7 +377,7 @@ Directive
 .. code-block:: rest
 
    .. c:autofunction:: frob
-      :file: example-71-autofunction.c
+      :file: example-70-function.c
    
 
 Output
@@ -386,7 +386,7 @@ Output
 .. c:namespace-push:: Autofunction
 
 .. c:autofunction:: frob
-   :file: example-71-autofunction.c
+   :file: example-70-function.c
 
 .. c:namespace-pop::
 
