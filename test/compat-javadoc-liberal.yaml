@@ -1,4 +1,4 @@
 directive-arguments:
-- compat-javadoc-liberal.c
+- compat.c
 directive-options:
   compat: javadoc-liberal

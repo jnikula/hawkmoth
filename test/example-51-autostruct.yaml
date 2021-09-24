@@ -2,5 +2,5 @@ directive: autostruct
 directive-arguments:
 - list
 directive-options:
-  file: example-51-autostruct.c
+  file: example-50-struct.c
   members:

@@ -1,1 +1,0 @@
-example-50-struct.c

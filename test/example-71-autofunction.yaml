@@ -2,4 +2,4 @@ directive: autofunction
 directive-arguments:
 - frob
 directive-options:
-  file: example-71-autofunction.c
+  file: example-70-function.c

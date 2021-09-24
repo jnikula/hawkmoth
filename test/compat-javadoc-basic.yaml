@@ -1,4 +1,4 @@
 directive-arguments:
-- compat-javadoc-basic.c
+- compat.c
 directive-options:
   compat: javadoc-basic

@@ -2,7 +2,7 @@ directive: autoenum
 directive-arguments:
 - foo
 directive-options:
-  file: autoenum.c
+  file: enum.c
   members:
   - bar
 

@@ -1,4 +1,4 @@
 directive-arguments:
-- compat-kernel-doc.c
+- compat.c
 directive-options:
   compat: kernel-doc

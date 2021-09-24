@@ -2,4 +2,4 @@ directive: autovar
 directive-arguments:
 - meaning_of_life
 directive-options:
-  file: example-21-autovar.c
+  file: example-20-variable.c
