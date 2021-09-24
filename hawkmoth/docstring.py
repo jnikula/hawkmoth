@@ -61,16 +61,20 @@ class Docstring():
 
     def _get_plain_comment(self):
         """Return plain comment with comment markers and line prefixes removed."""
-        comment = self._text
+        lines = self._text.splitlines()
 
-        comment = re.sub(r'^/\*\*[ \t]*', '', comment)
-        comment = re.sub(r'[ \t]*\*/$', '', comment)
-        # Could look at first line of comment, and remove the leading stuff there
-        # from the rest.
-        comment = re.sub(r'(?m)^[ \t]*\*?[ \t]?', '', comment)
-        # Strip leading blank lines.
-        comment = re.sub(r'^[\n]*', '', comment)
-        return comment.strip()
+        lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
+        lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
+
+        lines[1:-1] = [re.sub(r'^[ \t]*\*?[ \t]?', '', line) for line in lines[1:-1]]
+
+        while not lines[0] or lines[0].isspace():
+            del lines[0]
+
+        while not lines[-1] or lines[-1].isspace():
+            del lines[-1]
+
+        return '\n'.join(lines)
 
     @staticmethod
     def _nest(text, nest):
