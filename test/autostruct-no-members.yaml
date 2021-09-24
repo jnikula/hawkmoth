@@ -2,4 +2,4 @@ directive: autostruct
 directive-arguments:
 - sample_struct
 directive-options:
-  file: autostruct.c
+  file: struct.c

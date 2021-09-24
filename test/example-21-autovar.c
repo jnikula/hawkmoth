@@ -1,1 +1,0 @@
-example-20-variable.c

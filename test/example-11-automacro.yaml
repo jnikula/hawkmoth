@@ -2,4 +2,4 @@ directive: automacro
 directive-arguments:
 - DIE
 directive-options:
-  file: example-11-automacro.c
+  file: example-10-macro.c

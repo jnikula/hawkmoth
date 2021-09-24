@@ -1,1 +1,0 @@
-example-70-function.c
