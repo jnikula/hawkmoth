@@ -59,9 +59,10 @@ class Docstring():
         """Test if comment is a C documentation comment."""
         return comment.startswith('/**') and comment != '/**/'
 
-    @staticmethod
-    def _strip(comment):
-        """Strip comment from comment markers."""
+    def _get_plain_comment(self):
+        """Return plain comment with comment markers and line prefixes removed."""
+        comment = self._text
+
         comment = re.sub(r'^/\*\*[ \t]?', '', comment)
         comment = re.sub(r'\*/$', '', comment)
         # Could look at first line of comment, and remove the leading stuff there
@@ -91,7 +92,7 @@ class Docstring():
         # error reporting via meta['line']. Adjust meta to take this into
         # account.
 
-        text = Docstring._strip(self._text)
+        text = self._get_plain_comment()
 
         if transform is not None:
             text = transform(text)
