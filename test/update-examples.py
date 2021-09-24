@@ -10,7 +10,7 @@ import testenv
 def get_title(testcase):
     basename = os.path.basename(testcase)
 
-    title = re.sub(r'^example-[0-9]+-([a-zA-Z0-9_-]+).c$', r'\1', basename)
+    title = re.sub(r'^example-[0-9]+-([a-zA-Z0-9_-]+).yaml$', r'\1', basename)
     title = title.replace('-', ' ')
     title = title.capitalize()
 
@@ -47,9 +47,9 @@ This page showcases Hawkmoth in action.
 
 def print_example(testcase):
     title = get_title(testcase)
-    input_filename = os.path.basename(testcase)
-    literal_include = f'../test/{input_filename}'
     options = testenv.get_testcase_options(testcase)
+    input_filename = testenv.get_input_filename(options)
+    literal_include = f'../test/{input_filename}'
 
     directive = options.get('directive')
     if directive:
@@ -85,6 +85,6 @@ Output
 
 if __name__ == '__main__':
     print_header()
-    for f in testenv.get_testcases(testenv.testdir):
-        if os.path.basename(f).startswith('example-'):
-            print_example(f)
+    for testcase in testenv.get_testcases(testenv.testdir):
+        if os.path.basename(testcase).startswith('example-'):
+            print_example(testcase)
