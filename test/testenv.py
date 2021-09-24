@@ -7,7 +7,7 @@ import sys
 import pytest
 import strictyaml
 
-testext = '.c'
+testext = '.yaml'
 testdir = os.path.dirname(os.path.abspath(__file__))
 rootdir = os.path.dirname(testdir)
 
@@ -38,15 +38,27 @@ options_schema = strictyaml.Map({
 })
 
 def get_testcase_options(testcase):
-    options_filename = modify_filename(testcase, ext='yaml')
-
     # options are optional
     options = {}
-    if os.path.isfile(options_filename):
-        with open(options_filename, 'r') as f:
+    if os.path.isfile(testcase):
+        with open(testcase, 'r') as f:
             options = strictyaml.load(f.read(), options_schema).data
 
     return options
+
+def get_input_filename(options, path=None):
+    directive = options.get('directive', 'autodoc')
+    if directive == 'autodoc':
+        arguments = options.get('directive-arguments', [])
+        basename = arguments[0]
+    else:
+        directive_options = options.get('directive-options', {})
+        basename = directive_options.get('file')
+
+    if path:
+        return os.path.join(path, basename)
+    else:
+        return basename
 
 def get_directive_string(options):
     directive = options.get('directive', 'autodoc')
@@ -87,14 +99,14 @@ def read_file(filename, **kwargs):
     with open(filename, 'r') as f:
         return f.read()
 
-def run_test(input_filename, get_output, get_expected, monkeypatch=None, capsys=None):
-    options = get_testcase_options(input_filename)
+def run_test(testcase, get_output, get_expected, monkeypatch=None, capsys=None):
+    options = get_testcase_options(testcase)
 
     if options.get('expected-failure'):
         pytest.xfail()
 
-    output_docs, output_errors = get_output(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
-    expect_docs, expect_errors = get_expected(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
+    output_docs, output_errors = get_output(testcase, monkeypatch=monkeypatch, capsys=capsys, **options)
+    expect_docs, expect_errors = get_expected(testcase, monkeypatch=monkeypatch, capsys=capsys, **options)
 
     assert output_docs == expect_docs
     assert output_errors == expect_errors

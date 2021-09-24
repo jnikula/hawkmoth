@@ -40,8 +40,8 @@ def _capture(capsys):
 
     return captured.out, _stderr_basename(captured.err)
 
-def _get_output(input_filename, monkeypatch, capsys, **options):
-    args = [input_filename]
+def _get_output(testcase, monkeypatch, capsys, **options):
+    args = [testenv.get_input_filename(options, path=testenv.testdir)]
 
     directive = options.get('directive')
     if directive:
@@ -69,13 +69,13 @@ def _get_output(input_filename, monkeypatch, capsys, **options):
 
     return docs_str, errors_str
 
-def _get_expected(input_filename, monkeypatch, **options):
-    return testenv.read_file(input_filename, ext='rst'), \
-        testenv.read_file(input_filename, ext='stderr')
+def _get_expected(testcase, monkeypatch, **options):
+    return testenv.read_file(testcase, ext='rst'), \
+        testenv.read_file(testcase, ext='stderr')
 
 @pytest.mark.full
-@pytest.mark.parametrize('input_filename', testenv.get_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
-def test_cli(input_filename, monkeypatch, capsys):
+def test_cli(testcase, monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['dummy'])
-    testenv.run_test(input_filename, _get_output, _get_expected, monkeypatch, capsys)
+    testenv.run_test(testcase, _get_output, _get_expected, monkeypatch, capsys)

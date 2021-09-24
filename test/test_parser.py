@@ -10,13 +10,15 @@ from hawkmoth.parser import parse
 from hawkmoth.util import doccompat
 from test import conf, testenv
 
-def _get_output(input_filename, **options):
+def _get_output(testcase, **options):
     docs_str = ''
     errors_str = ''
 
     directive = options.get('directive')
     if directive:
         pytest.skip(f'{directive} directive test')
+
+    input_filename = testenv.get_input_filename(options, path=testenv.testdir)
 
     options = options.get('directive-options', {})
 
@@ -41,12 +43,12 @@ def _get_output(input_filename, **options):
 
     return docs_str, errors_str
 
-def _get_expected(input_filename, **options):
-    return testenv.read_file(input_filename, ext='rst'), \
-        testenv.read_file(input_filename, ext='stderr')
+def _get_expected(testcase, **options):
+    return testenv.read_file(testcase, ext='rst'), \
+        testenv.read_file(testcase, ext='stderr')
 
-@pytest.mark.parametrize('input_filename', testenv.get_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
-def test_parser(input_filename):
-    testenv.run_test(input_filename, _get_output, _get_expected)
+def test_parser(testcase):
+    testenv.run_test(testcase, _get_output, _get_expected)
 
