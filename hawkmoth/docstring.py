@@ -22,7 +22,26 @@ conversions:
 * Generation of Sphinx C Domain directives with appropriate indentation.
 """
 
+import os
 import re
+
+def _commonprefix_len(lines):
+    # common prefix
+    prefix = os.path.commonprefix(lines)
+
+    # common prefix length of limited characters
+    return len(prefix) - len(prefix.lstrip(' \t*'))
+
+def _get_prefix_len(lines):
+    # ignore lines with just space
+    lines = [line for line in lines if line.strip()]
+    prefix_len = _commonprefix_len(lines)
+
+    # ignore lines with just the prefix and space
+    lines = [line for line in lines if line[prefix_len:].strip()]
+    prefix_len = _commonprefix_len(lines)
+
+    return prefix_len
 
 class Docstring():
     _indent = 0
@@ -66,7 +85,8 @@ class Docstring():
         lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
         lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
 
-        lines[1:-1] = [re.sub(r'^[ \t]*\*?[ \t]?', '', line) for line in lines[1:-1]]
+        prefix_len = _get_prefix_len(lines[1:-1])
+        lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
 
         while not lines[0] or lines[0].isspace():
             del lines[0]
