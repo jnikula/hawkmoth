@@ -96,5 +96,5 @@ def run_test(input_filename, get_output, get_expected, monkeypatch=None, capsys=
     output_docs, output_errors = get_output(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
     expect_docs, expect_errors = get_expected(input_filename, monkeypatch=monkeypatch, capsys=capsys, **options)
 
-    assert expect_docs == output_docs
-    assert expect_errors == output_errors
+    assert output_docs == expect_docs
+    assert output_errors == expect_errors
