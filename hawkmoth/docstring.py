@@ -80,8 +80,8 @@ class Docstring():
         """Return plain comment with comment markers and line prefixes removed."""
         comment = self._text
 
-        comment = re.sub(r'^/\*\*[ \t]?', '', comment)
-        comment = re.sub(r'\*/$', '', comment)
+        comment = re.sub(r'^/\*\*[ \t]*', '', comment)
+        comment = re.sub(r'[ \t]*\*/$', '', comment)
         # Could look at first line of comment, and remove the leading stuff there
         # from the rest.
         comment = re.sub(r'(?m)^[ \t]*\*?[ \t]?', '', comment)
