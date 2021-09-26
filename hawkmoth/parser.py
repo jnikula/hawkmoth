@@ -31,9 +31,7 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
 import enum
-import random
 import re
-import sys
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit

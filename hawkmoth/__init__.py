@@ -9,10 +9,7 @@ Sphinx C Domain autodoc directive extension.
 
 import glob
 import os
-import re
 import stat
-import subprocess
-import sys
 
 from docutils import nodes, statemachine
 from docutils.parsers.rst import directives
