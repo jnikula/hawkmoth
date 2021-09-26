@@ -72,8 +72,8 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
       cautodoc_transformations = {
           None: default_transform,
-	  'javadoc': javadoc_transform,
-	  'none': None,
+          'javadoc': javadoc_transform,
+          'none': None,
       }
 
    The example below shows how to use Hawkmoth's existing compat functions in
