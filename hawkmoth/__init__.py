@@ -197,7 +197,7 @@ class CAutoSymbolDirective(CAutoBaseDirective):
 
         # Note: For the time being the file option is mandatory (sic).
         if not filename:
-            self.logger.warning(f':file: option missing.',
+            self.logger.warning(':file: option missing.',
                                 location=(self.env.docname, self.lineno))
             return []
 
