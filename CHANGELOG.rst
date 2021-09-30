@@ -6,6 +6,26 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* New fine-grained documentation directives ``c:autovar``, ``c:autotype``,
+  ``c:automacro``, ``c:autofunction``, ``c:autostruct``, ``c:autounion``, and
+  ``c:autoenum``
+* Dockerfiles for Docker Hub container images
+
+Changed
+~~~~~~~
+
+* Major internal implementation and testing refactoring
+* IRC channel moved to OFTC IRC network
+
+Fixed
+~~~~~
+
+* Documentation comment line prefix/indent removal (#64)
+* Hawkmoth documentation on Read the Docs
+
 Hawkmoth `0.8.0`_
 -----------------
 
