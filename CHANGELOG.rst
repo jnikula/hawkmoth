@@ -20,8 +20,8 @@ Added
 Changed
 ~~~~~~~
 
-* Extension `cautodoc_clang` configuration option must now be a Python list
-* Directive `clang` option now extends instead of overrides `cautodoc_clang`
+* Extension ``cautodoc_clang`` configuration option must now be a Python list
+* Directive ``clang`` option now extends instead of overrides ``cautodoc_clang``
 * Bumped Python dependency requirement to v3.6 for f-strings
 * Switched to pytest for testing
 * Switched to static packaging metadata
