@@ -158,7 +158,7 @@ class CAutoDocDirective(CAutoBaseDirective):
 
     # Allow passing a variable number of file patterns as arguments
     required_arguments = 1
-    optional_arguments = 100 # arbitrary limit
+    optional_arguments = 100   # arbitrary limit
 
     def _get_filenames(self):
         for pattern in self.arguments:
