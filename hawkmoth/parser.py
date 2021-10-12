@@ -31,6 +31,7 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
 import enum
+import random
 import re
 import sys
 
@@ -173,6 +174,21 @@ def _decl_fixup(ttype, name):
 
     return ttype, name
 
+# name may be empty for typedefs and anonymous enums, structs and unions
+def _anonymous_fixup(ttype, name):
+    if name:
+        return ttype, name
+
+    mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\(anonymous at [^)]+\)$', ttype)
+    if mo:
+        # Anonymous
+        name = ''
+    else:
+        # Typedef
+        name = ttype
+
+    return ttype, name
+
 def _recursive_parse(comments, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -221,17 +237,15 @@ def _recursive_parse(comments, cursor, nest):
         # Due to the new recursiveness of the parser, fixing this here, _should_
         # handle all cases (struct, union, enum).
 
-        # FIXME: Handle anonymous enumerators.
-
-        # name may be empty for typedefs
-        name = name if name else ttype
+        # Note: Preserve original name
+        ttype, decl_name = _anonymous_fixup(ttype, name)
 
         if cursor.kind == CursorKind.STRUCT_DECL:
-            ds = StructDocstring(text=text, nest=nest, name=name, meta=meta)
+            ds = StructDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
         elif cursor.kind == CursorKind.UNION_DECL:
-            ds = UnionDocstring(text=text, nest=nest, name=name, meta=meta)
+            ds = UnionDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
         else:
-            ds = EnumDocstring(text=text, nest=nest, name=name, meta=meta)
+            ds = EnumDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
 
         for c in cursor.get_children():
             if c.hash in comments:
