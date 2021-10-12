@@ -11,3 +11,17 @@ enum foo {
 	 */
 	baz,
 };
+
+/**
+ * Anonymous enum.
+ */
+enum {
+	/**
+	 * Enumeration comment.
+	 */
+	FOO,
+	/**
+	 * Another.
+	 */
+	BAR,
+};
