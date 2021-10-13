@@ -19,8 +19,8 @@ This page showcases Hawkmoth in action.
              seen below was pre-generated statically using Hawkmoth, and should
              closely reflect actual results.
 
-Macro
------
+Macro, Automacro
+----------------
 
 Source
 ~~~~~~
@@ -43,16 +43,6 @@ Output
 .. c:autodoc:: example-10-macro.c
 
 
-Automacro
----------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-10-macro.c
-   :language: C
-   :caption: example-10-macro.c
-
 Directive
 ~~~~~~~~~
 
@@ -73,8 +63,8 @@ Output
 .. c:namespace-pop::
 
 
-Variable
---------
+Variable, Autovar
+-----------------
 
 Source
 ~~~~~~
@@ -97,16 +87,6 @@ Output
 .. c:autodoc:: example-20-variable.c
 
 
-Autovar
--------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-20-variable.c
-   :language: C
-   :caption: example-20-variable.c
-
 Directive
 ~~~~~~~~~
 
@@ -127,8 +107,8 @@ Output
 .. c:namespace-pop::
 
 
-Typedef
--------
+Typedef, Autotype
+-----------------
 
 Source
 ~~~~~~
@@ -151,16 +131,6 @@ Output
 .. c:autodoc:: example-30-typedef.c
 
 
-Autotype
---------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-30-typedef.c
-   :language: C
-   :caption: example-30-typedef.c
-
 Directive
 ~~~~~~~~~
 
@@ -181,8 +151,8 @@ Output
 .. c:namespace-pop::
 
 
-Enum
-----
+Enum, Autoenum
+--------------
 
 Source
 ~~~~~~
@@ -204,16 +174,6 @@ Output
 
 .. c:autodoc:: example-40-enum.c
 
-
-Autoenum
---------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-40-enum.c
-   :language: C
-   :caption: example-40-enum.c
 
 Directive
 ~~~~~~~~~
@@ -237,8 +197,8 @@ Output
 .. c:namespace-pop::
 
 
-Struct
-------
+Struct, Autostruct
+------------------
 
 Source
 ~~~~~~
@@ -260,16 +220,6 @@ Output
 
 .. c:autodoc:: example-50-struct.c
 
-
-Autostruct
-----------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-50-struct.c
-   :language: C
-   :caption: example-50-struct.c
 
 Directive
 ~~~~~~~~~
@@ -325,8 +275,8 @@ Output
 .. c:namespace-pop::
 
 
-Function
---------
+Function, Autofunction
+----------------------
 
 Source
 ~~~~~~
@@ -347,6 +297,26 @@ Output
 ~~~~~~
 
 .. c:autodoc:: example-70-function.c
+
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autofunction:: frob
+      :file: example-70-function.c
+   
+
+Output
+~~~~~~
+
+.. c:namespace-push:: Autofunction
+
+.. c:autofunction:: frob
+   :file: example-70-function.c
+
+.. c:namespace-pop::
 
 
 Preprocessor
@@ -373,36 +343,6 @@ Output
 
 .. c:autodoc:: example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
-
-
-Autofunction
-------------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-70-function.c
-   :language: C
-   :caption: example-70-function.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:autofunction:: frob
-      :file: example-70-function.c
-   
-
-Output
-~~~~~~
-
-.. c:namespace-push:: Autofunction
-
-.. c:autofunction:: frob
-   :file: example-70-function.c
-
-.. c:namespace-pop::
 
 
 Transform

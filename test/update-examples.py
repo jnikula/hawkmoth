@@ -45,11 +45,28 @@ This page showcases Hawkmoth in action.
              closely reflect actual results.
 ''')
 
+def print_title(testcases):
+    titles = (get_title(testcase) for testcase in testcases)
+    title = ', '.join(titles)
+
+    print(f'''{title}
+{get_title_underline(title)}
+''')
+
+def print_source(input_filename):
+    literal_include = f'../test/{input_filename}'
+
+    print(f'''Source
+~~~~~~
+
+.. literalinclude:: {literal_include}
+   :language: C
+   :caption: {input_filename}
+''')
+
 def print_example(testcase):
     title = get_title(testcase)
     options = testenv.get_testcase_options(testcase)
-    input_filename = testenv.get_input_filename(options)
-    literal_include = f'../test/{input_filename}'
 
     directive = options.get('directive')
     if directive:
@@ -61,17 +78,7 @@ def print_example(testcase):
 
     directive_str = testenv.get_directive_string(options)
 
-    print(f'''{title}
-{get_title_underline(title)}
-
-Source
-~~~~~~
-
-.. literalinclude:: {literal_include}
-   :language: C
-   :caption: {input_filename}
-
-Directive
+    print(f'''Directive
 ~~~~~~~~~
 
 .. code-block:: rest
@@ -84,8 +91,28 @@ Output
 {namespace_push}{directive_str}{namespace_pop}
 ''')
 
+def get_examples():
+    examples = {}
+
+    for testcase in testenv.get_testcases(testenv.testdir):
+        if not os.path.basename(testcase).startswith('example-'):
+            continue
+
+        options = testenv.get_testcase_options(testcase)
+        input_filename = testenv.get_input_filename(options)
+
+        if input_filename in examples:
+            examples[input_filename].append(testcase)
+        else:
+            examples[input_filename] = [testcase]
+
+    return examples
+
 if __name__ == '__main__':
     print_header()
-    for testcase in testenv.get_testcases(testenv.testdir):
-        if os.path.basename(testcase).startswith('example-'):
+
+    for source, testcases in sorted(get_examples().items()):
+        print_title(testcases)
+        print_source(source)
+        for testcase in testcases:
             print_example(testcase)
