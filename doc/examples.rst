@@ -42,16 +42,6 @@ Output
 .. c:autodoc:: example-10-macro.c
 
 
-Automacro
----------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-10-macro.c
-   :language: C
-   :caption: example-10-macro.c
-
 Directive
 ~~~~~~~~~
 
@@ -93,16 +83,6 @@ Output
 
 .. c:autodoc:: example-20-variable.c
 
-
-Autovar
--------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-20-variable.c
-   :language: C
-   :caption: example-20-variable.c
 
 Directive
 ~~~~~~~~~
@@ -198,16 +178,6 @@ Output
 .. c:autodoc:: example-50-struct.c
 
 
-Autostruct
-----------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-50-struct.c
-   :language: C
-   :caption: example-50-struct.c
-
 Directive
 ~~~~~~~~~
 
@@ -229,8 +199,8 @@ Output
 .. c:namespace-pop::
 
 
-Autounion
----------
+Union
+-----
 
 Source
 ~~~~~~
@@ -279,6 +249,25 @@ Output
 .. c:autodoc:: example-70-function.c
 
 
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autofunction:: frob
+      :file: example-70-function.c
+
+Output
+~~~~~~
+
+.. c:namespace-push:: namespace_ce531590ead7856b8785db5da227c4cc
+
+.. c:autofunction:: frob
+   :file: example-70-function.c
+
+.. c:namespace-pop::
+
+
 Preprocessor
 ------------
 
@@ -302,35 +291,6 @@ Output
 
 .. c:autodoc:: example-70-preprocessor.c
    :clang: -DDEEP_THOUGHT
-
-
-Autofunction
-------------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-70-function.c
-   :language: C
-   :caption: example-70-function.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:autofunction:: frob
-      :file: example-70-function.c
-
-Output
-~~~~~~
-
-.. c:namespace-push:: namespace_ce531590ead7856b8785db5da227c4cc
-
-.. c:autofunction:: frob
-   :file: example-70-function.c
-
-.. c:namespace-pop::
 
 
 Transform

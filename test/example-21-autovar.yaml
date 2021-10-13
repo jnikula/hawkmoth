@@ -4,4 +4,4 @@ directive-arguments:
 directive-options:
   file: example-20-variable.c
 example-use-namespace: yes
-example-title: Autovar
+example-title: Variable

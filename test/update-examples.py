@@ -43,11 +43,27 @@ This page showcases Hawkmoth in action.
              closely reflect actual results.
 ''')
 
-def print_example(testcase):
-    title = get_title(testcase)
-    options = testenv.get_testcase_options(testcase)
-    input_filename = testenv.get_input_filename(options)
+def print_title(testcases):
+    titles = set(get_title(testcase) for testcase in testcases if get_title(testcase))
+    title = ', '.join(sorted(titles))
+
+    print(f'''{title}
+{get_title_underline(title)}
+''')
+
+def print_source(input_filename):
     literal_include = f'../test/{input_filename}'
+
+    print(f'''Source
+~~~~~~
+
+.. literalinclude:: {literal_include}
+   :language: C
+   :caption: {input_filename}
+''')
+
+def print_example(testcase):
+    options = testenv.get_testcase_options(testcase)
 
     if options.get('example-use-namespace'):
         namespace = 'namespace_' + hashlib.md5(f'{testcase}'.encode()).hexdigest()
@@ -60,17 +76,7 @@ def print_example(testcase):
 
     directive_str = testenv.get_directive_string(options)
 
-    print(f'''{title}
-{get_title_underline(title)}
-
-Source
-~~~~~~
-
-.. literalinclude:: {literal_include}
-   :language: C
-   :caption: {input_filename}
-
-Directive
+    print(f'''Directive
 ~~~~~~~~~
 
 .. code-block:: rest
@@ -83,8 +89,28 @@ Output
 {namespace_push}{directive_str}{namespace_pop}
 ''')
 
+def get_examples():
+    examples = {}
+
+    for testcase in testenv.get_testcases(testenv.testdir):
+        if not os.path.basename(testcase).startswith('example-'):
+            continue
+
+        options = testenv.get_testcase_options(testcase)
+        input_filename = testenv.get_input_filename(options)
+
+        if input_filename in examples:
+            examples[input_filename].append(testcase)
+        else:
+            examples[input_filename] = [testcase]
+
+    return examples
+
 if __name__ == '__main__':
     print_header()
-    for testcase in testenv.get_testcases(testenv.testdir):
-        if os.path.basename(testcase).startswith('example-'):
+
+    for source, testcases in sorted(get_examples().items()):
+        print_title(testcases)
+        print_source(source)
+        for testcase in testcases:
             print_example(testcase)

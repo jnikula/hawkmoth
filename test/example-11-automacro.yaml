@@ -4,4 +4,4 @@ directive-arguments:
 directive-options:
   file: example-10-macro.c
 example-use-namespace: yes
-example-title: Automacro
+example-title: Macro
