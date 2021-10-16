@@ -172,15 +172,18 @@ class TypeDocstring(Docstring):
     _indent = 1
     _fmt = '\n.. c:type:: {name}\n\n{text}\n'
 
-class StructDocstring(Docstring):
+class _CompoundDocstring(Docstring):
+    pass
+
+class StructDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '\n.. c:struct:: {name}\n\n{text}\n'
 
-class UnionDocstring(Docstring):
+class UnionDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '\n.. c:union:: {name}\n\n{text}\n'
 
-class EnumDocstring(Docstring):
+class EnumDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '\n.. c:enum:: {name}\n\n{text}\n'
 
