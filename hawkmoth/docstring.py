@@ -22,6 +22,7 @@ conversions:
 * Generation of Sphinx C Domain directives with appropriate indentation.
 """
 
+import hashlib
 import os
 import re
 
@@ -173,7 +174,19 @@ class TypeDocstring(Docstring):
     _fmt = '\n.. c:type:: {name}\n\n{text}\n'
 
 class _CompoundDocstring(Docstring):
-    pass
+    def _get_decl_name(self):
+        # The empty string for decl_name means anonymous.
+        if self._decl_name == '':
+            # Sphinx expects @name for anonymous entities. The name must be both
+            # stable and unique. Create one.
+            #
+            # FIXME: Support letting the user specify the name via e.g. meta
+            # field list for documentation purposes.
+            decl_name = hashlib.md5(f'{self._text}{self.get_line()}'.encode()).hexdigest()
+
+            return f'@anonymous_{decl_name}'
+
+        return super()._get_decl_name()
 
 class StructDocstring(_CompoundDocstring):
     _indent = 1
