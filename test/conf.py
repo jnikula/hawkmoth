@@ -16,6 +16,8 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from sphinx.ext.napoleon import docstring, Config
+from hawkmoth.util import doccompat
 
 # -- Project information -----------------------------------------------------
 
@@ -41,9 +43,6 @@ release = ''
 extensions = [
     'hawkmoth'
 ]
-
-from sphinx.ext.napoleon import docstring, Config
-from hawkmoth.util import doccompat
 
 def napoleon_transform(comment):
     config = Config(napoleon_use_rtype=False)
