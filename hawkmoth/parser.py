@@ -150,7 +150,7 @@ def _array_fixup(ttype, name):
 # If this is a function pointer, or an array of function pointers, the
 # name should be within the parenthesis as in (*name) or (*name[N]).
 def _function_pointer_fixup(ttype, name):
-    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)
+    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)  # noqa: E501
     if mo is None:
         return ttype, name
 
@@ -201,7 +201,8 @@ def _recursive_parse(comments, cursor, nest):
         if args is None:
             ds = docstring.MacroDocstring(text=text, nest=nest, name=name, meta=meta)
         else:
-            ds = docstring.MacroFunctionDocstring(text=text, nest=nest, name=name, args=args, meta=meta)
+            ds = docstring.MacroFunctionDocstring(text=text, nest=nest,
+                                                  name=name, args=args, meta=meta)
 
         return [ds]
 
@@ -210,9 +211,11 @@ def _recursive_parse(comments, cursor, nest):
         ttype, decl_name = _decl_fixup(ttype, name)
 
         if cursor.kind == CursorKind.VAR_DECL:
-            ds = docstring.VarDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
+            ds = docstring.VarDocstring(text=text, nest=nest, name=name,
+                                        decl_name=decl_name, ttype=ttype, meta=meta)
         else:
-            ds = docstring.MemberDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
+            ds = docstring.MemberDocstring(text=text, nest=nest, name=name,
+                                           decl_name=decl_name, ttype=ttype, meta=meta)
 
         return [ds]
 
@@ -239,11 +242,14 @@ def _recursive_parse(comments, cursor, nest):
         ttype, decl_name = _anonymous_fixup(ttype, name)
 
         if cursor.kind == CursorKind.STRUCT_DECL:
-            ds = docstring.StructDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.StructDocstring(text=text, nest=nest, name=name,
+                                           decl_name=decl_name, meta=meta)
         elif cursor.kind == CursorKind.UNION_DECL:
-            ds = docstring.UnionDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.UnionDocstring(text=text, nest=nest, name=name,
+                                          decl_name=decl_name, meta=meta)
         else:
-            ds = docstring.EnumDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.EnumDocstring(text=text, nest=nest, name=name,
+                                         decl_name=decl_name, meta=meta)
 
         for c in cursor.get_children():
             if c.hash in comments:
@@ -275,8 +281,8 @@ def _recursive_parse(comments, cursor, nest):
 
         ttype = cursor.result_type.spelling
 
-        ds = docstring.FunctionDocstring(text=text, nest=nest, name=name, ttype=ttype, args=args,
-                                         meta=meta)
+        ds = docstring.FunctionDocstring(text=text, nest=nest, name=name,
+                                         ttype=ttype, args=args, meta=meta)
         return [ds]
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error

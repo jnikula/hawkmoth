@@ -67,7 +67,7 @@ class CAutoBaseDirective(SphinxDirective):
         if compat is None:
             return None
 
-        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'
+        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'  # noqa: E501
         self.logger.warning(fmt, location=(self.env.docname, self.lineno))
 
         return lambda comment: doccompat.convert(comment, transform=compat)
@@ -125,7 +125,8 @@ class CAutoBaseDirective(SphinxDirective):
         transform = self.__get_transform()
         root = self.__parse(filename)
 
-        for docstrings in root.walk(recurse=False, filter_types=self._docstring_types, filter_names=self._get_names()):
+        for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
+                                    filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
                 lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
@@ -171,7 +172,7 @@ class CAutoDocDirective(CAutoBaseDirective):
             for filename in filenames:
                 mode = os.stat(filename).st_mode
                 if stat.S_ISDIR(mode):
-                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',
+                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',  # noqa: E501
                                         location=(self.env.docname, self.lineno))
                     continue
 

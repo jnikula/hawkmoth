@@ -48,7 +48,8 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, text=None, name=None, decl_name=None, ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, text=None, name=None, decl_name=None,
+                 ttype=None, args=None, meta=None, nest=0):
         self._text = text
         self._name = name
         self._decl_name = decl_name
