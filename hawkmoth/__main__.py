@@ -27,7 +27,7 @@ def main():
                                  'kernel-doc'],
                         help='Compatibility options. See cautodoc_compat.')
     parser.add_argument('--clang', metavar='PARAM', action='append',
-                        help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')
+                        help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')  # noqa: E501
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
     args = parser.parse_args()

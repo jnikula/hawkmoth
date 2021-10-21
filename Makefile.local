@@ -18,12 +18,11 @@ dir := .
 FLAKE8_IGNORE=\
 	E302,\
 	E305,\
-	E501,\
 	E731
 
 # Static analysis
 check:
-	flake8 --extend-ignore="$(FLAKE8_IGNORE)" hawkmoth test
+	flake8 --extend-ignore="$(FLAKE8_IGNORE)" --max-line-length=100 hawkmoth test
 
 # assume virtual environment is used for dist and upload
 build-tools:

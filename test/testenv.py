@@ -105,8 +105,10 @@ def run_test(testcase, get_output, get_expected, monkeypatch=None, capsys=None):
     if options.get('expected-failure'):
         pytest.xfail()
 
-    output_docs, output_errors = get_output(testcase, monkeypatch=monkeypatch, capsys=capsys, **options)
-    expect_docs, expect_errors = get_expected(testcase, monkeypatch=monkeypatch, capsys=capsys, **options)
+    output_docs, output_errors = get_output(testcase, monkeypatch=monkeypatch,
+                                            capsys=capsys, **options)
+    expect_docs, expect_errors = get_expected(testcase, monkeypatch=monkeypatch,
+                                              capsys=capsys, **options)
 
     assert output_docs == expect_docs
     assert output_errors == expect_errors
