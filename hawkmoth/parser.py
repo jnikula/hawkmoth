@@ -36,7 +36,7 @@ import re
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
 
-from hawkmoth.docstring import *
+from hawkmoth import docstring
 
 class ErrorLevel(enum.Enum):
     """
@@ -64,7 +64,7 @@ def _comment_extract(tu):
         # handle all comments we come across
         if token.kind == TokenKind.COMMENT:
             # if we already have a comment, it wasn't related to a cursor
-            if current_comment and Docstring.is_doc(current_comment.spelling):
+            if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
                 top_level_comments.append(current_comment)
             current_comment = token
             continue
@@ -87,12 +87,12 @@ def _comment_extract(tu):
         cursor = token_cursor
 
         # Note: current_comment may be None
-        if current_comment is not None and Docstring.is_doc(current_comment.spelling):
+        if current_comment is not None and docstring.Docstring.is_doc(current_comment.spelling):
             comments[cursor.hash] = current_comment
         current_comment = None
 
     # comment at the end of file
-    if current_comment and Docstring.is_doc(current_comment.spelling):
+    if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments
@@ -199,9 +199,9 @@ def _recursive_parse(comments, cursor, nest):
         args = _get_macro_args(cursor)
 
         if args is None:
-            ds = MacroDocstring(text=text, nest=nest, name=name, meta=meta)
+            ds = docstring.MacroDocstring(text=text, nest=nest, name=name, meta=meta)
         else:
-            ds = MacroFunctionDocstring(text=text, nest=nest, name=name, args=args, meta=meta)
+            ds = docstring.MacroFunctionDocstring(text=text, nest=nest, name=name, args=args, meta=meta)
 
         return [ds]
 
@@ -210,16 +210,16 @@ def _recursive_parse(comments, cursor, nest):
         ttype, decl_name = _decl_fixup(ttype, name)
 
         if cursor.kind == CursorKind.VAR_DECL:
-            ds = VarDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
+            ds = docstring.VarDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
         else:
-            ds = MemberDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
+            ds = docstring.MemberDocstring(text=text, nest=nest, name=name, decl_name=decl_name, ttype=ttype, meta=meta)
 
         return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
 
-        ds = TypeDocstring(text=text, nest=nest, name=ttype, meta=meta)
+        ds = docstring.TypeDocstring(text=text, nest=nest, name=ttype, meta=meta)
 
         return [ds]
 
@@ -239,11 +239,11 @@ def _recursive_parse(comments, cursor, nest):
         ttype, decl_name = _anonymous_fixup(ttype, name)
 
         if cursor.kind == CursorKind.STRUCT_DECL:
-            ds = StructDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.StructDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
         elif cursor.kind == CursorKind.UNION_DECL:
-            ds = UnionDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.UnionDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
         else:
-            ds = EnumDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
+            ds = docstring.EnumDocstring(text=text, nest=nest, name=name, decl_name=decl_name, meta=meta)
 
         for c in cursor.get_children():
             if c.hash in comments:
@@ -252,7 +252,7 @@ def _recursive_parse(comments, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        ds = EnumeratorDocstring(text=text, nest=nest, name=name, meta=meta)
+        ds = docstring.EnumeratorDocstring(text=text, nest=nest, name=name, meta=meta)
 
         return [ds]
 
@@ -275,8 +275,8 @@ def _recursive_parse(comments, cursor, nest):
 
         ttype = cursor.result_type.spelling
 
-        ds = FunctionDocstring(text=text, nest=nest, name=name, ttype=ttype, args=args,
-                               meta=meta)
+        ds = docstring.FunctionDocstring(text=text, nest=nest, name=name, ttype=ttype, args=args,
+                                         meta=meta)
         return [ds]
 
     # FIXME: If we reach here, nothing matched. This is a warning or even error
@@ -287,7 +287,7 @@ def _recursive_parse(comments, cursor, nest):
     text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
     meta = _get_meta(comment, cursor)
 
-    ds = TextDocstring(text=text, meta=meta)
+    ds = docstring.TextDocstring(text=text, meta=meta)
 
     return [ds]
 
@@ -306,7 +306,7 @@ def _clang_diagnostics(diagnostics):
 
     return errors
 
-# Parse a file and return a tree of Docstring objects.
+# Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, clang_args=None):
     index = Index.create()
 
@@ -319,12 +319,12 @@ def parse(filename, clang_args=None):
     top_level_comments, comments = _comment_extract(tu)
 
     # Empty comment with just children
-    result = Docstring()
+    result = docstring.Docstring()
 
     for comment in top_level_comments:
         text = comment.spelling
         meta = _get_meta(comment)
-        ds = TextDocstring(text=text, meta=meta)
+        ds = docstring.TextDocstring(text=text, meta=meta)
         result.add_child(ds)
 
     for cursor in tu.cursor.get_children():

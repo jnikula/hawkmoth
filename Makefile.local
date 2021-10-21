@@ -19,9 +19,7 @@ FLAKE8_IGNORE=\
 	E302,\
 	E305,\
 	E501,\
-	E731,\
-	F403,\
-	F405
+	E731
 
 # Static analysis
 check:
