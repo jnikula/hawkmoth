@@ -6,6 +6,17 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Changed
+~~~~~~~
+
+* More internal testing refactoring
+* Use flake8 to enforce style
+
+Fixed
+~~~~~
+
+* Fix handling of anonymous enums, structs and unions
+
 Hawkmoth `0.9.0`_
 -----------------
 
