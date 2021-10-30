@@ -116,15 +116,17 @@ mailing list.
 Dependencies
 ------------
 
+Dependencies and their minimum versions:
+
 - Python 3.6
 - Sphinx 3
-- Clang 6.0
-- Python 3 Bindings for Clang 6.0
-- pytest (for development)
-- sphinx-testing 1.0.0 (for development)
+- Clang library 6
+- Python 3 Bindings for Clang library 6
 
-These are the versions Hawkmoth is currently being developed and tested
-against. Other versions might work, but no guarantees.
+There are additional development and testing dependencies recorded in
+`setup.cfg`_.
+
+.. _setup.cfg: https://github.com/jnikula/hawkmoth/blob/master/setup.cfg
 
 License
 -------
