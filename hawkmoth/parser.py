@@ -177,7 +177,7 @@ def _anonymous_fixup(ttype, name):
     if name:
         return ttype, name
 
-    mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\(anonymous at [^)]+\)$', ttype)
+    mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\((anonymous|unnamed) at [^)]+\)$', ttype)
     if mo:
         # Anonymous
         name = ''
