@@ -6,6 +6,11 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Fixed
+~~~~~
+
+* Fix handling of anonymous enums, structs and unions for Clang 13
+
 Hawkmoth `0.10.0`_
 ------------------
 
