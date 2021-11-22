@@ -97,32 +97,11 @@ class CAutoBaseDirective(SphinxDirective):
         # Note: None is a valid value for no transformation.
         return transformations.get(tropt)
 
-    def __parse(self, filename):
-        clang_args = self.__get_clang_args()
-
-        # Cached parse results per rst document
-        parsed_files = self.env.temp_data.setdefault('cautodoc_parsed_files', {})
-
-        # The output depends on clang args
-        key = (filename, tuple(clang_args))
-
-        if key in parsed_files:
-            return parsed_files[key]
-
-        # Tell Sphinx about the dependency
-        self.env.note_dependency(filename)
-
-        docstrings, errors = parse(filename, clang_args=clang_args)
-
-        self.__display_parser_diagnostics(errors)
-
-        parsed_files[key] = docstrings
-
-        return docstrings
-
-    def __get_docstrings(self, viewlist, filename):
+    def __get_docstrings(self, cache, clang_args, viewlist, filename):
         transform = self.__get_transform()
-        root = self.__parse(filename)
+
+        key = (filename, tuple(clang_args))
+        root = cache.get(key, None)
 
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
@@ -151,12 +130,48 @@ class CAutoBaseDirective(SphinxDirective):
         """
         raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
 
+    def __get_all_filenames(self):
+        nfiles = 0
+
+        filenames = glob.glob(os.path.join(self.env.config.cautodoc_root, '*.[ch]'))
+        filenames += glob.glob(os.path.join(self.env.config.cautodoc_root, '**/*.[ch]'))
+
+        for filename in filenames:
+            if os.path.isfile(filename):
+                nfiles += 1
+                yield os.path.abspath(filename)
+        else:
+            if nfiles == 0:
+                self.logger.warning(f'No source files in {self.env.config.cautodoc_root}.',
+                                    location=(self.env.docname, self.lineno))
+
+    def __build_cache(self, cache, clang_args, filename):
+        # The output depends on clang args
+        key = (filename, tuple(clang_args))
+
+        if key not in cache:
+            self.env.note_dependency(filename)
+
+            docstrings, errors = parse(filename, clang_args=clang_args)
+
+            self.__display_parser_diagnostics(errors)
+            cache[key] = docstrings
+
     def run(self):
+        clang_args = self.__get_clang_args()
+        cache = self.env.temp_data.setdefault('cautodoc_cache', {})
         result = ViewList()
 
-        _, filenames = self._get_filenames()
+        # If the automatic file name resolution flag is set, use all files in
+        # the search path instead for both the cache building and for the member
+        # search space.
+        auto, filenames = self._get_filenames()
+        if auto:
+            filenames = self.__get_all_filenames()
+
         for filename in filenames:
-            self.__get_docstrings(result, filename)
+            self.__build_cache(cache, clang_args, filename)
+            self.__get_docstrings(cache, clang_args, result, filename)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
