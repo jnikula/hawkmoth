@@ -74,8 +74,32 @@ adding the ``file`` option.
       :type: text
 
       The ``file`` option specifies to file to parse. The filename is
-      interpreted relative to the :data:`cautodoc_root` configuration
-      option. (For the time being, this option is mandatory.)
+      interpreted relative to the :data:`cautodoc_root` configuration option.
+      Each parsed file is cached for any following directive, but it is never
+      kept across reruns and it takes :rst:dir:`c:autodoc:clang` into account,
+      which means the file may still be parsed multiple times for a single
+      build.
+
+      This option may be omitted with some caveats:
+
+      1. It will be generally less performant than specifying it: when omitted,
+         a full cache will be built based on all `\*.[ch]` files within or
+         nested within :data:`cautodoc_root`. This cache is built file by file
+         and skipped for any file previously cached. Omitting it in combination
+         with bespoke per directive :rst:dir:`c:autodoc:clang` options is
+         particularly costly, potentially triggering the parsing of all files
+         for each and every directive that does so.
+
+      2. If omitted, the variable ``name`` will be matched against each and
+         every file that is automatically discovered regardless of how many
+         matches are found. This is done on purpose to make sure that we raise a
+         warning when a symbol clashes and the user can fix it by explicitly
+         specifying a file.
+
+      3. If multiple matches are found, they are all included in the
+         generated documentation in the cache build order, which is in part
+         defined by the user and otherwise undefined from Hawkmoth's
+         perspective.
 
    For example:
 
