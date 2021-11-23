@@ -99,6 +99,7 @@ class CAutoBaseDirective(SphinxDirective):
 
     def __get_docstrings(self, cache, clang_args, viewlist, filename):
         transform = self.__get_transform()
+        matched = False
 
         key = (filename, tuple(clang_args))
         root = cache.get(key, None)
@@ -112,6 +113,10 @@ class CAutoBaseDirective(SphinxDirective):
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
+
+                matched = True
+
+        return matched
 
     def _get_names(self):
         return None
@@ -161,6 +166,7 @@ class CAutoBaseDirective(SphinxDirective):
         clang_args = self.__get_clang_args()
         cache = self.env.temp_data.setdefault('cautodoc_cache', {})
         result = ViewList()
+        matches = []
 
         # If the automatic file name resolution flag is set, use all files in
         # the search path instead for both the cache building and for the member
@@ -171,7 +177,16 @@ class CAutoBaseDirective(SphinxDirective):
 
         for filename in filenames:
             self.__build_cache(cache, clang_args, filename)
-            self.__get_docstrings(cache, clang_args, result, filename)
+            if self.__get_docstrings(cache, clang_args, result, filename):
+                matches.append(filename)
+
+        nmatches = len(matches)
+        if nmatches == 0:
+            self.logger.warning('No matching docstring.',
+                                location=(self.env.docname, self.lineno))
+        elif auto and nmatches > 1:
+            self.logger.warning(f'Multiple docstring matches in files {matches}.',
+                                location=(self.env.docname, self.lineno))
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
