@@ -141,12 +141,21 @@ class CAutoBaseDirective(SphinxDirective):
         return None
 
     def _get_filenames(self):
+        """
+        Return a tuple (auto lookup, list of filenames to use as a search path).
+
+        If the automatic lookup flag is set the list shall be ignored and all
+        files within the search path used instead. The flag is important to
+        distinguish between `(True, [])` and `(False, [])`  when the filenames
+        are a required argument instead of an option and yet there is no match.
+        """
         raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
 
     def run(self):
         result = ViewList()
 
-        for filename in self._get_filenames():
+        _, filenames = self._get_filenames()
+        for filename in filenames:
             self.__get_docstrings(result, filename)
 
         # Parse the extracted reST
@@ -164,19 +173,27 @@ class CAutoDocDirective(CAutoBaseDirective):
     optional_arguments = 100   # arbitrary limit
 
     def _get_filenames(self):
+        filenames = []
+
         for pattern in self.arguments:
-            filenames = glob.glob(os.path.join(self.env.config.cautodoc_root, pattern))
-            if len(filenames) == 0:
+            candidates = glob.glob(os.path.join(self.env.config.cautodoc_root, pattern))
+            if len(candidates) == 0:
                 self.logger.warning(f'Pattern "{pattern}" does not match any files.',
                                     location=(self.env.docname, self.lineno))
                 continue
 
             for filename in filenames:
                 if os.path.isfile(filename):
-                    yield os.path.abspath(filename)
+                    filenames.append(os.path.abspath(filename))
                 else:
                     self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is not a file.',  # noqa: E501
                                         location=(self.env.docname, self.lineno))
+
+        if len(filenames) == 0:
+            self.logger.warning('Directive did not match any source file.',
+                                location=(self.env.docname, self.lineno))
+
+        return False, filenames
 
 # Base class for named stuff
 class CAutoSymbolDirective(CAutoBaseDirective):
@@ -193,13 +210,10 @@ class CAutoSymbolDirective(CAutoBaseDirective):
     def _get_filenames(self):
         filename = self.options.get('file')
 
-        # Note: For the time being the file option is mandatory (sic).
-        if not filename:
-            self.logger.warning(':file: option missing.',
-                                location=(self.env.docname, self.lineno))
-            return []
-
-        return [os.path.abspath(os.path.join(self.env.config.cautodoc_root, filename))]
+        if filename:
+            return False, [os.path.abspath(os.path.join(self.env.config.cautodoc_root, filename))]
+        else:
+            return True, []
 
     def _get_names(self):
         return [self.arguments[0]]
