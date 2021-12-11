@@ -141,6 +141,9 @@ class CAutoBaseDirective(SphinxDirective):
     def _get_members(self):
         return None
 
+    def _get_filenames(self):
+        raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
+
     def run(self):
         result = ViewList()
 
