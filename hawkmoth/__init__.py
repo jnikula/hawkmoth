@@ -9,7 +9,6 @@ Sphinx C Domain autodoc directive extension.
 
 import glob
 import os
-import stat
 
 from docutils import nodes, statemachine
 from docutils.parsers.rst import directives
@@ -173,13 +172,11 @@ class CAutoDocDirective(CAutoBaseDirective):
                 continue
 
             for filename in filenames:
-                mode = os.stat(filename).st_mode
-                if stat.S_ISDIR(mode):
-                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is a directory.',  # noqa: E501
+                if os.path.isfile(filename):
+                    yield os.path.abspath(filename)
+                else:
+                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is not a file.',  # noqa: E501
                                         location=(self.env.docname, self.lineno))
-                    continue
-
-                yield os.path.abspath(filename)
 
 # Base class for named stuff
 class CAutoSymbolDirective(CAutoBaseDirective):
