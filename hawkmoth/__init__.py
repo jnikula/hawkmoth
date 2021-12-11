@@ -166,7 +166,7 @@ class CAutoDocDirective(CAutoBaseDirective):
 
     def _get_filenames(self):
         for pattern in self.arguments:
-            filenames = glob.glob(self.env.config.cautodoc_root + '/' + pattern)
+            filenames = glob.glob(os.path.join(self.env.config.cautodoc_root, pattern))
             if len(filenames) == 0:
                 self.logger.warning(f'Pattern "{pattern}" does not match any files.',
                                     location=(self.env.docname, self.lineno))
