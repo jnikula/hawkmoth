@@ -140,9 +140,9 @@ def _get_macro_args(cursor):
 # If this is an array, the dimensions should be applied to the name, not
 # the type.
 def _array_fixup(ttype, name):
-    dims = ttype.rsplit(' ', 1)[-1]
+    dims = ttype.rsplit(' ', 1)[-1].lstrip('*')
     if dims.startswith('[') and dims.endswith(']'):
-        ttype = ttype.rsplit(' ', 1)[0]
+        ttype = ttype[:-len(dims)].strip()
         name = name + dims
 
     return ttype, name
