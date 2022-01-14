@@ -170,6 +170,8 @@ def _decl_fixup(ttype, name):
 
     ttype, name = _function_pointer_fixup(ttype, name)
 
+    if ttype == '_Bool': ttype = 'bool'
+
     return ttype, name
 
 # name may be empty for typedefs and anonymous enums, structs and unions
