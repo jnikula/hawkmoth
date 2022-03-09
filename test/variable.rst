@@ -23,3 +23,8 @@
 
    function pointer with lots of const qualifiers
 
+
+.. c:var:: char * array_of_pointers[1]
+
+   Array of pointers.
+

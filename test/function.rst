@@ -30,3 +30,8 @@
 
    Function pointer parameter.
 
+
+.. c:function:: void array_of_pointer_params(char * p[])
+
+   Array of pointers parameter.
+
