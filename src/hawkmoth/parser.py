@@ -401,6 +401,9 @@ def _get_scopedenum_type(cursor):
             return f': {cursor.enum_type.spelling}'
     return None
 
+def _normalize_type(type_string):
+    return 'bool' if type_string == '_Bool' else type_string
+
 def _var_type_fixup(cursor, domain):
     """Fix non trivial variable and argument types.
 
@@ -455,7 +458,7 @@ def _var_type_fixup(cursor, domain):
         if len(args) == 0:
             args.append('void')
 
-        ret_type = cursor_type.get_result().spelling
+        ret_type = _normalize_type(cursor_type.get_result().spelling)
 
         name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
     else:
@@ -470,6 +473,9 @@ def _var_type_fixup(cursor, domain):
             type_elem.append(stars_and_quals)
 
         name = cursor.spelling + dims
+
+    # Convert _Bool to bool
+    type_elem = [_normalize_type(t) for t in type_elem]
 
     ttype = ' '.join(type_elem)
     return ttype, name
@@ -529,7 +535,7 @@ def _function_fixup(cursor, domain):
     if template_line:
         full_type.append(template_line)
 
-    full_type.append(cursor.result_type.spelling)
+    full_type.append(_normalize_type(cursor.result_type.spelling))
 
     ttype = ' '.join(full_type)
 
