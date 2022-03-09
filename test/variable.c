@@ -22,3 +22,8 @@ void (*function_pointer_array[5])(void);
  * function pointer with lots of const qualifiers
  */
 const char* (*const function_pointer_with_qualifier)(const char *in);
+
+/**
+ * Array of pointers.
+ */
+char *array_of_pointers[1];
