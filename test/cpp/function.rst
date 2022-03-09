@@ -4,6 +4,11 @@
    Foo function.
 
 
+.. cpp:function:: bool boolean(bool bar, bool baz)
+
+   Bool function.
+
+
 .. cpp:function:: int no_parameters(void)
 
    No parameters.

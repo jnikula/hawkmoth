@@ -1,7 +1,19 @@
+#include <stdbool.h>
+
 /**
  * This is a variable document.
  */
 static int sheesh;
+
+/**
+ * Retain bool instead of using _Bool.
+ */
+static bool convert_bool;
+
+/**
+ * Also convert _Bool to bool.
+ */
+static _Bool convert_Bool;
 
 /**
  * function pointer variable

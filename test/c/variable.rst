@@ -4,6 +4,16 @@
    This is a variable document.
 
 
+.. c:var:: static bool convert_bool
+
+   Retain bool instead of using _Bool.
+
+
+.. c:var:: static bool convert_Bool
+
+   Also convert _Bool to bool.
+
+
 .. c:var:: int (*function_pointer_variable)(int *param_name_ignored)
 
    function pointer variable

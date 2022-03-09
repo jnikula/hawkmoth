@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 /**
  * This is a sample struct
  *
@@ -8,6 +10,14 @@ struct sample_struct {
 	 * member
 	 */
 	int jesh;
+	/**
+	 * bool member
+	 */
+	bool bool_member;
+	/**
+	 * _Bool member
+	 */
+	_Bool _Bool_member;
 	/**
 	 * array member
 	 */
