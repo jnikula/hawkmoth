@@ -11,6 +11,16 @@
       member
 
 
+   .. cpp:member:: public bool bool_member
+
+      bool member
+
+
+   .. cpp:member:: public bool _Bool_member
+
+      _Bool member
+
+
    .. cpp:member:: public int array_member[5]
 
       array member
@@ -39,7 +49,7 @@
       foo next
 
 
-.. cpp:struct:: @anonymous_7bf120438d254a91e1275b973de6a0eb
+.. cpp:struct:: @anonymous_a6168a23d6840e8919ade5661a307607
 
    Anonymous struct documentation.
 
@@ -54,7 +64,7 @@
    Named struct.
 
 
-   .. cpp:struct:: @anonymous_a63d10331be1a527625db63b8ace540f
+   .. cpp:struct:: @anonymous_0a4d6f0b47cde0e9872b6dbde2ad1c1a
 
       Anonymous sub-struct.
 
@@ -64,7 +74,7 @@
          Member foo.
 
 
-   .. cpp:union:: @anonymous_69382278a84175c1cbff40d522114b38
+   .. cpp:union:: @anonymous_22cf17aa0fa6d83246282a58013db249
 
       Anonymous sub-union.
 

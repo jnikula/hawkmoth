@@ -1,7 +1,14 @@
+#include <stdbool.h>
+
 /**
  * Foo function.
  */
 static inline int foo(int bar, int baz);
+
+/**
+ * Bool function.
+ */
+bool boolean(bool bar, _Bool baz);
 
 /**
  * No parameters.
