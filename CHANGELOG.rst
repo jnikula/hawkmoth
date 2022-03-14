@@ -10,6 +10,7 @@ Fixed
 ~~~~~
 
 * Fix handling of anonymous enums, structs and unions for Clang 13
+* Fix handling of arrays of pointers
 
 Hawkmoth `0.10.0`_
 ------------------
