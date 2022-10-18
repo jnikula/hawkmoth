@@ -23,7 +23,15 @@
 
    .. c:member:: int (*function_pointer_member)(int, int)
 
-      function pointer member
+      function pointer member with parameter names omitted
+
+
+   .. c:member:: int (*other_function_pointer_member)(int foo, int bar)
+
+      function pointer member with parameter names
+
+      :param foo: the foo
+      :param bar: the bar
 
 
    .. c:member:: struct sample_struct *next
@@ -31,7 +39,7 @@
       foo next
 
 
-.. c:struct:: @anonymous_d395b02a54adefb5d094bf6d634d74d3
+.. c:struct:: @anonymous_7bf120438d254a91e1275b973de6a0eb
 
    Anonymous struct documentation.
 
@@ -46,7 +54,7 @@
    Named struct.
 
 
-   .. c:struct:: @anonymous_599b2b407b243a27c07e8bc5e7cd89a6
+   .. c:struct:: @anonymous_a63d10331be1a527625db63b8ace540f
 
       Anonymous sub-struct.
 
@@ -56,7 +64,7 @@
          Member foo.
 
 
-   .. c:union:: @anonymous_1e23b78307a72d6379776de1c90679d6
+   .. c:union:: @anonymous_69382278a84175c1cbff40d522114b38
 
       Anonymous sub-union.
 

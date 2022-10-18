@@ -11,8 +11,14 @@
       array member
 
 
-   .. c:member::  int (*function_pointer_member)(int, int)
+   .. c:member:: int (*function_pointer_member)(int, int)
 
-      function pointer member
+      function pointer member with parameter names omitted
 
 
+   .. c:member:: int (*other_function_pointer_member)(int foo, int bar)
+
+      function pointer member with parameter names
+
+      :param foo: the foo
+      :param bar: the bar
