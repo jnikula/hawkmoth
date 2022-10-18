@@ -6,3 +6,4 @@ directive-options:
   members:
   - array_member
   - function_pointer_member
+  - other_function_pointer_member

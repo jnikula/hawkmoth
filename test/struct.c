@@ -17,9 +17,16 @@ struct sample_struct {
 	 */
 	void *pointer_member;
 	/**
-	 * function pointer member
+	 * function pointer member with parameter names omitted
 	 */
 	int (*function_pointer_member)(int, int);
+	/**
+	 * function pointer member with parameter names
+	 *
+	 * :param foo: the foo
+	 * :param bar: the bar
+	 */
+	int (*other_function_pointer_member)(int foo, int bar);
 	/**
 	 * foo next
 	 */
