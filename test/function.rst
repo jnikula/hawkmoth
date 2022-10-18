@@ -26,7 +26,7 @@
    Clang removes spaces.
 
 
-.. c:function:: void function_pointer_param( void *(*hook)(void *, int))
+.. c:function:: void function_pointer_param( void * (*hook)(void * p, int n))
 
    Function pointer parameter.
 
