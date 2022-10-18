@@ -149,28 +149,63 @@ def _array_fixup(ttype, name):
 
     return ttype, name
 
-# If this is a function pointer, or an array of function pointers, the
-# name should be within the parenthesis as in (*name) or (*name[N]).
-def _function_pointer_fixup(ttype, name):
-    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)  # noqa: E501
-    if mo is None:
+# Return the FUNCTIONPROTO type associated with a function pointer cursor,
+# or None if not found
+# It also accumulates qualifiers and constant array sizes while traversing
+def _traverse_to_function_proto(cursor):
+    stars_and_quals = ''
+    brackets = ''
+    elt_type = cursor.type
+
+    while elt_type is not None and elt_type.kind != TypeKind.FUNCTIONPROTO:
+        if elt_type.kind == TypeKind.POINTER:
+            star_and_quals = '*'
+            if elt_type.is_const_qualified():
+                star_and_quals += 'const '
+            if elt_type.is_volatile_qualified():
+                star_and_quals += 'volatile '
+            if elt_type.is_restrict_qualified():
+                star_and_quals += 'restrict '
+            stars_and_quals = star_and_quals + stars_and_quals
+            elt_type = elt_type.get_pointee()
+        elif elt_type.kind == TypeKind.CONSTANTARRAY:
+            brackets += f'[{elt_type.element_count}]'
+            elt_type = elt_type.get_array_element_type()
+        else:
+            elt_type = None
+
+    return elt_type, stars_and_quals, brackets
+
+# If this is a function pointer, or an array of function pointers, we
+# first lookup the associated function proto
+# We then rebuild the function signature using parameter names, if available
+def _function_pointer_fixup(ttype, name, cursor):
+    function_proto, stars_and_quals, brackets = _traverse_to_function_proto(cursor)
+    if function_proto is None:
         return ttype, name
 
-    begin = mo.group('begin')
-    stars = mo.group('stars')
-    qual = mo.group('qual') + ' ' if mo.group('qual') is not None else ''
-    brackets = mo.group('brackets') if mo.group('brackets') is not None else ''
-    end = mo.group('end')
+    # FIXME: check args against function_proto argument_types()
+    args = []
+    for c in cursor.get_children():
+        if c.kind == CursorKind.PARM_DECL:
+            arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling, c)
+            args.append(f'{arg_ttype} {arg_name}' if arg_name else arg_ttype)
+    if function_proto.is_function_variadic():
+        args.append('...')
+    if not args:
+        args.append('void')
 
-    name = f'{begin}({stars}{qual}{name}{brackets}){end}'
+    ret_type = function_proto.get_result().spelling
+
+    name = f'''{ret_type} ({stars_and_quals}{name}{brackets})({', '.join(args)})'''
     ttype = ''
 
     return ttype, name
 
-def _decl_fixup(ttype, name):
+def _decl_fixup(ttype, name, cursor):
     ttype, name = _array_fixup(ttype, name)
 
-    ttype, name = _function_pointer_fixup(ttype, name)
+    ttype, name = _function_pointer_fixup(ttype, name, cursor)
 
     return ttype, name
 
@@ -210,7 +245,7 @@ def _recursive_parse(comments, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _decl_fixup(ttype, name)
+        ttype, decl_name = _decl_fixup(ttype, name, cursor)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(text=text, nest=nest, name=name,
@@ -274,7 +309,7 @@ def _recursive_parse(comments, cursor, nest):
         if cursor.type.kind == TypeKind.FUNCTIONPROTO:
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling)
+                    arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling, c)
 
                     args.append(f'{arg_ttype} {arg_name}')
 
