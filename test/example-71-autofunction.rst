@@ -1,5 +1,5 @@
 
-.. c:function:: int frob(struct list * list, enum mode mode)
+.. c:function:: int frob(struct list *list, enum mode mode)
 
    List frobnicator.
 
