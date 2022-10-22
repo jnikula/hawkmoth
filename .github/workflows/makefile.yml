@@ -1,0 +1,30 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies (apt)
+      run: sudo apt-get install -y python3-clang python3-pip
+
+    - name: Install dependencies (pip)
+      run: . venv
+
+    - name: Check
+      run: make check
+      
+    - name: Test
+      run: make test
+      
+    - name: Docs
+      run: make html
