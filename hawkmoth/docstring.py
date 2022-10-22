@@ -146,12 +146,17 @@ class Docstring():
 
         ttype = self._ttype
 
+        spacer = ''
+        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
+            spacer = ' '
+
         args = ''
         if self._args and len(self._args) > 0:
             arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        rst = self._fmt.format(text=text, name=self._get_decl_name(), ttype=self._ttype, args=args)
+        rst = self._fmt.format(text=text, name=name, ttype=ttype,
+                               type_spacer=spacer, args=args)
 
         rst = Docstring._nest(rst, self._nest)
 
@@ -175,7 +180,7 @@ class TextDocstring(Docstring):
 
 class VarDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:var:: {ttype} {name}\n\n{text}\n'
+    _fmt = '\n.. c:var:: {ttype}{type_spacer}{name}\n\n{text}\n'
 
 class TypeDocstring(Docstring):
     _indent = 1
@@ -211,7 +216,7 @@ class EnumeratorDocstring(Docstring):
 
 class MemberDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:member:: {ttype} {name}\n\n{text}\n'
+    _fmt = '\n.. c:member:: {ttype}{type_spacer}{name}\n\n{text}\n'
 
 class MacroDocstring(Docstring):
     _indent = 1
@@ -223,4 +228,4 @@ class MacroFunctionDocstring(Docstring):
 
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:function:: {ttype} {name}({args})\n\n{text}\n'
+    _fmt = '\n.. c:function:: {ttype}{type_spacer}{name}({args})\n\n{text}\n'

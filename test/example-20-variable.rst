@@ -4,7 +4,7 @@
    The name says it all.
 
 
-.. c:var:: struct list * entries
+.. c:var:: struct list *entries
 
    The list of entries.
 
