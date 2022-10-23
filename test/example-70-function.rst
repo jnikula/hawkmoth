@@ -1,5 +1,5 @@
 
-.. c:function:: int frob(struct list * list, enum mode mode)
+.. c:function:: int frob(struct list *list, enum mode mode)
 
    List frobnicator.
 
@@ -9,7 +9,7 @@
    :since: v0.1
 
 
-.. c:function:: int frobo(const char * fmt, ...)
+.. c:function:: int frobo(const char *fmt, ...)
 
    variadic frobnicator
 

@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2021 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2022 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment storage and converter
@@ -142,7 +142,14 @@ class Docstring():
 
         text = Docstring._nest(text, self._indent)
 
-        args = ', '.join(self._args) if self._args is not None else None
+        name = self._get_decl_name()
+
+        ttype = self._ttype
+
+        args = ''
+        if self._args and len(self._args) > 0:
+            arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
+            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
         rst = self._fmt.format(text=text, name=self._get_decl_name(), ttype=self._ttype, args=args)
 

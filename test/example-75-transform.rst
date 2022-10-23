@@ -1,5 +1,5 @@
 
-.. c:function:: int napoleon(int foo, char * bar)
+.. c:function:: int napoleon(int foo, char *bar)
 
    Custom comment transformations.
 
