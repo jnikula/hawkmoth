@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2020 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2022 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment extractor
@@ -129,9 +129,9 @@ def _get_macro_args(cursor):
         elif token.spelling == ',':
             continue
         elif token.kind == TokenKind.IDENTIFIER:
-            args.append(token.spelling)
+            args.extend([('', token.spelling)])
         elif token.spelling == '...':
-            args.append(token.spelling)
+            args.extend([('', token.spelling)])
         else:
             break
 
@@ -275,11 +275,10 @@ def _recursive_parse(comments, cursor, nest):
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
                     arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling)
-
-                    args.append(f'{arg_ttype} {arg_name}')
+                    args.extend([(arg_ttype, arg_name)])
 
             if cursor.type.is_function_variadic():
-                args.append('...')
+                args.extend([('', '...')])
 
         ttype = cursor.result_type.spelling
 

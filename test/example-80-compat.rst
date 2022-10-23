@@ -1,5 +1,5 @@
 
-.. c:function:: int frob2(struct list * list, enum mode mode)
+.. c:function:: int frob2(struct list *list, enum mode mode)
 
    Compat comment transformations.
 
