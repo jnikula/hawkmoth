@@ -172,7 +172,8 @@ def _decl_fixup(cursor):
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
                 arg_ttype, arg_name = _decl_fixup(c)
-                args.append(f'{arg_ttype}')
+                spacer = '' if not arg_name or arg_ttype.endswith('*') else ' '
+                args.append(f'{arg_ttype}{spacer}{arg_name}' if arg_name else arg_ttype)
         if cursor_type.is_function_variadic():
             args.append('...')
         if not args:
