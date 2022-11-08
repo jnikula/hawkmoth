@@ -27,3 +27,8 @@ const char* (*const function_pointer_with_qualifier)(const char *in);
  * Array of pointers.
  */
 char *array_of_pointers[1];
+
+/**
+ * Multi-dimensional array.
+ */
+int multi_dim[1][2];
