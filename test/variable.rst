@@ -28,3 +28,8 @@
 
    Array of pointers.
 
+
+.. c:var:: int multi_dim[1][2]
+
+   Multi-dimensional array.
+
