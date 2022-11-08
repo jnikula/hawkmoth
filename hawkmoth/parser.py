@@ -167,7 +167,10 @@ def _function_pointer_fixup(ttype, name):
 
     return ttype, name
 
-def _decl_fixup(ttype, name):
+def _decl_fixup(cursor):
+    ttype = cursor.type.spelling
+    name = cursor.spelling
+
     ttype, name = _array_fixup(ttype, name)
 
     ttype, name = _function_pointer_fixup(ttype, name)
@@ -210,7 +213,7 @@ def _recursive_parse(comments, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _decl_fixup(ttype, name)
+        ttype, decl_name = _decl_fixup(cursor)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(text=text, nest=nest, name=name,
@@ -274,7 +277,7 @@ def _recursive_parse(comments, cursor, nest):
         if cursor.type.kind == TypeKind.FUNCTIONPROTO:
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    arg_ttype, arg_name = _decl_fixup(c.type.spelling, c.spelling)
+                    arg_ttype, arg_name = _decl_fixup(c)
                     args.extend([(arg_ttype, arg_name)])
 
             if cursor.type.is_function_variadic():
