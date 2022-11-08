@@ -4,7 +4,7 @@
    This is a variable document.
 
 
-.. c:var:: int (*function_pointer_variable)(int *)
+.. c:var:: int (*function_pointer_variable)(int *param_name_ignored)
 
    function pointer variable
 
@@ -19,7 +19,7 @@
    array of function pointers
 
 
-.. c:var:: const char *(*const function_pointer_with_qualifier)(const char *)
+.. c:var:: const char *(*const function_pointer_with_qualifier)(const char *in)
 
    function pointer with lots of const qualifiers
 
