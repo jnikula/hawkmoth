@@ -139,41 +139,57 @@ def _get_macro_args(cursor):
 
 # If this is an array, the dimensions should be applied to the name, not
 # the type.
-def _array_fixup(ttype, name):
-    mo = re.match(r'(?P<ttype>[^][]*)(?P<dims>(\[[^]]*\])+)$', ttype)
-    if mo is None:
-        return ttype, name
-
-    ttype = mo.group('ttype').strip()
-    name = name + mo.group('dims')
-
-    return ttype, name
 
 # If this is a function pointer, or an array of function pointers, the
 # name should be within the parenthesis as in (*name) or (*name[N]).
-def _function_pointer_fixup(ttype, name):
-    mo = re.match(r'(?P<begin>.+)\((?P<stars>\*+)(?P<qual>[a-zA-Z_ ]+)?(?P<brackets>\[[^]]*\])?\)(?P<end>.+)', ttype)  # noqa: E501
-    if mo is None:
-        return ttype, name
-
-    begin = mo.group('begin')
-    stars = mo.group('stars')
-    qual = mo.group('qual') + ' ' if mo.group('qual') is not None else ''
-    brackets = mo.group('brackets') if mo.group('brackets') is not None else ''
-    end = mo.group('end')
-
-    name = f'{begin}({stars}{qual}{name}{brackets}){end}'
-    ttype = ''
-
-    return ttype, name
-
 def _decl_fixup(cursor):
-    ttype = cursor.type.spelling
-    name = cursor.spelling
+    cursor_type = cursor.type
 
-    ttype, name = _array_fixup(ttype, name)
+    stars_and_quals = ''
+    dims = ''
+    while True:
+        if cursor_type.kind == TypeKind.POINTER:
+            quals = []
+            if cursor_type.is_const_qualified():
+                quals.append('const')
+            if cursor_type.is_volatile_qualified():
+                quals.append('volatile')
+            if cursor_type.is_restrict_qualified():
+                quals.append('restrict')
+            stars_and_quals = '*' + ' '.join(quals) + stars_and_quals
+            cursor_type = cursor_type.get_pointee()
+        elif cursor_type.kind == TypeKind.CONSTANTARRAY:
+            dims += f'[{cursor_type.element_count}]'
+            cursor_type = cursor_type.get_array_element_type()
+        elif cursor_type.kind == TypeKind.INCOMPLETEARRAY:
+            dims += '[]'
+            cursor_type = cursor_type.get_array_element_type()
+        else:
+            break
 
-    ttype, name = _function_pointer_fixup(ttype, name)
+    if cursor_type.kind == TypeKind.FUNCTIONPROTO:
+        args = []
+        for c in cursor.get_children():
+            if c.kind == CursorKind.PARM_DECL:
+                arg_ttype, arg_name = _decl_fixup(c)
+                args.append(f'{arg_ttype}')
+        if cursor_type.is_function_variadic():
+            args.append('...')
+        if not args:
+            args.append('void')
+
+        ret_type = cursor_type.get_result().spelling
+
+        spacer1 = '' if ret_type.endswith('*') else ' '
+        spacer2 = '' if stars_and_quals.endswith('*') else ' '
+
+        ttype = ''
+        name = f'''{ret_type}{spacer1}({stars_and_quals}{spacer2}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
+    else:
+        ttype = cursor_type.spelling
+        if stars_and_quals:
+            ttype += ' ' + stars_and_quals
+        name = cursor.spelling + dims
 
     return ttype, name
 
