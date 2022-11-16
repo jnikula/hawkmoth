@@ -1,0 +1,49 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies (apt)
+      run: sudo apt-get install -y python3-clang python3-pip
+    - name: Install dependencies (pip)
+      run: sudo pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+    - name: Build docs
+      run: sphinx-build doc _build
+    - uses: actions/upload-artifact@v3
+      with:
+        name: docs-artifact
+        path: _build
+        if-no-files-found: error
+
+  deploy-docs:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: build-docs
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: docs-artifact
+          path: .
+      - run: find
+      - uses: actions/configure-pages@v1
+      - uses: actions/upload-pages-artifact@v1
+        with:
+           path: .
+      - id: deployment
+        uses: actions/deploy-pages@v1
