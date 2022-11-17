@@ -14,6 +14,11 @@
    Empty parameter list.
 
 
+.. c:function:: int variadic(const char *fmt, ...)
+
+   Variadic function.
+
+
 .. c:function:: void foorray(const double array[], int x[5])
 
    Array parameters.

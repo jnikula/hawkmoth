@@ -14,6 +14,11 @@ int no_parameters(void);
 int empty_parameter_list();
 
 /**
+ * Variadic function.
+ */
+int variadic(const char *fmt, ...);
+
+/**
  * Array parameters.
  */
 void foorray(const double array[], int x[5]);
