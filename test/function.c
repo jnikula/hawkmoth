@@ -4,14 +4,14 @@
 int foo(int bar, int baz);
 
 /**
- * Void parameter.
+ * No parameters.
  */
-int fooing(void);
+int no_parameters(void);
 
 /**
- * Empty parameters.
+ * Empty parameter list.
  */
-int fooation();
+int empty_parameter_list();
 
 /**
  * Array parameters.
