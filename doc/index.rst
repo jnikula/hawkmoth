@@ -36,6 +36,7 @@ Contents:
    directives
    syntax
    examples
+   troubleshooting
 
 Indices and tables
 ==================
