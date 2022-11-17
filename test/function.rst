@@ -4,14 +4,14 @@
    Foo function.
 
 
-.. c:function:: int fooing(void)
+.. c:function:: int no_parameters(void)
 
-   Void parameter.
+   No parameters.
 
 
-.. c:function:: int fooation()
+.. c:function:: int empty_parameter_list()
 
-   Empty parameters.
+   Empty parameter list.
 
 
 .. c:function:: void foorray(const double array[], int x[5])
