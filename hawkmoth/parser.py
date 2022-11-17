@@ -302,6 +302,8 @@ def _recursive_parse(comments, cursor, nest):
 
             if cursor.type.is_function_variadic():
                 args.extend([('', '...')])
+            if len(args) == 0:
+                args.extend([('', 'void')])
 
         ttype = cursor.result_type.spelling
 

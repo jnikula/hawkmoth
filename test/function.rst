@@ -4,7 +4,7 @@
    Foo function.
 
 
-.. c:function:: int fooing()
+.. c:function:: int fooing(void)
 
    Void parameter.
 
