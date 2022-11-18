@@ -18,6 +18,6 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install --no-cache-dir -U pip
-RUN python3 -m pip install --no-cache-dir Sphinx==4.1.2 Pillow hawkmoth==$HAWKMOTH_VERSION
+RUN python3 -m pip install --no-cache-dir Sphinx==5.3.0 Pillow hawkmoth==$HAWKMOTH_VERSION
 
 CMD ["make", "html"]
