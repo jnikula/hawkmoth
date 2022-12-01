@@ -34,9 +34,9 @@
    Tab prefix.
 
    :param foo: foo
-   	continuation with tab
+        continuation with tab
    :param foo: bar
-   	continuation with tab
+        continuation with tab
 
 
 .. c:function:: int tab_first_line_content(int foo, int bar)
@@ -44,9 +44,9 @@
    Tab prefix, content on first line.
 
    :param foo: foo
-   	continuation with tab
+        continuation with tab
    :param foo: bar
-   	continuation with tab
+        continuation with tab
 
 
 .. c:function:: int space_star_space_first_line_content(int foo, int bar)

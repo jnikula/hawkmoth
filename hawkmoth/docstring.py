@@ -26,6 +26,8 @@ import hashlib
 import os
 import re
 
+from docutils import statemachine
+
 def _commonprefix_len(lines):
     # common prefix
     prefix = os.path.commonprefix(lines)
@@ -160,7 +162,12 @@ class Docstring():
 
         rst = Docstring._nest(rst, self._nest)
 
-        return rst
+        lines = statemachine.string2lines(rst, 8, convert_whitespace=True)
+
+        if lines[-1] != '':
+            lines.append('')
+
+        return lines
 
     def get_meta(self):
         return self._meta
