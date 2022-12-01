@@ -36,18 +36,19 @@ from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
+from clang.cindex import Diagnostic
 
 from hawkmoth import docstring
 
-class ErrorLevel(enum.Enum):
+class ErrorLevel(enum.IntEnum):
     """
-    Supported error levels in inverse numerical order of severity. The values
-    are chosen so that they map directly to a 'verbosity level'.
+    Supported error levels. The values are an implementation detail.
     """
-    ERROR = 0
-    WARNING = 1
-    INFO = 2
-    DEBUG = 3
+    DEBUG = Diagnostic.Ignored
+    INFO = Diagnostic.Note
+    WARNING = Diagnostic.Warning
+    ERROR = Diagnostic.Error
+    CRITICAL = Diagnostic.Fatal
 
 @dataclass
 class ParserError:
@@ -337,15 +338,10 @@ def _recursive_parse(comments, errors, cursor, nest):
 
 def _clang_diagnostics(diagnostics):
     errors = []
-    sev = {0: ErrorLevel.DEBUG,
-           1: ErrorLevel.DEBUG,
-           2: ErrorLevel.WARNING,
-           3: ErrorLevel.ERROR,
-           4: ErrorLevel.ERROR}
 
     for diag in diagnostics:
         filename = diag.location.file.name if diag.location.file else None
-        errors.append(ParserError(sev[diag.severity], filename,
+        errors.append(ParserError(ErrorLevel(diag.severity), filename,
                                   diag.location.line, diag.spelling))
 
     return errors
