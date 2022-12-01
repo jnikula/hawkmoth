@@ -41,12 +41,8 @@ def main():
             print(f'# {comment.get_meta()}')
         print(comment.get_docstring(transform=transform))
 
-    for (severity, filename, lineno, msg) in errors:
-        if filename:
-            print(f'{severity.name}: {filename}:{lineno}: {msg}',
-                  file=sys.stderr)
-        else:
-            print(f'{severity.name}: {msg}', file=sys.stderr)
+    for error in errors:
+        print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
 
 if __name__ == '__main__':
     main()
