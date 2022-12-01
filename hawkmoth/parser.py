@@ -226,7 +226,7 @@ def _anonymous_fixup(ttype, name):
 
     return ttype, name
 
-def _recursive_parse(comments, cursor, nest):
+def _recursive_parse(comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
     ttype = cursor.type.spelling
@@ -292,7 +292,7 @@ def _recursive_parse(comments, cursor, nest):
 
         for c in cursor.get_children():
             if c.hash in comments:
-                ds.add_children(_recursive_parse(comments, c, nest + 1))
+                ds.add_children(_recursive_parse(comments, errors, c, nest + 1))
 
         return [ds]
 
@@ -325,13 +325,11 @@ def _recursive_parse(comments, cursor, nest):
                                          ttype=ttype, args=args, meta=meta)
         return [ds]
 
-    # FIXME: If we reach here, nothing matched. This is a warning or even error
-    # and it should be logged, but it should also return an empty list so that
-    # it doesn't break. I.e. the parser needs to pass warnings and errors to the
-    # Sphinx extension instead of polluting the generated output.
-    kind = str(cursor.kind)
-    text = f'warning: unhandled cursor {kind} {cursor.spelling}\n'
-    meta = _get_meta(comment, cursor)
+    # If we reach here, nothing matched i.e. there's a documentation comment
+    # above an unexpected cursor.
+    message = f'documentation comment attached to unexpected cursor {str(cursor.kind)} {cursor.spelling}'  # noqa: E501
+    errors.append(ParserError(ErrorLevel.WARNING, cursor.location.file.name,
+                              cursor.location.line, message))
 
     ds = docstring.TextDocstring(text=text, meta=meta)
 
@@ -375,6 +373,6 @@ def parse(filename, clang_args=None):
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
-            result.add_children(_recursive_parse(comments, cursor, 0))
+            result.add_children(_recursive_parse(comments, errors, cursor, 0))
 
     return result, errors
