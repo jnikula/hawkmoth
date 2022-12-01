@@ -8,6 +8,7 @@ Sphinx C Domain autodoc directive extension.
 """
 
 import glob
+import logging as log
 import os
 
 from docutils import nodes, statemachine
@@ -17,7 +18,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
 
-from hawkmoth.parser import parse, ErrorLevel
+from hawkmoth.parser import parse
 from hawkmoth.util import doccompat, strutil
 from hawkmoth import docstring
 
@@ -37,16 +38,19 @@ class CAutoBaseDirective(SphinxDirective):
 
     _docstring_types = None
 
-    # Map verbosity levels to logger levels.
-    _log_lvl = {ErrorLevel.ERROR: logging.LEVEL_NAMES['ERROR'],
-                ErrorLevel.WARNING: logging.LEVEL_NAMES['WARNING'],
-                ErrorLevel.INFO: logging.LEVEL_NAMES['INFO'],
-                ErrorLevel.DEBUG: logging.LEVEL_NAMES['DEBUG']}
+    # Map parser diagnostic levels to verbosity levels.
+    def __parser_verbosity(self, level):
+        if level >= log.ERROR:
+            return 0
+        elif level >= log.WARNING:
+            return 1
+        else:
+            return 3
 
     def __display_parser_diagnostics(self, errors):
         for error in errors:
-            if error.level.value <= self.env.app.verbosity:
-                self.logger.log(self._log_lvl[error.level], error.get_message(),
+            if self.__parser_verbosity(error.level) <= self.env.app.verbosity:
+                self.logger.log(error.level, error.get_message(),
                                 location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):

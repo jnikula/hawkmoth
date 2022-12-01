@@ -39,7 +39,7 @@ def _get_output(testcase, **options):
         docs_str += comment.get_docstring(transform=transform) + '\n'
 
     for error in errors:
-        errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
+        errors_str += f'{error.get_level_name()}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
 
     return docs_str, errors_str
 
