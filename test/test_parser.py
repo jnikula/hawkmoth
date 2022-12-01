@@ -38,8 +38,8 @@ def _get_output(testcase, **options):
     for comment in comments.walk():
         docs_str += comment.get_docstring(transform=transform) + '\n'
 
-    for (severity, filename, lineno, msg) in errors:
-        errors_str += f'{severity.name}: {os.path.basename(filename)}:{lineno}: {msg}\n'
+    for error in errors:
+        errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
 
     return docs_str, errors_str
 
