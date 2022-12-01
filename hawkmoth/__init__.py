@@ -37,16 +37,21 @@ class CAutoBaseDirective(SphinxDirective):
 
     _docstring_types = None
 
-    # Map verbosity levels to logger levels.
-    _log_lvl = {ErrorLevel.ERROR: logging.LEVEL_NAMES['ERROR'],
-                ErrorLevel.WARNING: logging.LEVEL_NAMES['WARNING'],
-                ErrorLevel.INFO: logging.LEVEL_NAMES['INFO'],
-                ErrorLevel.DEBUG: logging.LEVEL_NAMES['DEBUG']}
-
     def __display_parser_diagnostics(self, errors):
+        # Map parser diagnostic level to Sphinx verbosity and level name
+        log_level_map = {
+            ErrorLevel.DEBUG: (3, 'DEBUG'),
+            ErrorLevel.INFO: (3, 'INFO'),
+            ErrorLevel.WARNING: (1, 'WARNING'),
+            ErrorLevel.ERROR: (0, 'ERROR'),
+            ErrorLevel.CRITICAL: (0, 'CRITICAL'),
+        }
+
         for error in errors:
-            if error.level.value <= self.env.app.verbosity:
-                self.logger.log(self._log_lvl[error.level], error.get_message(),
+            verbosity, level = log_level_map[error.level]
+
+            if verbosity <= self.env.app.verbosity:
+                self.logger.log(level, error.get_message(),
                                 location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
