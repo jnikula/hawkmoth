@@ -31,7 +31,8 @@ def _get_output(testcase, **options):
         transform = None
 
     for comment in comments.walk():
-        docs_str += comment.get_docstring(transform=transform) + '\n'
+        lines = comment.get_docstring(transform=transform)
+        docs_str += '\n'.join(lines) + '\n'
 
     for error in errors:
         errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501

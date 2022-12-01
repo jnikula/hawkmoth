@@ -10,7 +10,7 @@ Sphinx C Domain autodoc directive extension.
 import glob
 import os
 
-from docutils import nodes, statemachine
+from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
 from sphinx.util.nodes import nested_parse_with_titles
@@ -109,8 +109,7 @@ class _AutoBaseDirective(SphinxDirective):
                                     filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
-                lines = statemachine.string2lines(docstr.get_docstring(transform=transform), 8,
-                                                  convert_whitespace=True)
+                lines = docstr.get_docstring(transform=transform)
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
