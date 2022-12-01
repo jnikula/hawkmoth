@@ -6,6 +6,26 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Parsing for function pointer argument names
+* Guide to contributing
+* Troubleshooting documentation
+* Install 'hawkmoth' command-line tool for debugging
+* GitHub CI automation
+
+Changed
+~~~~~~~
+
+* Bumped Docker container Sphinx version to 5.3.0
+
+Fixed
+~~~~~
+
+* Fix whitespace in the output
+* Fix function definitions with void parameter list as opposed to empty
+
 Hawkmoth `0.11.0`_
 ------------------
 
