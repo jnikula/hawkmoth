@@ -44,14 +44,9 @@ class CAutoBaseDirective(SphinxDirective):
                 ErrorLevel.DEBUG: logging.LEVEL_NAMES['DEBUG']}
 
     def __display_parser_diagnostics(self, errors):
-        for (severity, filename, lineno, msg) in errors:
-            if filename:
-                toprint = f'{filename}:{lineno}: {msg}'
-            else:
-                toprint = f'{msg}'
-
-            if severity.value <= self.env.app.verbosity:
-                self.logger.log(self._log_lvl[severity], toprint,
+        for error in errors:
+            if error.level.value <= self.env.app.verbosity:
+                self.logger.log(self._log_lvl[error.level], error.get_message(),
                                 location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):

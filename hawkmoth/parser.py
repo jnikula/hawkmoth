@@ -32,6 +32,7 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 
 import enum
 import re
+from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
@@ -47,6 +48,19 @@ class ErrorLevel(enum.Enum):
     WARNING = 1
     INFO = 2
     DEBUG = 3
+
+@dataclass
+class ParserError:
+    level: ErrorLevel
+    filename: str
+    line: int
+    message: str
+
+    def get_message(self):
+        if self.filename:
+            return f'{self.filename}:{self.line}: {self.message}'
+        else:
+            return f'{self.message}'
 
 def _comment_extract(tu):
 
@@ -333,8 +347,8 @@ def _clang_diagnostics(diagnostics):
 
     for diag in diagnostics:
         filename = diag.location.file.name if diag.location.file else None
-        errors.extend([(sev[diag.severity], filename,
-                        diag.location.line, diag.spelling)])
+        errors.append(ParserError(sev[diag.severity], filename,
+                                  diag.location.line, diag.spelling))
 
     return errors
 
