@@ -8,6 +8,7 @@ Sphinx C Domain autodoc directive extension.
 """
 
 import glob
+import logging
 import os
 
 from docutils import nodes, statemachine
@@ -15,9 +16,9 @@ from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
 from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input, SphinxDirective
-from sphinx.util import logging
+from sphinx.util import logging as sphinx_logging
 
-from hawkmoth.parser import parse, ErrorLevel
+from hawkmoth.parser import parse
 from hawkmoth.util import doccompat, strutil
 from hawkmoth import docstring
 
@@ -26,7 +27,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     __version__ = version_file.read().strip()
 
 class CAutoBaseDirective(SphinxDirective):
-    logger = logging.getLogger(__name__)
+    logger = sphinx_logging.getLogger(__name__)
 
     option_spec = {
         'transform': directives.unchanged_required,
@@ -37,16 +38,21 @@ class CAutoBaseDirective(SphinxDirective):
 
     _docstring_types = None
 
-    # Map verbosity levels to logger levels.
-    _log_lvl = {ErrorLevel.ERROR: logging.LEVEL_NAMES['ERROR'],
-                ErrorLevel.WARNING: logging.LEVEL_NAMES['WARNING'],
-                ErrorLevel.INFO: logging.LEVEL_NAMES['INFO'],
-                ErrorLevel.DEBUG: logging.LEVEL_NAMES['DEBUG']}
-
     def __display_parser_diagnostics(self, errors):
+        # Map parser diagnostic level to Sphinx verbosity and level name
+        log_level_map = {
+            logging.DEBUG: (3, 'DEBUG'),
+            logging.INFO: (3, 'INFO'),
+            logging.WARNING: (1, 'WARNING'),
+            logging.ERROR: (0, 'ERROR'),
+            logging.CRITICAL: (0, 'CRITICAL'),
+        }
+
         for error in errors:
-            if error.level.value <= self.env.app.verbosity:
-                self.logger.log(self._log_lvl[error.level], error.get_message(),
+            verbosity, level = log_level_map[error.level]
+
+            if verbosity <= self.env.app.verbosity:
+                self.logger.log(level, error.get_message(),
                                 location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):

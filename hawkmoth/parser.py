@@ -30,31 +30,26 @@ There is minimal syntax parsing or input conversion:
 The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
-import enum
+import logging
 import re
 from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import Index, TranslationUnit
+from clang.cindex import Diagnostic
 
 from hawkmoth import docstring
 
-class ErrorLevel(enum.Enum):
-    """
-    Supported error levels in inverse numerical order of severity. The values
-    are chosen so that they map directly to a 'verbosity level'.
-    """
-    ERROR = 0
-    WARNING = 1
-    INFO = 2
-    DEBUG = 3
-
 @dataclass
 class ParserError:
-    level: ErrorLevel
+    level: int
     filename: str
     line: int
     message: str
+
+    # Note: This relies on logger level names being unmodified.
+    def get_level_name(self):
+        return logging.getLevelName(self.level)
 
     def get_message(self):
         if self.filename:
@@ -328,7 +323,7 @@ def _recursive_parse(comments, errors, cursor, nest):
     # If we reach here, nothing matched i.e. there's a documentation comment
     # above an unexpected cursor.
     message = f'documentation comment attached to unexpected cursor {str(cursor.kind)} {cursor.spelling}'  # noqa: E501
-    errors.append(ParserError(ErrorLevel.WARNING, cursor.location.file.name,
+    errors.append(ParserError(logging.WARNING, cursor.location.file.name,
                               cursor.location.line, message))
 
     ds = docstring.TextDocstring(text=text, meta=meta)
@@ -337,11 +332,13 @@ def _recursive_parse(comments, errors, cursor, nest):
 
 def _clang_diagnostics(diagnostics):
     errors = []
-    sev = {0: ErrorLevel.DEBUG,
-           1: ErrorLevel.DEBUG,
-           2: ErrorLevel.WARNING,
-           3: ErrorLevel.ERROR,
-           4: ErrorLevel.ERROR}
+    sev = {
+        Diagnostic.Ignored: logging.DEBUG,
+        Diagnostic.Note: logging.INFO,
+        Diagnostic.Warning: logging.WARNING,
+        Diagnostic.Error: logging.ERROR,
+        Diagnostic.Fatal: logging.CRITICAL,
+    }
 
     for diag in diagnostics:
         filename = diag.location.file.name if diag.location.file else None

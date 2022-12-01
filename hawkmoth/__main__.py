@@ -42,7 +42,7 @@ def main():
         print(comment.get_docstring(transform=transform))
 
     for error in errors:
-        print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
+        print(f'{error.get_level_name()}: {error.get_message()}', file=sys.stderr)
 
 if __name__ == '__main__':
     main()
