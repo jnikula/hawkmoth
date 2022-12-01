@@ -45,7 +45,7 @@ def main():
     for comment in comments.walk():
         if args.verbose:
             print(f'# {comment.get_meta()}')
-        print(comment.get_docstring(transform=transform))
+        print('\n'.join(comment.get_docstring(transform=transform)))
 
     for error in errors:
         print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
