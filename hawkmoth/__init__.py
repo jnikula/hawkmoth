@@ -38,21 +38,18 @@ class CAutoBaseDirective(SphinxDirective):
     _docstring_types = None
 
     def __display_parser_diagnostics(self, errors):
-        # Map parser diagnostic level to Sphinx verbosity and level name
+        # Map parser diagnostic level to Sphinx level name
         log_level_map = {
-            ErrorLevel.DEBUG: (3, 'DEBUG'),
-            ErrorLevel.INFO: (3, 'INFO'),
-            ErrorLevel.WARNING: (1, 'WARNING'),
-            ErrorLevel.ERROR: (0, 'ERROR'),
-            ErrorLevel.CRITICAL: (0, 'CRITICAL'),
+            ErrorLevel.DEBUG: 'DEBUG',
+            ErrorLevel.INFO: 'VERBOSE',
+            ErrorLevel.WARNING: 'WARNING',
+            ErrorLevel.ERROR: 'ERROR',
+            ErrorLevel.CRITICAL: 'CRITICAL',
         }
 
         for error in errors:
-            verbosity, level = log_level_map[error.level]
-
-            if verbosity <= self.env.app.verbosity:
-                self.logger.log(level, error.get_message(),
-                                location=(self.env.docname, self.lineno))
+            self.logger.log(log_level_map[error.level], error.get_message(),
+                            location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
         clang_args = self.env.config.cautodoc_clang.copy()
