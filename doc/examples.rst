@@ -27,6 +27,7 @@ Source
 
 .. literalinclude:: ../test/example-10-macro.c
    :language: C
+   :caption: example-10-macro.c
 
 Directive
 ~~~~~~~~~
@@ -49,6 +50,7 @@ Source
 
 .. literalinclude:: ../test/example-10-macro.c
    :language: C
+   :caption: example-10-macro.c
 
 Directive
 ~~~~~~~~~
@@ -77,6 +79,7 @@ Source
 
 .. literalinclude:: ../test/example-20-variable.c
    :language: C
+   :caption: example-20-variable.c
 
 Directive
 ~~~~~~~~~
@@ -99,6 +102,7 @@ Source
 
 .. literalinclude:: ../test/example-20-variable.c
    :language: C
+   :caption: example-20-variable.c
 
 Directive
 ~~~~~~~~~
@@ -127,6 +131,7 @@ Source
 
 .. literalinclude:: ../test/example-30-typedef.c
    :language: C
+   :caption: example-30-typedef.c
 
 Directive
 ~~~~~~~~~
@@ -149,6 +154,7 @@ Source
 
 .. literalinclude:: ../test/example-30-typedef.c
    :language: C
+   :caption: example-30-typedef.c
 
 Directive
 ~~~~~~~~~
@@ -177,6 +183,7 @@ Source
 
 .. literalinclude:: ../test/example-40-enum.c
    :language: C
+   :caption: example-40-enum.c
 
 Directive
 ~~~~~~~~~
@@ -199,6 +206,7 @@ Source
 
 .. literalinclude:: ../test/example-40-enum.c
    :language: C
+   :caption: example-40-enum.c
 
 Directive
 ~~~~~~~~~
@@ -229,6 +237,7 @@ Source
 
 .. literalinclude:: ../test/example-50-struct.c
    :language: C
+   :caption: example-50-struct.c
 
 Directive
 ~~~~~~~~~
@@ -251,6 +260,7 @@ Source
 
 .. literalinclude:: ../test/example-50-struct.c
    :language: C
+   :caption: example-50-struct.c
 
 Directive
 ~~~~~~~~~
@@ -281,6 +291,7 @@ Source
 
 .. literalinclude:: ../test/example-60-autounion.c
    :language: C
+   :caption: example-60-autounion.c
 
 Directive
 ~~~~~~~~~
@@ -311,6 +322,7 @@ Source
 
 .. literalinclude:: ../test/example-70-function.c
    :language: C
+   :caption: example-70-function.c
 
 Directive
 ~~~~~~~~~
@@ -333,6 +345,7 @@ Source
 
 .. literalinclude:: ../test/example-70-preprocessor.c
    :language: C
+   :caption: example-70-preprocessor.c
 
 Directive
 ~~~~~~~~~
@@ -357,6 +370,7 @@ Source
 
 .. literalinclude:: ../test/example-70-function.c
    :language: C
+   :caption: example-70-function.c
 
 Directive
 ~~~~~~~~~
@@ -385,6 +399,7 @@ Source
 
 .. literalinclude:: ../test/example-75-transform.c
    :language: C
+   :caption: example-75-transform.c
 
 Directive
 ~~~~~~~~~
@@ -409,6 +424,7 @@ Source
 
 .. literalinclude:: ../test/example-80-compat.c
    :language: C
+   :caption: example-80-compat.c
 
 Directive
 ~~~~~~~~~
@@ -433,6 +449,7 @@ Source
 
 .. literalinclude:: ../test/example-90-generic.c
    :language: C
+   :caption: example-90-generic.c
 
 Directive
 ~~~~~~~~~

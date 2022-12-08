@@ -71,6 +71,7 @@ Source
 
 .. literalinclude:: {literal_include}
    :language: C
+   :caption: {input_filename}
 
 Directive
 ~~~~~~~~~
