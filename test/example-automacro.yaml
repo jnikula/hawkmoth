@@ -5,4 +5,4 @@ directive-options:
   file: example-macro.c
 example-use-namespace: yes
 example-title: Macro
-example-priority: 11
+example-priority: 31

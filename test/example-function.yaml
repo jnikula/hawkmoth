@@ -1,4 +1,4 @@
 directive-arguments:
 - example-function.c
 example-title: Function
-example-priority: 70
+example-priority: 40
