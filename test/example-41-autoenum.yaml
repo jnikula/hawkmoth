@@ -1,6 +1,0 @@
-directive: autoenum
-directive-arguments:
-- mode
-directive-options:
-  file: example-40-enum.c
-  members:

@@ -167,29 +167,6 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-40-enum.c
-
-Output
-~~~~~~
-
-.. c:autodoc:: example-40-enum.c
-
-
-Autoenum
---------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-40-enum.c
-   :language: C
-   :caption: example-40-enum.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
    .. c:autoenum:: mode
       :file: example-40-enum.c
       :members:
@@ -197,7 +174,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autoenum
+.. c:namespace-push:: Enum
 
 .. c:autoenum:: mode
    :file: example-40-enum.c
