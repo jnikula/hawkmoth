@@ -4,3 +4,4 @@ directive-options:
   clang:
   - -DDEEP_THOUGHT
 example-title: Preprocessor
+example-priority: 70
