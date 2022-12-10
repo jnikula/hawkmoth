@@ -4,4 +4,4 @@ directive-arguments:
 directive-options:
   file: example-60-autounion.c
   members:
-
+example-title: Autounion

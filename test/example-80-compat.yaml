@@ -2,3 +2,4 @@ directive-arguments:
 - example-80-compat.c
 directive-options:
   transform: javadoc-liberal
+example-title: Compat

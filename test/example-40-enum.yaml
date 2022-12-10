@@ -4,3 +4,4 @@ directive-arguments:
 directive-options:
   file: example-40-enum.c
   members:
+example-title: Enum

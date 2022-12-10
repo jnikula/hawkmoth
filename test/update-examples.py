@@ -4,18 +4,13 @@
 
 import hashlib
 import os
-import re
 
 import testenv
 
 def get_title(testcase):
-    basename = os.path.basename(testcase)
+    options = testenv.get_testcase_options(testcase)
 
-    title = re.sub(r'^example-[0-9]+-([a-zA-Z0-9_-]+).yaml$', r'\1', basename)
-    title = title.replace('-', ' ')
-    title = title.capitalize()
-
-    return title
+    return options.get('example-title')
 
 def get_title_underline(title):
     return '-' * len(title)
