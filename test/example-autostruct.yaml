@@ -2,7 +2,7 @@ directive: autostruct
 directive-arguments:
 - list
 directive-options:
-  file: example-50-struct.c
+  file: example-struct.c
   members:
 example-use-namespace: yes
 example-title: Struct

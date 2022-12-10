@@ -1,5 +1,5 @@
 directive-arguments:
-- example-70-preprocessor.c
+- example-preprocessor.c
 directive-options:
   clang:
   - -DDEEP_THOUGHT
