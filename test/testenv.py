@@ -72,7 +72,8 @@ def get_directive_string(options):
     for key, value in directive_options.items():
         if isinstance(value, list):
             value = ', '.join(value)
-        directive_str += f'   :{key}: {value}\n'
+        space = ' ' if len(value) else ''
+        directive_str += f'   :{key}:{space}{value}\n'
 
     return directive_str
 
