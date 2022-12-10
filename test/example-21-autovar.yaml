@@ -3,3 +3,4 @@ directive-arguments:
 - meaning_of_life
 directive-options:
   file: example-20-variable.c
+example-use-namespace: yes

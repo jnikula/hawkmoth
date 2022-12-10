@@ -3,3 +3,4 @@ directive-arguments:
 - DIE
 directive-options:
   file: example-10-macro.c
+example-use-namespace: yes
