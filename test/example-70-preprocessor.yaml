@@ -3,3 +3,4 @@ directive-arguments:
 directive-options:
   clang:
   - -DDEEP_THOUGHT
+example-title: Preprocessor

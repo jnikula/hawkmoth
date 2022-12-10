@@ -5,3 +5,4 @@ directive-options:
   file: example-50-struct.c
   members:
 example-use-namespace: yes
+example-title: Autostruct
