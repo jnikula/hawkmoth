@@ -5,3 +5,4 @@ directive-options:
   file: example-40-enum.c
   members:
 example-title: Enum
+example-priority: 40

@@ -89,6 +89,15 @@ Output
 {namespace_push}{directive_str}{namespace_pop}
 ''')
 
+def testcase_key(testcase):
+    options = testenv.get_testcase_options(testcase)
+    return int(options.get('example-priority', 0))
+
+def examples_key(item):
+    (_, testcases) = item
+
+    return min([testcase_key(testcase) for testcase in testcases])
+
 def get_examples():
     examples = {}
 
@@ -109,8 +118,8 @@ def get_examples():
 if __name__ == '__main__':
     print_header()
 
-    for source, testcases in sorted(get_examples().items()):
+    for source, testcases in sorted(get_examples().items(), key=examples_key):
         print_title(testcases)
         print_source(source)
-        for testcase in testcases:
+        for testcase in sorted(testcases, key=testcase_key):
             print_example(testcase)

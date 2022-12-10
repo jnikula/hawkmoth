@@ -6,3 +6,4 @@ directive-options:
   members:
 example-use-namespace: yes
 example-title: Struct
+example-priority: 51

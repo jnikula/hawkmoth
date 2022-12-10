@@ -3,3 +3,4 @@ directive-arguments:
 directive-options:
   transform: napoleon
 example-title: Transform
+example-priority: 75
