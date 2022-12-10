@@ -1,2 +1,5 @@
+directive: autotype
 directive-arguments:
-- example-30-typedef.c
+- list_data_t
+directive-options:
+  file: example-30-typedef.c
