@@ -19,6 +19,29 @@ This page showcases Hawkmoth in action.
              seen below was pre-generated statically using Hawkmoth, and should
              closely reflect actual results.
 
+Overview
+--------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-01-autodoc.c
+   :language: C
+   :caption: example-01-autodoc.c
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autodoc:: example-01-autodoc.c
+
+Output
+~~~~~~
+
+.. c:autodoc:: example-01-autodoc.c
+
+
 Macro
 -----
 
@@ -341,28 +364,5 @@ Output
 
 .. c:autodoc:: example-80-compat.c
    :transform: javadoc-liberal
-
-
-Generic
--------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-90-generic.c
-   :language: C
-   :caption: example-90-generic.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:autodoc:: example-90-generic.c
-
-Output
-~~~~~~
-
-.. c:autodoc:: example-90-generic.c
 
 
