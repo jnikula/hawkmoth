@@ -35,6 +35,7 @@ options_schema = strictyaml.Map({
         strictyaml.Optional('transform'): strictyaml.Str(),
     }),
     strictyaml.Optional('expected-failure'): strictyaml.Bool(),
+    strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
 })
 
 def get_testcase_options(testcase):

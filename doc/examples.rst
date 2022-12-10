@@ -63,7 +63,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Automacro
+.. c:namespace-push:: namespace_d50a87517a5abcdd3b282ba1d7eb9df3
 
 .. c:automacro:: DIE
    :file: example-10-macro.c
@@ -115,7 +115,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autovar
+.. c:namespace-push:: namespace_f34b52f8aaf542d18897d10034a4eaf6
 
 .. c:autovar:: meaning_of_life
    :file: example-20-variable.c
@@ -144,12 +144,8 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Typedef
-
 .. c:autotype:: list_data_t
    :file: example-30-typedef.c
-
-.. c:namespace-pop::
 
 
 Enum
@@ -174,13 +170,9 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Enum
-
 .. c:autoenum:: mode
    :file: example-40-enum.c
    :members:
-
-.. c:namespace-pop::
 
 
 Struct
@@ -228,7 +220,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autostruct
+.. c:namespace-push:: namespace_34f5002e54769dcf9de486d67a5bc20b
 
 .. c:autostruct:: list
    :file: example-50-struct.c
@@ -259,13 +251,9 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autounion
-
 .. c:autounion:: onion
    :file: example-60-autounion.c
    :members:
-
-.. c:namespace-pop::
 
 
 Function
@@ -337,7 +325,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autofunction
+.. c:namespace-push:: namespace_ce531590ead7856b8785db5da227c4cc
 
 .. c:autofunction:: frob
    :file: example-70-function.c

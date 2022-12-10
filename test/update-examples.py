@@ -2,6 +2,7 @@
 # Copyright (c) 2021, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
+import hashlib
 import os
 import re
 
@@ -53,9 +54,10 @@ def print_example(testcase):
     input_filename = testenv.get_input_filename(options)
     literal_include = f'../test/{input_filename}'
 
-    directive = options.get('directive')
-    if directive:
-        namespace_push = f'.. c:namespace-push:: {title}\n\n'
+    if options.get('example-use-namespace'):
+        namespace = 'namespace_' + hashlib.md5(f'{testcase}'.encode()).hexdigest()
+
+        namespace_push = f'.. c:namespace-push:: {namespace}\n\n'
         namespace_pop = '\n.. c:namespace-pop::\n'
     else:
         namespace_push = ''
