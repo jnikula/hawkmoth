@@ -138,36 +138,13 @@ Directive
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-30-typedef.c
-
-Output
-~~~~~~
-
-.. c:autodoc:: example-30-typedef.c
-
-
-Autotype
---------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-30-typedef.c
-   :language: C
-   :caption: example-30-typedef.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
    .. c:autotype:: list_data_t
       :file: example-30-typedef.c
 
 Output
 ~~~~~~
 
-.. c:namespace-push:: Autotype
+.. c:namespace-push:: Typedef
 
 .. c:autotype:: list_data_t
    :file: example-30-typedef.c
