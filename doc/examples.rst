@@ -42,48 +42,6 @@ Output
 .. c:autodoc:: example-autodoc.c
 
 
-Macro
------
-
-Source
-~~~~~~
-
-.. literalinclude:: ../test/example-macro.c
-   :language: C
-   :caption: example-macro.c
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:autodoc:: example-macro.c
-
-Output
-~~~~~~
-
-.. c:autodoc:: example-macro.c
-
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:automacro:: DIE
-      :file: example-macro.c
-
-Output
-~~~~~~
-
-.. c:namespace-push:: namespace_fc499782b4098eda1789721fd08742ba
-
-.. c:automacro:: DIE
-   :file: example-macro.c
-
-.. c:namespace-pop::
-
-
 Variable
 --------
 
@@ -151,31 +109,88 @@ Output
    :file: example-typedef.c
 
 
-Enum
-----
+Macro
+-----
 
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-enum.c
+.. literalinclude:: ../test/example-macro.c
    :language: C
-   :caption: example-enum.c
+   :caption: example-macro.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autoenum:: mode
-      :file: example-enum.c
-      :members:
+   .. c:autodoc:: example-macro.c
 
 Output
 ~~~~~~
 
-.. c:autoenum:: mode
-   :file: example-enum.c
-   :members:
+.. c:autodoc:: example-macro.c
+
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:automacro:: DIE
+      :file: example-macro.c
+
+Output
+~~~~~~
+
+.. c:namespace-push:: namespace_fc499782b4098eda1789721fd08742ba
+
+.. c:automacro:: DIE
+   :file: example-macro.c
+
+.. c:namespace-pop::
+
+
+Function
+--------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/example-function.c
+   :language: C
+   :caption: example-function.c
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autodoc:: example-function.c
+
+Output
+~~~~~~
+
+.. c:autodoc:: example-function.c
+
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autofunction:: frob
+      :file: example-function.c
+
+Output
+~~~~~~
+
+.. c:namespace-push:: namespace_c8d7b219201e168fc0ac126ec28e5dbf
+
+.. c:autofunction:: frob
+   :file: example-function.c
+
+.. c:namespace-pop::
 
 
 Struct
@@ -249,46 +264,31 @@ Output
    :members:
 
 
-Function
---------
+Enum
+----
 
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-function.c
+.. literalinclude:: ../test/example-enum.c
    :language: C
-   :caption: example-function.c
+   :caption: example-enum.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-function.c
+   .. c:autoenum:: mode
+      :file: example-enum.c
+      :members:
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-function.c
-
-
-Directive
-~~~~~~~~~
-
-.. code-block:: rest
-
-   .. c:autofunction:: frob
-      :file: example-function.c
-
-Output
-~~~~~~
-
-.. c:namespace-push:: namespace_c8d7b219201e168fc0ac126ec28e5dbf
-
-.. c:autofunction:: frob
-   :file: example-function.c
-
-.. c:namespace-pop::
+.. c:autoenum:: mode
+   :file: example-enum.c
+   :members:
 
 
 Preprocessor

@@ -4,4 +4,4 @@ directive-arguments:
 directive-options:
   file: example-typedef.c
 example-title: Typedef
-example-priority: 30
+example-priority: 20

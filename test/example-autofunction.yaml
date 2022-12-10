@@ -5,4 +5,4 @@ directive-options:
   file: example-function.c
 example-use-namespace: yes
 example-title: Function
-example-priority: 71
+example-priority: 41

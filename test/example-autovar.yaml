@@ -5,4 +5,4 @@ directive-options:
   file: example-variable.c
 example-use-namespace: yes
 example-title: Variable
-example-priority: 21
+example-priority: 11
