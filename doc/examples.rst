@@ -216,7 +216,7 @@ Output
 
 .. c:autoenum:: mode
    :file: example-40-enum.c
-   :members: 
+   :members:
 
 .. c:namespace-pop::
 
@@ -268,7 +268,7 @@ Output
 
 .. c:autostruct:: list
    :file: example-50-struct.c
-   :members: 
+   :members:
 
 .. c:namespace-pop::
 
@@ -298,7 +298,7 @@ Output
 
 .. c:autounion:: onion
    :file: example-60-autounion.c
-   :members: 
+   :members:
 
 .. c:namespace-pop::
 
