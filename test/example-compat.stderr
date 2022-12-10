@@ -1,0 +1,2 @@
+WARNING: example-compat.c:13: declaration of 'struct list' will not be visible outside of this function
+WARNING: example-compat.c:13: declaration of 'enum mode' will not be visible outside of this function

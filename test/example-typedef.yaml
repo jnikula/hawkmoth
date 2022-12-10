@@ -2,6 +2,6 @@ directive: autotype
 directive-arguments:
 - list_data_t
 directive-options:
-  file: example-30-typedef.c
+  file: example-typedef.c
 example-title: Typedef
 example-priority: 30

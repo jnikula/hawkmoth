@@ -25,21 +25,21 @@ Overview
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-01-autodoc.c
+.. literalinclude:: ../test/example-autodoc.c
    :language: C
-   :caption: example-01-autodoc.c
+   :caption: example-autodoc.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-01-autodoc.c
+   .. c:autodoc:: example-autodoc.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-01-autodoc.c
+.. c:autodoc:: example-autodoc.c
 
 
 Macro
@@ -48,21 +48,21 @@ Macro
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-10-macro.c
+.. literalinclude:: ../test/example-macro.c
    :language: C
-   :caption: example-10-macro.c
+   :caption: example-macro.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-10-macro.c
+   .. c:autodoc:: example-macro.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-10-macro.c
+.. c:autodoc:: example-macro.c
 
 
 Directive
@@ -71,15 +71,15 @@ Directive
 .. code-block:: rest
 
    .. c:automacro:: DIE
-      :file: example-10-macro.c
+      :file: example-macro.c
 
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_d50a87517a5abcdd3b282ba1d7eb9df3
+.. c:namespace-push:: namespace_fc499782b4098eda1789721fd08742ba
 
 .. c:automacro:: DIE
-   :file: example-10-macro.c
+   :file: example-macro.c
 
 .. c:namespace-pop::
 
@@ -90,21 +90,21 @@ Variable
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-20-variable.c
+.. literalinclude:: ../test/example-variable.c
    :language: C
-   :caption: example-20-variable.c
+   :caption: example-variable.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-20-variable.c
+   .. c:autodoc:: example-variable.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-20-variable.c
+.. c:autodoc:: example-variable.c
 
 
 Directive
@@ -113,15 +113,15 @@ Directive
 .. code-block:: rest
 
    .. c:autovar:: meaning_of_life
-      :file: example-20-variable.c
+      :file: example-variable.c
 
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_f34b52f8aaf542d18897d10034a4eaf6
+.. c:namespace-push:: namespace_238163a4c73047a60ccef522ea195193
 
 .. c:autovar:: meaning_of_life
-   :file: example-20-variable.c
+   :file: example-variable.c
 
 .. c:namespace-pop::
 
@@ -132,9 +132,9 @@ Typedef
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-30-typedef.c
+.. literalinclude:: ../test/example-typedef.c
    :language: C
-   :caption: example-30-typedef.c
+   :caption: example-typedef.c
 
 Directive
 ~~~~~~~~~
@@ -142,13 +142,13 @@ Directive
 .. code-block:: rest
 
    .. c:autotype:: list_data_t
-      :file: example-30-typedef.c
+      :file: example-typedef.c
 
 Output
 ~~~~~~
 
 .. c:autotype:: list_data_t
-   :file: example-30-typedef.c
+   :file: example-typedef.c
 
 
 Enum
@@ -157,9 +157,9 @@ Enum
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-40-enum.c
+.. literalinclude:: ../test/example-enum.c
    :language: C
-   :caption: example-40-enum.c
+   :caption: example-enum.c
 
 Directive
 ~~~~~~~~~
@@ -167,14 +167,14 @@ Directive
 .. code-block:: rest
 
    .. c:autoenum:: mode
-      :file: example-40-enum.c
+      :file: example-enum.c
       :members:
 
 Output
 ~~~~~~
 
 .. c:autoenum:: mode
-   :file: example-40-enum.c
+   :file: example-enum.c
    :members:
 
 
@@ -184,21 +184,21 @@ Struct
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-50-struct.c
+.. literalinclude:: ../test/example-struct.c
    :language: C
-   :caption: example-50-struct.c
+   :caption: example-struct.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-50-struct.c
+   .. c:autodoc:: example-struct.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-50-struct.c
+.. c:autodoc:: example-struct.c
 
 
 Directive
@@ -207,16 +207,16 @@ Directive
 .. code-block:: rest
 
    .. c:autostruct:: list
-      :file: example-50-struct.c
+      :file: example-struct.c
       :members:
 
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_34f5002e54769dcf9de486d67a5bc20b
+.. c:namespace-push:: namespace_6719e1b2c4db0da6ad0361cea0c2742f
 
 .. c:autostruct:: list
-   :file: example-50-struct.c
+   :file: example-struct.c
    :members:
 
 .. c:namespace-pop::
@@ -228,9 +228,9 @@ Union
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-60-autounion.c
+.. literalinclude:: ../test/example-autounion.c
    :language: C
-   :caption: example-60-autounion.c
+   :caption: example-autounion.c
 
 Directive
 ~~~~~~~~~
@@ -238,14 +238,14 @@ Directive
 .. code-block:: rest
 
    .. c:autounion:: onion
-      :file: example-60-autounion.c
+      :file: example-autounion.c
       :members:
 
 Output
 ~~~~~~
 
 .. c:autounion:: onion
-   :file: example-60-autounion.c
+   :file: example-autounion.c
    :members:
 
 
@@ -255,21 +255,21 @@ Function
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-70-function.c
+.. literalinclude:: ../test/example-function.c
    :language: C
-   :caption: example-70-function.c
+   :caption: example-function.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-70-function.c
+   .. c:autodoc:: example-function.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-70-function.c
+.. c:autodoc:: example-function.c
 
 
 Directive
@@ -278,15 +278,15 @@ Directive
 .. code-block:: rest
 
    .. c:autofunction:: frob
-      :file: example-70-function.c
+      :file: example-function.c
 
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_ce531590ead7856b8785db5da227c4cc
+.. c:namespace-push:: namespace_c8d7b219201e168fc0ac126ec28e5dbf
 
 .. c:autofunction:: frob
-   :file: example-70-function.c
+   :file: example-function.c
 
 .. c:namespace-pop::
 
@@ -297,22 +297,22 @@ Preprocessor
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-70-preprocessor.c
+.. literalinclude:: ../test/example-preprocessor.c
    :language: C
-   :caption: example-70-preprocessor.c
+   :caption: example-preprocessor.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-70-preprocessor.c
+   .. c:autodoc:: example-preprocessor.c
       :clang: -DDEEP_THOUGHT
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-70-preprocessor.c
+.. c:autodoc:: example-preprocessor.c
    :clang: -DDEEP_THOUGHT
 
 
@@ -322,22 +322,22 @@ Transform
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-75-transform.c
+.. literalinclude:: ../test/example-transform.c
    :language: C
-   :caption: example-75-transform.c
+   :caption: example-transform.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-75-transform.c
+   .. c:autodoc:: example-transform.c
       :transform: napoleon
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-75-transform.c
+.. c:autodoc:: example-transform.c
    :transform: napoleon
 
 
@@ -347,22 +347,22 @@ Compat
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-80-compat.c
+.. literalinclude:: ../test/example-compat.c
    :language: C
-   :caption: example-80-compat.c
+   :caption: example-compat.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: example-80-compat.c
+   .. c:autodoc:: example-compat.c
       :transform: javadoc-liberal
 
 Output
 ~~~~~~
 
-.. c:autodoc:: example-80-compat.c
+.. c:autodoc:: example-compat.c
    :transform: javadoc-liberal
 
 
