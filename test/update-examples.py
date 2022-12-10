@@ -20,7 +20,9 @@ def get_title_underline(title):
     return '-' * len(title)
 
 def indent(s, prefix=''):
-    return re.sub(r'(?m)^', prefix, s)
+    lines = [f'{prefix}{line}'.rstrip() for line in s.splitlines()]
+
+    return '\n'.join(lines)
 
 def print_header():
     print('''

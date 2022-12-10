@@ -34,7 +34,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-10-macro.c
-   
 
 Output
 ~~~~~~
@@ -58,7 +57,6 @@ Directive
 
    .. c:automacro:: DIE
       :file: example-10-macro.c
-   
 
 Output
 ~~~~~~
@@ -86,7 +84,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-20-variable.c
-   
 
 Output
 ~~~~~~
@@ -110,7 +107,6 @@ Directive
 
    .. c:autovar:: meaning_of_life
       :file: example-20-variable.c
-   
 
 Output
 ~~~~~~
@@ -138,7 +134,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-30-typedef.c
-   
 
 Output
 ~~~~~~
@@ -162,7 +157,6 @@ Directive
 
    .. c:autotype:: list_data_t
       :file: example-30-typedef.c
-   
 
 Output
 ~~~~~~
@@ -190,7 +184,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-40-enum.c
-   
 
 Output
 ~~~~~~
@@ -214,8 +207,7 @@ Directive
 
    .. c:autoenum:: mode
       :file: example-40-enum.c
-      :members: 
-   
+      :members:
 
 Output
 ~~~~~~
@@ -244,7 +236,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-50-struct.c
-   
 
 Output
 ~~~~~~
@@ -268,8 +259,7 @@ Directive
 
    .. c:autostruct:: list
       :file: example-50-struct.c
-      :members: 
-   
+      :members:
 
 Output
 ~~~~~~
@@ -299,8 +289,7 @@ Directive
 
    .. c:autounion:: onion
       :file: example-60-autounion.c
-      :members: 
-   
+      :members:
 
 Output
 ~~~~~~
@@ -329,7 +318,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-70-function.c
-   
 
 Output
 ~~~~~~
@@ -353,7 +341,6 @@ Directive
 
    .. c:autodoc:: example-70-preprocessor.c
       :clang: -DDEEP_THOUGHT
-   
 
 Output
 ~~~~~~
@@ -378,7 +365,6 @@ Directive
 
    .. c:autofunction:: frob
       :file: example-70-function.c
-   
 
 Output
 ~~~~~~
@@ -407,7 +393,6 @@ Directive
 
    .. c:autodoc:: example-75-transform.c
       :transform: napoleon
-   
 
 Output
 ~~~~~~
@@ -432,7 +417,6 @@ Directive
 
    .. c:autodoc:: example-80-compat.c
       :transform: javadoc-liberal
-   
 
 Output
 ~~~~~~
@@ -456,7 +440,6 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: example-90-generic.c
-   
 
 Output
 ~~~~~~
