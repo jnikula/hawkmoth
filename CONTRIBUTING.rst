@@ -25,7 +25,8 @@ Contribution Checklist
 ----------------------
 
 * New or modified features need test coverage. Add or update the tests in the
-  ``test`` directory accordingly.
+  ``test`` directory accordingly. See `test/README.rst`_ for an overview of the
+  approach to testing.
 
 * Bug fixes need test coverage. Ideally add an expected failure test case
   demonstrating the bug first, and then fix it.
@@ -47,3 +48,5 @@ Contribution Checklist
 * Make sure the documentation build passes for every commit::
 
     make html
+
+.. _test/README.rst: test/README.rst
