@@ -1,0 +1,2 @@
+WARNING: clang-diagnostics.c:4: declaration of 'struct list' will not be visible outside of this function
+WARNING: clang-diagnostics.c:4: declaration of 'enum mode' will not be visible outside of this function
