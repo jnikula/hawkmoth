@@ -14,17 +14,22 @@ Added
 * Troubleshooting documentation
 * Install 'hawkmoth' command-line tool for debugging
 * GitHub CI automation
+* Overview documentation for the tests
 
 Changed
 ~~~~~~~
 
+* Log Clang and parser warnings at default Sphinx verbosity level
 * Bumped Docker container Sphinx version to 5.3.0
+* Cleaned up examples section of the documentation
 
 Fixed
 ~~~~~
 
 * Fix whitespace in the output
 * Fix function definitions with void parameter list as opposed to empty
+* Fix parser warnings on documentation comments in unexpected locations
+* Fix Clang warnings from examples in 'make html'
 
 Hawkmoth `0.11.0`_
 ------------------
