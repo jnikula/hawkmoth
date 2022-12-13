@@ -1,3 +1,6 @@
+struct list;
+enum mode;
+
 /**
  * List frobnicator.
  *

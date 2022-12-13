@@ -1,2 +1,0 @@
-WARNING: example-function.c:9: declaration of 'struct list' will not be visible outside of this function
-WARNING: example-function.c:9: declaration of 'enum mode' will not be visible outside of this function
