@@ -50,8 +50,8 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, text=None, name=None, decl_name=None,
-                 ttype=None, args=None, meta=None, nest=0):
+    def __init__(self, domain='c', text=None, name=None,
+                 decl_name=None, ttype=None, args=None, meta=None, nest=0):
         self._text = text
         self._name = name
         self._decl_name = decl_name
@@ -59,6 +59,7 @@ class Docstring():
         self._args = args
         self._meta = meta
         self._nest = nest
+        self._domain = domain
         self._children = []
 
     def add_child(self, comment):
@@ -101,7 +102,7 @@ class Docstring():
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-
+        domain = self._domain
         ttype = self._ttype
 
         spacer = ''
@@ -113,7 +114,7 @@ class Docstring():
             arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        header = self._fmt.format(name=name, ttype=ttype,
+        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
                                   type_spacer=spacer, args=args)
 
         return header.splitlines()
@@ -190,11 +191,11 @@ class TextDocstring(Docstring):
 
 class VarDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:var:: {ttype}{type_spacer}{name}\n\n'
+    _fmt = '\n.. {domain}:var:: {ttype}{type_spacer}{name}\n\n'
 
 class TypeDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:type:: {name}\n\n'
+    _fmt = '\n.. {domain}:type:: {name}\n\n'
 
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
@@ -210,23 +211,23 @@ class _CompoundDocstring(Docstring):
 
 class StructDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:struct:: {name}\n\n'
+    _fmt = '\n.. {domain}:struct:: {name}\n\n'
 
 class UnionDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:union:: {name}\n\n'
+    _fmt = '\n.. {domain}:union:: {name}\n\n'
 
 class EnumDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:enum:: {name}\n\n'
+    _fmt = '\n.. {domain}:enum:: {name}\n\n'
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:enumerator:: {name}\n\n'
+    _fmt = '\n.. {domain}:enumerator:: {name}\n\n'
 
 class MemberDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:member:: {ttype}{type_spacer}{name}\n\n'
+    _fmt = '\n.. {domain}:member:: {ttype}{type_spacer}{name}\n\n'
 
 class MacroDocstring(Docstring):
     _indent = 1
@@ -238,4 +239,4 @@ class MacroFunctionDocstring(Docstring):
 
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:function:: {ttype}{type_spacer}{name}({args})\n\n'
+    _fmt = '\n.. {domain}:function:: {ttype}{type_spacer}{name}({args})\n\n'
