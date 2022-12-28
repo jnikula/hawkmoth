@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2022 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2023 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment extractor
@@ -73,12 +73,12 @@ def _comment_extract(tu):
 
     top_level_comments = []
     comments = {}
-    cursor = None
     current_comment = None
+
     for token in tu.get_tokens(extent=tu.cursor.extent):
-        # handle all comments we come across
+        # Handle all comments we come across.
         if token.kind == TokenKind.COMMENT:
-            # if we already have a comment, it wasn't related to a cursor
+            # If we already have a comment, it wasn't related to another cursor.
             if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
                 top_level_comments.append(current_comment)
             current_comment = token
@@ -88,25 +88,21 @@ def _comment_extract(tu):
         # instead of accessing the `cursor` property multiple times.
         token_cursor = token.cursor
 
-        # cursors that are 1) never documented themselves, and 2) allowed
-        # between comment and the actual cursor being documented
+        # Cursors that are 1) never documented themselves, and 2) allowed
+        # between the comment and the actual cursor being documented.
         if token_cursor.kind in [CursorKind.INVALID_FILE,
                                  CursorKind.TYPE_REF,
                                  CursorKind.PREPROCESSING_DIRECTIVE,
                                  CursorKind.MACRO_INSTANTIATION]:
             continue
 
-        if cursor is not None and token_cursor == cursor:
-            continue
-
-        cursor = token_cursor
-
-        # Note: current_comment may be None
-        if current_comment is not None and docstring.Docstring.is_doc(current_comment.spelling):
-            comments[cursor.hash] = current_comment
+        # Otherwise the current comment documents _this_ cursor. I.e.: not a top
+        # level comment.
+        if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
+            comments[token_cursor.hash] = current_comment
         current_comment = None
 
-    # comment at the end of file
+    # Comment at the end of file.
     if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
         top_level_comments.append(current_comment)
 
