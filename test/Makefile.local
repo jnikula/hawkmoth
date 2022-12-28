@@ -8,5 +8,8 @@ test_dir := test
 test:
 	pytest -n auto $(test_dir)
 
+test-verbose:
+	pytest -n auto -vv $(test_dir)
+
 quick-test:
 	pytest -n auto -m "not full" $(test_dir)
