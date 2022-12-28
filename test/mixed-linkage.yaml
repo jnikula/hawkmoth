@@ -1,0 +1,5 @@
+domain: cpp
+directive-arguments:
+  - mixed-linkage.cpp
+example-title: Mixed C/C++ linkage
+example-priority: 1
