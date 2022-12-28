@@ -1,0 +1,8 @@
+domain: cpp
+directive-arguments:
+  - wrong-syntax.h
+directive-options:
+  clang:
+    - -xc++
+example-title: C++ syntax override for .h header
+example-priority: 1
