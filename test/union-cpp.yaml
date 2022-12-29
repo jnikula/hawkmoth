@@ -1,0 +1,6 @@
+domain: cpp
+directive-arguments:
+  - union.c
+directive-options:
+  clang:
+    - -xc++

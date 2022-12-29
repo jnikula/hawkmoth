@@ -1,0 +1,7 @@
+domain: cpp
+directive-arguments:
+  - compat.c
+directive-options:
+  compat: javadoc-basic
+  clang:
+    - -xc++

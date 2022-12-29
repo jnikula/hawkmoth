@@ -1,0 +1,1 @@
+ERROR: clang-diagnostics.c:4: ISO C++ forbids forward references to 'enum' types

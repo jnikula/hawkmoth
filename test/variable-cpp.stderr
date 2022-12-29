@@ -1,0 +1,3 @@
+ERROR: variable.c:34: default initialization of an object of const type 'const char *(*const)(const char *)'
+ERROR: variable.c:39: default initialization of an object of const type 'const char *(*const volatile)(const char *)'
+ERROR: variable.c:44: default initialization of an object of const type 'const char *(*const *volatile *const[12][3])(const char *)'
