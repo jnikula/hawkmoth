@@ -25,7 +25,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
     __version__ = version_file.read().strip()
 
-class CAutoBaseDirective(SphinxDirective):
+class _AutoBaseDirective(SphinxDirective):
     logger = logging.getLogger(__name__)
 
     option_spec = {
@@ -153,7 +153,7 @@ class CAutoBaseDirective(SphinxDirective):
 
         return node.children
 
-class CAutoDocDirective(CAutoBaseDirective):
+class _AutoDocDirective(_AutoBaseDirective):
     """Extract all documentation comments from the specified files"""
 
     # Allow passing a variable number of file patterns as arguments
@@ -176,13 +176,13 @@ class CAutoDocDirective(CAutoBaseDirective):
                                         location=(self.env.docname, self.lineno))
 
 # Base class for named stuff
-class CAutoSymbolDirective(CAutoBaseDirective):
+class _AutoSymbolDirective(_AutoBaseDirective):
     """Extract specified documentation comments from the specified file"""
 
     required_arguments = 1
     optional_arguments = 0
 
-    option_spec = CAutoBaseDirective.option_spec.copy()
+    option_spec = _AutoBaseDirective.option_spec.copy()
     option_spec.update({
         'file': directives.unchanged_required,
     })
@@ -201,41 +201,44 @@ class CAutoSymbolDirective(CAutoBaseDirective):
     def _get_names(self):
         return [self.arguments[0]]
 
-class CAutoVarDirective(CAutoSymbolDirective):
-    _docstring_types = [docstring.VarDocstring]
-
-class CAutoTypeDirective(CAutoSymbolDirective):
-    _docstring_types = [docstring.TypeDocstring]
-
-class CAutoMacroDirective(CAutoSymbolDirective):
-    _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
-
-class CAutoFunctionDirective(CAutoSymbolDirective):
-    _docstring_types = [docstring.FunctionDocstring]
-
-def members_filter(argument):
+def _members_filter(argument):
     # Use None for members option without an argument to not filter.
     if argument is None:
         return None
     return strutil.string_list(argument)
 
-class CAutoCompoundDirective(CAutoSymbolDirective):
-    option_spec = CAutoSymbolDirective.option_spec.copy()
+class _AutoCompoundDirective(_AutoSymbolDirective):
+    option_spec = _AutoSymbolDirective.option_spec.copy()
     option_spec.update({
-        'members': members_filter,
+        'members': _members_filter,
     })
 
     def _get_members(self):
         # By default use [] as a filter that does not match any members.
         return self.options.get('members', [])
 
-class CAutoStructDirective(CAutoCompoundDirective):
+class CAutoDocDirective(_AutoDocDirective):
+    pass
+
+class CAutoVarDirective(_AutoSymbolDirective):
+    _docstring_types = [docstring.VarDocstring]
+
+class CAutoTypeDirective(_AutoSymbolDirective):
+    _docstring_types = [docstring.TypeDocstring]
+
+class CAutoMacroDirective(_AutoSymbolDirective):
+    _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
+
+class CAutoFunctionDirective(_AutoSymbolDirective):
+    _docstring_types = [docstring.FunctionDocstring]
+
+class CAutoStructDirective(_AutoCompoundDirective):
     _docstring_types = [docstring.StructDocstring]
 
-class CAutoUnionDirective(CAutoCompoundDirective):
+class CAutoUnionDirective(_AutoCompoundDirective):
     _docstring_types = [docstring.UnionDocstring]
 
-class CAutoEnumDirective(CAutoCompoundDirective):
+class CAutoEnumDirective(_AutoCompoundDirective):
     _docstring_types = [docstring.EnumDocstring]
 
 def setup(app):
