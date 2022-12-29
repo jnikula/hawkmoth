@@ -41,7 +41,7 @@ const char* (*const volatile function_pointer_with_multiple_qualifiers)(const ch
 /**
  * a complex type involving function pointers somehow
  */
-const char* (*const *volatile *restrict legal_type_involving_function_pointer[12][3])(const char *in);
+const char* (*const *volatile *const legal_type_involving_function_pointer[12][3])(const char *in);
 
 /**
  * function pointer to a function taking a function pointer as arg
