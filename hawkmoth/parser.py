@@ -279,11 +279,15 @@ def _decl_fixup(cursor):
     return ttype, name
 
 # name may be empty for typedefs and anonymous enums, structs and unions
-def _anonymous_fixup(ttype, name):
+def _anonymous_fixup(ttype, name, domain):
     if name:
         return ttype, name
 
-    mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\((anonymous|unnamed) at [^)]+\)$', ttype)  # noqa: E501
+    if domain == 'c':
+        mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\((anonymous|unnamed) at [^)]+\)$', ttype)  # noqa: E501
+    elif domain == 'cpp':
+        mo = re.match(r'([^:]+::)?\(unnamed (?P<type>enum|struct|union) at [^)]+\)$', ttype)
+
     if mo:
         # Anonymous
         name = ''
@@ -350,7 +354,7 @@ def _recursive_parse(comments, errors, cursor, nest, domain):
         # handle all cases (struct, union, enum).
 
         # Note: Preserve original name
-        ttype, decl_name = _anonymous_fixup(ttype, name)
+        ttype, decl_name = _anonymous_fixup(ttype, name, domain)
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(text=text, nest=nest, name=name,
