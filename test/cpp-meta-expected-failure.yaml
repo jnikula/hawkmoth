@@ -1,0 +1,4 @@
+domain: cpp
+directive-arguments:
+  - meta-expected-failure.c
+expected-failure: true
