@@ -1,0 +1,6 @@
+domain: cpp
+directive-arguments:
+  - enum.c
+directive-options:
+  clang:
+    - -xc++

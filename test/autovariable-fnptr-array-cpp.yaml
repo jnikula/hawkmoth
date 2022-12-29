@@ -1,0 +1,8 @@
+domain: cpp
+directive: autovar
+directive-arguments:
+  - function_pointer_array
+directive-options:
+  file: variable.c
+  clang:
+    - -xc++

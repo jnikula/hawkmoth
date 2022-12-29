@@ -1,0 +1,6 @@
+domain: cpp
+directive-arguments:
+  - variable.c
+directive-options:
+  clang:
+    - -xc++
