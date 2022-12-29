@@ -1,0 +1,6 @@
+domain: cpp
+directive: autostruct
+directive-arguments:
+  - sample_struct
+directive-options:
+  file: struct.c

@@ -1,0 +1,8 @@
+domain: cpp
+directive: autoenum
+directive-arguments:
+  - foo
+directive-options:
+  file: enum.c
+  members:
+    - bar

@@ -1,0 +1,3 @@
+domain: cpp
+directive-arguments:
+  - enum.c
