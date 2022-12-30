@@ -1,3 +1,4 @@
+domain: c
 directive: autounion
 directive-arguments:
   - onion
