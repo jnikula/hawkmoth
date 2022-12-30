@@ -60,7 +60,7 @@ try:
         config = Config(napoleon_use_rtype=False)
         return str(docstring.GoogleDocstring(comment, config))
 
-    cautodoc_transformations = {
+    hawkmoth_transformations = {
         'napoleon': napoleon_transform,
         'javadoc-liberal': doccompat.javadoc_liberal,
     }
@@ -71,7 +71,7 @@ except ImportError:
     # into the documentation instead of generating.
     extensions.append('automock')
 
-cautodoc_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test')
+hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test')
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
