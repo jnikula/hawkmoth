@@ -332,25 +332,22 @@ def _recursive_parse(comments, errors, cursor, nest):
 
     return [ds]
 
-def _clang_diagnostics(diagnostics):
-    errors = []
-
+def _clang_diagnostics(diagnostics, errors):
     for diag in diagnostics:
         filename = diag.location.file.name if diag.location.file else None
         errors.append(ParserError(ErrorLevel(diag.severity), filename,
                                   diag.location.line, diag.spelling))
 
-    return errors
-
 # Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, clang_args=None):
+    errors = []
     index = Index.create()
 
     tu = index.parse(filename, args=clang_args,
                      options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
-    errors = _clang_diagnostics(tu.diagnostics)
+    _clang_diagnostics(tu.diagnostics, errors)
 
     top_level_comments, comments = _comment_extract(tu)
 
