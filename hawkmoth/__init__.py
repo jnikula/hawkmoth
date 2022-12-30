@@ -239,6 +239,37 @@ class CAutoEnumDirective(_AutoCompoundDirective):
     _domain = 'c'
     _docstring_types = [docstring.EnumDocstring]
 
+class CppAutoDocDirective(_AutoDocDirective):
+    _domain = 'cpp'
+
+class CppAutoVarDirective(_AutoSymbolDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.VarDocstring]
+
+class CppAutoTypeDirective(_AutoSymbolDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.TypeDocstring]
+
+class CppAutoMacroDirective(_AutoSymbolDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
+
+class CppAutoFunctionDirective(_AutoSymbolDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.FunctionDocstring]
+
+class CppAutoStructDirective(_AutoCompoundDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.StructDocstring]
+
+class CppAutoUnionDirective(_AutoCompoundDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.UnionDocstring]
+
+class CppAutoEnumDirective(_AutoCompoundDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.EnumDocstring]
+
 def _deprecate(conf, old, new, default=None):
     if conf[old]:
         logger = logging.getLogger(__name__)
@@ -274,6 +305,15 @@ def setup(app):
     app.add_directive_to_domain('c', 'autoenum', CAutoEnumDirective)
     app.add_directive_to_domain('c', 'automacro', CAutoMacroDirective)
     app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
+
+    app.add_directive_to_domain('cpp', 'autodoc', CppAutoDocDirective)
+    app.add_directive_to_domain('cpp', 'autovar', CppAutoVarDirective)
+    app.add_directive_to_domain('cpp', 'autotype', CppAutoTypeDirective)
+    app.add_directive_to_domain('cpp', 'autostruct', CppAutoStructDirective)
+    app.add_directive_to_domain('cpp', 'autounion', CppAutoUnionDirective)
+    app.add_directive_to_domain('cpp', 'autoenum', CppAutoEnumDirective)
+    app.add_directive_to_domain('cpp', 'automacro', CppAutoMacroDirective)
+    app.add_directive_to_domain('cpp', 'autofunction', CppAutoFunctionDirective)
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
