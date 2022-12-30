@@ -20,6 +20,10 @@ def main():
     output. Include metadata with verbose output.""")
     parser.add_argument('file', metavar='FILE', type=str, action='store',
                         help='The C source or header file to parse.')
+    parser.add_argument('--domain',
+                        choices=['c', 'cpp'],
+                        default='c',
+                        help='Sphynx domain to be used.')
     parser.add_argument('--compat',
                         choices=['none',
                                  'javadoc-basic',
@@ -34,7 +38,7 @@ def main():
 
     transform = lambda comment: doccompat.convert(comment, transform=args.compat)
 
-    comments, errors = parse(args.file, clang_args=args.clang)
+    comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
     for comment in comments.walk():
         if args.verbose:
