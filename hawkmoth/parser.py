@@ -135,11 +135,13 @@ def _comment_extract(tu):
     comments = {}
     current_comment = None
 
+    is_doc = lambda cursor: cursor and docstring.Docstring.is_doc(cursor.spelling)
+
     for token in tu.get_tokens(extent=tu.cursor.extent):
         # Handle all comments we come across.
         if token.kind == TokenKind.COMMENT:
             # If we already have a comment, it wasn't related to another cursor.
-            if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
+            if is_doc(current_comment):
                 top_level_comments.append(current_comment)
             current_comment = token
             continue
@@ -156,14 +158,22 @@ def _comment_extract(tu):
                                  CursorKind.MACRO_INSTANTIATION]:
             continue
 
+        # Cursors that are 1) never documented themselves, and 2) not allowed
+        # between the comment and the actual cursor being documented.
+        if token_cursor.kind in [CursorKind.UNEXPOSED_DECL]:
+            if is_doc(current_comment):
+                top_level_comments.append(current_comment)
+            current_comment = None
+            continue
+
         # Otherwise the current comment documents _this_ cursor. I.e.: not a top
         # level comment.
-        if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
+        if is_doc(current_comment):
             comments[token_cursor.hash] = current_comment
         current_comment = None
 
     # Comment at the end of file.
-    if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
+    if is_doc(current_comment):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments
@@ -387,6 +397,46 @@ def _clang_diagnostics(diagnostics, errors):
         errors.append(ParserError(ErrorLevel(diag.severity), filename,
                                   diag.location.line, diag.spelling))
 
+def _parse_undocumented_block(domain, comments, errors, cursor, nest):
+    """Parse undocumented blocks.
+
+    Some blocks define plenty of children that may be documented themselves
+    while the parent cursor itself has no documentation. One such example is the
+    `extern "C"` block.
+    """
+    ret = []
+
+    # Identify `extern "C"` and `extern "C++"` blocks and recursively parse
+    # their contents. Only `extern "C"` is of any relevance in choosing a
+    # different domain.
+    # For some reason, the Python bindings don't return the cursor kind
+    # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
+    if cursor.kind == CursorKind.UNEXPOSED_DECL:
+        tokens = cursor.get_tokens()
+        ntoken = next(tokens, None)
+        if ntoken and ntoken.spelling == 'extern':
+            ntoken = next(tokens, None)
+
+            if not ntoken:
+                return ret
+
+            if ntoken.spelling == '"C"':
+                domain = 'c'
+            elif ntoken.spelling == '"C++"':
+                domain = 'cpp'
+            else:
+                message = f'unhandled `extern {ntoken.spelling}` block will mask all children'
+                errors.append(ParserError(ErrorLevel.WARNING,
+                                          cursor.location.file.name,
+                                          cursor.location.line, message))
+                return ret
+
+            for c in cursor.get_children():
+                if c.hash in comments:
+                    ret.extend(_recursive_parse(domain, comments, errors, c, nest))
+
+    return ret
+
 # Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, domain='c', clang_args=None):
     errors = []
@@ -416,5 +466,8 @@ def parse(filename, domain='c', clang_args=None):
         if cursor.hash in comments:
             result.add_children(_recursive_parse(domain, comments,
                                                  errors, cursor, 0))
+        else:
+            result.add_children(_parse_undocumented_block(domain, comments,
+                                                          errors, cursor, 0))
 
     return result, errors
