@@ -87,7 +87,10 @@ class _AutoBaseDirective(SphinxDirective):
             lines[:] = [line for line in text.splitlines()]
 
     def __parse(self, filename):
-        clang_args = self.__get_clang_args()
+        # Always pass `-xc++` to the compiler on 'cpp' domain as the first
+        # option so that the user can override it.
+        clang_args = ['-xc++'] if self._domain == 'cpp' else []
+        clang_args.extend(self.__get_clang_args())
 
         # Cached parse results per rst document
         parsed_files = self.env.temp_data.setdefault('cautodoc_parsed_files', {})
