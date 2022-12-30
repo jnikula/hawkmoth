@@ -30,7 +30,11 @@ def main():
     from FILE, along with the generated C Domain directives, to standard
     output. Include metadata with verbose output.""")
     parser.add_argument('file', metavar='FILE', type=filename, action='store',
-                        help='The C source or header file to parse.')
+                        help='The C or C++ source or header file to parse.')
+    parser.add_argument('--domain',
+                        choices=['c', 'cpp'],
+                        default='c',
+                        help='Sphinx domain to be used.')
     parser.add_argument('--compat',
                         choices=['none',
                                  'javadoc-basic',
@@ -44,6 +48,7 @@ def main():
     args = parser.parse_args()
 
     comments, errors = parse(args.file, clang_args=args.clang)
+    comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
     for comment in comments.walk():
         if args.verbose:
