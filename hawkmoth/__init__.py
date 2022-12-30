@@ -51,7 +51,7 @@ class _AutoBaseDirective(SphinxDirective):
                             location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
-        clang_args = self.env.config.cautodoc_clang.copy()
+        clang_args = self.env.config.hawkmoth_clang.copy()
 
         clang_args.extend(self.options.get('clang', []))
 
@@ -151,7 +151,7 @@ class _AutoDocDirective(_AutoBaseDirective):
 
     def _get_filenames(self):
         for pattern in self.arguments:
-            filenames = glob.glob(os.path.join(self.env.config.cautodoc_root, pattern))
+            filenames = glob.glob(os.path.join(self.env.config.hawkmoth_root, pattern))
             if len(filenames) == 0:
                 self.logger.warning(f'Pattern "{pattern}" does not match any files.',
                                     location=(self.env.docname, self.lineno))
@@ -185,7 +185,7 @@ class _AutoSymbolDirective(_AutoBaseDirective):
                                 location=(self.env.docname, self.lineno))
             return []
 
-        return [os.path.abspath(os.path.join(self.env.config.cautodoc_root, filename))]
+        return [os.path.abspath(os.path.join(self.env.config.hawkmoth_root, filename))]
 
     def _get_names(self):
         return [self.arguments[0]]
@@ -230,11 +230,33 @@ class CAutoUnionDirective(_AutoCompoundDirective):
 class CAutoEnumDirective(_AutoCompoundDirective):
     _docstring_types = [docstring.EnumDocstring]
 
+def _deprecate(conf, old, new, default=None):
+    if conf[old]:
+        logger = logging.getLogger(__name__)
+        logger.warning(f'{old} is deprecated in favour of {new}')
+        conf[new] = conf[old]
+        del conf[old]
+        return conf[new]
+    return default
+
 def setup(app):
     app.require_sphinx('3.0')
-    app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
+
+    app.add_config_value('cautodoc_root', None, 'env', [str])
+    app.add_config_value('cautodoc_clang', None, 'env', [list])
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
-    app.add_config_value('cautodoc_clang', [], 'env', [list])
+
+    app.add_config_value(
+        'hawkmoth_root',
+        lambda conf: _deprecate(conf, 'cautodoc_root', 'hawkmoth_root', app.confdir),
+        'env', [str]
+    )
+    app.add_config_value(
+        'hawkmoth_clang',
+        lambda conf: _deprecate(conf, 'cautodoc_clang', 'hawkmoth_clang', []),
+        'env', [list]
+    )
+
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
     app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
     app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
