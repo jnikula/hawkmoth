@@ -1,6 +1,7 @@
+domain: c
 directive: autovar
 directive-arguments:
-- meaning_of_life
+  - meaning_of_life
 directive-options:
   file: example-variable.c
 example-use-namespace: yes

@@ -47,17 +47,21 @@ def _get_output(testcase, monkeypatch, capsys, **options):
     if directive:
         pytest.skip(f'{directive} directive test')
 
-    options = options.get('directive-options', {})
+    domain = options.get('domain', None)
+    if domain is not None:
+        args += [f'--domain={domain}']
 
-    transform = options.get('compat', None)
+    directive_options = options.get('directive-options', {})
+
+    transform = directive_options.get('compat', None)
     if transform is not None:
         args += [f'--compat={transform}']
     else:
-        transform = options.get('transform', None)
+        transform = directive_options.get('transform', None)
         if transform is not None:
             pytest.skip('cli does not support generic transformations')
 
-    clang_args = options.get('clang')
+    clang_args = directive_options.get('clang')
     if clang_args:
         args += [f'--clang={clang_arg}' for clang_arg in clang_args]
 

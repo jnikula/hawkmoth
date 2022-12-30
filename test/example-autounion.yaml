@@ -1,6 +1,7 @@
+domain: c
 directive: autounion
 directive-arguments:
-- onion
+  - onion
 directive-options:
   file: example-autounion.c
   members:

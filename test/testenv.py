@@ -25,6 +25,7 @@ def get_testcases(path):
             yield os.path.join(path, f)
 
 options_schema = strictyaml.Map({
+    'domain': strictyaml.Str(),
     strictyaml.Optional('directive'): strictyaml.Str(),
     strictyaml.Optional('directive-arguments'): strictyaml.Seq(strictyaml.Str()),
     strictyaml.Optional('directive-options'): strictyaml.Map({
@@ -64,11 +65,12 @@ def get_input_filename(options, path=None):
         return basename
 
 def get_directive_string(options):
+    domain = options.get('domain', None)
     directive = options.get('directive', 'autodoc')
     arguments = options.get('directive-arguments', [])
     arguments_str = ' '.join(arguments)
 
-    directive_str = f'.. c:{directive}:: {arguments_str}\n'
+    directive_str = f'.. {domain}:{directive}:: {arguments_str}\n'
 
     directive_options = options.get('directive-options', {})
 

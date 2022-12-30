@@ -1,2 +1,3 @@
+domain: c
 directive-arguments:
-- variable.c
+  - variable.c

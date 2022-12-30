@@ -1,5 +1,6 @@
+domain: c
 directive: autostruct
 directive-arguments:
-- sample_struct
+  - sample_struct
 directive-options:
   file: struct.c
