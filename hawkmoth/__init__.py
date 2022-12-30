@@ -34,6 +34,7 @@ class _AutoBaseDirective(SphinxDirective):
     }
     has_content = False
 
+    _domain = None
     _docstring_types = None
 
     def __display_parser_diagnostics(self, errors):
@@ -100,7 +101,8 @@ class _AutoBaseDirective(SphinxDirective):
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        docstrings, errors = parse(filename, clang_args=clang_args)
+        docstrings, errors = parse(filename, domain=self._domain,
+                                   clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
@@ -207,27 +209,34 @@ class _AutoCompoundDirective(_AutoSymbolDirective):
         return self.options.get('members', [])
 
 class CAutoDocDirective(_AutoDocDirective):
-    pass
+    _domain = 'c'
 
 class CAutoVarDirective(_AutoSymbolDirective):
+    _domain = 'c'
     _docstring_types = [docstring.VarDocstring]
 
 class CAutoTypeDirective(_AutoSymbolDirective):
+    _domain = 'c'
     _docstring_types = [docstring.TypeDocstring]
 
 class CAutoMacroDirective(_AutoSymbolDirective):
+    _domain = 'c'
     _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
 
 class CAutoFunctionDirective(_AutoSymbolDirective):
+    _domain = 'c'
     _docstring_types = [docstring.FunctionDocstring]
 
 class CAutoStructDirective(_AutoCompoundDirective):
+    _domain = 'c'
     _docstring_types = [docstring.StructDocstring]
 
 class CAutoUnionDirective(_AutoCompoundDirective):
+    _domain = 'c'
     _docstring_types = [docstring.UnionDocstring]
 
 class CAutoEnumDirective(_AutoCompoundDirective):
+    _domain = 'c'
     _docstring_types = [docstring.EnumDocstring]
 
 def _deprecate(conf, old, new, default=None):
