@@ -19,6 +19,8 @@ def _get_output(testcase, **options):
     docs_str = ''
     errors_str = ''
 
+    domain = options.get('domain')
+
     directive = options.get('directive')
     if directive:
         pytest.skip(f'{directive} directive test')
@@ -28,7 +30,7 @@ def _get_output(testcase, **options):
     options = options.get('directive-options', {})
 
     clang_args = options.get('clang')
-    comments, errors = parse(input_filename, clang_args=clang_args)
+    comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
     tropt = options.pop('transform', None)
     if tropt is not None:
