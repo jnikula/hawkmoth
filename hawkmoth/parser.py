@@ -156,6 +156,14 @@ def _comment_extract(tu):
                                  CursorKind.MACRO_INSTANTIATION]:
             continue
 
+        # Cursors that are 1) never documented themselves, and 2) not allowed
+        # between the comment and the actual cursor being documented.
+        if token_cursor.kind in [CursorKind.UNEXPOSED_DECL]:
+            if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
+                top_level_comments.append(current_comment)
+            current_comment = None
+            continue
+
         # Otherwise the current comment documents _this_ cursor. I.e.: not a top
         # level comment.
         if current_comment and docstring.Docstring.is_doc(current_comment.spelling):
@@ -413,7 +421,23 @@ def parse(filename, domain='c', clang_args=None):
         result.add_child(ds)
 
     for cursor in tu.cursor.get_children():
-        if cursor.hash in comments:
+
+        # Identify `extern "C"` and `extern "C++"` blocks and recursively parse
+        # their contents. Only `extern "C"` is of any relevance in choosing a
+        # different domain.
+        # For some reason, the Python bindings don't return the cursor kind
+        # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
+        if cursor.kind == CursorKind.UNEXPOSED_DECL:
+            tokens = cursor.get_tokens()
+            if next(tokens).spelling == 'extern':
+                nested_domain = 'c' if next(tokens).spelling == '"C"' else domain
+                for c in cursor.get_children():
+                    if c.hash in comments:
+                        result.add_children(_recursive_parse(nested_domain,
+                                                             comments, errors, c, 0))
+
+        # Otherwise use the base domain.
+        elif cursor.hash in comments:
             result.add_children(_recursive_parse(domain, comments,
                                                  errors, cursor, 0))
 
