@@ -424,7 +424,7 @@ def _clang_diagnostics(diagnostics, errors):
                                   diag.location.line, diag.spelling))
 
 # Parse a file and return a tree of docstring.Docstring objects.
-def parse(filename, domain='c', clang_args=None):
+def parse(filename, domain=None, clang_args=None):
     errors = []
     index = Index.create()
 
