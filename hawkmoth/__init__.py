@@ -37,6 +37,25 @@ class _AutoBaseDirective(SphinxDirective):
 
     _docstring_types = None
 
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        # Map deprecated options; to be removed.
+        if self.env.config.cautodoc_root:
+            self.env.config.hawkmoth_root = self.env.config.cautodoc_root
+            fmt = 'cautodoc_root option is deprecated, please use hawkmoth_root.'
+            self.logger.warning(fmt, location=(self.env.docname, self.lineno))
+
+        if self.env.config.cautodoc_transformations:
+            fmt = 'cautodoc_transformations option is deprecated, please use hawkmoth_transformations.'  # noqa: E501
+            self.logger.warning(fmt, location=(self.env.docname, self.lineno))
+            self.env.config.hawkmoth_transformations = self.env.config.cautodoc_transformations
+
+        if self.env.config.cautodoc_clang:
+            self.env.config.hawkmoth_clang = self.env.config.cautodoc_clang
+            fmt = 'cautodoc_clang option is deprecated, please use hawkmoth_clang.'
+            self.logger.warning(fmt, location=(self.env.docname, self.lineno))
+
     def __display_parser_diagnostics(self, errors):
         # Map parser diagnostic level to Sphinx level name
         log_level_map = {
@@ -52,7 +71,7 @@ class _AutoBaseDirective(SphinxDirective):
                             location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
-        clang_args = self.env.config.cautodoc_clang.copy()
+        clang_args = self.env.config.hawkmoth_clang.copy()
 
         clang_args.extend(self.options.get('clang', []))
 
@@ -63,7 +82,7 @@ class _AutoBaseDirective(SphinxDirective):
         if compat is None:
             return None
 
-        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'  # noqa: E501
+        fmt = 'cautodoc_compat and compat options are deprecated, please use hawkmoth_transformations and transform options instead.'  # noqa: E501
         self.logger.warning(fmt, location=(self.env.docname, self.lineno))
 
         return lambda comment: doccompat.convert(comment, transform=compat)
@@ -74,12 +93,12 @@ class _AutoBaseDirective(SphinxDirective):
         if transform is not None:
             return transform
 
-        transformations = self.env.config.cautodoc_transformations
+        transformations = self.env.config.hawkmoth_transformations
         tropt = self.options.get('transform')
 
         if transformations is None:
             if tropt is not None:
-                self.logger.warning('transform specified without cautodoc_transformations config.',
+                self.logger.warning('transform specified without hawkmoth_transformations config.',
                                     location=(self.env.docname, self.lineno))
 
             return None
@@ -162,7 +181,7 @@ class _AutoDocDirective(_AutoBaseDirective):
 
     def _get_filenames(self):
         for pattern in self.arguments:
-            filenames = glob.glob(os.path.join(self.env.config.cautodoc_root, pattern))
+            filenames = glob.glob(os.path.join(self.env.config.hawkmoth_root, pattern))
             if len(filenames) == 0:
                 self.logger.warning(f'Pattern "{pattern}" does not match any files.',
                                     location=(self.env.docname, self.lineno))
@@ -196,7 +215,7 @@ class _AutoSymbolDirective(_AutoBaseDirective):
                                 location=(self.env.docname, self.lineno))
             return []
 
-        return [os.path.abspath(os.path.join(self.env.config.cautodoc_root, filename))]
+        return [os.path.abspath(os.path.join(self.env.config.hawkmoth_root, filename))]
 
     def _get_names(self):
         return [self.arguments[0]]
@@ -243,10 +262,15 @@ class CAutoEnumDirective(_AutoCompoundDirective):
 
 def setup(app):
     app.require_sphinx('3.0')
-    app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
+    app.add_config_value('cautodoc_root', None, 'env', [str])
     app.add_config_value('cautodoc_compat', None, 'env', [str])
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
-    app.add_config_value('cautodoc_clang', [], 'env', [list])
+    app.add_config_value('cautodoc_clang', None, 'env', [list])
+
+    app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
+    app.add_config_value('hawkmoth_transformations', None, 'env', [dict])
+    app.add_config_value('hawkmoth_clang', [], 'env', [list])
+
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
     app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
     app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
