@@ -63,6 +63,67 @@ class ParserError:
         else:
             return f'{self.message}'
 
+def _domain_is_valid(tu, domain, errors):
+    """Check the derived domain of a translation unit against the expected one.
+
+    The derived domain is observed indirectly by the definition of certain C++
+    specific macros. We try to maximize our chances by looking for any of the
+    known macros in case any of them is disabled through compiler flags or
+    preprocessor statements.
+    """
+    cpp_macros = (
+        '__cpp_rtti',
+        '__cpp_exceptions',
+        '__cpp_unicode_characters',
+        '__cpp_raw_strings',
+        '__cpp_unicode_literals',
+        '__cpp_user_defined_literals',
+        '__cpp_lambdas',
+        '__cpp_constexpr',
+        '__cpp_constexpr_in_decltype',
+        '__cpp_range_based_for',
+        '__cpp_static_assert',
+        '__cpp_decltype',
+        '__cpp_attributes',
+        '__cpp_rvalue_references',
+        '__cpp_variadic_templates',
+        '__cpp_initializer_lists',
+        '__cpp_delegating_constructors',
+        '__cpp_nsdmi',
+        '__cpp_inheriting_constructors',
+        '__cpp_ref_qualifiers',
+        '__cpp_alias_templates',
+        '__cpp_threadsafe_static_init',
+        '__cpp_binary_literals',
+        '__cpp_digit_separators',
+        '__cpp_init_captures',
+        '__cpp_generic_lambdas',
+        '__cpp_decltype_auto',
+        '__cpp_return_type_deduction',
+        '__cpp_aggregate_nsdmi',
+        '__cpp_variable_templates',
+        '__cpp_impl_destroying_delete',
+    )
+
+    if domain not in ['c', 'cpp']:
+        errors.append(ParserError(ErrorLevel.CRITICAL, None, None,
+                                  f'domain \'{domain}\' not in [\'c\', \'cpp\']'))
+        return False
+
+    for cursor in tu.cursor.get_children():
+        if cursor.kind == CursorKind.MACRO_DEFINITION and cursor.spelling in cpp_macros:
+            if domain != 'cpp':
+                errors.append(ParserError(ErrorLevel.CRITICAL, None, None,
+                                          f'domain ({domain}) does not match inferred domain (cpp)'))  # noqa: E501
+                return False
+            return True
+
+    if domain != 'c':
+        errors.append(ParserError(ErrorLevel.CRITICAL, None, None,
+                                  f'domain ({domain}) does not match inferred domain (c)'))  # noqa: E501
+        return False
+    return True
+
 def _comment_extract(tu):
 
     # FIXME: How to handle top level comments above a cursor that it does *not*
@@ -223,7 +284,7 @@ def _anonymous_fixup(ttype, name):
 
     return ttype, name
 
-def _recursive_parse(comments, errors, cursor, nest):
+def _recursive_parse(comments, errors, cursor, nest, domain):
     comment = comments[cursor.hash]
     name = cursor.spelling
     ttype = cursor.type.spelling
@@ -235,10 +296,12 @@ def _recursive_parse(comments, errors, cursor, nest):
         args = _get_macro_args(cursor)
 
         if args is None:
-            ds = docstring.MacroDocstring(text=text, nest=nest, name=name, meta=meta)
+            ds = docstring.MacroDocstring(text=text, nest=nest, name=name,
+                                          meta=meta, domain=domain)
         else:
             ds = docstring.MacroFunctionDocstring(text=text, nest=nest,
-                                                  name=name, args=args, meta=meta)
+                                                  name=name, args=args,
+                                                  meta=meta, domain=domain)
 
         return [ds]
 
@@ -248,17 +311,20 @@ def _recursive_parse(comments, errors, cursor, nest):
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(text=text, nest=nest, name=name,
-                                        decl_name=decl_name, ttype=ttype, meta=meta)
+                                        decl_name=decl_name, ttype=ttype,
+                                        meta=meta, domain=domain)
         else:
             ds = docstring.MemberDocstring(text=text, nest=nest, name=name,
-                                           decl_name=decl_name, ttype=ttype, meta=meta)
+                                           decl_name=decl_name, ttype=ttype,
+                                           meta=meta, domain=domain)
 
         return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
 
-        ds = docstring.TypeDocstring(text=text, nest=nest, name=ttype, meta=meta)
+        ds = docstring.TypeDocstring(text=text, nest=nest, name=ttype,
+                                     meta=meta, domain=domain)
 
         return [ds]
 
@@ -279,22 +345,27 @@ def _recursive_parse(comments, errors, cursor, nest):
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(text=text, nest=nest, name=name,
-                                           decl_name=decl_name, meta=meta)
+                                           decl_name=decl_name, meta=meta,
+                                           domain=domain)
         elif cursor.kind == CursorKind.UNION_DECL:
             ds = docstring.UnionDocstring(text=text, nest=nest, name=name,
-                                          decl_name=decl_name, meta=meta)
+                                          decl_name=decl_name, meta=meta,
+                                          domain=domain)
         else:
             ds = docstring.EnumDocstring(text=text, nest=nest, name=name,
-                                         decl_name=decl_name, meta=meta)
+                                         decl_name=decl_name, meta=meta,
+                                         domain=domain)
 
         for c in cursor.get_children():
             if c.hash in comments:
-                ds.add_children(_recursive_parse(comments, errors, c, nest + 1))
+                ds.add_children(_recursive_parse(comments, errors, c,
+                                                 nest + 1, domain))
 
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        ds = docstring.EnumeratorDocstring(text=text, nest=nest, name=name, meta=meta)
+        ds = docstring.EnumeratorDocstring(text=text, nest=nest, name=name,
+                                           meta=meta, domain=domain)
 
         return [ds]
 
@@ -319,7 +390,8 @@ def _recursive_parse(comments, errors, cursor, nest):
         ttype = cursor.result_type.spelling
 
         ds = docstring.FunctionDocstring(text=text, nest=nest, name=name,
-                                         ttype=ttype, args=args, meta=meta)
+                                         ttype=ttype, args=args, meta=meta,
+                                         domain=domain)
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
@@ -339,7 +411,7 @@ def _clang_diagnostics(diagnostics, errors):
                                   diag.location.line, diag.spelling))
 
 # Parse a file and return a tree of docstring.Docstring objects.
-def parse(filename, clang_args=None):
+def parse(filename, domain='c', clang_args=None):
     errors = []
     index = Index.create()
 
@@ -348,6 +420,9 @@ def parse(filename, clang_args=None):
                      TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
 
     _clang_diagnostics(tu.diagnostics, errors)
+
+    if not _domain_is_valid(tu, domain, errors):
+        return docstring.Docstring(), errors
 
     top_level_comments, comments = _comment_extract(tu)
 
@@ -362,6 +437,7 @@ def parse(filename, clang_args=None):
 
     for cursor in tu.cursor.get_children():
         if cursor.hash in comments:
-            result.add_children(_recursive_parse(comments, errors, cursor, 0))
+            result.add_children(_recursive_parse(comments, errors,
+                                                 cursor, 0, domain))
 
     return result, errors
