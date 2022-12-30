@@ -1,3 +1,4 @@
+domain: c
 directive: autovar
 directive-arguments:
   - function_pointer_array

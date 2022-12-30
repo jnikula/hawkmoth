@@ -64,12 +64,13 @@ def print_source(input_filename):
 
 def print_example(testcase):
     options = testenv.get_testcase_options(testcase)
+    domain = options.get('domain')
 
     if options.get('example-use-namespace'):
         namespace = 'namespace_' + hashlib.md5(f'{testcase}'.encode()).hexdigest()
 
-        namespace_push = f'.. c:namespace-push:: {namespace}\n\n'
-        namespace_pop = '\n.. c:namespace-pop::\n'
+        namespace_push = f'.. {domain}:namespace-push:: {namespace}\n\n'
+        namespace_pop = '\n.. {domain}:namespace-pop::\n'
     else:
         namespace_push = ''
         namespace_pop = ''
