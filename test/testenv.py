@@ -101,9 +101,10 @@ def get_testid(testcase):
     return testcase.get_testid()
 
 def get_testcase_filenames(path):
-    for f in sorted(os.listdir(path)):
-        if f.endswith(testext):
-            yield os.path.join(path, f)
+    for root, dirs, files in sorted(os.walk(path)):
+        for f in files:
+            if f.endswith(testext):
+                yield os.path.join(root, f)
 
 def read_file(filename):
     if not filename or not os.path.isfile(filename):
