@@ -31,7 +31,6 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
 import enum
-import re
 from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
@@ -208,21 +207,6 @@ def _decl_fixup(cursor):
 
     return ttype, name
 
-# name may be empty for typedefs and anonymous enums, structs and unions
-def _anonymous_fixup(ttype, name):
-    if name:
-        return ttype, name
-
-    mo = re.match(r'(?a)^(?P<type>enum|struct|union) ([^:]+::)?\((anonymous|unnamed) at [^)]+\)$', ttype)  # noqa: E501
-    if mo:
-        # Anonymous
-        name = ''
-    else:
-        # Typedef
-        name = ttype
-
-    return ttype, name
-
 def _recursive_parse(comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -265,17 +249,8 @@ def _recursive_parse(comments, errors, cursor, nest):
     elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL,
                          CursorKind.ENUM_DECL]:
 
-        # FIXME:
-        # Handle cases where variables are instantiated on type declaration,
-        # including anonymous cases. Idea is that if there is a variable
-        # instantiation, the documentation should be applied to the variable if
-        # the structure is anonymous or to the type otherwise.
-        #
-        # Due to the new recursiveness of the parser, fixing this here, _should_
-        # handle all cases (struct, union, enum).
-
-        # Note: Preserve original name
-        ttype, decl_name = _anonymous_fixup(ttype, name)
+        # Do not set the decl_name for anonymous symbols (empty spelling).
+        decl_name = name if cursor.spelling != '' else None
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(text=text, nest=nest, name=name,
