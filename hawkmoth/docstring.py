@@ -198,15 +198,15 @@ class TypeDocstring(Docstring):
 
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
-        # The empty string for decl_name means anonymous.
-        if self._decl_name == '':
+        # If decl_name is empty, it means this is an anonymous declaration.
+        if self._decl_name is None:
             # Sphinx expects @name for anonymous entities. The name must be both
             # stable and unique. Create one.
             decl_name = hashlib.md5(f'{self._text}{self.get_line()}'.encode()).hexdigest()
 
             return f'@anonymous_{decl_name}'
 
-        return super()._get_decl_name()
+        return self._decl_name
 
 class StructDocstring(_CompoundDocstring):
     _indent = 1
