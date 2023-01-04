@@ -1,5 +1,5 @@
 directive-arguments:
-- example-transform.c
+  - example-transform.c
 directive-options:
   transform: napoleon
 example-title: Transform

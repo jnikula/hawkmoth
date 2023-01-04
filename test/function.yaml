@@ -1,2 +1,2 @@
 directive-arguments:
-- function.c
+  - function.c

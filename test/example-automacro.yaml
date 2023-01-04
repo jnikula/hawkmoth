@@ -1,6 +1,6 @@
 directive: automacro
 directive-arguments:
-- DIE
+  - DIE
 directive-options:
   file: example-macro.c
 example-use-namespace: yes

@@ -1,2 +1,2 @@
 directive-arguments:
-- clang-diagnostics.c
+  - clang-diagnostics.c

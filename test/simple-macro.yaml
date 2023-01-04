@@ -1,2 +1,2 @@
 directive-arguments:
-- simple-macro.c
+  - simple-macro.c

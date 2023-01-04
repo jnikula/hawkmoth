@@ -1,2 +1,2 @@
 directive-arguments:
-- typedef-enum.c
+  - typedef-enum.c

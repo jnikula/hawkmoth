@@ -1,8 +1,8 @@
 directive: autoenum
 directive-arguments:
-- foo
+  - foo
 directive-options:
   file: enum.c
   members:
-  - bar
+    - bar
 

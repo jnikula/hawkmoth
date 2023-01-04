@@ -1,4 +1,4 @@
 directive-arguments:
-- example-autodoc.c
+  - example-autodoc.c
 example-title: Overview
 example-priority: 1

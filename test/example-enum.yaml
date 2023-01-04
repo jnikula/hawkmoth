@@ -1,6 +1,6 @@
 directive: autoenum
 directive-arguments:
-- mode
+  - mode
 directive-options:
   file: example-enum.c
   members:

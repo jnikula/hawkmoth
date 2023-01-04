@@ -1,4 +1,4 @@
 directive-arguments:
-- example-variable.c
+  - example-variable.c
 example-title: Variable
 example-priority: 10
