@@ -1,2 +1,2 @@
 directive-arguments:
-- typedef-struct.c
+  - typedef-struct.c

@@ -1,2 +1,2 @@
 directive-arguments:
-- struct.c
+  - struct.c

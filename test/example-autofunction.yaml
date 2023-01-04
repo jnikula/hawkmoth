@@ -1,6 +1,6 @@
 directive: autofunction
 directive-arguments:
-- frob
+  - frob
 directive-options:
   file: example-function.c
 example-use-namespace: yes

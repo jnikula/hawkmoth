@@ -1,2 +1,2 @@
 directive-arguments:
-- comment-strip.c
+  - comment-strip.c

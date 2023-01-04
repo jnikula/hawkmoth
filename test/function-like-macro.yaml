@@ -1,2 +1,2 @@
 directive-arguments:
-- function-like-macro.c
+  - function-like-macro.c

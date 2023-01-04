@@ -1,7 +1,7 @@
 directive-arguments:
-- example-preprocessor.c
+  - example-preprocessor.c
 directive-options:
   clang:
-  - -DDEEP_THOUGHT
+    - -DDEEP_THOUGHT
 example-title: Preprocessor
 example-priority: 80

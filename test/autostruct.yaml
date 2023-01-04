@@ -1,9 +1,9 @@
 directive: autostruct
 directive-arguments:
-- sample_struct
+  - sample_struct
 directive-options:
   file: struct.c
   members:
-  - array_member
-  - function_pointer_member
-  - other_function_pointer_member
+    - array_member
+    - function_pointer_member
+    - other_function_pointer_member
