@@ -1,6 +1,6 @@
 directive: autostruct
 directive-arguments:
-- list
+  - list
 directive-options:
   file: example-struct.c
   members:

@@ -1,2 +1,2 @@
 directive-arguments:
-- union.c
+  - union.c

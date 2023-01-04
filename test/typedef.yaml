@@ -1,2 +1,2 @@
 directive-arguments:
-- typedef.c
+  - typedef.c

@@ -1,2 +1,2 @@
 directive-arguments:
-- composition.c
+  - composition.c

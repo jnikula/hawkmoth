@@ -1,4 +1,4 @@
 directive-arguments:
-- example-struct.c
+  - example-struct.c
 example-title: Struct
 example-priority: 50
