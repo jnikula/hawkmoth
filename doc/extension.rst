@@ -1,12 +1,13 @@
 .. _extension:
 
-C Autodoc Extension
-===================
+Autodoc Extension
+=================
 
 Hawkmoth provides a Sphinx extension that adds :ref:`new directives
-<directives>` to the Sphinx :external+sphinx:ref:`C domain <c-domain>` to
-incorporate formatted C source code comments into a document. Hawkmoth is Sphinx
-:py:mod:`sphinx.ext.autodoc` for C.
+<directives>` to the Sphinx :external+sphinx:ref:`C <c-domain>` and
+:external+sphinx:ref:`C++ <cpp-domain>` domains to incorporate formatted C and
+C++ source code comments into a document. Hawkmoth is Sphinx
+:py:mod:`sphinx.ext.autodoc` for C/C++.
 
 For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for

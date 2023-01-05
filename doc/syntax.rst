@@ -3,9 +3,9 @@
 Syntax
 ======
 
-For the :ref:`Hawkmoth autodoc directives <directives>` to work, the C source
-code must be documented using specific documentation comment style, and the
-comments must follow reStructuredText markup.
+For the :ref:`Hawkmoth autodoc directives <directives>` to work, the C or C++
+source code must be documented using specific documentation comment style, and
+the comments must follow reStructuredText markup.
 
 Optionally, the syntax may be :ref:`extended <extending-the-syntax>` to support
 e.g. Javadoc and Napoleon style comments.
@@ -16,7 +16,8 @@ and read on for documentation comment formatting details.
 Documentation Comments
 ----------------------
 
-Documentation comments are C language block comments that begin with ``/**``.
+Documentation comments are C/C++ language block comments that begin with
+``/**``.
 
 Because reStructuredText is sensitive about indentation, it's strongly
 recommended, even if not strictly required, to follow a uniform style for
@@ -38,12 +39,12 @@ One-line comments are fine too:
 
    /** The quick brown fox jumps over the lazy dog. */
 
-All documentation comments preceding C constructs are attached to them, and
-result in C Domain directives being added for them. This includes macros,
-functions, struct and union members, enumerations, etc.
+All documentation comments preceding C or C++ constructs are attached to them,
+and result in C or C++ Domain directives being added for them accordingly. This
+includes macros, functions, struct and union members, enumerations, etc.
 
 Documentation comments followed by comments (documentation or not) are included
-as generic documentation.
+as normal paragraphs in the order they appear.
 
 Tags
 ----
@@ -80,20 +81,33 @@ for :external+sphinx:py:mod:`sphinx.ext.napoleon` style comments.
 
 .. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
 
-Cross-Referencing C Constructs
-------------------------------
+.. _cross-referencing:
 
-Use :external+sphinx:ref:`c-domain` roles for cross-referencing as follows:
+Cross-Referencing C and C++ Constructs
+--------------------------------------
 
-- ``:c:data:`name``` for variables.
+Under the hood, the :ref:`Hawkmoth directives <directives>` generate
+corresponding :external+sphinx:ref:`C <c-domain>` and :external+sphinx:ref:`C++
+<cpp-domain>` domain directives. For example, :rst:dir:`c:autovar` produces
+:external+sphinx:rst:dir:`c:var`. Use the Sphinx :external+sphinx:ref:`C Domain
+Roles <c-roles>` and :external+sphinx:ref:`C++ Domain Roles<cpp-roles>` for
+cross-referencing accordingly.
+
+For example:
+
+- ``:c:var:`name``` for variables.
 
 - ``:c:func:`name``` for functions and function-like macros.
 
-- ``:c:macro:`name``` for simple macros and enumeration constants.
-
-- ``:c:type:`name``` for structs, unions, enums, and typedefs.
+- ``:cpp:class:`name``` for classes.
 
 - ``:c:member:`name.membername``` for struct and union members.
+
+The C++ Domain does not have a ``cpp:macro`` directive, however, so all macros
+generate documentation using the C Domain :external+sphinx:rst:dir:`c:macro`
+directive. This also means macros have to be referenced using the
+:external+sphinx:rst:role:`c:macro` role, even when otherwise using C++ Domain
+directives.
 
 See the Sphinx :external+sphinx:ref:`basic-domain-markup` and generic
 :external+sphinx:ref:`xref-syntax` for further details on cross-referencing, and
