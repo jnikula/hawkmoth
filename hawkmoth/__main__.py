@@ -8,17 +8,23 @@ python3 -m hawkmoth
 """
 
 import argparse
+import os
 import sys
 
 from hawkmoth.parser import parse
 from hawkmoth.util import doccompat
+
+def filename(file):
+    if os.path.isfile(file):
+        return file
+    raise ValueError
 
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
     Hawkmoth parser debug tool. Print the documentation comments extracted
     from FILE, along with the generated C Domain directives, to standard
     output. Include metadata with verbose output.""")
-    parser.add_argument('file', metavar='FILE', type=str, action='store',
+    parser.add_argument('file', metavar='FILE', type=filename, action='store',
                         help='The C source or header file to parse.')
     parser.add_argument('--compat',
                         choices=['none',
