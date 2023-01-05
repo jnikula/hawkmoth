@@ -4,9 +4,10 @@ Directives
 ==========
 
 Hawkmoth provides several new directives for incorporating :ref:`documentation
-comments <syntax>` from C source files into the reStructuredText document. There
-are three main types of directives, for incorporating documentation from entire
-files, for single objects, and for composite objects optionally with members.
+comments <syntax>` from C/C++ source files into the reStructuredText document.
+There are three main types of directives, for incorporating documentation from
+entire files, for single objects, and for composite objects optionally with
+members.
 
 Source Files
 ------------
@@ -16,6 +17,7 @@ comments from any number of files. This is the most basic and quickest way to
 generate documentation, but offers no control over what gets included.
 
 .. rst:directive:: .. c:autodoc:: filename-pattern [...]
+.. rst:directive:: .. cpp:autodoc:: filename-pattern [...]
 
    Incorporate documentation comments from the files specified by the space
    separated list of filename patterns given as arguments. The patterns are
@@ -54,6 +56,7 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
 adding the ``file`` option.
 
 .. rst:directive:: .. c:autovar:: name
+.. rst:directive:: .. cpp:autovar:: name
 
    Incorporate the documentation comment for the variable ``name`` in the file
    ``file``.
@@ -73,6 +76,7 @@ adding the ``file`` option.
          :file: example_file.c
 
 .. rst:directive:: .. c:autotype:: name
+.. rst:directive:: .. cpp:autotype:: name
 
    Same as :rst:dir:`c:autovar` but for typedefs.
 
@@ -82,8 +86,17 @@ adding the ``file`` option.
          :file: example_file.c
 
 .. rst:directive:: .. c:automacro:: name
+.. rst:directive:: .. cpp:automacro:: name
 
    Same as :rst:dir:`c:autovar` but for macros, including function-like macros.
+
+   .. note::
+
+      :any:`sphinx:cpp-domain` does not have a ``cpp:macro`` directive, so all
+      macros are always in the C domain. The only known user limitation is that
+      references to said macros need to be done as (e.g.)
+      ``:c:macro:`EXAMPLE_MACRO``` even if the user used
+      :rst:dir:`cpp:automacro`. This is a Sphinx limitation.
 
    .. code-block:: rst
 
@@ -91,6 +104,7 @@ adding the ``file`` option.
          :file: example_file.c
 
 .. rst:directive:: .. c:autofunction:: name
+.. rst:directive:: .. cpp:autofunction:: name
 
    Same as :rst:dir:`c:autovar` but for functions. (Use :rst:dir:`c:automacro`
    for function-like macros.)
@@ -113,6 +127,7 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
 :rst:dir:`c:autofunction`, adding the ``members`` option.
 
 .. rst:directive:: .. c:autostruct:: name
+.. rst:directive:: .. cpp:autostruct:: name
 
    Incorporate the documentation comment for the structure ``name`` in the file
    ``file``, optionally including member documentation as specified by
@@ -148,6 +163,7 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
          :members: member_one, member_two
 
 .. rst:directive:: .. c:autounion:: name
+.. rst:directive:: .. cpp:autounion:: name
 
    Same as :rst:dir:`c:autostruct` but for unions.
 
@@ -158,6 +174,7 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
          :members: some_member
 
 .. rst:directive:: .. c:autoenum:: name
+.. rst:directive:: .. cpp:autoenum:: name
 
    Same as :rst:dir:`c:autostruct` but for enums. The enumeration constants are
    considered members and are included according to the ``members`` option.
