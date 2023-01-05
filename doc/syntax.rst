@@ -3,9 +3,9 @@
 Syntax
 ======
 
-For the :any:`c:autodoc` directive to work, the C source code must be
-documented using specific documentation comment style, and the comments must
-follow reStructuredText markup.
+For any of the directives to work, the C or C++ source code must be documented
+using specific documentation comment style, and the comments must follow
+reStructuredText markup.
 
 Optionally, there's limited support for some Javadoc_ and Doxygen_ style
 constructs for compatibility.
@@ -16,7 +16,8 @@ and read on for documentation comment formatting details.
 Documentation Comments
 ----------------------
 
-Documentation comments are C language block comments that begin with ``/**``.
+Documentation comments are C/C++ language block comments that begin with
+``/**``.
 
 Because reStructuredText is sensitive about indentation, it's strongly
 recommended, even if not strictly required, to follow a uniform style for
@@ -38,12 +39,12 @@ One-line comments are fine too:
 
    /** The quick brown fox jumps over the lazy dog. */
 
-All documentation comments preceding C constructs are attached to them, and
-result in C Domain directives being added for them. This includes macros,
-functions, struct and union members, enumerations, etc.
+All documentation comments preceding C or C++ constructs are attached to them,
+and result in C or C++ Domain directives being added for them accordingly. This
+includes macros, functions, struct and union members, enumerations, etc.
 
 Documentation comments followed by comments (documentation or not) are included
-as generic documentation.
+as normal paragraphs in the order they appear.
 
 Tags
 ----
@@ -91,12 +92,13 @@ enable the support.
 
 .. _Doxygen: http://doxygen.nl/
 
-Cross-Referencing C Constructs
-------------------------------
+Cross-Referencing C and C++ Constructs
+--------------------------------------
 
-Use :any:`sphinx:c-domain` roles for cross-referencing as follows:
+Use :any:`sphinx:c-domain` or :any:`sphinx:cpp-domain` roles for
+cross-referencing as follows:
 
-- ``:c:data:`name``` for variables.
+- ``:c:var:`name``` for variables.
 
 - ``:c:func:`name``` for functions and function-like macros.
 
