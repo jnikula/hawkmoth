@@ -147,12 +147,14 @@ def _get_macro_args(cursor):
 
     return None
 
-# If this is an array, the dimensions should be applied to the name, not
-# the type.
-#
-# If this is a function pointer, or an array of function pointers, the
-# name should be within the parenthesis as in (*name) or (*name[N]).
-def _decl_fixup(cursor):
+def _type_fixup(cursor):
+    """Fix non trivial types' spelling and append qualifiers.
+
+    If this is an array, the dimensions should be applied to the name, not
+    the type.
+    If this is a function pointer, or an array of function pointers, the
+    name should be within the parenthesis as in ``(*name)`` or ``(*name[N])``.
+    """
     cursor_type = cursor.type
 
     stars_and_quals = ''
@@ -181,21 +183,19 @@ def _decl_fixup(cursor):
             break
 
     if cursor_type.kind == TypeKind.FUNCTIONPROTO:
+        pad = lambda s: s if s.endswith('*') else s + ' '
+
         args = []
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _decl_fixup(c)
-                spacer = '' if not arg_name or arg_ttype.endswith('*') else ' '
-                args.append(f'{arg_ttype}{spacer}{arg_name}' if arg_name else arg_ttype)
+                arg_ttype, arg_name = _type_fixup(c)
+                args.append(f'{pad(arg_ttype)}{arg_name}' if arg_name else arg_ttype)
         if cursor_type.is_function_variadic():
             args.append('...')
         if len(args) == 0:
             args.append('void')
 
         ret_type = cursor_type.get_result().spelling
-
-        def pad(s):
-            return s if s.endswith('*') else s + ' '
 
         ttype = ''
         name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
@@ -228,7 +228,7 @@ def _recursive_parse(comments, errors, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _decl_fixup(cursor)
+        ttype, decl_name = _type_fixup(cursor)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(text=text, nest=nest, name=name,
@@ -283,7 +283,7 @@ def _recursive_parse(comments, errors, cursor, nest):
         if cursor.type.kind == TypeKind.FUNCTIONPROTO:
             for c in cursor.get_children():
                 if c.kind == CursorKind.PARM_DECL:
-                    arg_ttype, arg_name = _decl_fixup(c)
+                    arg_ttype, arg_name = _type_fixup(c)
                     args.extend([(arg_ttype, arg_name)])
 
             if cursor.type.is_function_variadic():
