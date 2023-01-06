@@ -207,6 +207,27 @@ def _type_fixup(cursor):
 
     return ttype, name
 
+def _get_args(cursor):
+    """Get function / method arguments."""
+    # FIXME: check args against comment
+    # FIXME: children may contain extra stuff if the return type is a typedef,
+    # for example
+    args = []
+
+    # Only fully prototyped functions will have argument lists to process.
+    if cursor.type.kind == TypeKind.FUNCTIONPROTO:
+        for c in cursor.get_children():
+            if c.kind == CursorKind.PARM_DECL:
+                arg_ttype, arg_name = _type_fixup(c)
+                args.extend([(arg_ttype, arg_name)])
+
+        if cursor.type.is_function_variadic():
+            args.extend([('', '...')])
+        if len(args) == 0:
+            args.extend([('', 'void')])
+
+    return args
+
 def _recursive_parse(comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -274,23 +295,7 @@ def _recursive_parse(comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        # FIXME: check args against comment
-        # FIXME: children may contain extra stuff if the return type is a
-        # typedef, for example
-        args = []
-
-        # Only fully prototyped functions will have argument lists to process.
-        if cursor.type.kind == TypeKind.FUNCTIONPROTO:
-            for c in cursor.get_children():
-                if c.kind == CursorKind.PARM_DECL:
-                    arg_ttype, arg_name = _type_fixup(c)
-                    args.extend([(arg_ttype, arg_name)])
-
-            if cursor.type.is_function_variadic():
-                args.extend([('', '...')])
-            if len(args) == 0:
-                args.extend([('', 'void')])
-
+        args = _get_args(cursor)
         ttype = cursor.result_type.spelling
 
         ds = docstring.FunctionDocstring(text=text, nest=nest, name=name,
