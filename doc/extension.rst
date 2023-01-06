@@ -33,7 +33,7 @@ Configuration
 
 The extension has a few configuration options that can be set in ``conf.py``:
 
-.. py:data:: cautodoc_root
+.. py:data:: hawkmoth_root
    :type: str
 
    Path to the root of the source files. Defaults to the
@@ -46,7 +46,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
    .. code-block:: python
 
       import os
-      cautodoc_root = os.path.abspath('my/sources/dir')
+      hawkmoth_root = os.path.abspath('my/sources/dir')
 
 .. py:data:: cautodoc_transformations
    :type: dict
@@ -88,7 +88,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
           'kernel-doc': doccompat.kerneldoc,
       }
 
-.. py:data:: cautodoc_clang
+.. py:data:: hawkmoth_clang
    :type: list
 
    A list of arguments to pass to ``clang`` while parsing the source, typically
@@ -99,7 +99,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
    .. code-block:: python
 
-      cautodoc_clang = ['-I/path/to/include', '-DHAWKMOTH']
+      hawkmoth_clang = ['-I/path/to/include', '-DHAWKMOTH']
 
    Hawkmoth provides a convenience helper for querying the include path from the
    compiler, and providing them as ``-I`` options:
@@ -108,7 +108,28 @@ The extension has a few configuration options that can be set in ``conf.py``:
 
       from hawkmoth.util import compiler
 
-      cautodoc_clang = compiler.get_include_args()
+      hawkmoth_clang = compiler.get_include_args()
 
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
+
+.. py:data:: cautodoc_root
+   :type: str
+
+   Equivalent to :py:data:`hawkmoth_root`.
+
+   .. warning::
+
+      The ``cautodoc_root`` option has been deprecated in favour of the
+      :py:data:`hawkmoth_root` option and will be removed in the future.
+
+.. py:data:: cautodoc_clang
+   :type: str
+
+   Equivalent to :py:data:`hawkmoth_clang`.
+
+   .. warning::
+
+      The ``cautodoc_clang`` option has been deprecated in favour of
+      the :py:data:`hawkmoth_clang` option and will be removed in the
+      future.
