@@ -101,7 +101,7 @@ class Docstring():
 
     def _get_plain_comment(self):
         """Return plain comment with comment markers and line prefixes removed."""
-        lines = self._text.splitlines()
+        lines = statemachine.string2lines(self._text, 8, convert_whitespace=True)
 
         lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
         lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
@@ -162,7 +162,7 @@ class Docstring():
 
         rst = Docstring._nest(rst, self._nest)
 
-        lines = statemachine.string2lines(rst, 8, convert_whitespace=True)
+        lines = rst.splitlines()
 
         if lines[-1] != '':
             lines.append('')
