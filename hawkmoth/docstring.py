@@ -131,22 +131,7 @@ class Docstring():
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
-    def get_docstring(self, transform=None):
-        lines = self._get_comment_lines()
-
-        # FIXME: This changes the number of lines in output. This impacts the
-        # error reporting via meta['line']. Adjust meta to take this into
-        # account.
-        self._remove_comment_markers(lines)
-
-        if transform is not None:
-            # FIXME: Make transform handle lists of lines
-            text = '\n'.join(lines)
-            text = transform(text)
-            lines = text.splitlines()
-
-        Docstring._nest(lines, self._indent)
-
+    def _insert_header_lines(self, lines):
         name = self._get_decl_name()
 
         ttype = self._ttype
@@ -163,6 +148,24 @@ class Docstring():
         header = self._fmt.format(name=name, ttype=ttype,
                                   type_spacer=spacer, args=args)
         lines[:0] = header.splitlines()
+
+    def get_docstring(self, transform=None):
+        lines = self._get_comment_lines()
+
+        # FIXME: This changes the number of lines in output. This impacts the
+        # error reporting via meta['line']. Adjust meta to take this into
+        # account.
+        self._remove_comment_markers(lines)
+
+        if transform is not None:
+            # FIXME: Make transform handle lists of lines
+            text = '\n'.join(lines)
+            text = transform(text)
+            lines = text.splitlines()
+
+        Docstring._nest(lines, self._indent)
+
+        self._insert_header_lines(lines)
 
         Docstring._nest(lines, self._nest)
 
