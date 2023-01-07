@@ -22,7 +22,6 @@ class Automock(Include):
 
     option_spec = {
         'transform': directives.unchanged_required,
-        'compat': directives.unchanged_required,
         'clang': directives.unchanged_required,
         'file': directives.unchanged_required,
         'members': directives.unchanged,
@@ -45,7 +44,6 @@ class AutomockSymbol(Automock):
 
 def setup(app):
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
-    app.add_config_value('cautodoc_compat', None, 'env', [str])
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
     app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', Automock)

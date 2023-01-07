@@ -18,7 +18,7 @@ from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
 
 from hawkmoth.parser import parse, ErrorLevel
-from hawkmoth.util import doccompat, strutil
+from hawkmoth.util import strutil
 from hawkmoth import docstring
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -30,7 +30,6 @@ class _AutoBaseDirective(SphinxDirective):
 
     option_spec = {
         'transform': directives.unchanged_required,
-        'compat': directives.unchanged_required,
         'clang': strutil.string_list,
     }
     has_content = False
@@ -58,22 +57,7 @@ class _AutoBaseDirective(SphinxDirective):
 
         return clang_args
 
-    def __get_compat_transform(self):
-        compat = self.options.get('compat', self.env.config.cautodoc_compat)
-        if compat is None:
-            return None
-
-        fmt = 'cautodoc_compat and compat options are deprecated, please use cautodoc_transformations and transform options instead.'  # noqa: E501
-        self.logger.warning(fmt, location=(self.env.docname, self.lineno))
-
-        return lambda comment: doccompat.convert(comment, transform=compat)
-
     def __get_transform(self):
-        # Handle deprecated compat. To be removed.
-        transform = self.__get_compat_transform()
-        if transform is not None:
-            return transform
-
         transformations = self.env.config.cautodoc_transformations
         tropt = self.options.get('transform')
 
@@ -244,7 +228,6 @@ class CAutoEnumDirective(_AutoCompoundDirective):
 def setup(app):
     app.require_sphinx('3.0')
     app.add_config_value('cautodoc_root', app.confdir, 'env', [str])
-    app.add_config_value('cautodoc_compat', None, 'env', [str])
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
     app.add_config_value('cautodoc_clang', [], 'env', [list])
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)

@@ -77,8 +77,7 @@ The extension has a few configuration options that can be set in ``conf.py``:
       }
 
    The example below shows how to use Hawkmoth's existing compat functions in
-   ``conf.py``, for migration from deprecated ``cautodoc_compat``. Also replace
-   ``:compat:`` with ``:transform:``.
+   ``conf.py``.
 
    .. code-block:: python
 
@@ -88,19 +87,6 @@ The extension has a few configuration options that can be set in ``conf.py``:
           'javadoc-liberal': doccompat.javadoc_liberal,
           'kernel-doc': doccompat.kerneldoc,
       }
-
-.. py:data:: cautodoc_compat
-   :type: str
-
-   Compatibility option. One of ``none`` (default), ``javadoc-basic``,
-   ``javadoc-liberal``, and ``kernel-doc``. This can be used to perform a
-   limited conversion of Javadoc-style tags to reStructuredText.
-
-   .. warning::
-
-      The cautodoc_compat option has been deprecated in favour of the
-      :data:`cautodoc_transformations` option and the :rst:dir:`c:autodoc`
-      directive ``transform`` option, and will be removed in the future.
 
 .. py:data:: cautodoc_clang
    :type: list

@@ -28,18 +28,6 @@ generate documentation, but offers no control over what gets included.
       :data:`cautodoc_transformations` to use for converting the comments. This
       value overrides the default in :data:`cautodoc_transformations`.
 
-   .. rst:directive:option:: compat
-      :type: text
-
-      The ``compat`` option overrides the :data:`cautodoc_compat` configuration
-      option.
-
-      .. warning::
-
-         The compat option has been deprecated in favour of the
-         :data:`cautodoc_transformations` option and the :rst:dir:`c:autodoc`
-         directive ``transform`` option, and will be removed in the future.
-
    .. rst:directive:option:: clang
       :type: text
 
