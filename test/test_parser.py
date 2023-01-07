@@ -7,7 +7,6 @@ import os
 import pytest
 
 from hawkmoth.parser import parse
-from hawkmoth.util import doccompat
 from test import conf, testenv
 
 def _get_output(testcase, **options):
@@ -25,15 +24,11 @@ def _get_output(testcase, **options):
     clang_args = options.get('clang')
     comments, errors = parse(input_filename, clang_args=clang_args)
 
-    tropt = options.pop('compat', None)
+    tropt = options.pop('transform', None)
     if tropt is not None:
-        transform = lambda comment: doccompat.convert(comment, transform=tropt)
+        transform = conf.cautodoc_transformations[tropt]
     else:
-        tropt = options.pop('transform', None)
-        if tropt is not None:
-            transform = conf.cautodoc_transformations[tropt]
-        else:
-            transform = None
+        transform = None
 
     for comment in comments.walk():
         docs_str += comment.get_docstring(transform=transform) + '\n'
