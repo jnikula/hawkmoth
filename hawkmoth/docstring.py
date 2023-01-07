@@ -115,34 +115,35 @@ class Docstring():
         while not lines[-1] or lines[-1].isspace():
             del lines[-1]
 
-        return '\n'.join(lines)
+        return lines
 
     @staticmethod
-    def _nest(text, nest):
+    def _nest(lines, nest):
         """
         Indent documentation block for nesting.
 
         Args:
-            text (str): Documentation body.
+            lines (List[str]): Documentation body as list of strings,
+                modified in-place.
             nest (int): Nesting level. For each level, the final block is indented
                 one level. Useful for (e.g.) declaring structure members.
-
-        Returns:
-            str: Indented reST documentation string.
         """
-        return re.sub('(?m)^(?!$)', '   ' * nest, text)
+        lines[:] = [re.sub('^(?!$)', '   ' * nest, line) for line in lines]
 
     def get_docstring(self, transform=None):
         # FIXME: This changes the number of lines in output. This impacts the
         # error reporting via meta['line']. Adjust meta to take this into
         # account.
 
-        text = self._get_plain_comment()
+        comment_lines = self._get_plain_comment()
 
         if transform is not None:
+            # FIXME: Make transform handle lists of lines
+            text = '\n'.join(comment_lines)
             text = transform(text)
+            comment_lines = text.splitlines()
 
-        text = Docstring._nest(text, self._indent)
+        Docstring._nest(comment_lines, self._indent)
 
         name = self._get_decl_name()
 
@@ -157,12 +158,12 @@ class Docstring():
             arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        rst = self._fmt.format(text=text, name=name, ttype=ttype,
-                               type_spacer=spacer, args=args)
+        header = self._fmt.format(name=name, ttype=ttype,
+                                  type_spacer=spacer, args=args)
 
-        rst = Docstring._nest(rst, self._nest)
+        lines = header.splitlines() + comment_lines
 
-        lines = rst.splitlines()
+        Docstring._nest(lines, self._nest)
 
         if lines[-1] != '':
             lines.append('')
@@ -183,15 +184,15 @@ class Docstring():
 
 class TextDocstring(Docstring):
     _indent = 0
-    _fmt = '\n{text}\n'
+    _fmt = '\n'
 
 class VarDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:var:: {ttype}{type_spacer}{name}\n\n{text}\n'
+    _fmt = '\n.. c:var:: {ttype}{type_spacer}{name}\n\n'
 
 class TypeDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:type:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:type:: {name}\n\n'
 
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
@@ -207,32 +208,32 @@ class _CompoundDocstring(Docstring):
 
 class StructDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:struct:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:struct:: {name}\n\n'
 
 class UnionDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:union:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:union:: {name}\n\n'
 
 class EnumDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. c:enum:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:enum:: {name}\n\n'
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:enumerator:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:enumerator:: {name}\n\n'
 
 class MemberDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:member:: {ttype}{type_spacer}{name}\n\n{text}\n'
+    _fmt = '\n.. c:member:: {ttype}{type_spacer}{name}\n\n'
 
 class MacroDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:macro:: {name}\n\n{text}\n'
+    _fmt = '\n.. c:macro:: {name}\n\n'
 
 class MacroFunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:macro:: {name}({args})\n\n{text}\n'
+    _fmt = '\n.. c:macro:: {name}({args})\n\n'
 
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:function:: {ttype}{type_spacer}{name}({args})\n\n{text}\n'
+    _fmt = '\n.. c:function:: {ttype}{type_spacer}{name}({args})\n\n'
