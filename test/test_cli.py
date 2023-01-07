@@ -49,13 +49,9 @@ def _get_output(testcase, monkeypatch, capsys, **options):
 
     options = options.get('directive-options', {})
 
-    transform = options.get('compat', None)
+    transform = options.get('transform', None)
     if transform is not None:
-        args += [f'--compat={transform}']
-    else:
-        transform = options.get('transform', None)
-        if transform is not None:
-            pytest.skip('cli does not support generic transformations')
+        pytest.skip('cli does not support generic transformations')
 
     clang_args = options.get('clang')
     if clang_args:
