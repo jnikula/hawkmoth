@@ -99,10 +99,12 @@ class Docstring():
         """Test if comment is a C documentation comment."""
         return comment.startswith('/**') and comment != '/**/'
 
-    def _get_plain_comment(self):
-        """Return plain comment with comment markers and line prefixes removed."""
-        lines = statemachine.string2lines(self._text, 8, convert_whitespace=True)
+    def _get_comment_lines(self):
+        return statemachine.string2lines(self._text, 8, convert_whitespace=True)
 
+    @staticmethod
+    def _remove_comment_markers(lines):
+        """Remove comment markers and line prefixes from comment lines."""
         lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
         lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
 
@@ -114,8 +116,6 @@ class Docstring():
 
         while not lines[-1] or lines[-1].isspace():
             del lines[-1]
-
-        return lines
 
     @staticmethod
     def _nest(lines, nest):
@@ -131,11 +131,12 @@ class Docstring():
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
     def get_docstring(self, transform=None):
+        comment_lines = self._get_comment_lines()
+
         # FIXME: This changes the number of lines in output. This impacts the
         # error reporting via meta['line']. Adjust meta to take this into
         # account.
-
-        comment_lines = self._get_plain_comment()
+        Docstring._remove_comment_markers(comment_lines)
 
         if transform is not None:
             # FIXME: Make transform handle lists of lines
