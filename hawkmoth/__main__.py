@@ -19,6 +19,11 @@ def filename(file):
         return file
     raise ValueError
 
+def transform(args, lines):
+    text = '\n'.join(lines)
+    text = doccompat.convert(text, transform=args.compat)
+    lines[:] = [line for line in text.splitlines()]
+
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
     Hawkmoth parser debug tool. Print the documentation comments extracted
@@ -38,14 +43,12 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    transform = lambda comment: doccompat.convert(comment, transform=args.compat)
-
     comments, errors = parse(args.file, clang_args=args.clang)
 
     for comment in comments.walk():
         if args.verbose:
             print(f'# {comment.get_meta()}')
-        print('\n'.join(comment.get_docstring(transform=transform)))
+        print('\n'.join(comment.get_docstring(transform=lambda lines: transform(args, lines))))
 
     for error in errors:
         print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)

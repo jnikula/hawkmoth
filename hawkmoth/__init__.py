@@ -78,6 +78,13 @@ class _AutoBaseDirective(SphinxDirective):
         # Note: None is a valid value for no transformation.
         return transformations.get(tropt)
 
+    def __transform(self, lines):
+        transform = self.__get_transform()
+        if transform:
+            text = '\n'.join(lines)
+            text = transform(text)
+            lines[:] = [line for line in text.splitlines()]
+
     def __parse(self, filename):
         clang_args = self.__get_clang_args()
 
@@ -102,14 +109,13 @@ class _AutoBaseDirective(SphinxDirective):
         return docstrings
 
     def __get_docstrings(self, viewlist, filename):
-        transform = self.__get_transform()
         root = self.__parse(filename)
 
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
-                lines = docstr.get_docstring(transform=transform)
+                lines = docstr.get_docstring(transform=lambda lines: self.__transform(lines))
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
