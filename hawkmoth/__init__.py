@@ -63,17 +63,10 @@ class _AutoBaseDirective(SphinxDirective):
         tropt = self.options.get('transform')
 
         if transformations is None:
-            if tropt is not None:
-                self.logger.warning('transform specified without cautodoc_transformations config.',
-                                    location=(self.env.docname, self.lineno))
-
             return None
 
         # Note: None is a valid key for default.
         if tropt not in transformations:
-            if tropt is not None:
-                self.logger.warning(f'unknown transformation "{tropt}".',
-                                    location=(self.env.docname, self.lineno))
             return None
 
         # Note: None is a valid value for no transformation.
