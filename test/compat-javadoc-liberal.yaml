@@ -1,4 +1,0 @@
-directive-arguments:
-- compat.c
-directive-options:
-  compat: javadoc-liberal
