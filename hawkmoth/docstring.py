@@ -130,7 +130,7 @@ class Docstring():
         Returns:
             str: Indented reST documentation string.
         """
-        lines[:] = [re.sub('^(?!$)', '   ' * nest, line) for line in lines]
+        lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
     def get_docstring(self, transform=None):
         # FIXME: This changes the number of lines in output. This impacts the
