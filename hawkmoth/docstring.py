@@ -159,10 +159,7 @@ class Docstring():
         Docstring._remove_comment_markers(comment_lines)
 
         if transform is not None:
-            # FIXME: Make transform handle lists of lines
-            text = '\n'.join(comment_lines)
-            text = transform(text)
-            comment_lines = text.splitlines()
+            transform(comment_lines)
 
         Docstring._nest(comment_lines, self._indent)
 

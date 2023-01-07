@@ -9,6 +9,12 @@ import pytest
 from hawkmoth.parser import parse
 from test import conf, testenv
 
+def _transform(transform, lines):
+    if transform:
+        text = '\n'.join(lines)
+        text = transform(text)
+        lines[:] = [line for line in text.splitlines()]
+
 def _get_output(testcase, **options):
     docs_str = ''
     errors_str = ''
@@ -31,7 +37,7 @@ def _get_output(testcase, **options):
         transform = None
 
     for comment in comments.walk():
-        lines = comment.get_docstring(transform=transform)
+        lines = comment.get_docstring(transform=lambda lines: _transform(transform, lines))
         docs_str += '\n'.join(lines) + '\n'
 
     for error in errors:
