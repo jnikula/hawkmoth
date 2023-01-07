@@ -99,6 +99,25 @@ class Docstring():
         """Test if comment is a C documentation comment."""
         return comment.startswith('/**') and comment != '/**/'
 
+    def _get_header_lines(self):
+        name = self._get_decl_name()
+
+        ttype = self._ttype
+
+        spacer = ''
+        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
+            spacer = ' '
+
+        args = ''
+        if self._args and len(self._args) > 0:
+            arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
+            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
+
+        header = self._fmt.format(name=name, ttype=ttype,
+                                  type_spacer=spacer, args=args)
+
+        return header.splitlines()
+
     def _get_comment_lines(self):
         return statemachine.string2lines(self._text, 8, convert_whitespace=True)
 
@@ -131,6 +150,7 @@ class Docstring():
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
     def get_docstring(self, transform=None):
+        header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
         # FIXME: This changes the number of lines in output. This impacts the
@@ -146,23 +166,7 @@ class Docstring():
 
         Docstring._nest(comment_lines, self._indent)
 
-        name = self._get_decl_name()
-
-        ttype = self._ttype
-
-        spacer = ''
-        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            spacer = ' '
-
-        args = ''
-        if self._args and len(self._args) > 0:
-            arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
-            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
-
-        header = self._fmt.format(name=name, ttype=ttype,
-                                  type_spacer=spacer, args=args)
-
-        lines = header.splitlines() + comment_lines
+        lines = header_lines + comment_lines
 
         Docstring._nest(lines, self._nest)
 
