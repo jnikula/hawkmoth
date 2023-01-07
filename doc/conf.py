@@ -50,22 +50,15 @@ needs_sphinx = '4.4'
 # This is not a good example to follow in regular documentation.
 try:
     import hawkmoth
-    from hawkmoth.util import doccompat, readthedocs
-    from sphinx.ext.napoleon import docstring, Config
+    from hawkmoth.util import readthedocs
 
     readthedocs.clang_setup()
 
     extensions.append('hawkmoth')
+    extensions.append('hawkmoth.ext.napoleon')
+    extensions.append('hawkmoth.ext.javadoc')
     tags.add('have_hawkmoth')
 
-    def napoleon_transform(comment):
-        config = Config(napoleon_use_rtype=False)
-        return str(docstring.GoogleDocstring(comment, config))
-
-    cautodoc_transformations = {
-        'napoleon': napoleon_transform,
-        'javadoc-liberal': doccompat.javadoc_liberal,
-    }
 except ImportError:
     sys.stderr.write('Warning: Failed to import hawkmoth. Mocking results.\n')
     sys.path.insert(0, os.path.abspath('ext'))
@@ -74,6 +67,7 @@ except ImportError:
     extensions.append('automock')
 
 hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test/examples')
+hawkmoth_javadoc_transform = 'javadoc-liberal'
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
