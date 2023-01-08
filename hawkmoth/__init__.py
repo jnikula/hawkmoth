@@ -58,27 +58,7 @@ class _AutoBaseDirective(SphinxDirective):
 
         return clang_args
 
-    def __get_transform(self):
-        transformations = self.env.config.cautodoc_transformations
-        tropt = self.options.get('transform')
-
-        if transformations is None:
-            return None
-
-        # Note: None is a valid key for default.
-        if tropt not in transformations:
-            return None
-
-        # Note: None is a valid value for no transformation.
-        return transformations.get(tropt)
-
     def __transform(self, lines):
-        transform = self.__get_transform()
-        if transform:
-            text = '\n'.join(lines)
-            text = transform(text)
-            lines[:] = [line for line in text.splitlines()]
-
         transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
 
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
@@ -288,7 +268,6 @@ def setup(app):
 
     app.add_config_value('cautodoc_root', None, 'env', [str])
     app.add_config_value('cautodoc_clang', None, 'env', [list])
-    app.add_config_value('cautodoc_transformations', None, 'env', [dict])
 
     app.add_config_value(
         'hawkmoth_root',
@@ -323,6 +302,9 @@ def setup(app):
     app.add_directive_to_domain('cpp', 'autoclass', CppAutoClassDirective)
 
     app.add_event('hawkmoth-process-docstring')
+
+    # Setup transformations for compatibility.
+    app.setup_extension('hawkmoth.ext.transformations')
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
