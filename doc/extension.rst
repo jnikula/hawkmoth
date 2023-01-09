@@ -48,6 +48,14 @@ The extension has a few configuration options that can be set in ``conf.py``:
       import os
       hawkmoth_root = os.path.abspath('my/sources/dir')
 
+.. py:data:: hawkmoth_transform_default
+   :type: str
+
+   The default transform parameter to be passed to the
+   :event:`hawkmoth-process-docstring` event. It can be overriden with the
+   ``transform`` option of the :ref:`directives <directives>`. Defaults to
+   ``None``.
+
 .. py:data:: cautodoc_transformations
    :type: dict
 
