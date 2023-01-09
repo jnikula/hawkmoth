@@ -19,7 +19,7 @@ generate documentation, but offers no control over what gets included.
 
    Incorporate documentation comments from the files specified by the space
    separated list of filename patterns given as arguments. The patterns are
-   interpreted relative to the :data:`cautodoc_root` configuration option.
+   interpreted relative to the :data:`hawkmoth_root` configuration option.
 
    .. rst:directive:option:: transform
       :type: text
@@ -31,7 +31,7 @@ generate documentation, but offers no control over what gets included.
    .. rst:directive:option:: clang
       :type: text
 
-      The ``clang`` option extends the :data:`cautodoc_clang` configuration
+      The ``clang`` option extends the :data:`hawkmoth_clang` configuration
       option.
 
    For example:
@@ -62,7 +62,7 @@ adding the ``file`` option.
       :type: text
 
       The ``file`` option specifies to file to parse. The filename is
-      interpreted relative to the :data:`cautodoc_root` configuration
+      interpreted relative to the :data:`hawkmoth_root` configuration
       option. (For the time being, this option is mandatory.)
 
    For example:
