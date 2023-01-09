@@ -220,3 +220,4 @@ intersphinx_mapping = {
 
 def setup(app):
     app.add_object_type('confval', 'confval')
+    app.add_object_type('event', 'event', 'pair: %s; event')

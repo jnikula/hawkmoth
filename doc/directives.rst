@@ -24,6 +24,9 @@ generate documentation, but offers no control over what gets included.
    .. rst:directive:option:: transform
       :type: text
 
+      Override :data:`hawkmoth_transform_default` for the ``transform``
+      parameter value of the :event:`hawkmoth-process-docstring` event.
+
       Name of the transformation function specified in
       :data:`cautodoc_transformations` to use for converting the comments. This
       value overrides the default in :data:`cautodoc_transformations`.
