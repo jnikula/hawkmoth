@@ -27,6 +27,27 @@ Installation and configuration in ``conf.py``:
    List of transforms to convert, defaults to ``['javadoc']``. If the
    ``transform`` option is not in in this list, do nothing.
 
+
+.. _hawkmoth.ext.napoleon:
+
+hawkmoth.ext.napoleon
+---------------------
+
+This extension provides a bridge from Hawkmoth to the
+:external+sphinx:py:mod:`sphinx.ext.napoleon` extension.
+
+Installation and configuration in ``conf.py``:
+
+.. code-block:: python
+
+   extensions.append('hawkmoth.ext.napoleon')
+
+.. py:data:: hawkmoth_napoleon_transform
+   :type: list
+
+   List of transforms to convert, defaults to ``['napoleon']``. If the
+   ``transform`` option is not in in this list, do nothing.
+
 .. _hawkmoth.ext.transformations:
 
 hawkmoth.ext.transformations
