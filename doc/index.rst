@@ -37,6 +37,7 @@ Contents:
    syntax
    examples
    extending
+   built-in-extensions
    troubleshooting
 
 Indices and tables
