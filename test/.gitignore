@@ -1,6 +1,0 @@
-# Note: needs fixing if non-generated .script files get added
-*.script
-*.stderr-actual
-*.stderr-diff
-*.stdout-actual
-*.stdout-diff
