@@ -388,7 +388,9 @@ def _type_fixup(cursor):
         ttype = ' '.join(type_elem)
         name = cursor.spelling + dims
 
-    return ttype, name
+    inheritance = _get_inheritance(cursor)
+
+    return ttype, f'{name}{inheritance if inheritance else ""}'
 
 def _get_args(cursor):
     """Get function / method arguments."""
@@ -432,6 +434,22 @@ def _fn_fixup(cursor):
     quals = ' '.join(method_quals)
 
     return ttype, args, quals
+
+def _get_inheritance(cursor):
+    """Get the full inheritance list of a cursor in C++ syntax.
+
+    Returns:
+        String with the form ': A, B, ...' when a cursor has
+        `CXX_BASE_SPECIFIER` children or `None` otherwise.
+    """
+    inherited = []
+    for child in cursor.get_children():
+        if child.kind == CursorKind.CXX_BASE_SPECIFIER:
+            pad = lambda s: s + ' ' if s else ''
+            access_spec = _get_access_specifier(child)
+            inherited.append(f'{pad(access_spec)}{child.type.spelling}')
+
+    return ': ' + ', '.join(inherited) if len(inherited) > 0 else None
 
 def _recursive_parse(domain, comments, errors, cursor, nest):
     comment = comments[cursor.hash]
@@ -477,11 +495,15 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
         return [ds]
 
-    elif cursor.kind in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL,
-                         CursorKind.ENUM_DECL]:
+    elif cursor.kind in [CursorKind.STRUCT_DECL,
+                         CursorKind.UNION_DECL,
+                         CursorKind.ENUM_DECL,
+                         CursorKind.CLASS_DECL,
+                         CursorKind.CLASS_TEMPLATE]:
 
         # Do not set the decl_name for anonymous symbols (empty spelling).
-        decl_name = name if cursor.spelling != '' else None
+        _, decl_name = _type_fixup(cursor)
+        decl_name = decl_name if cursor.spelling != '' else None
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(domain=domain, text=text,
@@ -491,10 +513,14 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
             ds = docstring.UnionDocstring(domain=domain, text=text,
                                           nest=nest, name=name,
                                           decl_name=decl_name, meta=meta)
-        else:
+        elif cursor.kind == CursorKind.ENUM_DECL:
             ds = docstring.EnumDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          decl_name=decl_name, meta=meta)
+        elif cursor.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE]:
+            ds = docstring.ClassDocstring(domain=domain, text=text,
+                                          nest=nest, name=name,
+                                          decl_name=decl_name, meta=meta)
 
         for c in cursor.get_children():
             if c.hash in comments:
