@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2021 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2022 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2023 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment storage and converter
@@ -51,12 +51,14 @@ class Docstring():
     _fmt = ''
 
     def __init__(self, domain='c', text=None, name=None,
-                 decl_name=None, ttype=None, args=None, meta=None, nest=0):
+                 decl_name=None, ttype=None, args=None,
+                 quals=None, meta=None, nest=0):
         self._text = text
         self._name = name
         self._decl_name = decl_name
         self._ttype = ttype
         self._args = args
+        self._quals = quals
         self._meta = meta
         self._nest = nest
         self._domain = domain
@@ -104,10 +106,15 @@ class Docstring():
         name = self._get_decl_name()
         domain = self._domain
         ttype = self._ttype
+        quals = self._quals
 
-        spacer = ''
+        type_spacer = ''
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            spacer = ' '
+            type_spacer = ' '
+
+        quals_spacer = ''
+        if quals and len(quals) > 0:
+            quals_spacer = ' '
 
         args = ''
         if self._args and len(self._args) > 0:
@@ -115,7 +122,8 @@ class Docstring():
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
         header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=spacer, args=args)
+                                  type_spacer=type_spacer, args=args,
+                                  quals=quals, quals_spacer=quals_spacer)
 
         return header.splitlines()
 
@@ -239,4 +247,4 @@ class MacroFunctionDocstring(Docstring):
 
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:function:: {ttype}{type_spacer}{name}({args})\n\n'
+    _fmt = '\n.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}\n\n'
