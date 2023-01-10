@@ -249,3 +249,7 @@ class MacroFunctionDocstring(Docstring):
 class FunctionDocstring(Docstring):
     _indent = 1
     _fmt = '\n.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}\n\n'
+
+class ClassDocstring(_CompoundDocstring):
+    _indent = 1
+    _fmt = '\n.. cpp:class:: {name}\n\n'
