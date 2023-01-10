@@ -118,7 +118,8 @@ class Docstring():
 
         args = ''
         if self._args and len(self._args) > 0:
-            arg_fmt = lambda t, n: f"{t}{'' if len(t) == 0 or t.endswith('*') else ' '}{n}"
+            pad_type = lambda t: '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+            arg_fmt = lambda t, n: f"{t}{pad_type(t)}{n}"
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
         header = self._fmt.format(domain=domain, name=name, ttype=ttype,
