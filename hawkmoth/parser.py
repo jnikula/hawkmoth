@@ -420,7 +420,8 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
-                                         ttype=ttype, args=args, meta=meta)
+                                         ttype=ttype, args=args,
+                                         quals='', meta=meta)
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
