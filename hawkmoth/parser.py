@@ -154,6 +154,8 @@ def _comment_extract(tu):
         # between the comment and the actual cursor being documented.
         if token_cursor.kind in [CursorKind.INVALID_FILE,
                                  CursorKind.TYPE_REF,
+                                 CursorKind.TEMPLATE_REF,
+                                 CursorKind.NAMESPACE_REF,
                                  CursorKind.PREPROCESSING_DIRECTIVE,
                                  CursorKind.MACRO_INSTANTIATION]:
             continue
