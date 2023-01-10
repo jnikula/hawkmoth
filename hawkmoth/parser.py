@@ -287,7 +287,7 @@ def _var_type_fixup(cursor):
             break
 
     if cursor_type.kind == TypeKind.FUNCTIONPROTO:
-        pad = lambda s: s if s.endswith('*') else s + ' '
+        pad = lambda s: s if s.endswith('*') or s.endswith('&') else s + ' '
 
         args = []
         for c in cursor.get_children():
