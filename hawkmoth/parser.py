@@ -33,7 +33,8 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 import enum
 from dataclasses import dataclass
 
-from clang.cindex import TokenKind, CursorKind, TypeKind, StorageClass
+from clang.cindex import TokenKind, CursorKind, TypeKind
+from clang.cindex import StorageClass, AccessSpecifier
 from clang.cindex import Index, TranslationUnit
 from clang.cindex import Diagnostic
 
@@ -236,12 +237,14 @@ def _get_storage_class(cursor):
     return storage_class_map.get(cursor.storage_class)
 
 def _get_fn_quals(cursor):
-    """Get all the qualifiers of a function object.
+    """Get all the qualifiers of a function object, whatever its type.
 
     Returns:
-        List of (prefix) function qualifiers.
+        List of (prefix) function qualifiers and list of (suffix) method
+        specific qualifiers.
     """
     fn_quals = []
+    method_quals = []
 
     if cursor.kind == CursorKind.FUNCTION_DECL:
         tokens = [t.spelling for t in cursor.get_tokens()]
@@ -250,7 +253,45 @@ def _get_fn_quals(cursor):
         if 'inline' in tokens:
             fn_quals.append('inline')
 
-    return fn_quals
+    elif cursor.kind in [CursorKind.CONSTRUCTOR,
+                         CursorKind.DESTRUCTOR,
+                         CursorKind.CXX_METHOD,
+                         CursorKind.FUNCTION_TEMPLATE]:
+        tokens = [t.spelling for t in cursor.get_tokens()]
+
+        if cursor.is_static_method():
+            fn_quals.append('static')
+        if cursor.is_virtual_method():
+            fn_quals.append('virtual')
+        if 'constexpr' in tokens:
+            fn_quals.append('constexpr')
+
+        if cursor.is_const_method():
+            method_quals.append('const')
+        if cursor.is_pure_virtual_method():
+            method_quals.append('= 0')
+        if cursor.is_default_method():
+            method_quals.append('= default')
+        if 'delete' in tokens:
+            method_quals.append('= delete')
+        if 'override' in tokens:
+            method_quals.append('override')
+
+    return fn_quals, method_quals
+
+def _get_access_specifier(cursor):
+    """Get the access specifier of a cursor, if any.
+
+    Returns:
+        One of 'private', 'protected', 'public' or `None`.
+    """
+    name_map = {
+        AccessSpecifier.PRIVATE: 'private',
+        AccessSpecifier.PROTECTED: 'protected',
+        AccessSpecifier.PUBLIC: 'public',
+    }
+
+    return name_map.get(cursor.access_specifier, None)
 
 def _type_fixup(cursor):
     """Fix non trivial types' spelling and append qualifiers.
@@ -339,6 +380,31 @@ def _get_args(cursor):
 
     return args
 
+def _fn_fixup(cursor):
+    """Parse C++ method specific qualifiers."""
+    args = _get_args(cursor)
+
+    if cursor.kind in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
+        ttype = ''
+        quals = '= default' if cursor.is_default_method() else ''
+        return ttype, args, quals
+
+    full_type = []
+
+    access_spec = _get_access_specifier(cursor)
+    if access_spec:
+        full_type.append(access_spec)
+
+    fn_quals, method_quals = _get_fn_quals(cursor)
+
+    full_type.extend(fn_quals)
+    full_type.append(cursor.result_type.spelling)
+
+    ttype = ' '.join(full_type)
+    quals = ' '.join(method_quals)
+
+    return ttype, args, quals
+
 def _recursive_parse(domain, comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -415,15 +481,16 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
         return [ds]
 
-    elif cursor.kind == CursorKind.FUNCTION_DECL:
-        args = _get_args(cursor)
-        linkage = ' '.join(_get_fn_quals(cursor))
-        ttype = f'{linkage}{" " if linkage else ""}{cursor.result_type.spelling}'
-
+    elif cursor.kind in [CursorKind.FUNCTION_DECL,
+                         CursorKind.CONSTRUCTOR,
+                         CursorKind.DESTRUCTOR,
+                         CursorKind.CXX_METHOD,
+                         CursorKind.FUNCTION_TEMPLATE]:
+        ttype, args, quals = _fn_fixup(cursor)
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
-                                         quals='', meta=meta)
+                                         quals=quals, meta=meta)
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
