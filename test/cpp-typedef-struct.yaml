@@ -1,3 +1,4 @@
 domain: cpp
+directive: autodoc
 directive-arguments:
   - typedef-struct.c

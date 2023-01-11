@@ -1,3 +1,4 @@
 domain: cpp
+directive: autodoc
 directive-arguments:
   - cpp-mixed-linkage.cpp

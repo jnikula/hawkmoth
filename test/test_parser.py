@@ -27,7 +27,7 @@ def _get_output(testcase, **options):
     clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
 
     directive = options.get('directive')
-    if directive:
+    if directive != 'autodoc':
         pytest.skip(f'{directive} directive test')
 
     input_filename = testenv.get_input_filename(options, path=testenv.testdir)

@@ -1,3 +1,4 @@
 domain: c
+directive: autodoc
 directive-arguments:
   - cpp-wrong-syntax.h
