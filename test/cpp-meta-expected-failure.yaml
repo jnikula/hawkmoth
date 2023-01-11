@@ -1,4 +1,5 @@
 domain: cpp
+directive: autodoc
 directive-arguments:
   - meta-expected-failure.c
 expected-failure: true

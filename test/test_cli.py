@@ -44,7 +44,7 @@ def _get_output(testcase, monkeypatch, capsys, **options):
     args = [testenv.get_input_filename(options, path=testenv.testdir)]
 
     directive = options.get('directive')
-    if directive:
+    if directive != 'autodoc':
         pytest.skip(f'{directive} directive test')
 
     domain = options.get('domain')

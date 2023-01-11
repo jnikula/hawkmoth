@@ -1,4 +1,5 @@
 domain: c
+directive: autodoc
 directive-arguments:
   - example-compat.c
 directive-options:

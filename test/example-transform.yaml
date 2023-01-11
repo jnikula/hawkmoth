@@ -1,4 +1,5 @@
 domain: c
+directive: autodoc
 directive-arguments:
   - example-transform.c
 directive-options:
