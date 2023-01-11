@@ -99,19 +99,6 @@ def get_directive_string(options):
 
     return directive_str
 
-def modify_filename(filename, **kwargs):
-    ext = kwargs.get('ext')
-    if ext is not None:
-        base, extension = os.path.splitext(filename)
-        filename = base + '.' + ext
-
-    dirname = kwargs.get('dir')
-    if dirname is not None:
-        base = os.path.basename(filename)
-        filename = os.path.join(dirname, base)
-
-    return filename
-
 def read_file(filename):
     if not filename or not os.path.isfile(filename):
         # Emulate empty file.

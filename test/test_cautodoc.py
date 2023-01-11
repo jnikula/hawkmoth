@@ -13,7 +13,7 @@ from test import testenv
 def _get_output(testcase, app, status, warning, output_suffix, **options):
     input_filename = testenv.get_input_filename(options, path=testenv.testdir)
     shutil.copyfile(input_filename,
-                    testenv.modify_filename(input_filename, dir=app.srcdir))
+                    os.path.join(app.srcdir, os.path.basename(input_filename)))
 
     directive_str = testenv.get_directive_string(options)
 
