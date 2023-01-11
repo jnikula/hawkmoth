@@ -71,8 +71,8 @@ def _get_output(testcase, monkeypatch, capsys, **options):
     return docs_str, errors_str
 
 def _get_expected(testcase, monkeypatch, **options):
-    return testenv.read_file(testcase, ext='rst'), \
-        testenv.read_file(testcase, ext='stderr')
+    return testenv.read_file(testenv.get_expected_filename(testcase)), \
+        testenv.read_file(testenv.get_stderr_filename(testcase))
 
 @pytest.mark.full
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
