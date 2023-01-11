@@ -41,7 +41,7 @@ def _capture(capsys):
     return captured.out, _stderr_basename(captured.err)
 
 def _get_output(testcase, monkeypatch, capsys, **options):
-    args = [testenv.get_input_filename(options, path=testenv.testdir)]
+    args = [testenv.get_input_filename(testcase)]
 
     directive = options.get('directive')
     if directive != 'autodoc':
