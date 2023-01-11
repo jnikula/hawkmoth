@@ -27,7 +27,7 @@ def _get_output(testcase, app, status, warning, output_suffix, **options):
     return testenv.read_file(output_filename), None
 
 def _get_expected(testcase, app, status, warning, output_suffix, **options):
-    shutil.copyfile(testenv.modify_filename(testcase, ext='rst'),
+    shutil.copyfile(testenv.get_expected_filename(testcase),
                     os.path.join(app.srcdir, 'index.rst'))
 
     app.build()

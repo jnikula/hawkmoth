@@ -63,6 +63,12 @@ def get_input_filename(options, path=None):
     else:
         return basename
 
+def get_expected_filename(testcase):
+    return modify_filename(testcase, ext='rst')
+
+def get_stderr_filename(testcase):
+    return modify_filename(testcase, ext='stderr')
+
 def get_directive_string(options):
     domain = options.get('domain', None)
     directive = options.get('directive')
@@ -94,9 +100,7 @@ def modify_filename(filename, **kwargs):
 
     return filename
 
-def read_file(filename, **kwargs):
-    filename = modify_filename(filename, **kwargs)
-
+def read_file(filename):
     if not os.path.isfile(filename):
         # Emulate empty file.
         return ''

@@ -53,8 +53,8 @@ def _get_output(testcase, **options):
     return docs_str, errors_str
 
 def _get_expected(testcase, **options):
-    return testenv.read_file(testcase, ext='rst'), \
-        testenv.read_file(testcase, ext='stderr')
+    return testenv.read_file(testenv.get_expected_filename(testcase)), \
+        testenv.read_file(testenv.get_stderr_filename(testcase))
 
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
