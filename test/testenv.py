@@ -38,6 +38,7 @@ options_schema = strictyaml.Map({
     strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
     strictyaml.Optional('example-title'): strictyaml.Str(),
     strictyaml.Optional('example-priority'): strictyaml.Int(),
+    strictyaml.Optional('errors'): strictyaml.Str(),
 })
 
 def get_testcase_options(testcase):
@@ -48,6 +49,12 @@ def get_testcase_options(testcase):
             options = strictyaml.load(f.read(), options_schema).data
 
     return options
+
+def get_testcase_relative_filename(testcase, relative):
+    if relative is None:
+        return None
+
+    return os.path.join(os.path.dirname(testcase), relative)
 
 def get_input_filename(options, path=None):
     directive = options.get('directive')
@@ -67,7 +74,9 @@ def get_expected_filename(testcase):
     return modify_filename(testcase, ext='rst')
 
 def get_stderr_filename(testcase):
-    return modify_filename(testcase, ext='stderr')
+    options = get_testcase_options(testcase)
+
+    return get_testcase_relative_filename(testcase, options.get('errors'))
 
 def get_directive_string(options):
     domain = options.get('domain', None)
@@ -101,7 +110,7 @@ def modify_filename(filename, **kwargs):
     return filename
 
 def read_file(filename):
-    if not os.path.isfile(filename):
+    if not filename or not os.path.isfile(filename):
         # Emulate empty file.
         return ''
 
