@@ -1,5 +1,3 @@
 domain: c
 directive-arguments:
   - cpp-wrong-syntax.h
-example-title: C++ syntax in C source
-example-priority: 1
