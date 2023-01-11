@@ -39,7 +39,7 @@
    function pointer with multiple qualifiers
 
 
-.. c:var:: const char *(*const *volatile *const legal_type_involving_function_pointer[12][3])(const char *in)
+.. c:var:: const char *(*const *volatile *const legal_type_involving_function_pointer[2][2])(const char *in)
 
    a complex type involving function pointers somehow
 
