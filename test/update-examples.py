@@ -70,7 +70,7 @@ def print_example(testcase):
         namespace = 'namespace_' + hashlib.md5(f'{testcase}'.encode()).hexdigest()
 
         namespace_push = f'.. {domain}:namespace-push:: {namespace}\n\n'
-        namespace_pop = '\n.. {domain}:namespace-pop::\n'
+        namespace_pop = f'\n.. {domain}:namespace-pop::\n'
     else:
         namespace_push = ''
         namespace_pop = ''
