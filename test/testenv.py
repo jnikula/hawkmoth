@@ -39,6 +39,7 @@ options_schema = strictyaml.Map({
     strictyaml.Optional('example-title'): strictyaml.Str(),
     strictyaml.Optional('example-priority'): strictyaml.Int(),
     strictyaml.Optional('errors'): strictyaml.Str(),
+    'expected': strictyaml.Str(),
 })
 
 def get_testcase_options(testcase):
@@ -71,7 +72,9 @@ def get_input_filename(options, path=None):
         return basename
 
 def get_expected_filename(testcase):
-    return modify_filename(testcase, ext='rst')
+    options = get_testcase_options(testcase)
+
+    return get_testcase_relative_filename(testcase, options.get('expected'))
 
 def get_stderr_filename(testcase):
     options = get_testcase_options(testcase)

@@ -6,3 +6,4 @@ directive-options:
   file: example-typedef.c
 example-title: Typedef
 example-priority: 20
+expected: example-typedef.rst

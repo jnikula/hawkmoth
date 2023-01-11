@@ -4,3 +4,4 @@ directive-arguments:
   - example-struct.c
 example-title: Struct
 example-priority: 50
+expected: example-struct.rst

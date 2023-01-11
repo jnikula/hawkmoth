@@ -3,3 +3,4 @@ directive: autodoc
 directive-arguments:
   - meta-expected-failure.c
 expected-failure: true
+expected: meta-expected-failure.rst

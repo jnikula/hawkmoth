@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - composition.c
+expected: composition.rst

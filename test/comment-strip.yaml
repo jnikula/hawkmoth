@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - comment-strip.c
+expected: comment-strip.rst

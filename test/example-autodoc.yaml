@@ -4,3 +4,4 @@ directive-arguments:
   - example-autodoc.c
 example-title: Overview
 example-priority: 1
+expected: example-autodoc.rst

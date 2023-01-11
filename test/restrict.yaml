@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - restrict.c
+expected: restrict.rst

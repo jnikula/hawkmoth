@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - typedef-struct.c
+expected: typedef-struct.rst

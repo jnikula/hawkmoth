@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - simple-macro.c
+expected: simple-macro.rst

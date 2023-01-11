@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - typedef-enum.c
+expected: typedef-enum.rst

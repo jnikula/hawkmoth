@@ -7,3 +7,4 @@ directive-options:
 example-use-namespace: yes
 example-title: Function
 example-priority: 41
+expected: example-autofunction.rst

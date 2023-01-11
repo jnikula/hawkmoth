@@ -4,3 +4,4 @@ directive-arguments:
   - function_pointer_array
 directive-options:
   file: variable.c
+expected: autovariable-fnptr-array.rst
