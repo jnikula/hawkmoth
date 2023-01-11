@@ -57,7 +57,9 @@ def get_testcase_relative_filename(testcase, relative):
 
     return os.path.join(os.path.dirname(testcase), relative)
 
-def get_input_filename(options, path=None):
+def get_input_filename(testcase):
+    options = get_testcase_options(testcase)
+
     directive = options.get('directive')
     if directive == 'autodoc':
         arguments = options.get('directive-arguments', [])
@@ -66,10 +68,7 @@ def get_input_filename(options, path=None):
         directive_options = options.get('directive-options', {})
         basename = directive_options.get('file')
 
-    if path:
-        return os.path.join(path, basename)
-    else:
-        return basename
+    return get_testcase_relative_filename(testcase, basename)
 
 def get_expected_filename(testcase):
     options = get_testcase_options(testcase)
