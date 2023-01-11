@@ -273,6 +273,10 @@ class CppAutoEnumDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.EnumDocstring]
 
+class CppAutoClassDirective(_AutoCompoundDirective):
+    _domain = 'cpp'
+    _docstring_types = [docstring.ClassDocstring]
+
 def _deprecate(conf, old, new, default=None):
     if conf[old]:
         logger = logging.getLogger(__name__)
@@ -317,6 +321,7 @@ def setup(app):
     app.add_directive_to_domain('cpp', 'autoenum', CppAutoEnumDirective)
     app.add_directive_to_domain('cpp', 'automacro', CppAutoMacroDirective)
     app.add_directive_to_domain('cpp', 'autofunction', CppAutoFunctionDirective)
+    app.add_directive_to_domain('cpp', 'autoclass', CppAutoClassDirective)
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
