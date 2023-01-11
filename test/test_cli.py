@@ -50,6 +50,7 @@ def _get_output(testcase, monkeypatch, capsys, **options):
     domain = options.get('domain')
     if domain is not None:
         args += [f'--domain={domain}']
+        args += [f'--clang={"-xc++" if domain == "cpp" else "-xc"}']
 
     directive_options = options.get('directive-options', {})
 
