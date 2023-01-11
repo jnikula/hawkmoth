@@ -2,3 +2,4 @@ domain: cpp
 directive: autodoc
 directive-arguments:
   - simple-macro.c
+expected: cpp-simple-macro.rst

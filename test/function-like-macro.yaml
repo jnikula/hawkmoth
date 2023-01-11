@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - function-like-macro.c
+expected: function-like-macro.rst

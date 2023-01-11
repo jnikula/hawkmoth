@@ -3,3 +3,4 @@ directive: autodoc
 directive-arguments:
   - cpp-wrong-syntax.h
 errors: cpp-wrong-syntax.stderr
+expected: cpp-wrong-syntax.rst

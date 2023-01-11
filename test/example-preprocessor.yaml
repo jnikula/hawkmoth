@@ -7,3 +7,4 @@ directive-options:
     - -DDEEP_THOUGHT
 example-title: Preprocessor
 example-priority: 80
+expected: example-preprocessor.rst

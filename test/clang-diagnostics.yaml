@@ -3,3 +3,4 @@ directive: autodoc
 directive-arguments:
   - clang-diagnostics.c
 errors: clang-diagnostics.stderr
+expected: clang-diagnostics.rst

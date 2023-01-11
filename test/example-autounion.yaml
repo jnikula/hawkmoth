@@ -7,3 +7,4 @@ directive-options:
   members:
 example-title: Union
 example-priority: 60
+expected: example-autounion.rst

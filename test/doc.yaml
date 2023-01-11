@@ -2,3 +2,4 @@ domain: c
 directive: autodoc
 directive-arguments:
   - doc.c
+expected: doc.rst

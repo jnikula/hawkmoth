@@ -4,3 +4,4 @@ directive-arguments:
   - example-function.c
 example-title: Function
 example-priority: 40
+expected: example-function.rst

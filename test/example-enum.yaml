@@ -7,3 +7,4 @@ directive-options:
   members:
 example-title: Enum
 example-priority: 70
+expected: example-enum.rst

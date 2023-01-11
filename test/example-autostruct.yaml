@@ -8,3 +8,4 @@ directive-options:
 example-use-namespace: yes
 example-title: Struct
 example-priority: 51
+expected: example-autostruct.rst

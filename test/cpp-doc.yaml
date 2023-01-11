@@ -2,3 +2,4 @@ domain: cpp
 directive: autodoc
 directive-arguments:
   - doc.c
+expected: cpp-doc.rst

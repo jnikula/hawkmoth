@@ -4,3 +4,4 @@ directive-arguments:
   - example-macro.c
 example-title: Macro
 example-priority: 30
+expected: example-macro.rst

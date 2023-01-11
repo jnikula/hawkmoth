@@ -4,3 +4,4 @@ directive-arguments:
   - example-variable.c
 example-title: Variable
 example-priority: 10
+expected: example-variable.rst
