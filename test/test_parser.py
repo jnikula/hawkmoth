@@ -21,6 +21,11 @@ def _get_output(testcase, **options):
 
     domain = options.get('domain')
 
+    # Default to compile as C++ if the test is for the C++ domain so that we can
+    # use C sources for C++ tests. The yaml may override this in cases where we
+    # want to force a mismatch.
+    clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
+
     directive = options.get('directive')
     if directive:
         pytest.skip(f'{directive} directive test')
@@ -29,7 +34,7 @@ def _get_output(testcase, **options):
 
     options = options.get('directive-options', {})
 
-    clang_args = options.get('clang')
+    clang_args.extend(options.get('clang', []))
     comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
     tropt = options.pop('transform', None)
