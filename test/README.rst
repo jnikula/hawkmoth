@@ -39,10 +39,9 @@ Test Cases
 ----------
 
 The test functions described above are parametrized using what we call test
-cases. Each test case is defined by a pair of ``.yaml`` and ``.rst`` files. The
-``.yaml`` defines the configuration and the input C source file, while the
-``.rst`` is the expected output. Optionally a ``.stderr`` file can define the
-expected error output.
+cases. Each test case is defined by a ``.yaml`` file. The ``.yaml`` defines the
+configuration, the input C source file, the expected reStructuredText output
+file, and optionally a diagnostics (error messages) output file.
 
 The YAML is parsed using StrictYAML, using a schema defined in ``testenv.py``.
 
