@@ -11,5 +11,9 @@ test:
 test-verbose:
 	pytest -n auto -vv $(test_dir)
 
+# Ensure a) update-examples works, and b) examples have been updated.
+test-examples:
+	$(test_dir)/update-examples.py | diff -q - $(docdir)/examples.rst
+
 quick-test:
 	pytest -n auto -m "not full" $(test_dir)
