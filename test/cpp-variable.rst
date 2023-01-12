@@ -1,5 +1,5 @@
 
-.. cpp:var:: int sheesh
+.. cpp:var:: static int sheesh
 
    This is a variable document.
 
@@ -54,7 +54,7 @@
    Array of pointers.
 
 
-.. cpp:var:: int multi_dim[1][2]
+.. cpp:var:: extern int multi_dim[1][2]
 
    Multi-dimensional array.
 
