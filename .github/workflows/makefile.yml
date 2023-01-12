@@ -18,6 +18,16 @@ jobs:
     - name: Style check
       run: make check
 
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - name: Install dependencies (pip)
+      run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+    - name: Examples check
+      run: make test-examples
+
   build:
     runs-on: ubuntu-latest
     steps:
