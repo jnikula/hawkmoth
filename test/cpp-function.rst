@@ -1,5 +1,5 @@
 
-.. cpp:function:: int foo(int bar, int baz)
+.. cpp:function:: static inline int foo(int bar, int baz)
 
    Foo function.
 

@@ -1,12 +1,12 @@
 /**
  * Foo function.
  */
-int foo(int bar, int baz);
+static inline int foo(int bar, int baz);
 
 /**
  * No parameters.
  */
-int no_parameters(void);
+extern int no_parameters(void);
 
 /**
  * Empty parameter list.
