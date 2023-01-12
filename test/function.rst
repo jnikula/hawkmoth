@@ -1,5 +1,5 @@
 
-.. c:function:: int foo(int bar, int baz)
+.. c:function:: static inline int foo(int bar, int baz)
 
    Foo function.
 
