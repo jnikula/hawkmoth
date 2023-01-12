@@ -68,7 +68,7 @@ def print_example(testcase):
 
     if options.get('example-use-namespace'):
         # Generate namespace from relative path to YAML without extension
-        relative = os.path.relpath(testcase, start=testenv.testdir)
+        relative = os.path.relpath(testcase.filename, start=testenv.testdir)
         relative, _ = os.path.splitext(relative)
 
         namespace = 'namespace_' + re.sub(r'[^a-zA-Z0-9]', '_', relative)
@@ -107,7 +107,7 @@ def get_examples():
     examples = {}
 
     for testcase in testenv.get_testcases(testenv.testdir):
-        if not os.path.basename(testcase).startswith('example-'):
+        if not os.path.basename(testcase.filename).startswith('example-'):
             continue
 
         input_filename = os.path.basename(testenv.get_input_filename(testcase))

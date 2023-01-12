@@ -15,14 +15,9 @@ sys.path.insert(0, rootdir)
 
 def get_testid(testcase):
     """Convert a testcase filename into a test case identifier."""
-    name = os.path.splitext(os.path.basename(testcase))[0]
+    name = os.path.splitext(os.path.basename(testcase.filename))[0]
 
     return name
-
-def get_testcases(path):
-    for f in sorted(os.listdir(path)):
-        if f.endswith(testext):
-            yield os.path.join(path, f)
 
 options_schema = strictyaml.Map({
     'domain': strictyaml.Enum(['c', 'cpp']),
@@ -42,20 +37,29 @@ options_schema = strictyaml.Map({
     'expected': strictyaml.Str(),
 })
 
-def get_testcase_options(testcase):
-    # options are optional
-    options = {}
-    if os.path.isfile(testcase):
-        with open(testcase, 'r') as f:
-            options = strictyaml.load(f.read(), options_schema).data
+class Testcase:
+    def __init__(self, filename):
+        self.filename = filename
+        with open(filename, 'r') as f:
+            self.options = strictyaml.load(f.read(), options_schema).data
 
-    return options
+def get_testcase_options(testcase):
+    return testcase.options
+
+def get_testcase_filenames(path):
+    for f in sorted(os.listdir(path)):
+        if f.endswith(testext):
+            yield os.path.join(path, f)
+
+def get_testcases(path):
+    for f in get_testcase_filenames(path):
+        yield Testcase(f)
 
 def get_testcase_relative_filename(testcase, relative):
     if relative is None:
         return None
 
-    return os.path.join(os.path.dirname(testcase), relative)
+    return os.path.join(os.path.dirname(testcase.filename), relative)
 
 def get_input_filename(testcase):
     options = get_testcase_options(testcase)
