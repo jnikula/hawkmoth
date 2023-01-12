@@ -72,4 +72,4 @@ char *array_of_pointers[1];
 /**
  * Multi-dimensional array.
  */
-int multi_dim[1][2];
+extern int multi_dim[1][2];

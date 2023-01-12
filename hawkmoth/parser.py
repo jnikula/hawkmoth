@@ -33,7 +33,7 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 import enum
 from dataclasses import dataclass
 
-from clang.cindex import TokenKind, CursorKind, TypeKind
+from clang.cindex import TokenKind, CursorKind, TypeKind, StorageClass
 from clang.cindex import Index, TranslationUnit
 from clang.cindex import Diagnostic
 
@@ -218,6 +218,21 @@ def _get_macro_args(cursor):
 
     return None
 
+def _get_storage_class(cursor):
+    """Get the storage class of a cursor.
+
+    Only storage classes that are relevant to the documentation are returned.
+
+    Returns:
+        Storage class as a string. ``None`` otherwise.
+    """
+    storage_class_map = {
+        StorageClass.EXTERN: 'extern',
+        StorageClass.STATIC: 'static',
+    }
+
+    return storage_class_map.get(cursor.storage_class)
+
 def _type_fixup(cursor):
     """Fix non trivial types' spelling and append qualifiers.
 
@@ -271,9 +286,18 @@ def _type_fixup(cursor):
         ttype = ''
         name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
     else:
-        ttype = cursor_type.spelling
+        type_elem = []
+
+        storage_class = _get_storage_class(cursor)
+        if storage_class:
+            type_elem.append(storage_class)
+
+        type_elem.append(cursor_type.spelling)
+
         if stars_and_quals:
-            ttype += ' ' + stars_and_quals
+            type_elem.append(stars_and_quals)
+
+        ttype = ' '.join(type_elem)
         name = cursor.spelling + dims
 
     return ttype, name
