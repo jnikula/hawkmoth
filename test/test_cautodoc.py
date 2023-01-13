@@ -11,7 +11,7 @@ from sphinx_testing import with_app
 from test import testenv
 
 def _get_output(testcase, app, status, warning, output_suffix, **options):
-    input_filename = testenv.get_input_filename(testcase)
+    input_filename = testcase.get_input_filename()
     shutil.copyfile(input_filename,
                     os.path.join(app.srcdir, os.path.basename(input_filename)))
 

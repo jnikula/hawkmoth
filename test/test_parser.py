@@ -30,7 +30,7 @@ def _get_output(testcase, **options):
     if directive != 'autodoc':
         pytest.skip(f'{directive} directive test')
 
-    input_filename = testenv.get_input_filename(testcase)
+    input_filename = testcase.get_input_filename()
 
     options = options.get('directive-options', {})
 

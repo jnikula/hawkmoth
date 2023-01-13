@@ -49,6 +49,19 @@ class Testcase:
 
         return os.path.join(os.path.dirname(self.filename), relative)
 
+    def get_input_filename(self):
+        options = self.options
+
+        directive = options.get('directive')
+        if directive == 'autodoc':
+            arguments = options.get('directive-arguments', [])
+            basename = arguments[0]
+        else:
+            directive_options = options.get('directive-options', {})
+            basename = directive_options.get('file')
+
+        return self.get_relative_filename(basename)
+
 def get_testid(testcase):
     return testcase.get_testid()
 
@@ -63,19 +76,6 @@ def get_testcase_filenames(path):
 def get_testcases(path):
     for f in get_testcase_filenames(path):
         yield Testcase(f)
-
-def get_input_filename(testcase):
-    options = get_testcase_options(testcase)
-
-    directive = options.get('directive')
-    if directive == 'autodoc':
-        arguments = options.get('directive-arguments', [])
-        basename = arguments[0]
-    else:
-        directive_options = options.get('directive-options', {})
-        basename = directive_options.get('file')
-
-    return testcase.get_relative_filename(basename)
 
 def get_expected_filename(testcase):
     options = get_testcase_options(testcase)
