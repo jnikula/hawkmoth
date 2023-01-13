@@ -88,14 +88,12 @@ class Testcase:
 
         return directive_str
 
-    def run_test(self, monkeypatch=None, capsys=None):
+    def run_test(self):
         if self.options.get('expected-failure'):
             pytest.xfail()
 
-        output_docs, output_errors = self.get_output(monkeypatch=monkeypatch,
-                                                     capsys=capsys)
-        expect_docs, expect_errors = self.get_expected(monkeypatch=monkeypatch,
-                                                       capsys=capsys)
+        output_docs, output_errors = self.get_output()
+        expect_docs, expect_errors = self.get_expected()
 
         assert output_docs == expect_docs
         assert output_errors == expect_errors

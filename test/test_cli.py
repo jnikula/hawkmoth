@@ -10,10 +10,6 @@ import pytest
 from hawkmoth.__main__ import main
 from test import testenv
 
-# Mock sys.argv for cli
-def _mock_args(monkeypatch, args):
-    monkeypatch.setattr('sys.argv', ['dummy'] + args)
-
 # Replace full filename in a stderr line with basename
 def _basename(line):
     mo = re.match(r'(?P<severity>[^:]+): (?P<filename>[^:]+):(?P<lineno>[^:]+):(?P<msg>.*)', line)
@@ -34,14 +30,26 @@ def _stderr_basename(errors_str):
 
     return errors_str
 
-# Capture stdout, stderr from cli
-def _capture(capsys):
-    captured = capsys.readouterr()
-
-    return captured.out, _stderr_basename(captured.err)
 
 class CliTestcase(testenv.Testcase):
-    def get_output(self, monkeypatch, capsys, **unused):
+    def set_monkeypatch(self, monkeypatch):
+        self.monkeypatch = monkeypatch
+        self.mock_args([])
+
+    # Mock sys.argv for cli
+    def mock_args(self, args):
+        self.monkeypatch.setattr('sys.argv', ['dummy'] + args)
+
+    def set_capsys(self, capsys):
+        self.capsys = capsys
+
+    # Capture stdout, stderr from cli
+    def capture(self):
+        captured = self.capsys.readouterr()
+
+        return captured.out, _stderr_basename(captured.err)
+
+    def get_output(self):
         options = self.options
 
         args = [self.get_input_filename()]
@@ -65,15 +73,15 @@ class CliTestcase(testenv.Testcase):
         if clang_args:
             args += [f'--clang={clang_arg}' for clang_arg in clang_args]
 
-        _mock_args(monkeypatch, args)
+        self.mock_args(args)
 
         main()
 
-        docs_str, errors_str = _capture(capsys)
+        docs_str, errors_str = self.capture()
 
         return docs_str, errors_str
 
-    def get_expected(self, monkeypatch, **unused):
+    def get_expected(self):
         return testenv.read_file(self.get_expected_filename()), \
             testenv.read_file(self.get_stderr_filename())
 
@@ -85,5 +93,6 @@ def _get_cli_testcases(path):
 @pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_cli(testcase, monkeypatch, capsys):
-    monkeypatch.setattr('sys.argv', ['dummy'])
-    testcase.run_test(monkeypatch, capsys)
+    testcase.set_monkeypatch(monkeypatch)
+    testcase.set_capsys(capsys)
+    testcase.run_test()

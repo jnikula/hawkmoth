@@ -16,7 +16,7 @@ def _transform(transform, lines):
         lines[:] = [line for line in text.splitlines()]
 
 class ParserTestcase(testenv.Testcase):
-    def get_output(self, **unused):
+    def get_output(self):
         options = self.options
 
         docs_str = ''
@@ -55,7 +55,7 @@ class ParserTestcase(testenv.Testcase):
 
         return docs_str, errors_str
 
-    def get_expected(self, **unused):
+    def get_expected(self):
         return testenv.read_file(self.get_expected_filename()), \
             testenv.read_file(self.get_stderr_filename())
 
