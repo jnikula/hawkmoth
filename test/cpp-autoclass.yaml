@@ -1,0 +1,11 @@
+domain: cpp
+directive: autoclass
+directive-arguments:
+  - foo
+directive-options:
+  file: cpp-class.cpp
+  members:
+    - mutable_member
+    - virtual_method
+    - const_method_to_const
+expected: cpp-autoclass.rst
