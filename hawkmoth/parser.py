@@ -321,6 +321,18 @@ def _specifiers_fixup(cursor, basetype):
 
     return type_elem
 
+def _get_scopedenum_type(cursor):
+    """Get the explicit underlying type of a scoped enumerator.
+
+    Returns:
+        Underlying type of a scoped enumerator that has been explicitly defined.
+        ``None`` otherwise.
+    """
+    if cursor.kind == CursorKind.ENUM_DECL and cursor.is_scoped_enum():
+        if list(cursor.get_tokens())[3].spelling == ':':
+            return f': {cursor.enum_type.spelling}'
+    return None
+
 def _type_fixup(cursor):
     """Fix non trivial types' spelling and append qualifiers.
 
@@ -389,8 +401,15 @@ def _type_fixup(cursor):
         name = cursor.spelling + dims
 
     inheritance = _get_inheritance(cursor)
+    scopedenum_type = _get_scopedenum_type(cursor)
 
-    return ttype, f'{name}{inheritance if inheritance else ""}'
+    colon_suffix = ''
+    if inheritance:
+        colon_suffix = inheritance
+    if scopedenum_type:
+        colon_suffix = scopedenum_type
+
+    return ttype, f'{name}{colon_suffix}'
 
 def _get_args(cursor):
     """Get function / method arguments."""
@@ -514,9 +533,14 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                                           nest=nest, name=name,
                                           decl_name=decl_name, meta=meta)
         elif cursor.kind == CursorKind.ENUM_DECL:
-            ds = docstring.EnumDocstring(domain=domain, text=text,
-                                         nest=nest, name=name,
-                                         decl_name=decl_name, meta=meta)
+            if cursor.is_scoped_enum():
+                ds = docstring.EnumClassDocstring(domain=domain, text=text,
+                                                  nest=nest, name=name,
+                                                  decl_name=decl_name, meta=meta)
+            else:
+                ds = docstring.EnumDocstring(domain=domain, text=text,
+                                             nest=nest, name=name,
+                                             decl_name=decl_name, meta=meta)
         elif cursor.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE]:
             ds = docstring.ClassDocstring(domain=domain, text=text,
                                           nest=nest, name=name,
