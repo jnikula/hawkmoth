@@ -54,7 +54,7 @@ def _get_output(testcase, **options):
 
 def _get_expected(testcase, **options):
     return testenv.read_file(testcase.get_expected_filename()), \
-        testenv.read_file(testenv.get_stderr_filename(testcase))
+        testenv.read_file(testcase.get_stderr_filename())
 
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)

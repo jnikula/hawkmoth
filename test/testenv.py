@@ -65,6 +65,9 @@ class Testcase:
     def get_expected_filename(self):
         return self.get_relative_filename(self.options.get('expected'))
 
+    def get_stderr_filename(self):
+        return self.get_relative_filename(self.options.get('errors'))
+
 def get_testid(testcase):
     return testcase.get_testid()
 
@@ -79,11 +82,6 @@ def get_testcase_filenames(path):
 def get_testcases(path):
     for f in get_testcase_filenames(path):
         yield Testcase(f)
-
-def get_stderr_filename(testcase):
-    options = get_testcase_options(testcase)
-
-    return testcase.get_relative_filename(options.get('errors'))
 
 def get_directive_string(options):
     domain = options.get('domain', None)
