@@ -16,50 +16,48 @@ def _transform(transform, lines):
         lines[:] = [line for line in text.splitlines()]
 
 class ParserTestcase(testenv.Testcase):
-    pass
+    def get_output(self, **unused):
+        options = self.options
 
-def _get_output(testcase, **unused):
-    options = testcase.options
+        docs_str = ''
+        errors_str = ''
 
-    docs_str = ''
-    errors_str = ''
+        domain = options.get('domain')
 
-    domain = options.get('domain')
+        # Default to compile as C++ if the test is for the C++ domain so that we can
+        # use C sources for C++ tests. The yaml may override this in cases where we
+        # want to force a mismatch.
+        clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
 
-    # Default to compile as C++ if the test is for the C++ domain so that we can
-    # use C sources for C++ tests. The yaml may override this in cases where we
-    # want to force a mismatch.
-    clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
+        directive = options.get('directive')
+        if directive != 'autodoc':
+            pytest.skip(f'{directive} directive test')
 
-    directive = options.get('directive')
-    if directive != 'autodoc':
-        pytest.skip(f'{directive} directive test')
+        input_filename = self.get_input_filename()
 
-    input_filename = testcase.get_input_filename()
+        options = options.get('directive-options', {})
 
-    options = options.get('directive-options', {})
+        clang_args.extend(options.get('clang', []))
+        comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
-    clang_args.extend(options.get('clang', []))
-    comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
+        tropt = options.pop('transform', None)
+        if tropt is not None:
+            transform = conf.cautodoc_transformations[tropt]
+        else:
+            transform = None
 
-    tropt = options.pop('transform', None)
-    if tropt is not None:
-        transform = conf.cautodoc_transformations[tropt]
-    else:
-        transform = None
+        for comment in comments.walk():
+            lines = comment.get_docstring(transform=lambda lines: _transform(transform, lines))
+            docs_str += '\n'.join(lines) + '\n'
 
-    for comment in comments.walk():
-        lines = comment.get_docstring(transform=lambda lines: _transform(transform, lines))
-        docs_str += '\n'.join(lines) + '\n'
+        for error in errors:
+            errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
 
-    for error in errors:
-        errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
+        return docs_str, errors_str
 
-    return docs_str, errors_str
-
-def _get_expected(testcase, **unused):
-    return testenv.read_file(testcase.get_expected_filename()), \
-        testenv.read_file(testcase.get_stderr_filename())
+    def get_expected(self, **unused):
+        return testenv.read_file(self.get_expected_filename()), \
+            testenv.read_file(self.get_stderr_filename())
 
 def _get_parser_testcases(path):
     for f in testenv.get_testcase_filenames(path):
@@ -68,4 +66,4 @@ def _get_parser_testcases(path):
 @pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_parser(testcase):
-    testcase.run_test(_get_output, _get_expected)
+    testcase.run_test()
