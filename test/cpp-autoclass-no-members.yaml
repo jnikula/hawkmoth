@@ -1,0 +1,7 @@
+domain: cpp
+directive: autoclass
+directive-arguments:
+  - foo
+directive-options:
+  file: cpp-class.cpp
+expected: cpp-autoclass-no-members.rst
