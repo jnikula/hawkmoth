@@ -30,7 +30,7 @@ def _get_output(testcase, app, status, warning, output_suffix, **options):
     return testenv.read_file(output_filename), None
 
 def _get_expected(testcase, app, status, warning, output_suffix, **options):
-    shutil.copyfile(testenv.get_expected_filename(testcase),
+    shutil.copyfile(testcase.get_expected_filename(),
                     os.path.join(app.srcdir, 'index.rst'))
 
     # Hack: It's not possible to disable search via configuration
