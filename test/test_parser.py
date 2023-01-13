@@ -15,7 +15,9 @@ def _transform(transform, lines):
         text = transform(text)
         lines[:] = [line for line in text.splitlines()]
 
-def _get_output(testcase, **options):
+def _get_output(testcase, **unused):
+    options = testcase.options
+
     docs_str = ''
     errors_str = ''
 
@@ -52,7 +54,7 @@ def _get_output(testcase, **options):
 
     return docs_str, errors_str
 
-def _get_expected(testcase, **options):
+def _get_expected(testcase, **unused):
     return testenv.read_file(testcase.get_expected_filename()), \
         testenv.read_file(testcase.get_stderr_filename())
 

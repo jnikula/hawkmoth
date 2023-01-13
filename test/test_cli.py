@@ -40,7 +40,9 @@ def _capture(capsys):
 
     return captured.out, _stderr_basename(captured.err)
 
-def _get_output(testcase, monkeypatch, capsys, **options):
+def _get_output(testcase, monkeypatch, capsys, **unused):
+    options = testcase.options
+
     args = [testcase.get_input_filename()]
 
     directive = options.get('directive')
@@ -70,7 +72,7 @@ def _get_output(testcase, monkeypatch, capsys, **options):
 
     return docs_str, errors_str
 
-def _get_expected(testcase, monkeypatch, **options):
+def _get_expected(testcase, monkeypatch, **unused):
     return testenv.read_file(testcase.get_expected_filename()), \
         testenv.read_file(testcase.get_stderr_filename())
 

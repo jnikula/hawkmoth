@@ -8,9 +8,7 @@ import re
 import testenv
 
 def get_title(testcase):
-    options = testenv.get_testcase_options(testcase)
-
-    return options.get('example-title')
+    return testcase.options.get('example-title')
 
 def get_title_underline(title):
     return '-' * len(title)
@@ -63,7 +61,7 @@ def print_source(input_filename):
 ''')
 
 def print_example(testcase):
-    options = testenv.get_testcase_options(testcase)
+    options = testcase.options
     domain = options.get('domain')
 
     if options.get('example-use-namespace'):
@@ -95,8 +93,7 @@ Output
 ''')
 
 def testcase_key(testcase):
-    options = testenv.get_testcase_options(testcase)
-    return int(options.get('example-priority', 0))
+    return int(testcase.options.get('example-priority', 0))
 
 def examples_key(item):
     (_, testcases) = item
