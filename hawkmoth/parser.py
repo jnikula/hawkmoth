@@ -282,12 +282,20 @@ def _get_method_quals(cursor):
 
     return pre_quals, pos_quals
 
-def _get_access_specifier(cursor):
+def _get_access_specifier(cursor, domain='cpp'):
     """Get the access specifier of a cursor, if any.
 
     Returns:
         One of 'private', 'protected', 'public' or `None`.
     """
+    # No access specifiers in C.
+    if domain == 'c':
+        return None
+
+    # No access specifiers in redundant contexts.
+    if cursor.semantic_parent and cursor.semantic_parent.kind == CursorKind.UNION_DECL:
+        return None
+
     name_map = {
         AccessSpecifier.PRIVATE: 'private',
         AccessSpecifier.PROTECTED: 'protected',
@@ -296,7 +304,33 @@ def _get_access_specifier(cursor):
 
     return name_map.get(cursor.access_specifier, None)
 
-def _var_type_fixup(cursor):
+def _specifiers_fixup(cursor, basetype):
+    """Fix the type for C++ specifiers.
+
+    Note the ``basetype`` is not necessarily ``cursor.type``. When dealing with
+    pointers or arrays, we need to get to the base type as in
+    :py:func:`_var_type_fixup`.
+
+    Returns:
+        List of C++ specifiers for the cursor.
+    """
+    tokens = [t.spelling for t in cursor.get_tokens()]
+    type_elem = []
+
+    if 'mutable' in tokens:
+        type_elem.append('mutable')
+
+    # If 'constexpr', strip the redundant 'const' that Clang adds to the
+    # type spelling by default.
+    if 'constexpr' in tokens:
+        type_elem.append('constexpr')
+        type_elem.append(basetype.spelling[len('const '):])
+    else:
+        type_elem.append(basetype.spelling)
+
+    return type_elem
+
+def _var_type_fixup(cursor, domain):
     """Fix non trivial variable and argument types.
 
     If this is an array, the dimensions should be applied to the name, not
@@ -331,13 +365,19 @@ def _var_type_fixup(cursor):
         else:
             break
 
+    type_elem = []
+
+    access_spec = _get_access_specifier(cursor, domain)
+    if access_spec:
+        type_elem.append(access_spec)
+
     if cursor_type.kind == TypeKind.FUNCTIONPROTO:
         pad = lambda s: s if s.endswith('*') or s.endswith('&') else s + ' '
 
         args = []
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _var_type_fixup(c)
+                arg_ttype, arg_name = _var_type_fixup(c, domain)
                 args.append(f'{pad(arg_ttype)}{arg_name}' if arg_name else arg_ttype)
         if cursor_type.is_function_variadic():
             args.append('...')
@@ -346,26 +386,24 @@ def _var_type_fixup(cursor):
 
         ret_type = cursor_type.get_result().spelling
 
-        ttype = ''
         name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
     else:
-        type_elem = []
 
         storage_class = _get_storage_class(cursor)
         if storage_class:
             type_elem.append(storage_class)
 
-        type_elem.append(cursor_type.spelling)
+        type_elem.extend(_specifiers_fixup(cursor, cursor_type))
 
         if stars_and_quals:
             type_elem.append(stars_and_quals)
 
-        ttype = ' '.join(type_elem)
         name = cursor.spelling + dims
 
+    ttype = ' '.join(type_elem)
     return ttype, name
 
-def _get_args(cursor):
+def _get_args(cursor, domain):
     """Get function / method arguments."""
     args = []
 
@@ -373,7 +411,7 @@ def _get_args(cursor):
     if cursor.type.kind == TypeKind.FUNCTIONPROTO:
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _var_type_fixup(c)
+                arg_ttype, arg_name = _var_type_fixup(c, domain)
                 args.extend([(arg_ttype, arg_name)])
 
         if cursor.type.is_function_variadic():
@@ -383,9 +421,9 @@ def _get_args(cursor):
 
     return args
 
-def _function_fixup(cursor):
+def _function_fixup(cursor, domain):
     """Parse additional details of a function declaration."""
-    args = _get_args(cursor)
+    args = _get_args(cursor, domain)
 
     full_type = _get_function_quals(cursor)
     full_type.append(cursor.result_type.spelling)
@@ -396,7 +434,7 @@ def _function_fixup(cursor):
 
 def _method_fixup(cursor):
     """Parse additional details of a method declaration."""
-    args = _get_args(cursor)
+    args = _get_args(cursor, 'cpp')
 
     full_type = []
 
@@ -439,7 +477,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _var_type_fixup(cursor)
+        ttype, decl_name = _var_type_fixup(cursor, domain)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(domain=domain, text=text, nest=nest,
@@ -493,7 +531,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        ttype, args = _function_fixup(cursor)
+        ttype, args = _function_fixup(cursor, domain)
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,

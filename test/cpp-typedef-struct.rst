@@ -4,7 +4,7 @@
    named typedeffed struct
 
 
-   .. cpp:member:: int m
+   .. cpp:member:: public int m
 
       named member
 
@@ -14,7 +14,7 @@
    unnamed typedeffed struct
 
 
-   .. cpp:member:: int m
+   .. cpp:member:: public int m
 
       unnamed member
 

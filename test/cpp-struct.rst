@@ -6,27 +6,27 @@
    Woohoo.
 
 
-   .. cpp:member:: int jesh
+   .. cpp:member:: public int jesh
 
       member
 
 
-   .. cpp:member:: int array_member[5]
+   .. cpp:member:: public int array_member[5]
 
       array member
 
 
-   .. cpp:member:: void *pointer_member
+   .. cpp:member:: public void *pointer_member
 
       pointer member
 
 
-   .. cpp:member:: int (*function_pointer_member)(int, int)
+   .. cpp:member:: public int (*function_pointer_member)(int, int)
 
       function pointer member with parameter names omitted
 
 
-   .. cpp:member:: int (*other_function_pointer_member)(int foo, int bar)
+   .. cpp:member:: public int (*other_function_pointer_member)(int foo, int bar)
 
       function pointer member with parameter names
 
@@ -34,7 +34,7 @@
       :param bar: the bar
 
 
-   .. cpp:member:: struct sample_struct *next
+   .. cpp:member:: public struct sample_struct *next
 
       foo next
 
@@ -44,7 +44,7 @@
    Anonymous struct documentation.
 
 
-   .. cpp:member:: int foo
+   .. cpp:member:: public int foo
 
       Struct member.
 
@@ -59,7 +59,7 @@
       Anonymous sub-struct.
 
 
-      .. cpp:member:: int foo_member
+      .. cpp:member:: public int foo_member
 
          Member foo.
 
