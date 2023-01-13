@@ -42,6 +42,20 @@ def _get_expected(testcase, app, status, warning, output_suffix):
 
     return testenv.read_file(output_filename), None
 
+class ExtensionTextTestcase(testenv.Testcase):
+    pass
+
+class ExtensionHtmlTestcase(testenv.Testcase):
+    pass
+
+def _get_text_testcases(path):
+    for f in testenv.get_testcase_filenames(path):
+        yield ExtensionTextTestcase(f)
+
+def _get_html_testcases(path):
+    for f in testenv.get_testcase_filenames(path):
+        yield ExtensionHtmlTestcase(f)
+
 # Test using Sphinx plain text builder
 @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
 def _get_output_text(testcase, app, status, warning, **unused):
@@ -51,7 +65,7 @@ def _get_output_text(testcase, app, status, warning, **unused):
 def _get_expected_text(testcase, app, status, warning, **unused):
     return _get_expected(testcase, app, status, warning, 'txt')
 
-@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', _get_text_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_directive_text(testcase):
     testcase.run_test(_get_output_text, _get_expected_text)
@@ -66,7 +80,7 @@ def _get_expected_html(testcase, app, status, warning, **unused):
     return _get_expected(testcase, app, status, warning, 'html')
 
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', _get_html_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_directive_html(testcase):
     testcase.run_test(_get_output_html, _get_expected_html)

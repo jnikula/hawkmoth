@@ -40,6 +40,9 @@ def _capture(capsys):
 
     return captured.out, _stderr_basename(captured.err)
 
+class CliTestcase(testenv.Testcase):
+    pass
+
 def _get_output(testcase, monkeypatch, capsys, **unused):
     options = testcase.options
 
@@ -76,8 +79,12 @@ def _get_expected(testcase, monkeypatch, **unused):
     return testenv.read_file(testcase.get_expected_filename()), \
         testenv.read_file(testcase.get_stderr_filename())
 
+def _get_cli_testcases(path):
+    for f in testenv.get_testcase_filenames(path):
+        yield CliTestcase(f)
+
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_cli(testcase, monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['dummy'])
