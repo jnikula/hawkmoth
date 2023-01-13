@@ -15,6 +15,9 @@ def _transform(transform, lines):
         text = transform(text)
         lines[:] = [line for line in text.splitlines()]
 
+class ParserTestcase(testenv.Testcase):
+    pass
+
 def _get_output(testcase, **unused):
     options = testcase.options
 
@@ -58,7 +61,11 @@ def _get_expected(testcase, **unused):
     return testenv.read_file(testcase.get_expected_filename()), \
         testenv.read_file(testcase.get_stderr_filename())
 
-@pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
+def _get_parser_testcases(path):
+    for f in testenv.get_testcase_filenames(path):
+        yield ParserTestcase(f)
+
+@pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_parser(testcase):
     testcase.run_test(_get_output, _get_expected)
