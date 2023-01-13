@@ -106,10 +106,6 @@ def get_testcase_filenames(path):
         if f.endswith(testext):
             yield os.path.join(path, f)
 
-def get_testcases(path):
-    for f in get_testcase_filenames(path):
-        yield Testcase(f)
-
 def read_file(filename):
     if not filename or not os.path.isfile(filename):
         # Emulate empty file.

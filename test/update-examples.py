@@ -7,6 +7,9 @@ import re
 
 import testenv
 
+class ExampleTestcase(testenv.Testcase):
+    pass
+
 def get_title(testcase):
     return testcase.options.get('example-title')
 
@@ -100,13 +103,15 @@ def examples_key(item):
 
     return min([testcase_key(testcase) for testcase in testcases])
 
+def _get_example_testcases(path):
+    for f in testenv.get_testcase_filenames(path):
+        if os.path.basename(f).startswith('example-'):
+            yield ExampleTestcase(f)
+
 def get_examples():
     examples = {}
 
-    for testcase in testenv.get_testcases(testenv.testdir):
-        if not os.path.basename(testcase.filename).startswith('example-'):
-            continue
-
+    for testcase in _get_example_testcases(testenv.testdir):
         input_filename = os.path.basename(testcase.get_input_filename())
 
         if input_filename in examples:
