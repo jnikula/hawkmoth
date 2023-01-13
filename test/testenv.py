@@ -43,6 +43,12 @@ class Testcase:
 
         return name
 
+    def get_relative_filename(self, relative):
+        if relative is None:
+            return None
+
+        return os.path.join(os.path.dirname(self.filename), relative)
+
 def get_testid(testcase):
     return testcase.get_testid()
 
@@ -58,12 +64,6 @@ def get_testcases(path):
     for f in get_testcase_filenames(path):
         yield Testcase(f)
 
-def get_testcase_relative_filename(testcase, relative):
-    if relative is None:
-        return None
-
-    return os.path.join(os.path.dirname(testcase.filename), relative)
-
 def get_input_filename(testcase):
     options = get_testcase_options(testcase)
 
@@ -75,17 +75,17 @@ def get_input_filename(testcase):
         directive_options = options.get('directive-options', {})
         basename = directive_options.get('file')
 
-    return get_testcase_relative_filename(testcase, basename)
+    return testcase.get_relative_filename(basename)
 
 def get_expected_filename(testcase):
     options = get_testcase_options(testcase)
 
-    return get_testcase_relative_filename(testcase, options.get('expected'))
+    return testcase.get_relative_filename(options.get('expected'))
 
 def get_stderr_filename(testcase):
     options = get_testcase_options(testcase)
 
-    return get_testcase_relative_filename(testcase, options.get('errors'))
+    return testcase.get_relative_filename(options.get('errors'))
 
 def get_directive_string(options):
     domain = options.get('domain', None)
