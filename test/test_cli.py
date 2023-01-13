@@ -81,4 +81,4 @@ def _get_expected(testcase, monkeypatch, **unused):
                          ids=testenv.get_testid)
 def test_cli(testcase, monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['dummy'])
-    testenv.run_test(testcase, _get_output, _get_expected, monkeypatch, capsys)
+    testcase.run_test(_get_output, _get_expected, monkeypatch, capsys)
