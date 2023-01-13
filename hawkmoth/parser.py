@@ -293,6 +293,34 @@ def _get_access_specifier(cursor):
 
     return name_map.get(cursor.access_specifier, None)
 
+def _specifiers_fixup(cursor, basetype):
+    """Fix the type for C++ specifiers.
+
+    Note the ``basetype`` is not necessarily ``cursor.type``. When dealing with
+    pointers or arrays, we need to get to the base type as in
+    :py:func:`__type_fixup`.
+
+    Returns:
+        List of C++ specifiers for the cursor.
+    """
+    type_elem = []
+
+    if cursor.kind in [CursorKind.VAR_DECL,
+                       CursorKind.FIELD_DECL,
+                       CursorKind.PARM_DECL]:
+        tokens = [t.spelling for t in cursor.get_tokens()]
+
+        if 'mutable' in tokens:
+            type_elem.append('mutable')
+
+        if 'constexpr' in tokens:
+            type_elem.append('constexpr')
+            type_elem.append(basetype.spelling[len('const '):])
+        else:
+            type_elem.append(basetype.spelling)
+
+    return type_elem
+
 def _type_fixup(cursor):
     """Fix non trivial types' spelling and append qualifiers.
 
@@ -352,7 +380,7 @@ def _type_fixup(cursor):
         if storage_class:
             type_elem.append(storage_class)
 
-        type_elem.append(cursor_type.spelling)
+        type_elem.extend(_specifiers_fixup(cursor, cursor_type))
 
         if stars_and_quals:
             type_elem.append(stars_and_quals)
