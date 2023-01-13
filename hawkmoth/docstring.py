@@ -253,3 +253,7 @@ class FunctionDocstring(Docstring):
 class ClassDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '\n.. cpp:class:: {name}\n\n'
+
+class EnumClassDocstring(Docstring):
+    _indent = 1
+    _fmt = '\n.. cpp:enum-class:: {name}\n\n'
