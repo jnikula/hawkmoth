@@ -68,6 +68,26 @@ class Testcase:
     def get_stderr_filename(self):
         return self.get_relative_filename(self.options.get('errors'))
 
+    def get_directive_string(self):
+        options = self.options
+
+        domain = options.get('domain', None)
+        directive = options.get('directive')
+        arguments = options.get('directive-arguments', [])
+        arguments_str = ' '.join(arguments)
+
+        directive_str = f'.. {domain}:{directive}:: {arguments_str}\n'
+
+        directive_options = options.get('directive-options', {})
+
+        for key, value in directive_options.items():
+            if isinstance(value, list):
+                value = ', '.join(value)
+            space = ' ' if len(value) else ''
+            directive_str += f'   :{key}:{space}{value}\n'
+
+        return directive_str
+
 def get_testid(testcase):
     return testcase.get_testid()
 
@@ -82,24 +102,6 @@ def get_testcase_filenames(path):
 def get_testcases(path):
     for f in get_testcase_filenames(path):
         yield Testcase(f)
-
-def get_directive_string(options):
-    domain = options.get('domain', None)
-    directive = options.get('directive')
-    arguments = options.get('directive-arguments', [])
-    arguments_str = ' '.join(arguments)
-
-    directive_str = f'.. {domain}:{directive}:: {arguments_str}\n'
-
-    directive_options = options.get('directive-options', {})
-
-    for key, value in directive_options.items():
-        if isinstance(value, list):
-            value = ', '.join(value)
-        space = ' ' if len(value) else ''
-        directive_str += f'   :{key}:{space}{value}\n'
-
-    return directive_str
 
 def read_file(filename):
     if not filename or not os.path.isfile(filename):
