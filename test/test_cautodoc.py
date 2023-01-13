@@ -50,21 +50,21 @@ def _get_expected(testcase, app, status, warning):
 # Test using Sphinx plain text builder
 class ExtensionTextTestcase(testenv.Testcase):
     @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
-    def get_output(self, app, status, warning, **unused):
+    def get_output(self, app, status, warning):
         return _get_output(self, app, status, warning)
 
     @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
-    def get_expected(self, app, status, warning, **unused):
+    def get_expected(self, app, status, warning):
         return _get_expected(self, app, status, warning)
 
 # Test using Sphinx html builder
 class ExtensionHtmlTestcase(testenv.Testcase):
     @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='html')
-    def get_output(self, app, status, warning, **unused):
+    def get_output(self, app, status, warning):
         return _get_output(self, app, status, warning)
 
     @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='html')
-    def get_expected(self, app, status, warning, **unused):
+    def get_expected(self, app, status, warning):
         return _get_expected(self, app, status, warning)
 
 def _get_text_testcases(path):
