@@ -330,6 +330,18 @@ def _specifiers_fixup(cursor, basetype):
 
     return type_elem
 
+def _get_scopedenum_type(cursor):
+    """Get the explicit underlying type of a scoped enumerator.
+
+    Returns:
+        Underlying type of a scoped enumerator that has been explicitly defined.
+        ``None`` otherwise.
+    """
+    if cursor.kind == CursorKind.ENUM_DECL and cursor.is_scoped_enum():
+        if list(cursor.get_tokens())[3].spelling == ':':
+            return f': {cursor.enum_type.spelling}'
+    return None
+
 def _var_type_fixup(cursor, domain):
     """Fix non trivial variable and argument types.
 
@@ -424,6 +436,10 @@ def _type_definition_fixup(cursor):
         inheritance = _get_inheritance(cursor)
         if inheritance:
             colon_suffix = inheritance
+    elif cursor.kind == CursorKind.ENUM_DECL:
+        scopedenum_type = _get_scopedenum_type(cursor)
+        if scopedenum_type:
+            colon_suffix = scopedenum_type
 
     return f'{cursor.spelling}{colon_suffix}'
 
@@ -555,9 +571,14 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                                           nest=nest, name=name,
                                           decl_name=decl_name, meta=meta)
         elif cursor.kind == CursorKind.ENUM_DECL:
-            ds = docstring.EnumDocstring(domain=domain, text=text,
-                                         nest=nest, name=name,
-                                         decl_name=decl_name, meta=meta)
+            if cursor.is_scoped_enum():
+                ds = docstring.EnumClassDocstring(domain=domain, text=text,
+                                                  nest=nest, name=name,
+                                                  decl_name=decl_name, meta=meta)
+            else:
+                ds = docstring.EnumDocstring(domain=domain, text=text,
+                                             nest=nest, name=name,
+                                             decl_name=decl_name, meta=meta)
         elif cursor.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE]:
             ds = docstring.ClassDocstring(domain=domain, text=text,
                                           nest=nest, name=name,
