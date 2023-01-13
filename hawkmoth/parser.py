@@ -293,6 +293,57 @@ def _get_access_specifier(cursor):
 
     return name_map.get(cursor.access_specifier, None)
 
+def _get_template_line(cursor):
+    """Get the template arguments of a cursor.
+
+    This recurses for templated template arguments.
+
+    Returns:
+        String with the form 'template<...> ' if the cursor is a template or
+        `None` otherwise. When the cursor represents a templated template
+        argument, the returned string is actually of the form 'template<...>
+        name', but this should only occur under recursion.
+    """
+    # We only add the name when we recurse, in which case we need to track the
+    # name of the templated template argument. Otherwise the name is not part of
+    # the template arguments.
+    name = ''
+
+    if cursor.kind not in [CursorKind.CLASS_TEMPLATE,
+                           CursorKind.FUNCTION_TEMPLATE,
+                           CursorKind.TEMPLATE_TEMPLATE_PARAMETER]:
+        return None
+
+    # The type of type parameters can be 'typename' and 'class'. These are
+    # equivalent, but we want it to look like the source code for consistency.
+    # We can do it by looking at the tokens directly. This is slightly
+    # complicated due to variadic template type parameters.
+    def typetype(cursor):
+        tokens = list(cursor.get_tokens())
+        if tokens[-2].spelling == '...':
+            return f'{tokens[-3].spelling}...'
+        else:
+            return f'{tokens[-2].spelling}'
+
+    # We need to add the keyword 'typename' or 'class' if we have recursed and
+    # therefore we are inside the template argument list.
+    if cursor.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
+        name = f' {typetype(cursor)} {cursor.spelling}'
+
+    template_args = []
+    for child in cursor.get_children():
+        if child.kind == CursorKind.TEMPLATE_TYPE_PARAMETER:
+            template_args.append(f'{typetype(child)} {child.spelling}')
+        elif child.kind == CursorKind.TEMPLATE_NON_TYPE_PARAMETER:
+            arg_name = f' {child.spelling}' if child.spelling != '' else '...'
+            template_args.append(f'{child.type.spelling}{arg_name}')
+        elif child.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
+            arg = _get_template_line(child)
+            if arg:
+                template_args.append(arg)
+
+    return f'template<{", ".join(template_args)}>{name}'
+
 def _specifiers_fixup(cursor, basetype):
     """Fix the type for C++ specifiers.
 
@@ -409,7 +460,10 @@ def _type_fixup(cursor):
     if scopedenum_type:
         colon_suffix = scopedenum_type
 
-    return ttype, f'{name}{colon_suffix}'
+    pad = lambda s: f'{s} ' if s else ''
+    template = _get_template_line(cursor)
+
+    return ttype, f'{pad(template)}{name}{colon_suffix}'
 
 def _get_args(cursor):
     """Get function / method arguments."""
@@ -447,6 +501,11 @@ def _fn_fixup(cursor):
     fn_quals, method_quals = _get_fn_quals(cursor)
 
     full_type.extend(fn_quals)
+
+    template_line = _get_template_line(cursor)
+    if template_line:
+        full_type.append(template_line)
+
     full_type.append(cursor.result_type.spelling)
 
     ttype = ' '.join(full_type)
