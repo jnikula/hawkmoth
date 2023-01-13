@@ -13,12 +13,6 @@ rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
 
-def get_testid(testcase):
-    """Convert a testcase filename into a test case identifier."""
-    name = os.path.splitext(os.path.basename(testcase.filename))[0]
-
-    return name
-
 options_schema = strictyaml.Map({
     'domain': strictyaml.Enum(['c', 'cpp']),
     'directive': strictyaml.Str(),
@@ -42,6 +36,15 @@ class Testcase:
         self.filename = filename
         with open(filename, 'r') as f:
             self.options = strictyaml.load(f.read(), options_schema).data
+
+    def get_testid(self):
+        """Convert a testcase filename into a test case identifier."""
+        name = os.path.splitext(os.path.basename(self.filename))[0]
+
+        return name
+
+def get_testid(testcase):
+    return testcase.get_testid()
 
 def get_testcase_options(testcase):
     return testcase.options
