@@ -110,7 +110,7 @@ def get_examples():
         if not os.path.basename(testcase.filename).startswith('example-'):
             continue
 
-        input_filename = os.path.basename(testenv.get_input_filename(testcase))
+        input_filename = os.path.basename(testcase.get_input_filename())
 
         if input_filename in examples:
             examples[input_filename].append(testcase)
