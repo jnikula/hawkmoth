@@ -91,9 +91,6 @@ class Testcase:
 def get_testid(testcase):
     return testcase.get_testid()
 
-def get_testcase_options(testcase):
-    return testcase.options
-
 def get_testcase_filenames(path):
     for f in sorted(os.listdir(path)):
         if f.endswith(testext):
@@ -112,15 +109,13 @@ def read_file(filename):
         return f.read()
 
 def run_test(testcase, get_output, get_expected, monkeypatch=None, capsys=None):
-    options = get_testcase_options(testcase)
-
-    if options.get('expected-failure'):
+    if testcase.options.get('expected-failure'):
         pytest.xfail()
 
     output_docs, output_errors = get_output(testcase, monkeypatch=monkeypatch,
-                                            capsys=capsys, **options)
+                                            capsys=capsys)
     expect_docs, expect_errors = get_expected(testcase, monkeypatch=monkeypatch,
-                                              capsys=capsys, **options)
+                                              capsys=capsys)
 
     assert output_docs == expect_docs
     assert output_errors == expect_errors
