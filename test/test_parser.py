@@ -61,4 +61,4 @@ def _get_expected(testcase, **unused):
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_parser(testcase):
-    testenv.run_test(testcase, _get_output, _get_expected)
+    testcase.run_test(_get_output, _get_expected)

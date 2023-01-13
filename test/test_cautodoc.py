@@ -54,7 +54,7 @@ def _get_expected_text(testcase, app, status, warning, **unused):
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_directive_text(testcase):
-    testenv.run_test(testcase, _get_output_text, _get_expected_text)
+    testcase.run_test(_get_output_text, _get_expected_text)
 
 # Test using Sphinx html builder
 @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='html')
@@ -69,4 +69,4 @@ def _get_expected_html(testcase, app, status, warning, **unused):
 @pytest.mark.parametrize('testcase', testenv.get_testcases(testenv.testdir),
                          ids=testenv.get_testid)
 def test_directive_html(testcase):
-    testenv.run_test(testcase, _get_output_html, _get_expected_html)
+    testcase.run_test(_get_output_html, _get_expected_html)

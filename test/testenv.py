@@ -88,6 +88,18 @@ class Testcase:
 
         return directive_str
 
+    def run_test(self, get_output, get_expected, monkeypatch=None, capsys=None):
+        if self.options.get('expected-failure'):
+            pytest.xfail()
+
+        output_docs, output_errors = get_output(self, monkeypatch=monkeypatch,
+                                                capsys=capsys)
+        expect_docs, expect_errors = get_expected(self, monkeypatch=monkeypatch,
+                                                  capsys=capsys)
+
+        assert output_docs == expect_docs
+        assert output_errors == expect_errors
+
 def get_testid(testcase):
     return testcase.get_testid()
 
@@ -107,15 +119,3 @@ def read_file(filename):
 
     with open(filename, 'r') as f:
         return f.read()
-
-def run_test(testcase, get_output, get_expected, monkeypatch=None, capsys=None):
-    if testcase.options.get('expected-failure'):
-        pytest.xfail()
-
-    output_docs, output_errors = get_output(testcase, monkeypatch=monkeypatch,
-                                            capsys=capsys)
-    expect_docs, expect_errors = get_expected(testcase, monkeypatch=monkeypatch,
-                                              capsys=capsys)
-
-    assert output_docs == expect_docs
-    assert output_errors == expect_errors
