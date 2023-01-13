@@ -41,43 +41,41 @@ def _capture(capsys):
     return captured.out, _stderr_basename(captured.err)
 
 class CliTestcase(testenv.Testcase):
-    pass
+    def get_output(self, monkeypatch, capsys, **unused):
+        options = self.options
 
-def _get_output(testcase, monkeypatch, capsys, **unused):
-    options = testcase.options
+        args = [self.get_input_filename()]
 
-    args = [testcase.get_input_filename()]
+        directive = options.get('directive')
+        if directive != 'autodoc':
+            pytest.skip(f'{directive} directive test')
 
-    directive = options.get('directive')
-    if directive != 'autodoc':
-        pytest.skip(f'{directive} directive test')
+        domain = options.get('domain')
+        if domain is not None:
+            args += [f'--domain={domain}']
+            args += [f'--clang={"-xc++" if domain == "cpp" else "-xc"}']
 
-    domain = options.get('domain')
-    if domain is not None:
-        args += [f'--domain={domain}']
-        args += [f'--clang={"-xc++" if domain == "cpp" else "-xc"}']
+        directive_options = options.get('directive-options', {})
 
-    directive_options = options.get('directive-options', {})
+        transform = directive_options.get('transform')
+        if transform is not None:
+            pytest.skip('cli does not support generic transformations')
 
-    transform = directive_options.get('transform')
-    if transform is not None:
-        pytest.skip('cli does not support generic transformations')
+        clang_args = directive_options.get('clang')
+        if clang_args:
+            args += [f'--clang={clang_arg}' for clang_arg in clang_args]
 
-    clang_args = directive_options.get('clang')
-    if clang_args:
-        args += [f'--clang={clang_arg}' for clang_arg in clang_args]
+        _mock_args(monkeypatch, args)
 
-    _mock_args(monkeypatch, args)
+        main()
 
-    main()
+        docs_str, errors_str = _capture(capsys)
 
-    docs_str, errors_str = _capture(capsys)
+        return docs_str, errors_str
 
-    return docs_str, errors_str
-
-def _get_expected(testcase, monkeypatch, **unused):
-    return testenv.read_file(testcase.get_expected_filename()), \
-        testenv.read_file(testcase.get_stderr_filename())
+    def get_expected(self, monkeypatch, **unused):
+        return testenv.read_file(self.get_expected_filename()), \
+            testenv.read_file(self.get_stderr_filename())
 
 def _get_cli_testcases(path):
     for f in testenv.get_testcase_filenames(path):
@@ -88,4 +86,4 @@ def _get_cli_testcases(path):
                          ids=testenv.get_testid)
 def test_cli(testcase, monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['dummy'])
-    testcase.run_test(_get_output, _get_expected, monkeypatch, capsys)
+    testcase.run_test(monkeypatch, capsys)
