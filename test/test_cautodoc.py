@@ -20,6 +20,9 @@ def _get_output(testcase, app, status, warning, output_suffix, **options):
     with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
         f.write(directive_str)
 
+    # Hack: It's not possible to disable search via configuration
+    app.builder.search = False
+
     app.build()
 
     output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
@@ -29,6 +32,9 @@ def _get_output(testcase, app, status, warning, output_suffix, **options):
 def _get_expected(testcase, app, status, warning, output_suffix, **options):
     shutil.copyfile(testenv.get_expected_filename(testcase),
                     os.path.join(app.srcdir, 'index.rst'))
+
+    # Hack: It's not possible to disable search via configuration
+    app.builder.search = False
 
     app.build()
 
