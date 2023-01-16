@@ -92,7 +92,9 @@ html_theme = 'basic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'nosidebar': True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -107,8 +109,14 @@ html_theme = 'basic'
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+html_sidebars = {}
 
+html_use_index = False
+html_copy_source = False
+html_show_sourcelink = False
+html_show_copyright = False
+html_show_search_summary = False
+html_show_sphinx = False
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
