@@ -249,8 +249,8 @@ def _get_function_quals(cursor):
 
     return quals
 
-def _type_fixup(cursor):
-    """Fix non trivial types' spelling and append qualifiers.
+def _var_type_fixup(cursor):
+    """Fix non trivial variable and argument types.
 
     If this is an array, the dimensions should be applied to the name, not
     the type.
@@ -290,7 +290,7 @@ def _type_fixup(cursor):
         args = []
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _type_fixup(c)
+                arg_ttype, arg_name = _var_type_fixup(c)
                 args.append(f'{pad(arg_ttype)}{arg_name}' if arg_name else arg_ttype)
         if cursor_type.is_function_variadic():
             args.append('...')
@@ -326,7 +326,7 @@ def _get_args(cursor):
     if cursor.type.kind == TypeKind.FUNCTIONPROTO:
         for c in cursor.get_children():
             if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _type_fixup(c)
+                arg_ttype, arg_name = _var_type_fixup(c)
                 args.extend([(arg_ttype, arg_name)])
 
         if cursor.type.is_function_variadic():
@@ -370,7 +370,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _type_fixup(cursor)
+        ttype, decl_name = _var_type_fixup(cursor)
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(domain=domain, text=text, nest=nest,
