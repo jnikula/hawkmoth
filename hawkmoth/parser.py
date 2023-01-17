@@ -33,7 +33,8 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 import enum
 from dataclasses import dataclass
 
-from clang.cindex import TokenKind, CursorKind, TypeKind, StorageClass
+from clang.cindex import TokenKind, CursorKind, TypeKind
+from clang.cindex import StorageClass, AccessSpecifier
 from clang.cindex import Index, TranslationUnit
 from clang.cindex import Diagnostic
 
@@ -251,6 +252,50 @@ def _get_function_quals(cursor):
 
     return quals
 
+def _get_method_quals(cursor):
+    """Get all the qualifiers of a method.
+
+    Returns:
+        List of prefix method qualifiers and list of suffix method qualifiers.
+    """
+    tokens = [t.spelling for t in cursor.get_tokens()]
+    pre_quals = []
+    pos_quals = []
+
+    if cursor.is_static_method():
+        pre_quals.append('static')
+    if cursor.is_virtual_method():
+        pre_quals.append('virtual')
+    if 'constexpr' in tokens:
+        pre_quals.append('constexpr')
+
+    if cursor.is_const_method():
+        pos_quals.append('const')
+    if cursor.is_pure_virtual_method():
+        pos_quals.append('= 0')
+    if cursor.is_default_method():
+        pos_quals.append('= default')
+    if 'delete' in tokens:
+        pos_quals.append('= delete')
+    if 'override' in tokens:
+        pos_quals.append('override')
+
+    return pre_quals, pos_quals
+
+def _get_access_specifier(cursor):
+    """Get the access specifier of a cursor, if any.
+
+    Returns:
+        One of 'private', 'protected', 'public' or `None`.
+    """
+    name_map = {
+        AccessSpecifier.PRIVATE: 'private',
+        AccessSpecifier.PROTECTED: 'protected',
+        AccessSpecifier.PUBLIC: 'public',
+    }
+
+    return name_map.get(cursor.access_specifier, None)
+
 def _var_type_fixup(cursor):
     """Fix non trivial variable and argument types.
 
@@ -349,6 +394,28 @@ def _function_fixup(cursor):
 
     return ttype, args
 
+def _method_fixup(cursor):
+    """Parse additional details of a method declaration."""
+    args = _get_args(cursor)
+
+    full_type = []
+
+    access_spec = _get_access_specifier(cursor)
+    if access_spec:
+        full_type.append(access_spec)
+
+    pre_quals, pos_quals = _get_method_quals(cursor)
+
+    full_type.extend(pre_quals)
+
+    if cursor.kind not in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
+        full_type.append(cursor.result_type.spelling)
+
+    ttype = ' '.join(full_type)
+    quals = ' '.join(pos_quals)
+
+    return ttype, args, quals
+
 def _recursive_parse(domain, comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -431,6 +498,17 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
                                          quals='', meta=meta)
+        return [ds]
+
+    elif cursor.kind in [CursorKind.CONSTRUCTOR,
+                         CursorKind.DESTRUCTOR,
+                         CursorKind.CXX_METHOD,
+                         CursorKind.FUNCTION_TEMPLATE]:
+        ttype, args, quals = _method_fixup(cursor)
+        ds = docstring.FunctionDocstring(domain=domain, text=text,
+                                         nest=nest, name=name,
+                                         ttype=ttype, args=args,
+                                         quals=quals, meta=meta)
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
