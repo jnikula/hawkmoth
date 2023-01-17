@@ -2,8 +2,8 @@
 # Copyright (c) 2021, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
-import hashlib
 import os
+import re
 
 import testenv
 
@@ -67,7 +67,11 @@ def print_example(testcase):
     domain = options.get('domain')
 
     if options.get('example-use-namespace'):
-        namespace = 'namespace_' + hashlib.md5(f'{testcase}'.encode()).hexdigest()
+        # Generate namespace from relative path to YAML without extension
+        relative = os.path.relpath(testcase, start=testenv.testdir)
+        relative, _ = os.path.splitext(relative)
+
+        namespace = 'namespace_' + re.sub(r'[^a-zA-Z0-9]', '_', relative)
 
         namespace_push = f'.. {domain}:namespace-push:: {namespace}\n\n'
         namespace_pop = f'\n.. {domain}:namespace-pop::\n'
