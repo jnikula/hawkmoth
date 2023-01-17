@@ -76,7 +76,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_238163a4c73047a60ccef522ea195193
+.. c:namespace-push:: namespace_example_autovar
 
 .. c:autovar:: meaning_of_life
    :file: example-variable.c
@@ -143,7 +143,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_fc499782b4098eda1789721fd08742ba
+.. c:namespace-push:: namespace_example_automacro
 
 .. c:automacro:: DIE
    :file: example-macro.c
@@ -185,7 +185,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_c8d7b219201e168fc0ac126ec28e5dbf
+.. c:namespace-push:: namespace_example_autofunction
 
 .. c:autofunction:: frob
    :file: example-function.c
@@ -228,7 +228,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_6719e1b2c4db0da6ad0361cea0c2742f
+.. c:namespace-push:: namespace_example_autostruct
 
 .. c:autostruct:: list
    :file: example-struct.c
