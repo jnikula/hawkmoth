@@ -233,22 +233,21 @@ def _get_storage_class(cursor):
 
     return storage_class_map.get(cursor.storage_class)
 
-def _get_fn_quals(cursor):
+def _get_function_quals(cursor):
     """Get all the qualifiers of a function object.
 
     Returns:
         List of (prefix) function qualifiers.
     """
-    fn_quals = []
+    tokens = [t.spelling for t in cursor.get_tokens()]
+    quals = []
 
-    if cursor.kind == CursorKind.FUNCTION_DECL:
-        tokens = [t.spelling for t in cursor.get_tokens()]
-        if 'static' in tokens:
-            fn_quals.append('static')
-        if 'inline' in tokens:
-            fn_quals.append('inline')
+    if 'static' in tokens:
+        quals.append('static')
+    if 'inline' in tokens:
+        quals.append('inline')
 
-    return fn_quals
+    return quals
 
 def _type_fixup(cursor):
     """Fix non trivial types' spelling and append qualifiers.
@@ -337,6 +336,17 @@ def _get_args(cursor):
 
     return args
 
+def _function_fixup(cursor):
+    """Parse additional details of a function declaration."""
+    args = _get_args(cursor)
+
+    full_type = _get_function_quals(cursor)
+    full_type.append(cursor.result_type.spelling)
+
+    ttype = ' '.join(full_type)
+
+    return ttype, args
+
 def _recursive_parse(domain, comments, errors, cursor, nest):
     comment = comments[cursor.hash]
     name = cursor.spelling
@@ -414,10 +424,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        args = _get_args(cursor)
-        linkage = ' '.join(_get_fn_quals(cursor))
-        ttype = f'{linkage}{" " if linkage else ""}{cursor.result_type.spelling}'
-
+        ttype, args = _function_fixup(cursor)
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args, meta=meta)
