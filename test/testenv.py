@@ -37,12 +37,10 @@ class Testcase:
         self.filename = filename
         with open(filename, 'r') as f:
             self.options = strictyaml.load(f.read(), self._options_schema).data
+        self.testid = os.path.splitext(os.path.basename(self.filename))[0]
 
     def get_testid(self):
-        """Convert a testcase filename into a test case identifier."""
-        name = os.path.splitext(os.path.basename(self.filename))[0]
-
-        return name
+        return self.testid
 
     def get_relative_filename(self, relative):
         if relative is None:
