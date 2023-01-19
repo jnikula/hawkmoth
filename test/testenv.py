@@ -13,29 +13,30 @@ rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
 
-options_schema = strictyaml.Map({
-    'domain': strictyaml.Enum(['c', 'cpp']),
-    'directive': strictyaml.Str(),
-    strictyaml.Optional('directive-arguments'): strictyaml.Seq(strictyaml.Str()),
-    strictyaml.Optional('directive-options'): strictyaml.Map({
-        strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
-        strictyaml.Optional('file'): strictyaml.Str(),
-        strictyaml.Optional('members'): strictyaml.Seq(strictyaml.Str()) | strictyaml.EmptyList(),
-        strictyaml.Optional('transform'): strictyaml.Str(),
-    }),
-    strictyaml.Optional('expected-failure'): strictyaml.Bool(),
-    strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
-    strictyaml.Optional('example-title'): strictyaml.Str(),
-    strictyaml.Optional('example-priority'): strictyaml.Int(),
-    strictyaml.Optional('errors'): strictyaml.Str(),
-    'expected': strictyaml.Str(),
-})
-
 class Testcase:
+    _options_schema = strictyaml.Map({
+        'domain': strictyaml.Enum(['c', 'cpp']),
+        'directive': strictyaml.Str(),
+        strictyaml.Optional('directive-arguments'): strictyaml.Seq(strictyaml.Str()),
+        strictyaml.Optional('directive-options'): strictyaml.Map({
+            strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
+            strictyaml.Optional('file'): strictyaml.Str(),
+            strictyaml.Optional('members'): (strictyaml.Seq(strictyaml.Str()) |
+                                             strictyaml.EmptyList()),
+            strictyaml.Optional('transform'): strictyaml.Str(),
+        }),
+        strictyaml.Optional('expected-failure'): strictyaml.Bool(),
+        strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
+        strictyaml.Optional('example-title'): strictyaml.Str(),
+        strictyaml.Optional('example-priority'): strictyaml.Int(),
+        strictyaml.Optional('errors'): strictyaml.Str(),
+        'expected': strictyaml.Str(),
+    })
+
     def __init__(self, filename):
         self.filename = filename
         with open(filename, 'r') as f:
-            self.options = strictyaml.load(f.read(), options_schema).data
+            self.options = strictyaml.load(f.read(), self._options_schema).data
 
     def get_testid(self):
         """Convert a testcase filename into a test case identifier."""
