@@ -15,10 +15,6 @@ def _get_suffix(buildername):
 
 class ExtensionTestcase(testenv.Testcase):
     def get_output(self, app, status, warning):
-        input_filename = self.get_input_filename()
-        shutil.copyfile(input_filename,
-                        os.path.join(app.srcdir, os.path.basename(input_filename)))
-
         directive_str = self.get_directive_string()
 
         with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
