@@ -215,3 +215,6 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None)
 }
+
+def setup(app):
+    app.add_object_type('confval', 'confval')
