@@ -6,6 +6,60 @@ Built-In Extensions
 Hawkmoth is :ref:`extensible <extending>`, and ships with some built-in
 extensions.
 
+.. _hawkmoth.ext.javadoc:
+
+hawkmoth.ext.javadoc
+--------------------
+
+This extension converts Javadoc_ comments to reStructuredText, using the
+:event:`hawkmoth-process-docstring` event.
+
+.. note::
+
+   The Javadoc support is rudimentary at best.
+
+.. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
+
+Installation and configuration in ``conf.py``:
+
+.. code-block:: python
+
+   extensions.append('hawkmoth.ext.javadoc')
+
+.. py:data:: hawkmoth_javadoc_transform
+   :type: str
+
+   Name of the transformation to handle. Defaults to ``'javadoc'``. Only convert
+   the comment if the ``transform`` option matches this name, otherwise do
+   nothing.
+
+For example:
+
+.. code-block:: python
+   :caption: conf.py
+
+   extensions.append('hawkmoth.ext.javadoc')
+
+.. code-block:: c
+   :caption: file.c
+
+   /**
+    * The baznicator.
+    *
+    * @param foo The Foo parameter.
+    * @param bar The Bar parameter.
+    * @return 0 on success, non-zero error code on error.
+    * @since v0.1
+    */
+   int baz(int foo, int bar);
+
+.. code-block:: rst
+   :caption: api.rst
+
+   .. c:autofunction:: baz
+      :file: file.c
+      :transform: javadoc
+
 .. _hawkmoth.ext.transformations:
 
 hawkmoth.ext.transformations
