@@ -108,10 +108,14 @@ def get_testcase_filenames(path):
             if f.endswith(testext):
                 yield os.path.join(root, f)
 
-def read_file(filename):
-    if not filename or not os.path.isfile(filename):
+def read_file(filename, optional=False):
+    if not filename:
+        assert optional
+
         # Emulate empty file.
         return ''
+
+    assert os.path.isfile(filename)
 
     with open(filename, 'r') as f:
         return f.read()
