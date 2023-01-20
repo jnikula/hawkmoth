@@ -15,6 +15,10 @@ def _get_suffix(buildername):
 
 class ExtensionTestcase(testenv.Testcase):
     def get_output(self, app, status, warning):
+        # Set root to the directory the testcase yaml is in, because the
+        # filenames in yaml are relative to it.
+        app.config.hawkmoth_root = os.path.dirname(self.filename)
+
         directive_str = self.get_directive_string()
 
         with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
