@@ -6,6 +6,27 @@ Built-In Extensions
 Hawkmoth is :ref:`extensible <extending>`, and ships with some built-in
 extensions.
 
+.. _hawkmoth.ext.javadoc:
+
+hawkmoth.ext.javadoc
+--------------------
+
+This extension converts Javadoc_ comments to reStructuredText.
+
+.. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
+
+Installation and configuration in ``conf.py``:
+
+.. code-block:: python
+
+   extensions.append('hawkmoth.ext.javadoc')
+
+.. py:data:: hawkmoth_javadoc_transform
+   :type: list
+
+   List of transforms to convert, defaults to ``['javadoc']``. If the
+   ``transform`` option is not in in this list, do nothing.
+
 .. _hawkmoth.ext.transformations:
 
 hawkmoth.ext.transformations
