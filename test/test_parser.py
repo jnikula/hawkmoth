@@ -57,7 +57,7 @@ class ParserTestcase(testenv.Testcase):
 
     def get_expected(self):
         return testenv.read_file(self.get_expected_filename()), \
-            testenv.read_file(self.get_stderr_filename())
+            testenv.read_file(self.get_stderr_filename(), optional=True)
 
 def _get_parser_testcases(path):
     for f in testenv.get_testcase_filenames(path):
