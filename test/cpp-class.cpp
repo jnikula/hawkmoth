@@ -30,8 +30,8 @@ public:
 	/** A mutable member. */
 	mutable int mutable_member;
 
-	/** A simple method. */
-	void simple_method(void);
+	/** A simple method that will not throw. */
+	void simple_method(void) noexcept;
 
 	/** A constexpr method. */
 	constexpr void constexpr_method(void);

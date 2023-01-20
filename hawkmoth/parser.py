@@ -34,7 +34,7 @@ import enum
 from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
-from clang.cindex import StorageClass, AccessSpecifier
+from clang.cindex import StorageClass, AccessSpecifier, ExceptionSpecificationKind
 from clang.cindex import Index, TranslationUnit
 from clang.cindex import Diagnostic
 
@@ -279,6 +279,10 @@ def _get_method_quals(cursor):
         pos_quals.append('= delete')
     if 'override' in tokens:
         pos_quals.append('override')
+
+    except_spec = cursor.exception_specification_kind
+    if except_spec == ExceptionSpecificationKind.BASIC_NOEXCEPT:
+        pos_quals.append('noexcept')
 
     return pre_quals, pos_quals
 
