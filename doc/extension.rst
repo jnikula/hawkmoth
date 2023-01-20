@@ -18,7 +18,7 @@ dependencies.
 Usage
 -----
 
-Add ``hawkmoth`` to :data:`sphinx:extensions` in ``conf.py``. Note that
+Add ``hawkmoth`` to :confval:`sphinx:extensions` in ``conf.py``. Note that
 depending on the packaging and installation directory, this may require
 adjusting the :envvar:`python:PYTHONPATH`.
 
