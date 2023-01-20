@@ -94,6 +94,8 @@ class Testcase:
         output_docs, output_errors = self.get_output()
         expect_docs, expect_errors = self.get_expected()
 
+        assert output_docs, 'empty output'
+        assert expect_docs, 'empty expected'
         assert output_docs == expect_docs
         assert output_errors == expect_errors
 
