@@ -49,9 +49,9 @@
       A mutable member.
 
 
-   .. cpp:function:: public void simple_method(void)
+   .. cpp:function:: public void simple_method(void) noexcept
 
-      A simple method.
+      A simple method that will not throw.
 
 
    .. cpp:function:: public constexpr void constexpr_method(void)
