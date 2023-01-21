@@ -213,5 +213,5 @@ epub_exclude_files = ['search.html']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
-    'sphinx': ('http://www.sphinx-doc.org/en/stable/', None)
+    'sphinx': ('https://www.sphinx-doc.org/en/master', None)
 }
