@@ -94,7 +94,7 @@ enable the support.
 Cross-Referencing C Constructs
 ------------------------------
 
-Use :any:`sphinx:c-domain` roles for cross-referencing as follows:
+Use :external+sphinx:ref:`c-domain` roles for cross-referencing as follows:
 
 - ``:c:data:`name``` for variables.
 
@@ -106,6 +106,6 @@ Use :any:`sphinx:c-domain` roles for cross-referencing as follows:
 
 - ``:c:member:`name.membername``` for struct and union members.
 
-See the Sphinx :any:`sphinx:basic-domain-markup` and generic
-:any:`sphinx:xref-syntax` for further details on cross-referencing, and how to
-specify the default domain for brevity.
+See the Sphinx :external+sphinx:ref:`basic-domain-markup` and generic
+:external+sphinx:ref:`xref-syntax` for further details on cross-referencing, and
+how to specify the default domain for brevity.
