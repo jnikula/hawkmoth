@@ -10,6 +10,7 @@ on:
 
 jobs:
   style:
+    name: Check style
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,6 +20,7 @@ jobs:
         run: make check
 
   examples:
+    name: Check examples
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +30,8 @@ jobs:
       - name: Examples check
         run: make test-examples
 
-  build:
+  test:
+    name: Run test suite
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
