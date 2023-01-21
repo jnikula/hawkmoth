@@ -12,30 +12,30 @@ jobs:
   style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - run: pip install flake8
-    - name: Style check
-      run: make check
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install flake8
+      - name: Style check
+        run: make check
 
   examples:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - name: Install dependencies (pip)
-      run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
-    - name: Examples check
-      run: make test-examples
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Install dependencies (pip)
+        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+      - name: Examples check
+        run: make test-examples
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - name: Install dependencies (apt)
-      run: sudo apt-get install -y python3-clang python3-pip
-    - name: Install dependencies (pip)
-      run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
-    - name: Test
-      run: make test
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Install dependencies (apt)
+        run: sudo apt-get install -y python3-clang python3-pip
+      - name: Install dependencies (pip)
+        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+      - name: Test
+        run: make test
