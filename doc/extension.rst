@@ -4,9 +4,9 @@ C Autodoc Extension
 ===================
 
 Hawkmoth provides a Sphinx extension that adds :ref:`new directives
-<directives>` to the Sphinx :any:`C domain <sphinx:c-domain>` to incorporate
-formatted C source code comments into a document. Hawkmoth is Sphinx
-:any:`sphinx:sphinx.ext.autodoc` for C.
+<directives>` to the Sphinx :external+sphinx:ref:`C domain <c-domain>` to
+incorporate formatted C source code comments into a document. Hawkmoth is Sphinx
+:py:mod:`sphinx.ext.autodoc` for C.
 
 For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
@@ -18,8 +18,8 @@ dependencies.
 Usage
 -----
 
-Add ``hawkmoth`` to :confval:`sphinx:extensions` in ``conf.py``. Note that
-depending on the packaging and installation directory, this may require
+Add ``hawkmoth`` to :external+sphinx:confval:`extensions` in ``conf.py``. Note
+that depending on the packaging and installation directory, this may require
 adjusting the :envvar:`python:PYTHONPATH`.
 
 For example:
@@ -37,8 +37,8 @@ The extension has a few configuration options that can be set in ``conf.py``:
    :type: str
 
    Path to the root of the source files. Defaults to the
-   :term:`sphinx:configuration directory`, i.e. the directory containing
-   ``conf.py``.
+   :external+sphinx:term:`configuration directory`, i.e. the directory
+   containing ``conf.py``.
 
    To use paths relative to the configuration directory, use
    :func:`python:os.path.abspath`, for example:
