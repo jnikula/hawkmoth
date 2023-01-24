@@ -66,3 +66,39 @@ necessary. This may change in the future.
           'javadoc-liberal': doccompat.javadoc_liberal,
           'kernel-doc': doccompat.kerneldoc,
       }
+
+Converting to Event Handling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have a function ``foo_transform()`` that you use with
+:py:data:`cautodoc_transformations`, it can be used with the
+:event:`hawkmoth-process-docstring` event as follows in ``conf.py``.
+
+Before:
+
+.. code-block:: python
+
+   cautodoc_transformations = {
+       'foo': foo_transform
+   }
+
+After:
+
+.. code-block:: python
+
+   def _process_docstring(app, lines, transform, options):
+       if transform != 'foo':
+           return
+
+       comment = '\n.join(lines)
+       comment = foo_transform(comment)
+       lines[:] = comment.splitlines()[:]
+
+   # conf.py can be turned into an extension by adding setup() function
+   setup(app)
+       app.connect('hawkmoth-process-docstring', _process_docstring)
+
+Of course, if you modify ``foo_transform()`` to operate on a list of strings,
+you can do away with the ``join()`` and ``splitlines()`` pair. Also, this can be
+turned into a proper Sphinx extension by putting it in a separate package. See
+:external+sphinx:doc:`development/index` for details.
