@@ -3,8 +3,11 @@
 
    Compat comment transformations.
 
-   Transformations require ``cautodoc_transformations`` configuration in
-   ``conf.py``. In this example, a transformation is used to support
+   Documentation comments can be processed using the hawkmoth-process-docstring
+   Sphinx event. You can use the built-in extensions for this, or create your
+   own.
+
+   In this example, hawkmoth.ext.javadoc built-in extension is used to support
    Javadoc-style documentation comments.
 
 
