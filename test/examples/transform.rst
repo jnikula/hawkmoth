@@ -3,9 +3,12 @@
 
    Custom comment transformations.
 
-   Transformations require ``cautodoc_transformations`` configuration in
-   ``conf.py``. In this example, Napoleon is used to interpret another
-   documentation comment format.
+   Documentation comments can be processed using the hawkmoth-process-docstring
+   Sphinx event. You can use the built-in extensions for this, or create your
+   own.
+
+   In this example, hawkmoth.ext.napoleon built-in extension is used to support
+   Napoleon-style documentation comments.
 
    :param foo: This is foo.
    :param bar: This is bar.
