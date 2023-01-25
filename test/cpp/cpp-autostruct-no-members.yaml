@@ -3,5 +3,5 @@ directive: autostruct
 directive-arguments:
   - sample_struct
 directive-options:
-  file: struct.c
+  file: ../c/struct.c
 expected: cpp-autostruct-no-members.rst

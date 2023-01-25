@@ -1,5 +1,5 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - struct.c
-expected: cpp-struct.rst
+  - ../c/variable.c
+expected: cpp-variable.rst

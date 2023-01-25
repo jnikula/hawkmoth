@@ -1,0 +1,5 @@
+domain: cpp
+directive: autodoc
+directive-arguments:
+  - ../c/comment-strip.c
+expected: cpp-comment-strip.rst

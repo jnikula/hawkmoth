@@ -1,5 +1,5 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - comment-strip.c
-expected: cpp-comment-strip.rst
+  - ../c/struct.c
+expected: cpp-struct.rst

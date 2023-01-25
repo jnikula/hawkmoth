@@ -3,7 +3,7 @@ directive: autoenum
 directive-arguments:
   - foo
 directive-options:
-  file: enum.c
+  file: ../c/enum.c
   members:
     - bar
 expected: cpp-autoenum.rst

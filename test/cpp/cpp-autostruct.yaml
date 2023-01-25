@@ -3,7 +3,7 @@ directive: autostruct
 directive-arguments:
   - sample_struct
 directive-options:
-  file: struct.c
+  file: ../c/struct.c
   members:
     - array_member
     - function_pointer_member

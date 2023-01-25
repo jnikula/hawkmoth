@@ -1,5 +1,0 @@
-domain: cpp
-directive: autodoc
-directive-arguments:
-  - variable.c
-expected: cpp-variable.rst
