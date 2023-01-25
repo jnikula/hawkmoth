@@ -8,4 +8,4 @@ directive-options:
     - array_member
     - function_pointer_member
     - other_function_pointer_member
-expected: cpp-autostruct.rst
+expected: autostruct.rst

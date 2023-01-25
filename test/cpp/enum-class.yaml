@@ -1,5 +1,5 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - ../c/typedef.c
-expected: cpp-typedef.rst
+  - enum-class.cpp
+expected: enum-class.rst

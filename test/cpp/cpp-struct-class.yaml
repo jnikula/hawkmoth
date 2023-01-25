@@ -1,5 +1,0 @@
-domain: cpp
-directive: autodoc
-directive-arguments:
-  - cpp-struct-class.cpp
-expected: cpp-struct-class.rst

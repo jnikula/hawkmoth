@@ -1,0 +1,5 @@
+domain: cpp
+directive: autodoc
+directive-arguments:
+  - mixed-linkage.cpp
+expected: mixed-linkage.rst

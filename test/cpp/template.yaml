@@ -1,8 +1,8 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - cpp-template.cpp
+  - template.cpp
 directive-options:
   clang:
     - --std=c++17
-expected: cpp-template.rst
+expected: template.rst

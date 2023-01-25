@@ -1,0 +1,2 @@
+ERROR: wrong-syntax.h:2: unknown type name 'class'
+ERROR: wrong-syntax.h:2: expected ';' after top level declarator

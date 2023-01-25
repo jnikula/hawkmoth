@@ -2,4 +2,4 @@ domain: cpp
 directive: autodoc
 directive-arguments:
   - ../c/typedef-struct.c
-expected: cpp-typedef-struct.rst
+expected: typedef-struct.rst
