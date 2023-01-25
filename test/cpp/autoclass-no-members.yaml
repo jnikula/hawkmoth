@@ -3,5 +3,5 @@ directive: autoclass
 directive-arguments:
   - foo
 directive-options:
-  file: cpp-class.cpp
-expected: cpp-autoclass-no-members.rst
+  file: class.cpp
+expected: autoclass-no-members.rst

@@ -1,5 +1,5 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - ../c/union.c
-expected: cpp-union.rst
+  - ../c/struct.c
+expected: struct.rst

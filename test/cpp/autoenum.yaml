@@ -6,4 +6,4 @@ directive-options:
   file: ../c/enum.c
   members:
     - bar
-expected: cpp-autoenum.rst
+expected: autoenum.rst

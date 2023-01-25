@@ -2,4 +2,4 @@ domain: cpp
 directive: autodoc
 directive-arguments:
   - ../c/composition.c
-expected: cpp-composition.rst
+expected: composition.rst

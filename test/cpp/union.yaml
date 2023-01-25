@@ -1,5 +1,5 @@
 domain: cpp
 directive: autodoc
 directive-arguments:
-  - ../c/enum.c
-expected: cpp-enum.rst
+  - ../c/union.c
+expected: union.rst

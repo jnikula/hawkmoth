@@ -2,5 +2,5 @@ domain: cpp
 directive: autodoc
 directive-arguments:
   - ../c/clang-diagnostics.c
-errors: cpp-clang-diagnostics.stderr
-expected: cpp-clang-diagnostics.rst
+errors: clang-diagnostics.stderr
+expected: clang-diagnostics.rst

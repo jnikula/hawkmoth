@@ -4,4 +4,4 @@ directive-arguments:
   - sample_struct
 directive-options:
   file: ../c/struct.c
-expected: cpp-autostruct-no-members.rst
+expected: autostruct-no-members.rst
