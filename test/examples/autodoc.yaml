@@ -1,7 +1,7 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - example-autodoc.c
+  - autodoc.c
 example-title: Overview
 example-priority: 1
-expected: example-autodoc.rst
+expected: autodoc.rst

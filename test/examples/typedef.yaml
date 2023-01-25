@@ -3,7 +3,7 @@ directive: autotype
 directive-arguments:
   - list_data_t
 directive-options:
-  file: example-typedef.c
+  file: typedef.c
 example-title: Typedef
 example-priority: 20
-expected: example-typedef.rst
+expected: typedef.rst

@@ -3,8 +3,8 @@ directive: automacro
 directive-arguments:
   - DIE
 directive-options:
-  file: example-macro.c
+  file: macro.c
 example-use-namespace: yes
 example-title: Macro
 example-priority: 31
-expected: example-automacro.rst
+expected: automacro.rst

@@ -1,10 +1,10 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - example-preprocessor.c
+  - preprocessor.c
 directive-options:
   clang:
     - -DDEEP_THOUGHT
 example-title: Preprocessor
 example-priority: 80
-expected: example-preprocessor.rst
+expected: preprocessor.rst

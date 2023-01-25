@@ -1,7 +1,7 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - example-variable.c
+  - variable.c
 example-title: Variable
 example-priority: 10
-expected: example-variable.rst
+expected: variable.rst
