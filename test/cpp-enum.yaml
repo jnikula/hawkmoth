@@ -1,5 +1,0 @@
-domain: cpp
-directive: autodoc
-directive-arguments:
-  - enum.c
-expected: cpp-enum.rst
