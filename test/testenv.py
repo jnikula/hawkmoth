@@ -37,7 +37,7 @@ class Testcase:
         self.filename = filename
         with open(filename, 'r') as f:
             self.options = strictyaml.load(f.read(), self._options_schema).data
-        self.testid = os.path.splitext(os.path.basename(self.filename))[0]
+        self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
     def get_testid(self):
         return self.testid
