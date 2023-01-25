@@ -3,9 +3,9 @@ directive: autostruct
 directive-arguments:
   - list
 directive-options:
-  file: example-struct.c
+  file: struct.c
   members:
 example-use-namespace: yes
 example-title: Struct
 example-priority: 51
-expected: example-autostruct.rst
+expected: autostruct.rst

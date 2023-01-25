@@ -3,8 +3,8 @@ directive: autounion
 directive-arguments:
   - onion
 directive-options:
-  file: example-autounion.c
+  file: autounion.c
   members:
 example-title: Union
 example-priority: 60
-expected: example-autounion.rst
+expected: autounion.rst

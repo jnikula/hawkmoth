@@ -3,8 +3,8 @@ directive: autofunction
 directive-arguments:
   - frob
 directive-options:
-  file: example-function.c
+  file: function.c
 example-use-namespace: yes
 example-title: Function
 example-priority: 41
-expected: example-autofunction.rst
+expected: autofunction.rst

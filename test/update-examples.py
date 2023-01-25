@@ -103,15 +103,11 @@ def examples_key(item):
 
     return min([testcase_key(testcase) for testcase in testcases])
 
-def _get_example_testcases(path):
-    for f in testenv.get_testcase_filenames(path):
-        if os.path.basename(f).startswith('example-'):
-            yield ExampleTestcase(f)
-
 def get_examples():
     examples = {}
 
-    for testcase in _get_example_testcases(os.path.join(testenv.testdir, 'examples')):
+    for f in testenv.get_testcase_filenames(os.path.join(testenv.testdir, 'examples')):
+        testcase = ExampleTestcase(f)
         input_filename = os.path.basename(testcase.get_input_filename())
 
         if input_filename in examples:

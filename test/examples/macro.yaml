@@ -1,7 +1,7 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - example-macro.c
+  - macro.c
 example-title: Macro
 example-priority: 30
-expected: example-macro.rst
+expected: macro.rst

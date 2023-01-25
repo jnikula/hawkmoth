@@ -1,7 +1,7 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - example-struct.c
+  - struct.c
 example-title: Struct
 example-priority: 50
-expected: example-struct.rst
+expected: struct.rst
