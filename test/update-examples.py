@@ -53,7 +53,7 @@ def print_title(testcases):
 ''')
 
 def print_source(input_filename):
-    literal_include = f'../test/{input_filename}'
+    literal_include = f'../test/examples/{input_filename}'
 
     print(f'''Source
 ~~~~~~
@@ -111,7 +111,7 @@ def _get_example_testcases(path):
 def get_examples():
     examples = {}
 
-    for testcase in _get_example_testcases(testenv.testdir):
+    for testcase in _get_example_testcases(os.path.join(testenv.testdir, 'examples')):
         input_filename = os.path.basename(testcase.get_input_filename())
 
         if input_filename in examples:

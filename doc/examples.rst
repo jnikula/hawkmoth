@@ -25,7 +25,7 @@ Overview
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-autodoc.c
+.. literalinclude:: ../test/examples/example-autodoc.c
    :language: C
    :caption: example-autodoc.c
 
@@ -48,7 +48,7 @@ Variable
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-variable.c
+.. literalinclude:: ../test/examples/example-variable.c
    :language: C
    :caption: example-variable.c
 
@@ -76,7 +76,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_example_autovar
+.. c:namespace-push:: namespace_examples_example_autovar
 
 .. c:autovar:: meaning_of_life
    :file: example-variable.c
@@ -90,7 +90,7 @@ Typedef
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-typedef.c
+.. literalinclude:: ../test/examples/example-typedef.c
    :language: C
    :caption: example-typedef.c
 
@@ -115,7 +115,7 @@ Macro
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-macro.c
+.. literalinclude:: ../test/examples/example-macro.c
    :language: C
    :caption: example-macro.c
 
@@ -143,7 +143,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_example_automacro
+.. c:namespace-push:: namespace_examples_example_automacro
 
 .. c:automacro:: DIE
    :file: example-macro.c
@@ -157,7 +157,7 @@ Function
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-function.c
+.. literalinclude:: ../test/examples/example-function.c
    :language: C
    :caption: example-function.c
 
@@ -185,7 +185,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_example_autofunction
+.. c:namespace-push:: namespace_examples_example_autofunction
 
 .. c:autofunction:: frob
    :file: example-function.c
@@ -199,7 +199,7 @@ Struct
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-struct.c
+.. literalinclude:: ../test/examples/example-struct.c
    :language: C
    :caption: example-struct.c
 
@@ -228,7 +228,7 @@ Directive
 Output
 ~~~~~~
 
-.. c:namespace-push:: namespace_example_autostruct
+.. c:namespace-push:: namespace_examples_example_autostruct
 
 .. c:autostruct:: list
    :file: example-struct.c
@@ -243,7 +243,7 @@ Union
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-autounion.c
+.. literalinclude:: ../test/examples/example-autounion.c
    :language: C
    :caption: example-autounion.c
 
@@ -270,7 +270,7 @@ Enum
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-enum.c
+.. literalinclude:: ../test/examples/example-enum.c
    :language: C
    :caption: example-enum.c
 
@@ -297,7 +297,7 @@ Preprocessor
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-preprocessor.c
+.. literalinclude:: ../test/examples/example-preprocessor.c
    :language: C
    :caption: example-preprocessor.c
 
@@ -322,7 +322,7 @@ Transform
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-transform.c
+.. literalinclude:: ../test/examples/example-transform.c
    :language: C
    :caption: example-transform.c
 
@@ -347,7 +347,7 @@ Compat
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/example-compat.c
+.. literalinclude:: ../test/examples/example-compat.c
    :language: C
    :caption: example-compat.c
 
