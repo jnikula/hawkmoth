@@ -50,7 +50,7 @@ def napoleon_transform(comment):
 
 cautodoc_transformations = {
     'napoleon': napoleon_transform,
-    'javadoc-liberal': doccompat.javadoc_liberal,
+    'javadoc': doccompat.javadoc_liberal,
 }
 
 # Add any paths that contain templates here, relative to this directory.
