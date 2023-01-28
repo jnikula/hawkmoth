@@ -3,7 +3,7 @@ directive: autodoc
 directive-arguments:
   - compat.c
 directive-options:
-  transform: javadoc-liberal
+  transform: javadoc
 example-title: Compat
 example-priority: 95
 expected: compat.rst

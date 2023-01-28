@@ -357,12 +357,12 @@ Directive
 .. code-block:: rest
 
    .. c:autodoc:: compat.c
-      :transform: javadoc-liberal
+      :transform: javadoc
 
 Output
 ~~~~~~
 
 .. c:autodoc:: compat.c
-   :transform: javadoc-liberal
+   :transform: javadoc
 
 
