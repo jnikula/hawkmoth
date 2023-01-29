@@ -11,7 +11,7 @@ PyPI_ with:
   pip install hawkmoth
 
 However, you'll also need to install Clang and Clang Python Bindings through
-your distro's package manager; they are not available via PyPI_. This is
+your distro's package manager; they are not available via PyPI. This is
 typically the biggest hurdle in getting your Hawkmoth setup to work.
 
 .. _PyPI: https://pypi.org/project/hawkmoth/
@@ -30,7 +30,7 @@ For example, in Debian Bullseye:
 Clang Python Bindings
 ---------------------
 
-There are **unofficial** Clang Python Bindings available in PyPI_. They may be
+There are **unofficial** Clang Python Bindings available in PyPI. They may be
 helpful in some scenarios (for example Debian Buster not packaging Clang Python
 Bindings for Python 3 at all), but they will not include the binary
 ``libclang``, and the provided Python Bindings might not be compatible with the
