@@ -23,7 +23,7 @@ extensions = [
 # -- Project information -----------------------------------------------------
 
 project = 'Hawkmoth'
-copyright = '2017-2019, Jani Nikula'
+copyright = '2017-2023, Jani Nikula and contributors'
 author = 'Jani Nikula'
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
