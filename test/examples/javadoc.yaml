@@ -1,9 +1,9 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - compat.c
+  - javadoc.c
 directive-options:
   transform: javadoc
-example-title: Compat
+example-title: Javadoc-style comments
 example-priority: 95
-expected: compat.rst
+expected: javadoc.rst

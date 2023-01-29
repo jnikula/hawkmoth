@@ -1,7 +1,7 @@
 
 .. c:function:: int frob2(struct list *list, enum mode mode)
 
-   Compat comment transformations.
+   Custom comment transformations.
 
    Documentation comments can be processed using the hawkmoth-process-docstring
    Sphinx event. You can use the built-in extensions for this, or create your
