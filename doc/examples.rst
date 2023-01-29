@@ -316,53 +316,53 @@ Output
    :clang: -DDEEP_THOUGHT
 
 
-Transform
----------
+Napoleon-style comments
+-----------------------
 
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/examples/transform.c
+.. literalinclude:: ../test/examples/napoleon.c
    :language: C
-   :caption: transform.c
+   :caption: napoleon.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: transform.c
+   .. c:autodoc:: napoleon.c
       :transform: napoleon
 
 Output
 ~~~~~~
 
-.. c:autodoc:: transform.c
+.. c:autodoc:: napoleon.c
    :transform: napoleon
 
 
-Compat
-------
+Javadoc-style comments
+----------------------
 
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/examples/compat.c
+.. literalinclude:: ../test/examples/javadoc.c
    :language: C
-   :caption: compat.c
+   :caption: javadoc.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: compat.c
+   .. c:autodoc:: javadoc.c
       :transform: javadoc
 
 Output
 ~~~~~~
 
-.. c:autodoc:: compat.c
+.. c:autodoc:: javadoc.c
    :transform: javadoc
 
 

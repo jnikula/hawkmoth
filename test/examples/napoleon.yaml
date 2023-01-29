@@ -1,9 +1,9 @@
 domain: c
 directive: autodoc
 directive-arguments:
-  - transform.c
+  - napoleon.c
 directive-options:
   transform: napoleon
-example-title: Transform
+example-title: Napoleon-style comments
 example-priority: 90
-expected: transform.rst
+expected: napoleon.rst
