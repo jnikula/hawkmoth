@@ -3,9 +3,9 @@
 Syntax
 ======
 
-For the :any:`c:autodoc` directive to work, the C source code must be
-documented using specific documentation comment style, and the comments must
-follow reStructuredText markup.
+For the :ref:`Hawkmoth autodoc directives <directives>` to work, the C source
+code must be documented using specific documentation comment style, and the
+comments must follow reStructuredText markup.
 
 Optionally, the syntax may be :ref:`extended <extending-the-syntax>` to support
 e.g. Javadoc and Napoleon style comments.
