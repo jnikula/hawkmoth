@@ -60,6 +60,58 @@ For example:
       :file: file.c
       :transform: javadoc
 
+.. _hawkmoth.ext.napoleon:
+
+hawkmoth.ext.napoleon
+---------------------
+
+This extension provides a bridge from Hawkmoth to the
+:external+sphinx:py:mod:`sphinx.ext.napoleon` extension, using the
+:event:`hawkmoth-process-docstring` event, to support Napoleon style
+documentation comments.
+
+Installation and configuration in ``conf.py``:
+
+.. code-block:: python
+
+   extensions.append('hawkmoth.ext.napoleon')
+
+.. py:data:: hawkmoth_napoleon_transform
+   :type: str
+
+   Name of the transformation to handle. Defaults to ``'napoleon'``. Only
+   convert the comment if the ``transform`` option matches this name, otherwise
+   do nothing.
+
+For example:
+
+.. code-block:: python
+   :caption: conf.py
+
+   extensions.append('hawkmoth.ext.napoleon')
+   hawkmoth_transform_default = 'napoleon'
+
+.. code-block:: c
+   :caption: file.c
+
+   /**
+    * The baznicator.
+    *
+    * Args:
+    *     foo: The Foo parameter.
+    *     bar: The Bar parameter.
+    *
+    * Returns:
+    *     0 on success, non-zero error code on error.
+    */
+   int baz(int foo, int bar);
+
+.. code-block:: rst
+   :caption: api.rst
+
+   .. c:autofunction:: baz
+      :file: file.c
+
 .. _hawkmoth.ext.transformations:
 
 hawkmoth.ext.transformations
