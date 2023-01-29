@@ -120,7 +120,7 @@ First, add a ``requirements.txt`` file to your project according to RTD
 `dependency documentation`_ to have RTD install some required dependencies::
 
   clang>=6
-  hawkmoth>=0.7
+  hawkmoth>=0.12
 
 Next, add this snippet to your ``conf.py``:
 
