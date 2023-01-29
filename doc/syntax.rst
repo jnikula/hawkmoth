@@ -7,8 +7,8 @@ For the :any:`c:autodoc` directive to work, the C source code must be
 documented using specific documentation comment style, and the comments must
 follow reStructuredText markup.
 
-Optionally, there's limited support for some Javadoc_ and Doxygen_ style
-constructs for compatibility.
+Optionally, the syntax may be :ref:`extended <extending-the-syntax>` to support
+e.g. Javadoc and Napoleon style comments.
 
 See :ref:`the examples section <examples>` for a quick tour of what's possible,
 and read on for documentation comment formatting details.
@@ -65,31 +65,20 @@ values, and arbitrary other data:
 
 .. _field lists: http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists
 
-Compatibility
--------------
+.. _extending-the-syntax:
 
-Hawkmoth supports limited Javadoc_ and Doxygen_ style constructs for
-compatibility. See the :ref:`extension documentation <extension>` on how to
-enable the support.
+Extending the Syntax
+--------------------
 
-.. code-block:: c
+Hawkmoth supports :ref:`extending <extending>` the syntax using :ref:`built-in
+<built-in-extensions>` and custom extensions that convert the comments to
+reStructuredText.
 
-  /**
-   * The baznicator.
-   *
-   * @param foo The Foo parameter.
-   * @param bar The Bar parameter.
-   * @return 0 on success, non-zero error code on error.
-   * @since v0.1
-   */
-  int baz(int foo, int bar);
-
-.. warning:: The compatibility support and its documentation are a
-             work-in-progress.
+The :ref:`hawkmoth.ext.javadoc` extension provides limited support for Javadoc_
+style comments, and the :ref:`hawkmoth.ext.napoleon` extension provides support
+for :external+sphinx:py:mod:`sphinx.ext.napoleon` style comments.
 
 .. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
-
-.. _Doxygen: http://doxygen.nl/
 
 Cross-Referencing C Constructs
 ------------------------------
