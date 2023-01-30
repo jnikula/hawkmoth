@@ -211,6 +211,12 @@ intersphinx_mapping = {
     'sphinx': ('https://www.sphinx-doc.org/en/master', None)
 }
 
+def _process_signature(app, lines, options):
+    # Yuck.
+    for i in range(len(lines)):
+        lines[i] = lines[i].replace('_Bool', 'bool')
+
 def setup(app):
     app.add_object_type('confval', 'confval')
     app.add_object_type('event', 'event', 'pair: %s; event')
+    app.connect('hawkmoth-process-signature', _process_signature)
