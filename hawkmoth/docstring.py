@@ -159,9 +159,14 @@ class Docstring():
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
-    def get_docstring(self, transform=None):
+    def get_docstring(self, transform=None, process_signature=None):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
+
+        # FIXME: Likely better to call with one line? Although this allows
+        # adding :noindex: etc.
+        if process_signature is not None:
+            process_signature(header_lines)
 
         # FIXME: This changes the number of lines in output. This impacts the
         # error reporting via meta['line']. Adjust meta to take this into

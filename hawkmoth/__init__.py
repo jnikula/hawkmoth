@@ -90,16 +90,21 @@ class _AutoBaseDirective(SphinxDirective):
 
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
+    def __process_signature(self, lines):
+        self.env.app.emit('hawkmoth-process-signature', lines, self.options)
+
     def __get_docstrings(self, viewlist, filename):
         root = self.__parse(filename)
 
         process_docstring = lambda lines: self.__process_docstring(lines)
+        process_signature = lambda lines: self.__process_signature(lines)
 
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
-                lines = docstr.get_docstring(transform=process_docstring)
+                lines = docstr.get_docstring(transform=process_docstring,
+                                             process_signature=process_signature)
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
@@ -304,6 +309,7 @@ def setup(app):
     app.add_directive_to_domain('cpp', 'autoclass', CppAutoClassDirective)
 
     app.add_event('hawkmoth-process-docstring')
+    app.add_event('hawkmoth-process-signature')
 
     # Setup transformations for compatibility.
     app.setup_extension('hawkmoth.ext.transformations')
