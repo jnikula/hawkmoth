@@ -35,12 +35,12 @@ class ParserTestcase(testenv.Testcase):
 
         input_filename = self.get_input_filename()
 
-        options = options.get('directive-options', {})
+        directive_options = options.get('directive-options', {})
 
-        clang_args.extend(options.get('clang', []))
+        clang_args.extend(directive_options.get('clang', []))
         comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
-        tropt = options.get('transform')
+        tropt = directive_options.get('transform')
         if tropt is not None:
             transform = conf.cautodoc_transformations[tropt]
         else:
