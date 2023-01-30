@@ -4,7 +4,7 @@
    Linked list node.
 
 
-   .. c:member:: struct list * next
+   .. c:member:: struct list *next
 
       Next node.
 
