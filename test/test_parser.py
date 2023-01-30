@@ -38,7 +38,7 @@ class ParserTestcase(testenv.Testcase):
         directive_options = options.get('directive-options', {})
 
         clang_args.extend(directive_options.get('clang', []))
-        comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
+        root, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
         tropt = directive_options.get('transform')
         if tropt is not None:
@@ -46,9 +46,10 @@ class ParserTestcase(testenv.Testcase):
         else:
             transform = None
 
-        for comment in comments.walk():
-            lines = comment.get_docstring(transform=lambda lines: _transform(transform, lines))
-            docs_str += '\n'.join(lines) + '\n'
+        for docstrings in root.walk(recurse=False):
+            for docstr in docstrings.walk():
+                lines = docstr.get_docstring(transform=lambda lines: _transform(transform, lines))
+                docs_str += '\n'.join(lines) + '\n'
 
         for error in errors:
             errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
