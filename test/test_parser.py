@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018, Jani Nikula <jani@nikula.org>
+# Copyright (c) 2018-2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 import os
@@ -40,7 +40,7 @@ class ParserTestcase(testenv.Testcase):
         clang_args.extend(options.get('clang', []))
         comments, errors = parse(input_filename, domain=domain, clang_args=clang_args)
 
-        tropt = options.pop('transform', None)
+        tropt = options.get('transform')
         if tropt is not None:
             transform = conf.cautodoc_transformations[tropt]
         else:
