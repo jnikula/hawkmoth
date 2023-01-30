@@ -58,11 +58,6 @@ class _AutoBaseDirective(SphinxDirective):
 
         return clang_args
 
-    def __transform(self, lines):
-        transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
-
-        self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
-
     def __parse(self, filename):
         # Always pass `-xc++` to the compiler on 'cpp' domain as the first
         # option so that the user can override it.
@@ -90,14 +85,21 @@ class _AutoBaseDirective(SphinxDirective):
 
         return docstrings
 
+    def __process_docstring(self, lines):
+        transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
+
+        self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
+
     def __get_docstrings(self, viewlist, filename):
         root = self.__parse(filename)
+
+        process_docstring = lambda lines: self.__process_docstring(lines)
 
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
-                lines = docstr.get_docstring(transform=lambda lines: self.__transform(lines))
+                lines = docstr.get_docstring(transform=process_docstring)
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
