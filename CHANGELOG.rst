@@ -6,6 +6,39 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Early support for documenting C++ (contributions courtesy of `Critical Software`_)
+* Support for extending documentation comment parsing and transformations via
+  ``hawkmoth-process-docstring`` event
+* ``hawkmoth_transform_default`` configuration option for the
+  ``hawkmoth-process-docstring`` event
+* ``hawkmoth_root`` configuration option to replace ``cautodoc_root``
+* ``hawkmoth_clang`` configuration option to replace ``cautodoc_clang``
+* Built-in extensions for Javadoc and Napoleon comment handling
+
+.. _Critical Software: https://www.criticalsoftware.com/
+
+Changed
+~~~~~~~
+
+* Typedefed anonymous struct, union, and enum parsing to be more explicit
+* ``cautodoc_transformations`` handling moved to a built-in extension
+* Lots of test suite refactoring and cleanups
+
+Deprecated
+~~~~~~~~~~
+
+* ``cautodoc_root`` configuration option in favour of ``hawkmoth_root``
+* ``cautodoc_clang`` configuration option in favour of ``hawkmoth_clang``
+
+Removed
+~~~~~~~
+
+* ``cautodoc_compat`` configuration option
+* ``compat`` directive option
+
 Hawkmoth `0.12.0`_
 ------------------
 
