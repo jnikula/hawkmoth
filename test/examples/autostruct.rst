@@ -13,3 +13,8 @@
 
       Data.
 
+
+   .. c:member:: _Bool x
+
+      Bool.
+

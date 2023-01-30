@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 /**
  * Linked list node.
  */
@@ -7,4 +9,7 @@ struct list {
 
 	/** Data. */
 	int data;
+
+	/** Bool. */
+	bool x;
 };

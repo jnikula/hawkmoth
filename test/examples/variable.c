@@ -1,3 +1,10 @@
+#include <stdbool.h>
+
+/**
+ * Let's see.
+ */
+bool x;
+
 /**
  * The name says it all.
  */
