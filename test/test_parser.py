@@ -7,6 +7,7 @@ import os
 import pytest
 
 from hawkmoth.parser import parse
+from hawkmoth import docstring
 from test import conf, testenv
 
 def _transform(transform, lines):
@@ -14,6 +15,41 @@ def _transform(transform, lines):
         text = '\n'.join(lines)
         text = transform(text)
         lines[:] = [line for line in text.splitlines()]
+
+def _filter_types(directive):
+    types = {
+        'autodoc': None,
+        'autovar': [docstring.VarDocstring],
+        'autotype': [docstring.TypeDocstring],
+        'autostruct': [docstring.StructDocstring],
+        'autounion': [docstring.UnionDocstring],
+        'autoenum': [docstring.EnumDocstring],
+        'automacro': [docstring.MacroDocstring, docstring.MacroFunctionDocstring],
+        'autofunction': [docstring.FunctionDocstring],
+        'autoclass': [docstring.ClassDocstring],
+    }
+
+    return types.get(directive)
+
+def _filter_names(directive, options):
+    if directive == 'autodoc':
+        return None
+
+    return options.get('directive-arguments')
+
+def _filter_members(directive, directive_options):
+    if directive in ['autodoc', 'autovar', 'autotype', 'automacro', 'autofunction']:
+        return None
+
+    members = directive_options.get('members')
+
+    if members is None:
+        return []
+
+    if len(members) == 0:
+        return None
+
+    return members
 
 class ParserTestcase(testenv.Testcase):
     def get_output(self):
@@ -30,8 +66,6 @@ class ParserTestcase(testenv.Testcase):
         clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
 
         directive = options.get('directive')
-        if directive != 'autodoc':
-            pytest.skip(f'{directive} directive test')
 
         input_filename = self.get_input_filename()
 
@@ -46,8 +80,9 @@ class ParserTestcase(testenv.Testcase):
         else:
             transform = None
 
-        for docstrings in root.walk(recurse=False):
-            for docstr in docstrings.walk():
+        for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
+                                    filter_names=_filter_names(directive, options)):
+            for docstr in docstrings.walk(filter_names=_filter_members(directive, directive_options)):  # noqa: E501
                 lines = docstr.get_docstring(transform=lambda lines: _transform(transform, lines))
                 docs_str += '\n'.join(lines) + '\n'
 

@@ -4,7 +4,7 @@
    Classy foo.
 
 
-   .. cpp:member:: mutable int mutable_member
+   .. cpp:member:: public mutable int mutable_member
 
       A mutable member.
 
