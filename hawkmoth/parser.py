@@ -478,10 +478,6 @@ def _type_definition_fixup(cursor):
     if cursor.spelling == '':
         return None
 
-    storage_class = _get_storage_class(cursor)
-    if storage_class:
-        type_elem.append(storage_class)
-
     type_elem.extend(_specifiers_fixup(cursor, cursor.type))
 
     colon_suffix = ''
