@@ -1,0 +1,7 @@
+domain: c
+directive: autotext
+directive-arguments:
+  - Just a random comment
+directive-options:
+  file: autotext.c
+expected: autotext.rst
