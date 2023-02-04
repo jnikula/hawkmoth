@@ -30,6 +30,7 @@ def _transform(transform, lines):
 def _filter_types(directive):
     types = {
         'autodoc': None,
+        'autotext': [docstring.TextDocstring],
         'autovar': [docstring.VarDocstring],
         'autotype': [docstring.TypeDocstring],
         'autostruct': [docstring.StructDocstring],
@@ -49,7 +50,7 @@ def _filter_names(directive, options):
     return options.get('directive-arguments')
 
 def _filter_members(directive, directive_options):
-    if directive in ['autodoc', 'autovar', 'autotype', 'automacro', 'autofunction']:
+    if directive in ['autodoc', 'autotext', 'autovar', 'autotype', 'automacro', 'autofunction']:
         return None
 
     members = directive_options.get('members')

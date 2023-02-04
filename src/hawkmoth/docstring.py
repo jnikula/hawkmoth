@@ -198,6 +198,35 @@ class TextDocstring(Docstring):
     _indent = 0
     _fmt = '\n'
 
+    def get_name(self):
+        """Figure out a name for the text comment based on the comment contents.
+
+        The name is the sub-string starting from the first alphanumeric
+        character in the comment to the next :, ., or newline.
+
+        This sensibly covers cases like reStructuredText hyperlink targets::
+
+            .. _Foo Bar:
+
+        and section titles::
+
+            Foo Bar
+            =======
+
+        and just first sentences::
+
+            Foo Bar. Blah.
+
+        Not perfect, but good enough.
+        """
+        # If the parser passed in a name, use it (unlikely)
+        if self._name:
+            return self._name
+
+        mo = re.search(r'[\W_]*(?P<name>\w[^:.\n\r]*)', self._text)
+
+        return mo.group('name') if mo else None
+
 class VarDocstring(Docstring):
     _indent = 1
     _fmt = '\n.. {domain}:var:: {ttype}{type_spacer}{name}\n\n'
