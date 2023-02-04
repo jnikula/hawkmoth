@@ -191,6 +191,12 @@ class _AutoCompoundDirective(_AutoSymbolDirective):
 class CAutoDocDirective(_AutoDocDirective):
     _domain = 'c'
 
+class CAutoSectionDirective(_AutoSymbolDirective):
+    # Allow spaces in the directive argument (the name)
+    final_argument_whitespace = True
+    _domain = 'c'
+    _docstring_types = [docstring.TextDocstring]
+
 class CAutoVarDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.VarDocstring]
@@ -221,6 +227,12 @@ class CAutoEnumDirective(_AutoCompoundDirective):
 
 class CppAutoDocDirective(_AutoDocDirective):
     _domain = 'cpp'
+
+class CppAutoSectionDirective(_AutoSymbolDirective):
+    # Allow spaces in the directive argument (the name)
+    final_argument_whitespace = True
+    _domain = 'cpp'
+    _docstring_types = [docstring.TextDocstring]
 
 class CppAutoVarDirective(_AutoSymbolDirective):
     _domain = 'cpp'
@@ -283,6 +295,7 @@ def setup(app):
     app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
 
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
+    app.add_directive_to_domain('c', 'autosection', CAutoSectionDirective)
     app.add_directive_to_domain('c', 'autovar', CAutoVarDirective)
     app.add_directive_to_domain('c', 'autotype', CAutoTypeDirective)
     app.add_directive_to_domain('c', 'autostruct', CAutoStructDirective)
@@ -292,6 +305,7 @@ def setup(app):
     app.add_directive_to_domain('c', 'autofunction', CAutoFunctionDirective)
 
     app.add_directive_to_domain('cpp', 'autodoc', CppAutoDocDirective)
+    app.add_directive_to_domain('cpp', 'autosection', CppAutoSectionDirective)
     app.add_directive_to_domain('cpp', 'autovar', CppAutoVarDirective)
     app.add_directive_to_domain('cpp', 'autotype', CppAutoTypeDirective)
     app.add_directive_to_domain('cpp', 'autostruct', CppAutoStructDirective)
