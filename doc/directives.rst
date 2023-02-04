@@ -203,3 +203,54 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
       .. c:autoenum:: example_enum
          :file: example_file.c
          :members: CONSTANT_ONE, CONSTANT_TWO
+
+Generic Documentation Sections
+------------------------------
+
+The :rst:dir:`c:autosection` and :rst:dir:`cpp:autosection` directives
+incorporate generic documentation comments not attached to any objects in the
+specified file.
+
+.. rst:directive:: .. c:autosection:: name
+.. rst:directive:: .. cpp:autosection:: name
+
+   Incorporate the generic documentation comment identified by ``name`` in the
+   file ``file``. The ``file`` option is as in :rst:dir:`c:autovar`.
+
+   The ``name`` is derived from the first sentence of the comment, and may
+   contain whitespace. It starts from the first alphanumeric character,
+   inclusive, and extends to the next ``:``, ``.``, or newline, non-inclusive.
+
+   For example:
+
+   .. code-block:: c
+
+      /**
+       * This is the reference. This is not. It all becomes
+       * the documentation comment.
+       */
+
+   .. code-block:: rst
+
+      .. c:autosection:: This is the reference
+	 :file: example_file.c
+
+   Note that the above does not automatically create hyperlink targets that you
+   could reference from reStructuredText. However, reStructuredText hyperlink
+   targets work nicely as the reference name for the directive:
+
+   .. code-block:: c
+
+      /**
+       * .. _This is the reference:
+       *
+       * The actual documentation comment.
+       *
+       * You can use :ref:`This is the reference` to reference
+       * this comment in reStructuredText.
+       */
+
+   .. code-block:: rst
+
+      .. c:autosection:: This is the reference
+	 :file: example_file.c
