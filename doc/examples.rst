@@ -312,6 +312,31 @@ Output
    :members:
 
 
+Generic Documentation Section
+-----------------------------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/examples/autosection.c
+   :language: C
+   :caption: autosection.c
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autosection:: Hyperlink Target
+      :file: autosection.c
+
+Output
+~~~~~~
+
+.. c:autosection:: Hyperlink Target
+   :file: autosection.c
+
+
 Preprocessor
 ------------
 

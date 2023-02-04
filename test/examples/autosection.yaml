@@ -1,0 +1,9 @@
+domain: c
+directive: autosection
+directive-arguments:
+  - Hyperlink Target
+directive-options:
+  file: autosection.c
+example-priority: 75
+example-title: Generic Documentation Section
+expected: autosection.rst

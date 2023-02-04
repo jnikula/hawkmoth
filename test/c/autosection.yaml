@@ -1,0 +1,7 @@
+domain: c
+directive: autosection
+directive-arguments:
+  - Just a random comment
+directive-options:
+  file: autosection.c
+expected: autosection.rst
