@@ -172,3 +172,41 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
       .. c:autoenum:: example_enum
          :file: example_file.c
          :members: CONSTANT_ONE, CONSTANT_TWO
+
+Text Documentation Comments
+---------------------------
+
+.. rst:directive:: .. c:autotext:: name
+
+   Incorporate the text documentation comment identified by ``name`` in the file
+   ``file``. The ``file`` option is as in :rst:dir:`c:autovar`.
+
+   The ``name`` is derived from the first sentence of the comment, and may
+   contain whitespace. It starts from the first alphanumeric character,
+   inclusive, and extends to the next ``:``, ``.``, or newline, non-inclusive.
+
+   For example:
+
+   .. code-block:: c
+
+      /**
+       * This is the reference. This is not.
+       */
+
+   .. code-block:: rst
+
+      .. c:autotext:: This is the reference
+	 :file: example_file.c
+
+   reStructuredText hyperlink targets work nicely:
+
+   .. code-block:: c
+
+      /**
+       * .. _This is the reference:
+       */
+
+   .. code-block:: rst
+
+      .. c:autotext:: This is the reference
+	 :file: example_file.c
