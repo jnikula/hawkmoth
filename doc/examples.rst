@@ -312,6 +312,31 @@ Output
    :members:
 
 
+Generic Documentation Comments
+------------------------------
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/examples/autotext.c
+   :language: C
+   :caption: autotext.c
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. c:autotext:: Hyperlink Target
+      :file: autotext.c
+
+Output
+~~~~~~
+
+.. c:autotext:: Hyperlink Target
+   :file: autotext.c
+
+
 Preprocessor
 ------------
 

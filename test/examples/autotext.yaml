@@ -1,0 +1,9 @@
+domain: c
+directive: autotext
+directive-arguments:
+  - Hyperlink Target
+directive-options:
+  file: autotext.c
+example-priority: 75
+example-title: Generic Documentation Comments
+expected: autotext.rst
