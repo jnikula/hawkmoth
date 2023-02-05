@@ -31,6 +31,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   Introduction <self>
    installation
    extension
    directives
