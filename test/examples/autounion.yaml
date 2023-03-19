@@ -3,7 +3,7 @@ directive: autounion
 directive-arguments:
   - onion
 directive-options:
-  file: autounion.c
+  file: union.c
   members:
 example-title: Union
 example-priority: 60

@@ -25,21 +25,21 @@ Overview
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/examples/autodoc.c
+.. literalinclude:: ../test/examples/overview.c
    :language: C
-   :caption: autodoc.c
+   :caption: overview.c
 
 Directive
 ~~~~~~~~~
 
 .. code-block:: rest
 
-   .. c:autodoc:: autodoc.c
+   .. c:autodoc:: overview.c
 
 Output
 ~~~~~~
 
-.. c:autodoc:: autodoc.c
+.. c:autodoc:: overview.c
 
 
 Variable
@@ -243,9 +243,9 @@ Union
 Source
 ~~~~~~
 
-.. literalinclude:: ../test/examples/autounion.c
+.. literalinclude:: ../test/examples/union.c
    :language: C
-   :caption: autounion.c
+   :caption: union.c
 
 Directive
 ~~~~~~~~~
@@ -253,14 +253,14 @@ Directive
 .. code-block:: rest
 
    .. c:autounion:: onion
-      :file: autounion.c
+      :file: union.c
       :members:
 
 Output
 ~~~~~~
 
 .. c:autounion:: onion
-   :file: autounion.c
+   :file: union.c
    :members:
 
 
