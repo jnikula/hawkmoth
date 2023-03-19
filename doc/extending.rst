@@ -36,3 +36,8 @@ connect events.
 
    The *options* argument is a dictionary with all the options given to the
    directive being processed.
+
+   .. note::
+
+      Please note that this API is still somewhat experimental and in
+      development. In particular, new arguments may be added in the future.
