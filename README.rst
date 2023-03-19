@@ -20,18 +20,24 @@
 Hawkmoth - Sphinx Autodoc for C
 ===============================
 
-Hawkmoth is a minimalistic Sphinx_ `C Domain`_ autodoc directive extension to
-incorporate formatted C source code comments written in reStructuredText_ into
-Sphinx based documentation. It uses Clang Python Bindings for parsing, and
-generates C Domain directives for C API documentation, and more. In short,
-Hawkmoth is Sphinx Autodoc for C.
+Hawkmoth is a minimalistic Sphinx_ `C and C++ Domain`_ autodoc directive
+extension to incorporate formatted C and C++ source code comments written in
+reStructuredText_ into Sphinx based documentation. It uses Clang Python Bindings
+for parsing, and generates C and C++ Domain directives for C and C++ API
+documentation, and more. In short, Hawkmoth is Sphinx Autodoc for C/C++.
 
-Hawkmoth aims to be a compelling alternative for documenting C projects using
-Sphinx, mainly through its simplicity of design, implementation and use.
+Hawkmoth aims to be a compelling alternative for documenting C and C++ projects
+using Sphinx, mainly through its simplicity of design, implementation and use.
+
+.. note::
+
+   The C++ support is still in early stages of development, and lacks some
+   fundamental features such as handling namespaces and documenting C++ specific
+   features other than classes.
 
 .. _Sphinx: http://www.sphinx-doc.org
 
-.. _C Domain: http://www.sphinx-doc.org/en/stable/domains.html
+.. _C and C++ Domain: http://www.sphinx-doc.org/en/stable/domains.html
 
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 
