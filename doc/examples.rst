@@ -237,6 +237,33 @@ Output
 .. c:namespace-pop::
 
 
+Class
+-----
+
+Source
+~~~~~~
+
+.. literalinclude:: ../test/examples/class.cpp
+   :language: C
+   :caption: class.cpp
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
+   .. cpp:autoclass:: Circle
+      :file: class.cpp
+      :members:
+
+Output
+~~~~~~
+
+.. cpp:autoclass:: Circle
+   :file: class.cpp
+   :members:
+
+
 Union
 -----
 

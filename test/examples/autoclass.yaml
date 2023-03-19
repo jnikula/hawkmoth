@@ -1,0 +1,10 @@
+domain: cpp
+directive: autoclass
+directive-arguments:
+  - Circle
+directive-options:
+  file: class.cpp
+  members:
+example-title: Class
+example-priority: 55
+expected: autoclass.rst
