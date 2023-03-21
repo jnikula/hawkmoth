@@ -244,7 +244,7 @@ Source
 ~~~~~~
 
 .. literalinclude:: ../test/examples/class.cpp
-   :language: C
+   :language: C++
    :caption: class.cpp
 
 Directive

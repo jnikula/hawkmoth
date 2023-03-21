@@ -4,6 +4,7 @@
 
 import os
 import re
+import sys
 
 import testenv
 
@@ -52,14 +53,21 @@ def print_title(testcases):
 {get_title_underline(title)}
 ''')
 
-def print_source(input_filename):
+def print_source(testcases, input_filename):
+    domain = {testcase.options.get('domain') for testcase in testcases}
+    if len(domain) == 1:
+        language = 'C' if next(iter(domain)) == 'c' else 'C++'
+    else:
+        print(f'WARNING: {input_filename} used in multiple domains', file=sys.stderr)
+        language = 'C++'
+
     literal_include = f'../test/examples/{input_filename}'
 
     print(f'''Source
 ~~~~~~
 
 .. literalinclude:: {literal_include}
-   :language: C
+   :language: {language}
    :caption: {input_filename}
 ''')
 
@@ -122,6 +130,6 @@ if __name__ == '__main__':
 
     for source, testcases in sorted(get_examples().items(), key=examples_key):
         print_title(testcases)
-        print_source(source)
+        print_source(testcases, source)
         for testcase in sorted(testcases, key=testcase_key):
             print_example(testcase)
