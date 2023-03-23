@@ -13,9 +13,6 @@ For this to work, the documentation comments must of course be written in
 correct reStructuredText. See :ref:`documentation comment syntax <syntax>` for
 details.
 
-See :ref:`installation` on how to install the Hawkmoth package and its
-dependencies.
-
 Hawkmoth itself is :ref:`extensible <extending>`, and ships with some
 :ref:`built-in extensions <built-in-extensions>`.
 
