@@ -17,6 +17,9 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 extensions = [
+    'hawkmoth',
+    'hawkmoth.ext.javadoc',
+    'hawkmoth.ext.napoleon',
     'sphinx.ext.intersphinx',
 ]
 
@@ -39,32 +42,11 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 # that this is not the same as Hawkmoth extension minimum version requirement.
 needs_sphinx = '4.4'
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-
-# Handle failing hawkmoth import gracefully to be able to build the
-# documentation on e.g. https://readthedocs.org/ which would otherwise fail due
-# to missing clang.
-
-# This is not a good example to follow in regular documentation.
-try:
-    import hawkmoth
+# Setup Clang on Read The Docs
+if 'READTHEDOCS' in os.environ:
     from hawkmoth.util import readthedocs
 
     readthedocs.clang_setup()
-
-    extensions.append('hawkmoth')
-    extensions.append('hawkmoth.ext.napoleon')
-    extensions.append('hawkmoth.ext.javadoc')
-    tags.add('have_hawkmoth')
-
-except ImportError:
-    sys.stderr.write('Warning: Failed to import hawkmoth. Mocking results.\n')
-    sys.path.insert(0, os.path.abspath('ext'))
-    # The mock extension will include the hawkmoth test suite expected results
-    # into the documentation instead of generating.
-    extensions.append('automock')
 
 hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test/examples')
 
