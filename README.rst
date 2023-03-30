@@ -57,21 +57,27 @@ and a directive in the Sphinx project::
 
 you can incorporate code documentation into Sphinx. It's as simple as that.
 
-You can document functions, their parameters and return values, structs, unions,
-their members, macros, function-like macros, enums, enumeration constants,
-typedefs, variables, as well as have generic documentation comments not attached
-to any symbols.
+You can document functions, their parameters and return values, structs,
+classes, unions, their members, macros, function-like macros, enums, enumeration
+constants, typedefs, variables, as well as have generic documentation comments
+not attached to any symbols.
+
+See the documentation `examples`_ section for more, with sample output.
+
+.. _examples: https://jnikula.github.io/hawkmoth/stable/examples.html
 
 Documentation
 -------------
 
-Documentation on how to install and configure Hawkmoth, and write documentation
-comments, with examples, is available in the ``doc`` directory in the source
-tree, obviously in Sphinx format and using the directive extension. Pre-built
-documentation `showcasing what Hawkmoth can do`_ is available at `Read the
-Docs`_.
+Documentation on how to install, configure and use Hawkmoth, as well as write
+documentation comments, with examples, is available for both the `latest
+release`_ and the `version currently in development`_.
 
-.. _showcasing what Hawkmoth can do: https://hawkmoth.readthedocs.io/en/latest/examples.html
+The same is also hosted at `Read the Docs`_.
+
+.. _latest release: https://jnikula.github.io/hawkmoth/stable/
+
+.. _version currently in development: https://jnikula.github.io/hawkmoth/dev/
 
 .. _Read the Docs: https://hawkmoth.readthedocs.io/
 
