@@ -9,8 +9,17 @@ jobs:
   build-docs:
     name: Build Documentation
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - ref: master
+            name: dev
+          - ref: v0.13.0
+            name: stable
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ matrix.ref }}
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
       - name: Install dependencies (pip)
@@ -19,7 +28,7 @@ jobs:
         run: sphinx-build doc _build
       - uses: actions/upload-artifact@v3
         with:
-          name: docs-artifact
+          name: ${{ matrix.name }}
           path: _build
           if-no-files-found: error
 
@@ -36,7 +45,6 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: docs-artifact
           path: .
       - run: find
       - uses: actions/configure-pages@v3
