@@ -42,3 +42,16 @@ jobs:
         run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
       - name: Test
         run: make test
+
+  docs:
+    name: Check documentation
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies (apt)
+        run: sudo apt-get install -y python3-clang python3-pip
+      - name: Install dependencies (pip)
+        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+      - name: Documentation build check
+        run: make SPHINXOPTS=-Wn html
