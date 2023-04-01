@@ -25,10 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - name: Install dependencies (pip)
-        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
       - name: Examples check
-        run: make test-examples
+        run: |
+          . venv
+          make test-examples
 
   test:
     name: Run test suite
@@ -38,10 +38,10 @@ jobs:
       - uses: actions/setup-python@v4
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
-      - name: Install dependencies (pip)
-        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
       - name: Test
-        run: make test
+        run: |
+          . venv
+          make test
 
   docs:
     name: Check documentation
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
-      - name: Install dependencies (pip)
-        run: pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
       - name: Documentation build check
-        run: make SPHINXOPTS=-Wn html
+        run: |
+          . venv
+          make SPHINXOPTS=-Wn html
