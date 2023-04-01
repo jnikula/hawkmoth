@@ -30,7 +30,7 @@ copyright = '2017-2023, Jani Nikula and contributors'
 author = 'Jani Nikula'
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       '../hawkmoth/VERSION')) as version_file:
+                       '../src/hawkmoth/VERSION')) as version_file:
     version = version_file.read().strip()
     release = version
 
