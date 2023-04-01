@@ -23,7 +23,7 @@ FLAKE8_IGNORE=\
 # Static analysis
 .PHONY: check
 check:
-	flake8 --extend-ignore="$(FLAKE8_IGNORE)" --max-line-length=100 hawkmoth test
+	flake8 --extend-ignore="$(FLAKE8_IGNORE)" --max-line-length=100 src/hawkmoth test
 
 # assume virtual environment is used for dist and upload
 .PHONY: build-tools

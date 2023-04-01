@@ -23,7 +23,7 @@ docker-test-html: docker-test-build
 # Containers for release
 DOCKER_MAIN_REPO = jnikula/hawkmoth
 DOCKER_LATEXPDF_REPO = jnikula/hawkmoth-latexpdf
-HAWKMOTH_VERSION = $(shell cat hawkmoth/VERSION)
+HAWKMOTH_VERSION = $(shell cat src/hawkmoth/VERSION)
 
 .PHONY: docker-build docker-push
 docker-build:
