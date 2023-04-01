@@ -21,23 +21,26 @@ FLAKE8_IGNORE=\
 	E731
 
 # Static analysis
+.PHONY: check
 check:
 	flake8 --extend-ignore="$(FLAKE8_IGNORE)" --max-line-length=100 hawkmoth test
 
 # assume virtual environment is used for dist and upload
+.PHONY: build-tools
 build-tools:
 	pip install --upgrade build twine
 
+.PHONY: build
 build:
 	rm -rf build dist hawkmoth.egg-info
 	python3 -m build
 
+.PHONY: test-upload
 test-upload:
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
+.PHONY: upload
 upload:
 	twine upload dist/*
-
-.PHONY: dist-tools dist test-upload upload
 
 CLEAN := $(CLEAN) build dist hawkmoth.egg-info
