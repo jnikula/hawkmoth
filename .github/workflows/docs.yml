@@ -14,7 +14,7 @@ jobs:
         include:
           - ref: master
             name: dev
-          - ref: v0.13.0
+          - ref: v0.14.0
             name: stable
     steps:
       - uses: actions/checkout@v3
