@@ -38,6 +38,6 @@ test-upload:
 upload:
 	twine upload dist/*
 
-.PHONY: dist-tools dist test-upload upload
+.PHONY: build-tools build test-upload upload
 
 CLEAN := $(CLEAN) build dist hawkmoth.egg-info
