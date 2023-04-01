@@ -6,6 +6,28 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Build and deploy stable and development documentation at GitHub pages
+
+Changed
+~~~~~~~
+
+* Switch the project to src/ hierarchy
+* Test the installed package instead of source to detect packaging issues
+* Require functional hawkmoth to build documentation
+
+Removed
+~~~~~~~
+
+* Sunset the mailing list as contact
+
+Fixed
+~~~~~
+
+* Fix packaging of hawkmoth.ext.* sub-packages
+
 Hawkmoth `0.13.0`_
 ------------------
 
