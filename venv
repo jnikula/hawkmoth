@@ -1,4 +1,6 @@
 # source this file with '. venv'
 python3 -m venv --system-site-packages .venv
 . .venv/bin/activate
+pip install --upgrade pip setuptools
 pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
+pip install --config-settings editable_mode=strict --editable .
