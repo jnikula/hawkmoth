@@ -4,11 +4,22 @@
 
 import os
 
+from sphinx.ext import napoleon
 import pytest
 
-from hawkmoth.parser import parse
 from hawkmoth import docstring
-from test import conf, testenv
+from hawkmoth.parser import parse
+from hawkmoth.util import doccompat
+from test import testenv
+
+def napoleon_transform(comment):
+    config = napoleon.Config(napoleon_use_rtype=False)
+    return str(napoleon.docstring.GoogleDocstring(comment, config))
+
+parser_transformations = {
+    'napoleon': napoleon_transform,
+    'javadoc': doccompat.javadoc_liberal,
+}
 
 def _transform(transform, lines):
     if transform:
@@ -76,7 +87,7 @@ class ParserTestcase(testenv.Testcase):
 
         tropt = directive_options.get('transform')
         if tropt is not None:
-            transform = conf.cautodoc_transformations[tropt]
+            transform = parser_transformations[tropt]
         else:
             transform = None
 
