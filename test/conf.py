@@ -16,9 +16,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from sphinx.ext.napoleon import docstring, Config
-from hawkmoth.util import doccompat
-
 # -- Project information -----------------------------------------------------
 
 project = 'Hawkmoth Test'
@@ -41,17 +38,10 @@ release = ''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'hawkmoth'
+    'hawkmoth',
+    'hawkmoth.ext.javadoc',
+    'hawkmoth.ext.napoleon',
 ]
-
-def napoleon_transform(comment):
-    config = Config(napoleon_use_rtype=False)
-    return str(docstring.GoogleDocstring(comment, config))
-
-cautodoc_transformations = {
-    'napoleon': napoleon_transform,
-    'javadoc': doccompat.javadoc_liberal,
-}
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
