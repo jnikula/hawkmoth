@@ -1,29 +1,35 @@
 # -*- makefile -*-
-# Copyright (c) 2021, Jani Nikula <jani@nikula.org>
+# Copyright (c) 2021-2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 docker_dir := docker
 
+HAWKMOTH_VERSION := $(shell cat src/hawkmoth/VERSION)
+HAWKMOTH_ARCHIVE := $(docker_dir)/hawkmoth-$(HAWKMOTH_VERSION).tar.gz
+
+$(HAWKMOTH_ARCHIVE): $(shell git ls-files)
+	git archive -o $@ HEAD
+
 # Containers for local testing
-DOCKER_TEST_SRC_MOUNT = --mount type=bind,src=$(PWD),dst=/src,readonly=true
 DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
 DOCKER_TEST_TAG = hawkmoth
 
-.PHONY: docker-test-build docker-test docker-test-html
-docker-test-build:
-	docker build --file $(docker_dir)/test/Dockerfile --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --tag $(DOCKER_TEST_TAG) .
+.PHONY: docker-test-build
+docker-test-build: $(HAWKMOTH_ARCHIVE)
+	docker build --file $(docker_dir)/test/Dockerfile --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $(DOCKER_TEST_TAG) .
 
+.PHONY: docker-test
 docker-test: docker-test-build
-	docker run $(DOCKER_TEST_SRC_MOUNT) $(DOCKER_TEST_TAG) make test
+	docker run $(DOCKER_TEST_TAG) make test
 
+.PHONY: docker-test-html
 docker-test-html: docker-test-build
 	mkdir -p doc/_build
-	docker run $(DOCKER_TEST_SRC_MOUNT) $(DOCKER_TEST_OUT_MOUNT) $(DOCKER_TEST_TAG) make BUILDDIR=/out html
+	docker run $(DOCKER_TEST_OUT_MOUNT) $(DOCKER_TEST_TAG) make BUILDDIR=/out html
 
 # Containers for release
 DOCKER_MAIN_REPO = jnikula/hawkmoth
 DOCKER_LATEXPDF_REPO = jnikula/hawkmoth-latexpdf
-HAWKMOTH_VERSION = $(shell cat src/hawkmoth/VERSION)
 
 .PHONY: docker-build docker-push
 docker-build:
@@ -44,3 +50,5 @@ docker-html: docker-build
 
 docker-latexpdf: docker-latexpdf-build
 	docker run --rm -v $(PWD):/docs $(DOCKER_LATEXPDF_REPO) make latexpdf
+
+CLEAN := $(CLEAN) $(HAWKMOTH_ARCHIVE)
