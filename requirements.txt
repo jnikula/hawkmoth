@@ -3,5 +3,4 @@ pytest
 pytest-cov
 pytest-xdist
 sphinx
-sphinx-testing
 strictyaml

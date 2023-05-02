@@ -1,88 +1,75 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018, Jani Nikula <jani@nikula.org>
+# Copyright (c) 2018-2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 import os
 import shutil
+import tempfile
 
 import pytest
-from sphinx_testing import with_app
+from sphinx.application import Sphinx
 
 from test import testenv
 
-def _get_suffix(buildername):
-    return 'txt' if buildername == 'text' else buildername
-
 class ExtensionTestcase(testenv.Testcase):
-    def get_output(self, app, status, warning):
+    def __init__(self, filename, buildername):
+        super().__init__(filename)
+        self._buildername = buildername
+
+    def _get_suffix(self):
+        return 'txt' if self._buildername == 'text' else self._buildername
+
+    def _sphinx_build(self, srcdir):
+        outdir = os.path.join(srcdir, self._buildername)
+        doctreedir = os.path.join(srcdir, 'doctrees')
+
+        app = Sphinx(srcdir=srcdir, confdir=testenv.testdir, outdir=outdir,
+                     doctreedir=doctreedir, buildername=self._buildername)
+
         # Set root to the directory the testcase yaml is in, because the
         # filenames in yaml are relative to it.
         app.config.hawkmoth_root = os.path.dirname(self.filename)
 
-        directive_str = self.get_directive_string()
-
-        with open(os.path.join(app.srcdir, 'index.rst'), 'w') as f:
-            f.write(directive_str)
-
         # Hack: It's not possible to disable search via configuration
         app.builder.search = False
 
         app.build()
 
-        output_suffix = _get_suffix(app.builder.name)
+        output_suffix = self._get_suffix()
         output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
 
         return testenv.read_file(output_filename), None
 
-    def get_expected(self, app, status, warning):
-        shutil.copyfile(self.get_expected_filename(),
-                        os.path.join(app.srcdir, 'index.rst'))
+    def _sphinx_build_str(self, input_str):
+        with tempfile.TemporaryDirectory() as srcdir:
+            with open(os.path.join(srcdir, 'index.rst'), 'w') as f:
+                f.write(input_str)
+            return self._sphinx_build(srcdir)
 
-        # Hack: It's not possible to disable search via configuration
-        app.builder.search = False
+    def _sphinx_build_file(self, input_filename):
+        with tempfile.TemporaryDirectory() as srcdir:
+            shutil.copyfile(input_filename, os.path.join(srcdir, 'index.rst'))
+            return self._sphinx_build(srcdir)
 
-        app.build()
+    def get_output(self):
+        return self._sphinx_build_str(self.get_directive_string())
 
-        output_suffix = _get_suffix(app.builder.name)
-        output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
+    def get_expected(self):
+        return self._sphinx_build_file(self.get_expected_filename())
 
-        return testenv.read_file(output_filename), None
+def _get_extension_testcases(path, buildername):
+    for f in testenv.get_testcase_filenames(path):
+        yield ExtensionTestcase(f, buildername)
 
 # Test using Sphinx plain text builder
-class ExtensionTextTestcase(ExtensionTestcase):
-    @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
-    def get_output(self, app, status, warning):
-        return super().get_output(app, status, warning)
-
-    @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='text')
-    def get_expected(self, app, status, warning):
-        return super().get_expected(app, status, warning)
-
-# Test using Sphinx html builder
-class ExtensionHtmlTestcase(ExtensionTestcase):
-    @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='html')
-    def get_output(self, app, status, warning):
-        return super().get_output(app, status, warning)
-
-    @with_app(confdir=testenv.testdir, create_new_srcdir=True, buildername='html')
-    def get_expected(self, app, status, warning):
-        return super().get_expected(app, status, warning)
-
-def _get_text_testcases(path):
-    for f in testenv.get_testcase_filenames(path):
-        yield ExtensionTextTestcase(f)
-
-def _get_html_testcases(path):
-    for f in testenv.get_testcase_filenames(path):
-        yield ExtensionHtmlTestcase(f)
-
-@pytest.mark.parametrize('testcase', _get_text_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),
                          ids=testenv.get_testid)
 def test_directive_text(testcase):
     testcase.run_test()
 
+# Test using Sphinx html builder
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', _get_html_testcases(testenv.testdir),
+@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'html'),
                          ids=testenv.get_testid)
 def test_directive_html(testcase):
     testcase.run_test()
