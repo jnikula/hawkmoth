@@ -65,7 +65,7 @@ class _AutoBaseDirective(SphinxDirective):
         clang_args.extend(self.__get_clang_args())
 
         # Cached parse results per rst document
-        parsed_files = self.env.temp_data.setdefault('cautodoc_parsed_files', {})
+        parsed_files = self.env.temp_data.setdefault('hawkmoth_parsed_files', {})
 
         # The output depends on clang args
         key = (filename, tuple(clang_args))
