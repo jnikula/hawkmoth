@@ -161,6 +161,12 @@ class _AutoSymbolDirective(_AutoBaseDirective):
     def _get_filenames(self):
         filename = self.options.get('file')
 
+        # Cache filename across directives in rst document
+        if filename:
+            self.env.temp_data['hawkmoth_current_file'] = filename
+        else:
+            filename = self.env.temp_data.get('hawkmoth_current_file')
+
         # Note: For the time being the file option is mandatory (sic).
         if not filename:
             self.logger.warning(':file: option missing.',
