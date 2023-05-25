@@ -43,4 +43,4 @@ test-upload:
 upload:
 	twine upload dist/*
 
-CLEAN := $(CLEAN) build dist hawkmoth.egg-info
+DISTCLEAN := $(DISTCLEAN) build dist hawkmoth.egg-info

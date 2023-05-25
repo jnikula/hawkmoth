@@ -22,4 +22,8 @@ quiet ?= $($1)
 clean:
 	$(call quiet,RM,CLEAN) -rf $(CLEAN)
 
+.PHONY: distclean
+distclean: clean
+	$(call quiet,RM,DISTCLEAN) -rf $(DISTCLEAN)
+
 .SUFFIXES:
