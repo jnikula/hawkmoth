@@ -111,18 +111,34 @@ in the `Hawkmoth source repository`_ for a starting point.
 Read the Docs
 -------------
 
-It's possible to set up Hawkmoth based documentation on `Read the Docs`_ (RTD),
-and Hawkmoth provides a helper for configuration. There's a caveat, though: This
-is not based on the official RTD documentation, and might cease to work at any
-time.
+It's possible to set up Hawkmoth based documentation on `Read the Docs`_
+(RTD). Use the ``.readthedocs.yaml`` `configuration file`_ to install system
+``libclang`` and specify a Python ``requirements.txt`` file:
 
-First, add a ``requirements.txt`` file to your project according to RTD
-`dependency documentation`_ to have RTD install some required dependencies::
+.. code-block:: yaml
 
-  clang>=6
-  hawkmoth>=0.12
+   build:
+     os: ubuntu-22.04
+     tools:
+       python: "3.11"
+     apt_packages:
+       - libclang-14-dev
 
-Next, add this snippet to your ``conf.py``:
+   python:
+     install:
+       - requirements: requirements.txt
+
+In the ``requirements.txt`` file, specify the dependencies::
+
+  clang==14.0.6
+  hawkmoth==0.14.0
+
+To ensure the system ``libclang`` and Python ``clang`` compatibility, it's
+recommended to specify matching major versions. RTD also recommends pinning all
+the versions to avoid unexpected build errors.
+
+If the Clang Python Bindings fail to find ``libclang`` automatically, try adding
+this snippet to your ``conf.py``:
 
 .. code-block:: python
 
@@ -132,6 +148,8 @@ Next, add this snippet to your ``conf.py``:
 
 This will try to find ``libclang`` on RTD, and configure Clang Python Bindings
 to use it.
+
+.. _configuration file: https://docs.readthedocs.io/en/stable/config-file/v2.html
 
 .. _Read the Docs: https://readthedocs.org/
 
