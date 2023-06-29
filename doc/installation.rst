@@ -21,7 +21,7 @@ Clang Distro Install
 
 This step is necessarily distro specific.
 
-For example, in Debian Bullseye:
+For example, in recent Debian and Ubuntu:
 
 .. code-block:: shell
 
@@ -31,10 +31,11 @@ Clang Python Bindings
 ---------------------
 
 There are **unofficial** Clang Python Bindings available in PyPI. They may be
-helpful in some scenarios (for example Debian Buster not packaging Clang Python
-Bindings for Python 3 at all), but they will not include the binary
-``libclang``, and the provided Python Bindings might not be compatible with the
-library provided in your system.
+helpful in some scenarios, but they will not include the binary ``libclang``,
+and the provided Python Bindings might not be compatible with the library
+provided in your system. It's recommended to use the bindings from the distro,
+but if you need to install the ``clang`` package from PyPI, it's recommended to
+use the same major varsion for both system ``libclang`` and Python ``clang``.
 
 If the Clang Python Bindings are unable to find ``libclang``, for whatever
 reason, there are some tricks to try:
