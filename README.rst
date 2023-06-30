@@ -1,5 +1,5 @@
 
-|badge-tag| |badge-license| |badge-rtd| |badge-pypi|
+|badge-tag| |badge-license| |badge-ci| |badge-docs| |badge-rtd| |badge-pypi|
 
 .. |badge-tag| image:: https://img.shields.io/github/v/tag/jnikula/hawkmoth
 		       :target: https://github.com/jnikula/hawkmoth/blob/master/CHANGELOG.rst
@@ -8,6 +8,14 @@
 .. |badge-license| image:: https://img.shields.io/github/license/jnikula/hawkmoth
 			   :target: https://opensource.org/licenses/BSD-2-Clause
 			   :alt: BSD-2-Clause
+
+.. |badge-ci| image:: https://github.com/jnikula/hawkmoth/actions/workflows/makefile.yml/badge.svg
+		      :target: https://github.com/jnikula/hawkmoth/actions/workflows/makefile.yml
+		      :alt: Makefile CI
+
+.. |badge-docs| image:: https://github.com/jnikula/hawkmoth/actions/workflows/docs.yml/badge.svg
+			:target: https://github.com/jnikula/hawkmoth/actions/workflows/docs.yml
+			:alt: Build and Deploy Documentation
 
 .. |badge-rtd| image:: https://img.shields.io/readthedocs/hawkmoth
 		       :target: https://hawkmoth.readthedocs.io/en/latest/
