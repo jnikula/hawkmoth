@@ -56,12 +56,15 @@ Given C source code with rather familiar looking documentation comments::
 
   /**
    * Get foo out of bar.
+   *
+   * :param bar: Name of the bar.
    */
-  void foobar();
+  void foobar(const char *bar);
 
 and a directive in the Sphinx project::
 
-  .. c:autodoc:: filename.c
+  .. c:autofunction:: foobar
+     :file: filename.c
 
 you can incorporate code documentation into Sphinx. It's as simple as that.
 
