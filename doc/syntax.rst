@@ -46,11 +46,13 @@ includes macros, functions, struct and union members, enumerations, etc.
 Documentation comments followed by comments (documentation or not) are included
 as normal paragraphs in the order they appear.
 
-Tags
-----
+Info Field Lists
+----------------
 
 Use reStructuredText `field lists`_ for documenting function parameters, return
-values, and arbitrary other data:
+values, and arbitrary other data. Sphinx recognizes :external+sphinx:ref:`some
+info fields<info-field-lists>`, such as ``param`` and ``return``, and formats
+them nicely.
 
 .. code-block:: c
 
