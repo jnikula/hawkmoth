@@ -13,7 +13,7 @@ test-verbose:
 
 # Ensure a) update-examples works, and b) examples have been updated.
 test-examples:
-	$(test_dir)/update-examples.py | diff -q - $(docdir)/examples.rst
+	$(test_dir)/update-examples.py | diff -u $(docdir)/examples.rst -
 
 quick-test:
 	pytest -n auto -m "not full" $(test_dir)
