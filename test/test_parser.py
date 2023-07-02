@@ -94,7 +94,7 @@ class ParserTestcase(testenv.Testcase):
         for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
                                     filter_names=_filter_names(directive, options)):
             for docstr in docstrings.walk(filter_names=_filter_members(directive, directive_options)):  # noqa: E501
-                lines = docstr.get_docstring(transform=lambda lines: _transform(transform, lines))
+                lines = docstr.get_docstring(process_docstring=lambda lines: _transform(transform, lines))
                 docs_str += '\n'.join(lines) + '\n'
 
         for error in errors:

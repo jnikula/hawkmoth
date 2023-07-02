@@ -159,7 +159,7 @@ class Docstring():
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
-    def get_docstring(self, transform=None):
+    def get_docstring(self, process_docstring=None):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
@@ -168,8 +168,8 @@ class Docstring():
         # account.
         Docstring._remove_comment_markers(comment_lines)
 
-        if transform is not None:
-            transform(comment_lines)
+        if process_docstring is not None:
+            process_docstring(comment_lines)
 
         Docstring._nest(comment_lines, self._indent)
 
