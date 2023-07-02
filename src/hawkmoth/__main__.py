@@ -19,7 +19,7 @@ def filename(file):
         return file
     raise ValueError
 
-def transform(args, lines):
+def _process_docstring(args, lines):
     text = '\n'.join(lines)
     text = doccompat.convert(text, transform=args.compat)
     lines[:] = [line for line in text.splitlines()]
@@ -50,10 +50,12 @@ def main():
     comments, errors = parse(args.file, clang_args=args.clang)
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
+    process_docstring = lambda lines: _process_docstring(args, lines)
+
     for comment in comments.walk():
         if args.verbose:
             print(f'# {comment.get_meta()}')
-        print('\n'.join(comment.get_docstring(process_docstring=lambda lines: transform(args, lines))))
+        print('\n'.join(comment.get_docstring(process_docstring=process_docstring)))
 
     for error in errors:
         print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
