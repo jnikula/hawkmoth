@@ -97,7 +97,7 @@ class _AutoBaseDirective(SphinxDirective):
                                     filter_names=self._get_names()):
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
-                lines = docstr.get_docstring(transform=lambda lines: self.__transform(lines))
+                lines = docstr.get_docstring(process_docstring=lambda lines: self.__transform(lines))
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
