@@ -95,14 +95,26 @@ class _AutoBaseDirective(SphinxDirective):
 
         process_docstring = lambda lines: self.__process_docstring(lines)
 
+        match = False
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
+            match = True
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
                 lines = docstr.get_docstring(process_docstring=process_docstring)
                 for line in lines:
                     viewlist.append(line, filename, lineoffset)
                     lineoffset += 1
+
+        if not match:
+            if self._get_names():
+                args = ' '.join(self.arguments)
+                self.logger.warning(f'"{self.name}:: {args}" does not match documented symbols.',
+                                    location=(self.env.docname, self.lineno))
+            else:
+                # autodoc
+                self.logger.warning('No documented symbols were found.',
+                                    location=(self.env.docname, self.lineno))
 
     def _get_names(self):
         return None
