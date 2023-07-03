@@ -35,7 +35,7 @@ from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import StorageClass, AccessSpecifier, ExceptionSpecificationKind
-from clang.cindex import Index, TranslationUnit
+from clang.cindex import Index, TranslationUnit, TranslationUnitLoadError
 from clang.cindex import Diagnostic
 
 from hawkmoth import docstring
@@ -59,7 +59,10 @@ class ParserError:
 
     def get_message(self):
         if self.filename:
-            return f'{self.filename}:{self.line}: {self.message}'
+            if self.line is not None:
+                return f'{self.filename}:{self.line}: {self.message}'
+            else:
+                return f'{self.filename}: {self.message}'
         else:
             return f'{self.message}'
 
@@ -742,9 +745,13 @@ def parse(filename, domain=None, clang_args=None):
     errors = []
     index = Index.create()
 
-    tu = index.parse(filename, args=clang_args,
-                     options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
-                     TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
+    try:
+        tu = index.parse(filename, args=clang_args,
+                         options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
+                         TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
+    except TranslationUnitLoadError as e:
+        errors.append(ParserError(ErrorLevel.CRITICAL, filename, None, str(e)))
+        return result, errors
 
     _clang_diagnostics(tu.diagnostics, errors)
 
