@@ -173,10 +173,19 @@ class Docstring():
 
         Docstring._nest(comment_lines, self._indent)
 
+        # ensure we have cushion blank line before the docstring
+        if len(header_lines) == 0 or header_lines[0] != '':
+            header_lines.insert(0, '')
+
+        # ensure we have cushion blank line between header and comment
+        if header_lines[-1] != '':
+            header_lines.append('')
+
         lines = header_lines + comment_lines
 
         Docstring._nest(lines, self._nest)
 
+        # ensure we have cushion blank line after the docstring
         if lines[-1] != '':
             lines.append('')
 
@@ -211,7 +220,7 @@ class RootDocstring(Docstring):
 
 class TextDocstring(Docstring):
     _indent = 0
-    _fmt = '\n'
+    _fmt = ''
 
     def get_name(self):
         """Figure out a name for the text comment based on the comment contents.
@@ -244,11 +253,11 @@ class TextDocstring(Docstring):
 
 class VarDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:var:: {ttype}{type_spacer}{name}\n\n'
+    _fmt = '.. {domain}:var:: {ttype}{type_spacer}{name}'
 
 class TypeDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:type:: {name}\n\n'
+    _fmt = '.. {domain}:type:: {name}'
 
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
@@ -264,19 +273,19 @@ class _CompoundDocstring(Docstring):
 
 class StructDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. {domain}:struct:: {name}\n\n'
+    _fmt = '.. {domain}:struct:: {name}'
 
 class UnionDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. {domain}:union:: {name}\n\n'
+    _fmt = '.. {domain}:union:: {name}'
 
 class EnumDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. {domain}:enum:: {name}\n\n'
+    _fmt = '.. {domain}:enum:: {name}'
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:enumerator:: {name}{value}\n\n'
+    _fmt = '.. {domain}:enumerator:: {name}{value}'
 
     def __init__(self, domain, name, value, text, meta, nest):
         self._value = value
@@ -291,24 +300,24 @@ class EnumeratorDocstring(Docstring):
 
 class MemberDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:member:: {ttype}{type_spacer}{name}\n\n'
+    _fmt = '.. {domain}:member:: {ttype}{type_spacer}{name}'
 
 class MacroDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:macro:: {name}\n\n'
+    _fmt = '.. c:macro:: {name}'
 
 class MacroFunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. c:macro:: {name}({args})\n\n'
+    _fmt = '.. c:macro:: {name}({args})'
 
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}\n\n'
+    _fmt = '.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}'
 
 class ClassDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '\n.. cpp:class:: {name}\n\n'
+    _fmt = '.. cpp:class:: {name}'
 
 class EnumClassDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. cpp:enum-class:: {name}\n\n'
+    _fmt = '.. cpp:enum-class:: {name}'
