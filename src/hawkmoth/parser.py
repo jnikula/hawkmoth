@@ -31,6 +31,7 @@ The documentation comments are returned verbatim in a tree of Docstring objects.
 """
 
 import enum
+import os
 from dataclasses import dataclass
 
 from clang.cindex import TokenKind, CursorKind, TypeKind
@@ -750,7 +751,15 @@ def parse(filename, domain=None, clang_args=None):
                          options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                          TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
     except TranslationUnitLoadError as e:
-        errors.append(ParserError(ErrorLevel.CRITICAL, filename, None, str(e)))
+        # File not found is a common problem, but not properly reported by
+        # clang. Try to be a bit more helpful.
+        if not os.path.isfile(filename):
+            message = f'File not found. {str(e)}'
+        else:
+            message = str(e)
+
+        errors.append(ParserError(ErrorLevel.CRITICAL, filename, None, message))
+
         return result, errors
 
     _clang_diagnostics(tu.diagnostics, errors)
