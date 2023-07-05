@@ -109,3 +109,31 @@
 
    Two line comment with leading and trailing whitespace.
 
+
+
+.. cpp:struct:: empty_comment_1
+
+
+   .. cpp:member:: public int description
+
+      The canonical empty documentation comment.
+
+
+Top level comment.
+
+
+.. cpp:struct:: empty_comment_2
+
+
+   .. cpp:member:: public int description
+
+      Another empty documentation comment.
+
+
+.. cpp:struct:: empty_comment_3
+
+
+   .. cpp:member:: public int description
+
+      Another empty documentation comment.
+

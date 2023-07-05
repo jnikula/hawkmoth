@@ -107,3 +107,31 @@ int two_liner(int foo, int bar);
  	 */
 int two_liner_whitespace(int foo, int bar);
 
+/**/
+struct empty_comment_0 {
+	/** The embedding struct is not documented. */
+	int description;
+};
+
+/***/
+
+/***/
+struct empty_comment_1 {
+	/** The canonical empty documentation comment. */
+	int description;
+};
+
+/** Top level comment. */
+
+/** */
+struct empty_comment_2 {
+	/** Another empty documentation comment. */
+	int description;
+};
+
+/**
+ */
+struct empty_comment_3 {
+	/** Another empty documentation comment. */
+	int description;
+};
