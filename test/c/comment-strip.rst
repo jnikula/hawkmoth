@@ -109,3 +109,31 @@
 
    Two line comment with leading and trailing whitespace.
 
+
+
+.. c:struct:: empty_comment_1
+
+
+   .. c:member:: int description
+
+      The canonical empty documentation comment.
+
+
+Top level comment.
+
+
+.. c:struct:: empty_comment_2
+
+
+   .. c:member:: int description
+
+      Another empty documentation comment.
+
+
+.. c:struct:: empty_comment_3
+
+
+   .. c:member:: int description
+
+      Another empty documentation comment.
+

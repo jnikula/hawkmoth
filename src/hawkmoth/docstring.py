@@ -140,10 +140,10 @@ class Docstring():
         prefix_len = _get_prefix_len(lines[1:-1])
         lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
 
-        while not lines[0] or lines[0].isspace():
+        while lines and (not lines[0] or lines[0].isspace()):
             del lines[0]
 
-        while not lines[-1] or lines[-1].isspace():
+        while lines and (not lines[-1] or lines[-1].isspace()):
             del lines[-1]
 
     @staticmethod

@@ -1,0 +1,7 @@
+domain: c
+directive: autosection
+directive-arguments:
+  - Top level comment
+directive-options:
+  file: comment-strip.c
+expected: autosection-comment-strip.rst
