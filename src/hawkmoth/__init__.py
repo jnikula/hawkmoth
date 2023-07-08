@@ -86,6 +86,18 @@ class _AutoBaseDirective(SphinxDirective):
 
         return docstrings
 
+    def __parsed_files(self, filter_filenames=None, filter_clang_args=None):
+        parsed_files = self.env.temp_data.get('hawkmoth_parsed_files', {})
+
+        for root in parsed_files.values():
+            if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                continue
+
+            if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
+                continue
+
+            yield root
+
     def __process_docstring(self, lines):
         transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
 
@@ -109,9 +121,8 @@ class _AutoBaseDirective(SphinxDirective):
 
     def __get_docstrings(self, viewlist):
         num_matches = 0
-        for filename in self._get_filenames():
-            # These are all pre-parsed results now
-            root = self.__parse(filename)
+        for root in self.__parsed_files(filter_filenames=self._get_filenames(),
+                                        filter_clang_args=[self.__get_clang_args()]):
             num_matches += self.__get_docstrings_for_root(viewlist, root)
 
         if num_matches == 0:
