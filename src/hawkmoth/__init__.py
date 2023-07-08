@@ -147,8 +147,9 @@ class _AutoBaseDirective(SphinxDirective):
         raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
 
     def run(self):
-        for filename in self._get_filenames():
-            self.__parse(filename)
+        if self._get_filenames():
+            for filename in self._get_filenames():
+                self.__parse(filename)
 
         result = ViewList()
 
@@ -200,12 +201,8 @@ class _AutoSymbolDirective(_AutoBaseDirective):
 
     def _get_filenames(self):
         filename = self.options.get('file')
-
-        # Note: For the time being the file option is mandatory (sic).
         if not filename:
-            self.logger.warning(':file: option missing.',
-                                location=(self.env.docname, self.lineno))
-            return []
+            return None
 
         return [os.path.abspath(os.path.join(self.env.config.hawkmoth_root, filename))]
 
