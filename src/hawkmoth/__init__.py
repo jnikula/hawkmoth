@@ -160,6 +160,7 @@ class _AutoDocDirective(_AutoBaseDirective):
     optional_arguments = 100   # arbitrary limit
 
     def _get_filenames(self):
+        ret = []
         for pattern in self.arguments:
             filenames = glob.glob(os.path.join(self.env.config.hawkmoth_root, pattern))
             if len(filenames) == 0:
@@ -169,10 +170,12 @@ class _AutoDocDirective(_AutoBaseDirective):
 
             for filename in filenames:
                 if os.path.isfile(filename):
-                    yield os.path.abspath(filename)
+                    ret.append(os.path.abspath(filename))
                 else:
                     self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is not a file.',  # noqa: E501
                                         location=(self.env.docname, self.lineno))
+
+        return ret
 
 # Base class for named stuff
 class _AutoSymbolDirective(_AutoBaseDirective):
