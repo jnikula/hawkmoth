@@ -91,9 +91,7 @@ class _AutoBaseDirective(SphinxDirective):
 
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
-    def __get_docstrings(self, viewlist, filename):
-        root = self.__parse(filename)
-
+    def __get_docstrings_for_root(self, viewlist, root):
         process_docstring = lambda lines: self.__process_docstring(lines)
 
         match = False
@@ -104,7 +102,7 @@ class _AutoBaseDirective(SphinxDirective):
                 lineoffset = docstr.get_line() - 1
                 lines = docstr.get_docstring(process_docstring=process_docstring)
                 for line in lines:
-                    viewlist.append(line, filename, lineoffset)
+                    viewlist.append(line, root.get_filename(), lineoffset)
                     lineoffset += 1
 
         if not match:
@@ -117,6 +115,12 @@ class _AutoBaseDirective(SphinxDirective):
                 self.logger.warning('No documented symbols were found.',
                                     location=(self.env.docname, self.lineno))
 
+    def __get_docstrings(self, viewlist):
+        for filename in self._get_filenames():
+            # These are all pre-parsed results now
+            root = self.__parse(filename)
+            self.__get_docstrings_for_root(viewlist, root)
+
     def _get_names(self):
         return None
 
@@ -127,10 +131,12 @@ class _AutoBaseDirective(SphinxDirective):
         raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
 
     def run(self):
+        for filename in self._get_filenames():
+            self.__parse(filename)
+
         result = ViewList()
 
-        for filename in self._get_filenames():
-            self.__get_docstrings(result, filename)
+        self.__get_docstrings(result)
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
