@@ -52,17 +52,18 @@ class _AutoBaseDirective(SphinxDirective):
                             location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
-        clang_args = self.env.config.hawkmoth_clang.copy()
+        # Always pass `-xc++` to the compiler on 'cpp' domain as the first
+        # option so that the user can override it.
+        clang_args = ['-xc++'] if self._domain == 'cpp' else []
+
+        clang_args.extend(self.env.config.hawkmoth_clang.copy())
 
         clang_args.extend(self.options.get('clang', []))
 
         return clang_args
 
     def __parse(self, filename):
-        # Always pass `-xc++` to the compiler on 'cpp' domain as the first
-        # option so that the user can override it.
-        clang_args = ['-xc++'] if self._domain == 'cpp' else []
-        clang_args.extend(self.__get_clang_args())
+        clang_args = self.__get_clang_args()
 
         # Cached parse results per rst document
         parsed_files = self.env.temp_data.setdefault('hawkmoth_parsed_files', {})
