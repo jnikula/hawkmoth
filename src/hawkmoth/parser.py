@@ -742,7 +742,8 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
 # Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, domain=None, clang_args=None):
     # Empty root comment with just children
-    result = docstring.Docstring()
+    result = docstring.RootDocstring(filename=filename, domain=domain,
+                                     clang_args=clang_args)
     errors = []
     index = Index.create()
 
