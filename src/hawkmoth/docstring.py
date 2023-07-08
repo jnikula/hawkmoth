@@ -194,6 +194,21 @@ class Docstring():
     def get_line(self):
         return self._meta['line']
 
+class RootDocstring(Docstring):
+    def __init__(self, filename=None, domain='c', clang_args=None):
+        super().__init__(domain=domain)
+        self._filename = filename
+        self._clang_args = clang_args
+
+    def get_filename(self):
+        return self._filename
+
+    def get_clang_args(self):
+        return self._clang_args
+
+    def get_domain(self):
+        return self._domain
+
 class TextDocstring(Docstring):
     _indent = 0
     _fmt = '\n'
