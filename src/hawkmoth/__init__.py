@@ -151,6 +151,9 @@ class _AutoBaseDirective(SphinxDirective):
             for filename in self._get_filenames():
                 self.__parse(filename)
 
+        if 'parse-only' in self.options:
+            return []
+
         result = ViewList()
 
         self.__get_docstrings(result)
@@ -168,6 +171,11 @@ class _AutoDocDirective(_AutoBaseDirective):
     # Allow passing a variable number of file patterns as arguments
     required_arguments = 1
     optional_arguments = 100   # arbitrary limit
+
+    option_spec = _AutoBaseDirective.option_spec.copy()
+    option_spec.update({
+        'parse-only': directives.flag,
+    })
 
     def _get_filenames(self):
         ret = []
