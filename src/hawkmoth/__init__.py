@@ -94,10 +94,10 @@ class _AutoBaseDirective(SphinxDirective):
     def __get_docstrings_for_root(self, viewlist, root):
         process_docstring = lambda lines: self.__process_docstring(lines)
 
-        match = False
+        num_matches = 0
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
-            match = True
+            num_matches += 1
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lineoffset = docstr.get_line() - 1
                 lines = docstr.get_docstring(process_docstring=process_docstring)
@@ -105,7 +105,16 @@ class _AutoBaseDirective(SphinxDirective):
                     viewlist.append(line, root.get_filename(), lineoffset)
                     lineoffset += 1
 
-        if not match:
+        return num_matches
+
+    def __get_docstrings(self, viewlist):
+        num_matches = 0
+        for filename in self._get_filenames():
+            # These are all pre-parsed results now
+            root = self.__parse(filename)
+            num_matches += self.__get_docstrings_for_root(viewlist, root)
+
+        if num_matches == 0:
             if self._get_names():
                 args = ' '.join(self.arguments)
                 self.logger.warning(f'"{self.name}:: {args}" does not match documented symbols.',
@@ -114,12 +123,6 @@ class _AutoBaseDirective(SphinxDirective):
                 # autodoc
                 self.logger.warning('No documented symbols were found.',
                                     location=(self.env.docname, self.lineno))
-
-    def __get_docstrings(self, viewlist):
-        for filename in self._get_filenames():
-            # These are all pre-parsed results now
-            root = self.__parse(filename)
-            self.__get_docstrings_for_root(viewlist, root)
 
     def _get_names(self):
         return None
