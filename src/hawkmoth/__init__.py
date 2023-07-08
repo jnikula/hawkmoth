@@ -123,6 +123,10 @@ class _AutoBaseDirective(SphinxDirective):
                 # autodoc
                 self.logger.warning('No documented symbols were found.',
                                     location=(self.env.docname, self.lineno))
+        elif num_matches > 1 and self._get_names():
+            args = ' '.join(self.arguments)
+            self.logger.warning(f'"{self.name}:: {args}" matches {num_matches} documented symbols.',
+                                location=(self.env.docname, self.lineno))
 
     def _get_names(self):
         return None
