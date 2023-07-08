@@ -72,7 +72,7 @@ class _AutoBaseDirective(SphinxDirective):
         key = (filename, tuple(clang_args))
 
         if key in parsed_files:
-            return parsed_files[key]
+            return
 
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
@@ -83,8 +83,6 @@ class _AutoBaseDirective(SphinxDirective):
         self.__display_parser_diagnostics(errors)
 
         parsed_files[key] = docstrings
-
-        return docstrings
 
     def __parsed_files(self, filter_filenames=None, filter_clang_args=None):
         parsed_files = self.env.temp_data.get('hawkmoth_parsed_files', {})
