@@ -61,15 +61,20 @@ and :rst:dir:`cpp:autodoc`, adding the ``file`` option.
 .. rst:directive:: .. c:autovar:: name
 .. rst:directive:: .. cpp:autovar:: name
 
-   Incorporate the documentation comment for the variable ``name`` in the file
-   ``file``.
+   Incorporate the documentation comment for the variable ``name``.
+
+   If ``file`` is specified, look up ``name`` there, otherwise look up ``name``
+   in all previously parsed files in the current document.
 
    .. rst:directive:option:: file
       :type: text
 
-      The ``file`` option specifies to file to parse. The filename is
-      interpreted relative to the :data:`hawkmoth_root` configuration
-      option. (For the time being, this option is mandatory.)
+      The ``file`` option specifies the file to look up ``name`` in. This is
+      required if the file has not been parsed yet, and to disambiguate if
+      ``name`` is found in multiple files.
+
+      The filename is interpreted relative to the :data:`hawkmoth_root`
+      configuration option.
 
    For example:
 
@@ -77,6 +82,8 @@ and :rst:dir:`cpp:autodoc`, adding the ``file`` option.
 
       .. c:autovar:: example_variable
          :file: example_file.c
+
+      .. c:autovar:: another_variable
 
 .. rst:directive:: .. c:autotype:: name
 .. rst:directive:: .. cpp:autotype:: name
@@ -132,9 +139,12 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
 .. rst:directive:: .. c:autostruct:: name
 .. rst:directive:: .. cpp:autostruct:: name
 
-   Incorporate the documentation comment for the structure ``name`` in the file
-   ``file``, optionally including member documentation as specified by
-   ``members``.
+   Incorporate the documentation comment for the structure ``name``, optionally
+   including member documentation as specified by ``members``.
+
+   The ``file`` option is as in :rst:dir:`c:autovar`. If ``file`` is specified,
+   look up ``name`` there, otherwise look up ``name`` in all previously parsed
+   files in the current document.
 
    .. rst:directive:option:: members
       :type: text
@@ -158,11 +168,9 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
          :file: example_file.c
 
       .. c:autostruct:: example_struct
-         :file: example_file.c
          :members:
 
       .. c:autostruct:: example_struct
-         :file: example_file.c
          :members: member_one, member_two
 
 .. rst:directive:: .. cpp:autoclass:: name
@@ -201,7 +209,6 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
          :members:
 
       .. c:autoenum:: example_enum
-         :file: example_file.c
          :members: CONSTANT_ONE, CONSTANT_TWO
 
 Generic Documentation Sections
@@ -214,12 +221,15 @@ specified file.
 .. rst:directive:: .. c:autosection:: name
 .. rst:directive:: .. cpp:autosection:: name
 
-   Incorporate the generic documentation comment identified by ``name`` in the
-   file ``file``. The ``file`` option is as in :rst:dir:`c:autovar`.
+   Incorporate the generic documentation comment identified by ``name``.
 
    The ``name`` is derived from the first sentence of the comment, and may
    contain whitespace. It starts from the first alphanumeric character,
    inclusive, and extends to the next ``:``, ``.``, or newline, non-inclusive.
+
+   The ``file`` option is as in :rst:dir:`c:autovar`. If ``file`` is specified,
+   look up ``name`` there, otherwise look up ``name`` in all previously parsed
+   files in the current document.
 
    For example:
 
