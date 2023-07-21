@@ -48,7 +48,7 @@ def print_title(testcases):
 ''')
 
 def print_source(testcases, input_filename):
-    domain = {testcase.options.get('domain') for testcase in testcases}
+    domain = {testcase.directives[0].domain for testcase in testcases}
     if len(domain) == 1:
         language = 'C' if next(iter(domain)) == 'c' else 'C++'
     else:
@@ -67,7 +67,7 @@ def print_source(testcases, input_filename):
 
 def print_example(testcase):
     options = testcase.options
-    domain = options.get('domain')
+    domain = testcase.directives[0].domain
 
     if options.get('example-use-namespace'):
         # Generate namespace from relative path to YAML without extension
@@ -82,7 +82,7 @@ def print_example(testcase):
         namespace_push = ''
         namespace_pop = ''
 
-    directive_str = testcase.get_directive_string()
+    directive_str = testcase.directives[0].get_directive_string()
 
     print(f'''Directive
 ~~~~~~~~~
@@ -110,7 +110,11 @@ def get_examples():
 
     for f in testenv.get_testcase_filenames(os.path.join(testenv.testdir, 'examples')):
         testcase = ExampleTestcase(f)
-        input_filename = os.path.basename(testcase.get_input_filename())
+
+        if len(testcase.directives) != 1:
+            print(f'WARNING: {f} uses multiple directives', file=sys.stderr)
+
+        input_filename = os.path.basename(testcase.directives[0].get_input_filename())
 
         if input_filename in examples:
             examples[input_filename].append(testcase)

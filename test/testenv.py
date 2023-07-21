@@ -90,17 +90,11 @@ class Testcase:
 
         return os.path.join(os.path.dirname(self.filename), relative)
 
-    def get_input_filename(self):
-        return self.directives[0].get_input_filename()
-
     def get_expected_filename(self):
         return self.get_relative_filename(self.options.get('expected'))
 
     def get_stderr_filename(self):
         return self.get_relative_filename(self.options.get('errors'))
-
-    def get_directive_string(self):
-        return self.directives[0].get_directive_string()
 
     def run_test(self):
         if self.options.get('expected-failure'):
