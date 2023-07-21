@@ -1,9 +1,10 @@
-domain: c
-directive: autovar
-directive-arguments:
+directives:
+- domain: c
+  directive: autovar
+  arguments:
   - meaning_of_life
-directive-options:
-  file: variable.c
+  options:
+    file: variable.c
 example-use-namespace: yes
 example-title: Variable
 example-priority: 11

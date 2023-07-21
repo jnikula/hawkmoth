@@ -1,10 +1,11 @@
-domain: cpp
-directive: autoclass
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autoclass
+  arguments:
   - foo
-directive-options:
-  file: class.cpp
-  members:
+  options:
+    file: class.cpp
+    members:
     - mutable_member
     - virtual_method
     - const_method_to_const

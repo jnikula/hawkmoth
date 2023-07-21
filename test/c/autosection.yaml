@@ -1,7 +1,8 @@
-domain: c
-directive: autosection
-directive-arguments:
+directives:
+- domain: c
+  directive: autosection
+  arguments:
   - Just a random comment
-directive-options:
-  file: autosection.c
+  options:
+    file: autosection.c
 expected: autosection.rst

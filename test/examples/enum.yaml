@@ -1,10 +1,11 @@
-domain: c
-directive: autoenum
-directive-arguments:
+directives:
+- domain: c
+  directive: autoenum
+  arguments:
   - mode
-directive-options:
-  file: enum.c
-  members:
+  options:
+    file: enum.c
+    members:
 example-title: Enum
 example-priority: 70
 expected: enum.rst

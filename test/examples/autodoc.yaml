@@ -1,6 +1,7 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - overview.c
 example-title: Overview
 example-priority: 1

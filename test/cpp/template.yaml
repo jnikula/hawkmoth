@@ -1,8 +1,9 @@
-domain: cpp
-directive: autodoc
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autodoc
+  arguments:
   - template.cpp
-directive-options:
-  clang:
+  options:
+    clang:
     - --std=c++17
 expected: template.rst

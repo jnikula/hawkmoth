@@ -1,10 +1,11 @@
-domain: c
-directive: autostruct
-directive-arguments:
+directives:
+- domain: c
+  directive: autostruct
+  arguments:
   - sample_struct
-directive-options:
-  file: struct.c
-  members:
+  options:
+    file: struct.c
+    members:
     - array_member
     - function_pointer_member
     - other_function_pointer_member

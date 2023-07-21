@@ -1,6 +1,7 @@
-domain: cpp
-directive: autodoc
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autodoc
+  arguments:
   - ../c/meta-expected-failure.c
 expected-failure: true
 expected: meta-expected-failure.rst

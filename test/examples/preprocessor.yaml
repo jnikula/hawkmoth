@@ -1,9 +1,10 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - preprocessor.c
-directive-options:
-  clang:
+  options:
+    clang:
     - -DDEEP_THOUGHT
 example-title: Preprocessor
 example-priority: 80

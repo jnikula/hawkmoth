@@ -1,6 +1,7 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - struct.c
 example-title: Struct
 example-priority: 50

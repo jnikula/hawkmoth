@@ -1,6 +1,7 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - wrong-syntax.h
 errors: wrong-syntax.stderr
 expected: wrong-syntax.rst
