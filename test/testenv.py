@@ -13,6 +13,46 @@ rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
 
+class Directive:
+    def __init__(self, testcase):
+        self.testcase = testcase
+
+        options = testcase.options
+        self.domain = options.get('domain')
+        self.directive = options.get('directive')
+        self.arguments = options.get('directive-arguments', [])
+        self.options = options.get('directive-options', {})
+
+    def get_input_filename(self):
+        if self.directive == 'autodoc':
+            basename = self.arguments[0]
+        else:
+            basename = self.options.get('file')
+
+        return self.testcase.get_relative_filename(basename)
+
+    def get_directive_string(self):
+        arguments_str = ' '.join(self.arguments)
+        directive_str = f'.. {self.domain}:{self.directive}:: {arguments_str}\n'
+
+        for key, value in self.options.items():
+            if isinstance(value, list):
+                value = ', '.join(value)
+            space = ' ' if len(value) else ''
+            directive_str += f'   :{key}:{space}{value}\n'
+
+        return directive_str
+
+    def get_clang_args(self):
+        # Default to compile as C++ if the test is for the C++ domain so that we
+        # can use C sources for C++ tests. The yaml may override this in cases
+        # where we want to force a mismatch.
+        clang_args = ['-xc++'] if self.domain == 'cpp' else ['-xc']
+
+        clang_args.extend(self.options.get('clang', []))
+
+        return clang_args
+
 class Testcase:
     _options_schema = strictyaml.Map({
         'domain': strictyaml.Enum(['c', 'cpp']),
@@ -39,6 +79,8 @@ class Testcase:
             self.options = strictyaml.load(f.read(), self._options_schema).data
         self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
+        self.directives = [Directive(self)]
+
     def get_testid(self):
         return self.testid
 
@@ -49,17 +91,7 @@ class Testcase:
         return os.path.join(os.path.dirname(self.filename), relative)
 
     def get_input_filename(self):
-        options = self.options
-
-        directive = options.get('directive')
-        if directive == 'autodoc':
-            arguments = options.get('directive-arguments', [])
-            basename = arguments[0]
-        else:
-            directive_options = options.get('directive-options', {})
-            basename = directive_options.get('file')
-
-        return self.get_relative_filename(basename)
+        return self.directives[0].get_input_filename()
 
     def get_expected_filename(self):
         return self.get_relative_filename(self.options.get('expected'))
@@ -68,24 +100,7 @@ class Testcase:
         return self.get_relative_filename(self.options.get('errors'))
 
     def get_directive_string(self):
-        options = self.options
-
-        domain = options.get('domain', None)
-        directive = options.get('directive')
-        arguments = options.get('directive-arguments', [])
-        arguments_str = ' '.join(arguments)
-
-        directive_str = f'.. {domain}:{directive}:: {arguments_str}\n'
-
-        directive_options = options.get('directive-options', {})
-
-        for key, value in directive_options.items():
-            if isinstance(value, list):
-                value = ', '.join(value)
-            space = ' ' if len(value) else ''
-            directive_str += f'   :{key}:{space}{value}\n'
-
-        return directive_str
+        return self.directives[0].get_directive_string()
 
     def run_test(self):
         if self.options.get('expected-failure'):
