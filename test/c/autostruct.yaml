@@ -9,4 +9,11 @@ directives:
     - array_member
     - function_pointer_member
     - other_function_pointer_member
+- domain: c
+  directive: autostruct
+  arguments:
+  - foo_struct
+  options:
+    file: struct.c
+    members:
 expected: autostruct.rst
