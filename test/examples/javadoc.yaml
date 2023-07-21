@@ -1,9 +1,10 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - javadoc.c
-directive-options:
-  transform: javadoc
+  options:
+    transform: javadoc
 example-title: Javadoc-style comments
 example-priority: 95
 expected: javadoc.rst

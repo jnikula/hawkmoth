@@ -1,7 +1,8 @@
-domain: cpp
-directive: autovar
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autovar
+  arguments:
   - function_pointer_array
-directive-options:
-  file: ../c/variable.c
+  options:
+    file: ../c/variable.c
 expected: autovariable-fnptr-array.rst

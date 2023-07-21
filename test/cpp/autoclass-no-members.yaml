@@ -1,7 +1,8 @@
-domain: cpp
-directive: autoclass
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autoclass
+  arguments:
   - foo
-directive-options:
-  file: class.cpp
+  options:
+    file: class.cpp
 expected: autoclass-no-members.rst

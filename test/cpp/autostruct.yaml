@@ -1,10 +1,11 @@
-domain: cpp
-directive: autostruct
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autostruct
+  arguments:
   - sample_struct
-directive-options:
-  file: ../c/struct.c
-  members:
+  options:
+    file: ../c/struct.c
+    members:
     - array_member
     - function_pointer_member
     - other_function_pointer_member

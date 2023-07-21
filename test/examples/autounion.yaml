@@ -1,10 +1,11 @@
-domain: c
-directive: autounion
-directive-arguments:
+directives:
+- domain: c
+  directive: autounion
+  arguments:
   - onion
-directive-options:
-  file: union.c
-  members:
+  options:
+    file: union.c
+    members:
 example-title: Union
 example-priority: 60
 expected: autounion.rst

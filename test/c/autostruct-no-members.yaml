@@ -1,7 +1,8 @@
-domain: c
-directive: autostruct
-directive-arguments:
+directives:
+- domain: c
+  directive: autostruct
+  arguments:
   - sample_struct
-directive-options:
-  file: struct.c
+  options:
+    file: struct.c
 expected: autostruct-no-members.rst

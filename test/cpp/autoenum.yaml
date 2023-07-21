@@ -1,9 +1,10 @@
-domain: cpp
-directive: autoenum
-directive-arguments:
+directives:
+- domain: cpp
+  directive: autoenum
+  arguments:
   - foo
-directive-options:
-  file: ../c/enum.c
-  members:
+  options:
+    file: ../c/enum.c
+    members:
     - bar
 expected: autoenum.rst

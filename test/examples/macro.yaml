@@ -1,6 +1,7 @@
-domain: c
-directive: autodoc
-directive-arguments:
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
   - macro.c
 example-title: Macro
 example-priority: 30

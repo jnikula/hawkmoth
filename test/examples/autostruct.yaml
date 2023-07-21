@@ -1,10 +1,11 @@
-domain: c
-directive: autostruct
-directive-arguments:
+directives:
+- domain: c
+  directive: autostruct
+  arguments:
   - list
-directive-options:
-  file: struct.c
-  members:
+  options:
+    file: struct.c
+    members:
 example-use-namespace: yes
 example-title: Struct
 example-priority: 51
