@@ -50,34 +50,33 @@ class CliTestcase(testenv.Testcase):
         return captured.out, _stderr_basename(captured.err)
 
     def get_output(self):
-        options = self.options
+        docs_str, errors_str = '', ''
 
-        args = [self.get_input_filename()]
+        for directive in self.directives:
+            args = [directive.get_input_filename()]
 
-        directive = options.get('directive')
-        if directive != 'autodoc':
-            pytest.skip(f'{directive} directive test')
+            if directive.directive != 'autodoc':
+                pytest.skip(f'{directive} directive test')
 
-        domain = options.get('domain')
-        if domain is not None:
-            args += [f'--domain={domain}']
-            args += [f'--clang={"-xc++" if domain == "cpp" else "-xc"}']
+            if directive.domain is not None:
+                args += [f'--domain={directive.domain}']
 
-        directive_options = options.get('directive-options', {})
+            transform = directive.options.get('transform')
+            if transform is not None:
+                pytest.skip('cli does not support generic transformations')
 
-        transform = directive_options.get('transform')
-        if transform is not None:
-            pytest.skip('cli does not support generic transformations')
+            clang_args = directive.get_clang_args()
+            if clang_args:
+                args += [f'--clang={clang_arg}' for clang_arg in clang_args]
 
-        clang_args = directive_options.get('clang')
-        if clang_args:
-            args += [f'--clang={clang_arg}' for clang_arg in clang_args]
+            self.mock_args(args)
 
-        self.mock_args(args)
+            main()
 
-        main()
+            d, e = self.capture()
 
-        docs_str, errors_str = self.capture()
+            docs_str += d
+            errors_str += e
 
         return docs_str, errors_str
 
