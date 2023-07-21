@@ -43,17 +43,18 @@ def _filter_types(directive):
 
     return types.get(directive)
 
-def _filter_names(directive, options):
-    if directive == 'autodoc':
+def _filter_names(directive):
+    if directive.directive == 'autodoc':
         return None
 
-    return options.get('directive-arguments')
+    return directive.arguments
 
-def _filter_members(directive, directive_options):
-    if directive in ['autodoc', 'autotext', 'autovar', 'autotype', 'automacro', 'autofunction']:
+def _filter_members(directive):
+    if directive.directive in ['autodoc', 'autotext', 'autovar', 'autotype',
+                               'automacro', 'autofunction']:
         return None
 
-    members = directive_options.get('members')
+    members = directive.options.get('members')
 
     if members is None:
         return []
@@ -65,43 +66,32 @@ def _filter_members(directive, directive_options):
 
 class ParserTestcase(testenv.Testcase):
     def get_output(self):
-        options = self.options
-
         docs_str = ''
         errors_str = ''
 
-        domain = options.get('domain')
+        for directive in self.directives:
+            input_filename = directive.get_input_filename()
 
-        # Default to compile as C++ if the test is for the C++ domain so that we can
-        # use C sources for C++ tests. The yaml may override this in cases where we
-        # want to force a mismatch.
-        clang_args = ['-xc++'] if domain == 'cpp' else ['-xc']
+            clang_args = directive.get_clang_args()
 
-        directive = options.get('directive')
+            root, errors = parse(input_filename, domain=directive.domain, clang_args=clang_args)
 
-        input_filename = self.get_input_filename()
+            tropt = directive.options.get('transform')
+            if tropt is not None:
+                transform = parser_transformations[tropt]
+            else:
+                transform = None
 
-        directive_options = options.get('directive-options', {})
+            process_docstring = lambda lines: _process_docstring(transform, lines)
 
-        clang_args.extend(directive_options.get('clang', []))
-        root, errors = parse(input_filename, domain=domain, clang_args=clang_args)
+            for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
+                                        filter_names=_filter_names(directive)):
+                for docstr in docstrings.walk(filter_names=_filter_members(directive)):  # noqa: E501
+                    lines = docstr.get_docstring(process_docstring=process_docstring)
+                    docs_str += '\n'.join(lines) + '\n'
 
-        tropt = directive_options.get('transform')
-        if tropt is not None:
-            transform = parser_transformations[tropt]
-        else:
-            transform = None
-
-        process_docstring = lambda lines: _process_docstring(transform, lines)
-
-        for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
-                                    filter_names=_filter_names(directive, options)):
-            for docstr in docstrings.walk(filter_names=_filter_members(directive, directive_options)):  # noqa: E501
-                lines = docstr.get_docstring(process_docstring=process_docstring)
-                docs_str += '\n'.join(lines) + '\n'
-
-        for error in errors:
-            errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
+            for error in errors:
+                errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
 
         return docs_str, errors_str
 
