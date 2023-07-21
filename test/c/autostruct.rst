@@ -23,3 +23,33 @@
       :param foo: the foo
       :param bar: the bar
 
+
+.. c:struct:: foo_struct
+
+   Named struct.
+
+
+   .. c:struct:: @anonymous_a63d10331be1a527625db63b8ace540f
+
+      Anonymous sub-struct.
+
+
+      .. c:member:: int foo_member
+
+         Member foo.
+
+
+   .. c:union:: @anonymous_69382278a84175c1cbff40d522114b38
+
+      Anonymous sub-union.
+
+
+      .. c:member:: int bar_member_1
+
+         Member bar 1.
+
+
+      .. c:member:: int bar_member_2
+
+         Member bar 2.
+
