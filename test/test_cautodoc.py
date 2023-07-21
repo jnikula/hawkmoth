@@ -52,7 +52,9 @@ class ExtensionTestcase(testenv.Testcase):
             return self._sphinx_build(srcdir)
 
     def get_output(self):
-        return self._sphinx_build_str(self.get_directive_string())
+        input_str = ''.join([d.get_directive_string() for d in self.directives])
+
+        return self._sphinx_build_str(input_str)
 
     def get_expected(self):
         return self._sphinx_build_file(self.get_expected_filename())
