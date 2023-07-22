@@ -66,32 +66,53 @@ def _filter_members(directive):
 
 class ParserTestcase(testenv.Testcase):
     def get_output(self):
+        roots = {}
         docs_str = ''
         errors_str = ''
 
         for directive in self.directives:
-            input_filename = directive.get_input_filename()
+            filename = directive.get_input_filename()
+            if not filename:
+                continue
 
             clang_args = directive.get_clang_args()
 
-            root, errors = parse(input_filename, domain=directive.domain, clang_args=clang_args)
+            key = (filename, tuple(clang_args))
+            if key in roots:
+                continue
 
-            tropt = directive.options.get('transform')
-            if tropt is not None:
-                transform = parser_transformations[tropt]
-            else:
-                transform = None
+            root, errors = parse(filename, domain=directive.domain, clang_args=clang_args)
 
-            process_docstring = lambda lines: _process_docstring(transform, lines)
-
-            for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
-                                        filter_names=_filter_names(directive)):
-                for docstr in docstrings.walk(filter_names=_filter_members(directive)):  # noqa: E501
-                    lines = docstr.get_docstring(process_docstring=process_docstring)
-                    docs_str += '\n'.join(lines) + '\n'
+            roots[key] = root
 
             for error in errors:
                 errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
+
+        for directive in self.directives:
+            filename = directive.get_input_filename()
+            filter_filenames = [filename] if filename is not None else None
+            filter_clang_args = [directive.get_clang_args()]
+
+            for root in roots.values():
+                if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                    continue
+
+                if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
+                    continue
+
+                tropt = directive.options.get('transform')
+                if tropt is not None:
+                    transform = parser_transformations[tropt]
+                else:
+                    transform = None
+
+                process_docstring = lambda lines: _process_docstring(transform, lines)
+
+                for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
+                                            filter_names=_filter_names(directive)):
+                    for docstr in docstrings.walk(filter_names=_filter_members(directive)):
+                        lines = docstr.get_docstring(process_docstring=process_docstring)
+                        docs_str += '\n'.join(lines) + '\n'
 
         return docs_str, errors_str
 
