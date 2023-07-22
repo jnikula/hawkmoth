@@ -58,6 +58,8 @@ class CliTestcase(testenv.Testcase):
             if directive.directive != 'autodoc':
                 pytest.skip(f'{directive} directive test')
 
+            assert args[0] is not None
+
             if directive.domain is not None:
                 args += [f'--domain={directive.domain}']
 
