@@ -14,6 +14,5 @@ directives:
   arguments:
   - foo_struct
   options:
-    file: struct.c
     members:
 expected: autostruct.rst
