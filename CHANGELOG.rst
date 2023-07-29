@@ -6,6 +6,31 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* ``autosection`` directive to include generic documentation comments
+* ``.readthedocs.yaml`` config file
+* Documentation on how to use Hawkmoth on Read the Docs more reliably
+* Values in enumerator documentation when explicitly initialized in source code
+
+Changed
+~~~~~~~
+
+* The ``:file:`` option is optional for files that have been previously parsed
+* Test case yaml schema
+
+Removed
+~~~~~~~
+
+* Development dependency on the deprecated ``sphinx_testing`` package
+
+Fixed
+~~~~~
+
+* Handling of empty documentation comments
+* Parser error propagation
+
 Hawkmoth `0.14.0`_
 ------------------
 
