@@ -50,7 +50,7 @@ def _filter_names(directive):
     return directive.arguments
 
 def _filter_members(directive):
-    if directive.directive in ['autodoc', 'autotext', 'autovar', 'autotype',
+    if directive.directive in ['autodoc', 'autosection', 'autovar', 'autotype',
                                'automacro', 'autofunction']:
         return None
 
