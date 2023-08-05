@@ -1,0 +1,6 @@
+directives:
+- domain: cpp
+  directive: autodoc
+  arguments:
+  - ../c/array-symbolic-dimensions.c
+expected: array-symbolic-dimensions.rst
