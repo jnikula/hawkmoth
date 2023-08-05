@@ -276,7 +276,18 @@ class EnumDocstring(_CompoundDocstring):
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
-    _fmt = '\n.. {domain}:enumerator:: {name}\n\n'
+    _fmt = '\n.. {domain}:enumerator:: {name}{value}\n\n'
+
+    def __init__(self, domain, name, value, text, meta, nest):
+        self._value = value
+        super().__init__(domain=domain, name=name, text=text, meta=meta, nest=nest)
+
+    def _get_header_lines(self):
+        value = f' = {self._value}' if self._value is not None else ''
+        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(),
+                                  value=value)
+
+        return header.splitlines()
 
 class MemberDocstring(Docstring):
     _indent = 1
