@@ -659,8 +659,15 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        ds = docstring.EnumeratorDocstring(domain=domain, text=text,
-                                           nest=nest, name=name, meta=meta)
+        # Show enumerator value if it's explicitly set in source
+        if '=' in [t.spelling for t in cursor.get_tokens()]:
+            value = cursor.enum_value
+        else:
+            value = None
+
+        ds = docstring.EnumeratorDocstring(domain=domain, name=name,
+                                           value=value, text=text,
+                                           meta=meta, nest=nest)
 
         return [ds]
 
