@@ -9,7 +9,10 @@
       The primary frobnication mode.
 
 
-   .. c:enumerator:: MODE_SECONDARY
+   .. c:enumerator:: MODE_SECONDARY = 2
 
       The secondary frobnication mode.
+
+      If the enumerator is initialized in source, its value will also be
+      included in documentation.
 

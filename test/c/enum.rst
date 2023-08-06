@@ -4,7 +4,7 @@
    Enum doc.
 
 
-   .. c:enumerator:: bar
+   .. c:enumerator:: bar = 0
 
       Enumeration comment.
 
@@ -19,7 +19,7 @@
    Anonymous enum.
 
 
-   .. c:enumerator:: FOO
+   .. c:enumerator:: FOO = 5
 
       Enumeration comment.
 

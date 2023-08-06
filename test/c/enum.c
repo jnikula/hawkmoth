@@ -5,7 +5,7 @@ enum foo {
 	/**
 	 * Enumeration comment.
 	 */
-	bar,
+	bar = 0,
 	/**
 	 * Another.
 	 */
@@ -19,7 +19,7 @@ enum {
 	/**
 	 * Enumeration comment.
 	 */
-	FOO,
+	FOO = 5,
 	/**
 	 * Another.
 	 */

@@ -4,7 +4,7 @@
    Enum doc.
 
 
-   .. cpp:enumerator:: bar
+   .. cpp:enumerator:: bar = 0
 
       Enumeration comment.
 
@@ -19,7 +19,7 @@
    Anonymous enum.
 
 
-   .. cpp:enumerator:: FOO
+   .. cpp:enumerator:: FOO = 5
 
       Enumeration comment.
 
