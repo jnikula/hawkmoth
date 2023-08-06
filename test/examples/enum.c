@@ -8,6 +8,9 @@ enum mode {
 	MODE_PRIMARY,
 	/**
 	 * The secondary frobnication mode.
+	 *
+	 * If the enumerator is initialized in source, its value will also be
+	 * included in documentation.
 	 */
-	MODE_SECONDARY,
+	MODE_SECONDARY = 2,
 };

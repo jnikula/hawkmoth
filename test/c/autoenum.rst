@@ -4,7 +4,7 @@
    Enum doc.
 
 
-   .. c:enumerator:: bar
+   .. c:enumerator:: bar = 0
 
       Enumeration comment.
 
