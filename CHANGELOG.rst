@@ -24,6 +24,7 @@ Removed
 ~~~~~~~
 
 * Development dependency on the deprecated ``sphinx_testing`` package
+* Docker containers
 
 Fixed
 ~~~~~
