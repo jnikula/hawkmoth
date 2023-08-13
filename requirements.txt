@@ -2,5 +2,6 @@ flake8
 pytest
 pytest-cov
 pytest-xdist
+restructuredtext_lint
 sphinx
 strictyaml
