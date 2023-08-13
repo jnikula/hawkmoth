@@ -107,9 +107,6 @@ Alternatively, installation packages are available for:
 
 * `Arch Linux`_
 
-There are also Docker images `jnikula/hawkmoth`_ and
-`jnikula/hawkmoth-latexpdf`_ at Docker Hub.
-
 In Sphinx ``conf.py``, add ``hawkmoth`` to ``extensions``, and point
 ``hawkmoth_root`` at the source tree. See the extension documentation for
 details.
@@ -117,10 +114,6 @@ details.
 .. _PyPI: https://pypi.org/project/hawkmoth/
 
 .. _Arch Linux: https://aur.archlinux.org/packages/?K=hawkmoth
-
-.. _jnikula/hawkmoth-latexpdf: https://hub.docker.com/repository/docker/jnikula/hawkmoth-latexpdf
-
-.. _jnikula/hawkmoth: https://hub.docker.com/repository/docker/jnikula/hawkmoth
 
 Development and Contributing
 ----------------------------

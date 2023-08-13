@@ -79,36 +79,6 @@ the distro Clang package available to the virtual environment. For example:
 
    python3 -m venv --system-site-packages .venv
 
-Docker
-------
-
-To run Sphinx and Hawkmoth using Docker, there are separate images with and
-without Latex PDF support, `jnikula/hawkmoth-latexpdf`_ and `jnikula/hawkmoth`_,
-respectively. If you don't need Latex PDF support, the latter is much smaller.
-
-The images are based on the official Sphinx Docker images
-`sphinxdoc/sphinx-latexpdf`_ and `sphinxdoc/sphinx`_, and can be used
-similarly. Just replace the image names.
-
-For example:
-
-.. code-block:: shell
-
-   docker run --rm -v /path/to/document:/docs jnikula/hawkmoth make html
-
-To create your own custom images, please have a look at the ``docker`` directory
-in the `Hawkmoth source repository`_ for a starting point.
-
-.. _jnikula/hawkmoth-latexpdf: https://hub.docker.com/repository/docker/jnikula/hawkmoth-latexpdf
-
-.. _jnikula/hawkmoth: https://hub.docker.com/repository/docker/jnikula/hawkmoth
-
-.. _sphinxdoc/sphinx-latexpdf: https://hub.docker.com/r/sphinxdoc/sphinx-latexpdf
-
-.. _sphinxdoc/sphinx: https://hub.docker.com/r/sphinxdoc/sphinx
-
-.. _Hawkmoth source repository: https://github.com/jnikula/hawkmoth
-
 Read the Docs
 -------------
 
