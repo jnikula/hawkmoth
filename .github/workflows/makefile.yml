@@ -19,6 +19,16 @@ jobs:
       - name: Style check
         run: make check
 
+  rst:
+    name: Check reStructuredText
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install restructuredtext_lint
+      - name: reStructuredText check
+        run: make check-rst
+
   examples:
     name: Check examples
     runs-on: ubuntu-latest
