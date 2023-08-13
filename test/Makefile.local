@@ -4,6 +4,8 @@
 
 test_dir := test
 
+RST := $(RST) $(test_dir)/README.rst
+
 .PHONY: test
 test:
 	pytest -n auto $(test_dir)
