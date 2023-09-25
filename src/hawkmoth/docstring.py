@@ -64,12 +64,6 @@ class Docstring():
         self._domain = domain
         self._children = []
 
-    def add_child(self, comment):
-        self._children.append(comment)
-
-    def add_children(self, comments):
-        self._children.extend(comments)
-
     def _match(self, filter_types=None, filter_names=None):
         if filter_types is not None and type(self) not in filter_types:
             return False
@@ -80,22 +74,8 @@ class Docstring():
         return True
 
     def walk(self, recurse=True, filter_types=None, filter_names=None):
-        # Note: The filtering is pretty specialized for our use case here. It
-        # only filters the immediate children, not this comment, nor
-        # grandchildren.
-
-        # The contents of the parent will always be before children.
         if self._text:
             yield self
-
-        # Sort the children by order of appearance. We may add other sort
-        # options later.
-        for comment in sorted(self._children, key=lambda c: c.get_line()):
-            if comment._match(filter_types=filter_types, filter_names=filter_names):
-                if recurse:
-                    yield from comment.walk()
-                else:
-                    yield comment
 
     @staticmethod
     def is_doc(comment):
@@ -255,6 +235,30 @@ class _CompoundDocstring(Docstring):
             return f'@anonymous_{decl_name}'
 
         return self._decl_name
+
+    def add_child(self, comment):
+        self._children.append(comment)
+
+    def add_children(self, comments):
+        self._children.extend(comments)
+
+    def walk(self, recurse=True, filter_types=None, filter_names=None):
+        # Note: The filtering is pretty specialized for our use case here. It
+        # only filters the immediate children, not this comment, nor
+        # grandchildren.
+
+        # The contents of the parent will always be before children.
+        if self._text:
+            yield self
+
+        # Sort the children by order of appearance. We may add other sort
+        # options later.
+        for comment in sorted(self._children, key=lambda c: c.get_line()):
+            if comment._match(filter_types=filter_types, filter_names=filter_names):
+                if recurse:
+                    yield from comment.walk()
+                else:
+                    yield comment
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename=None, domain='c', clang_args=None):
