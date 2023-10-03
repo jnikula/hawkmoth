@@ -3,9 +3,10 @@ Hawkmoth -- Sphinx Autodoc for C and C++
 
 Hawkmoth is a Sphinx_ extension to incorporate C and C++ source code comments
 formatted in reStructuredText_ into Sphinx based documentation. It uses Clang_
-Python Bindings for parsing, and generates :external+sphinx:ref:`C <c-domain>`
-and :external+sphinx:ref:`C++ <cpp-domain>` domain directives for C and C++
-documentation, respectively. In short, Hawkmoth is Sphinx Autodoc for C/C++.
+Python Bindings for parsing, and generates :external+sphinx:doc:`C
+<usage/domains/c>` and :external+sphinx:doc:`C++ <usage/domains/cpp>` domain
+directives for C and C++ documentation, respectively. In short, Hawkmoth is
+Sphinx Autodoc for C/C++.
 
 Hawkmoth aims to be a compelling alternative for documenting C and C++ projects
 using Sphinx, mainly through its simplicity of design, implementation and use.
