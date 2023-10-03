@@ -25,9 +25,9 @@ Read on for information about Hawkmoth installation details and usage; how to
 configure and use the extension and how to write documentation comments, with
 examples.
 
-.. _Sphinx: http://www.sphinx-doc.org
+.. _Sphinx: https://www.sphinx-doc.org
 
-.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+.. _reStructuredText: https://docutils.sourceforge.io/rst.html
 
 .. _Clang: https://clang.llvm.org/
 

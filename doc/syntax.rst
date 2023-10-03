@@ -66,7 +66,7 @@ them nicely.
    */
   int baz(int foo, int bar);
 
-.. _field lists: http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists
+.. _field lists: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#field-lists
 
 .. _extending-the-syntax:
 
@@ -81,7 +81,7 @@ The :ref:`hawkmoth.ext.javadoc` extension provides limited support for Javadoc_
 style comments, and the :ref:`hawkmoth.ext.napoleon` extension provides support
 for :external+sphinx:py:mod:`sphinx.ext.napoleon` style comments.
 
-.. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
+.. _Javadoc: https://www.oracle.com/java/technologies/javase/javadoc.html
 
 .. _cross-referencing:
 
