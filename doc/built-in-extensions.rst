@@ -18,7 +18,7 @@ This extension converts Javadoc_ comments to reStructuredText, using the
 
    The Javadoc support is rudimentary at best.
 
-.. _Javadoc: https://www.oracle.com/technetwork/java/javase/documentation/javadoc-137458.html
+.. _Javadoc: https://www.oracle.com/java/technologies/javase/javadoc.html
 
 Installation and configuration in ``conf.py``:
 
