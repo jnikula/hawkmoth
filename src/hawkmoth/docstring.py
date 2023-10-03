@@ -318,6 +318,6 @@ class ClassDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. cpp:class:: {name}'
 
-class EnumClassDocstring(Docstring):
+class EnumClassDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. cpp:enum-class:: {name}'
