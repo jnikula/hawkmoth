@@ -102,10 +102,10 @@ and :rst:dir:`cpp:autodoc`, adding the ``file`` option.
 
    .. note::
 
-      The :external+sphinx:ref:`C++ Domain <cpp-domain>` does not have a
+      The :external+sphinx:doc:`C++ Domain <usage/domains/cpp>` does not have a
       ``cpp:macro`` directive, so all macros are always in the
-      :external+sphinx:ref:`C Domain <c-domain>`. This affects cross-referencing
-      them; see :ref:`cross-referencing` for details.
+      :external+sphinx:doc:`C Domain <usage/domains/c>`. This affects
+      cross-referencing them; see :ref:`cross-referencing` for details.
 
    .. code-block:: rst
 
