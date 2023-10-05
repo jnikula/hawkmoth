@@ -38,6 +38,7 @@ from clang.cindex import TokenKind, CursorKind, TypeKind
 from clang.cindex import StorageClass, AccessSpecifier, ExceptionSpecificationKind
 from clang.cindex import Index, TranslationUnit, TranslationUnitLoadError
 from clang.cindex import Diagnostic
+from clang.cindex import SourceLocation, SourceRange
 
 from hawkmoth import docstring
 
@@ -185,6 +186,27 @@ def _comment_extract(tu):
 
     return top_level_comments, comments
 
+# Workaround for clang cursor.get_tokens() being unreliable for cursors whose
+# extent contains macro expansions. The result may be empty or contain bogus
+# tokens, depending on the case.
+#
+# The problem seems to be related to cursor.extent. Recreating the extent and
+# getting the tokens from the translation unit works fine. The __repr__ for both
+# the recreated and original extents is the same, but comparison indicates they
+# do differ under the hood.
+def _cursor_get_tokens(cursor):
+    tu = cursor.translation_unit
+
+    start = cursor.extent.start
+    start = SourceLocation.from_position(tu, start.file, start.line, start.column)
+
+    end = cursor.extent.end
+    end = SourceLocation.from_position(tu, end.file, end.line, end.column)
+
+    extent = SourceRange.from_locations(start, end)
+
+    yield from tu.get_tokens(extent=extent)
+
 def _get_meta(comment, cursor=None):
     meta = {'line': comment.extent.start.line}
     if cursor:
@@ -200,7 +222,7 @@ def _get_macro_args(cursor):
     if cursor.kind != CursorKind.MACRO_DEFINITION:
         return None
 
-    tokens = cursor.get_tokens()
+    tokens = _cursor_get_tokens(cursor)
 
     # Use the first two tokens to make sure this starts with 'IDENTIFIER('
     one = next(tokens)
@@ -246,7 +268,7 @@ def _get_function_quals(cursor):
     Returns:
         List of (prefix) function qualifiers.
     """
-    tokens = [t.spelling for t in cursor.get_tokens()]
+    tokens = [t.spelling for t in _cursor_get_tokens(cursor)]
     quals = []
 
     if 'static' in tokens:
@@ -262,7 +284,7 @@ def _get_method_quals(cursor):
     Returns:
         List of prefix method qualifiers and list of suffix method qualifiers.
     """
-    tokens = [t.spelling for t in cursor.get_tokens()]
+    tokens = [t.spelling for t in _cursor_get_tokens(cursor)]
     pre_quals = []
     pos_quals = []
 
@@ -338,7 +360,7 @@ def _get_template_line(cursor):
     # We can do it by looking at the tokens directly. This is slightly
     # complicated due to variadic template type parameters.
     def typetype(cursor):
-        tokens = list(cursor.get_tokens())
+        tokens = list(_cursor_get_tokens(cursor))
         if tokens[-2].spelling == '...':
             return f'{tokens[-3].spelling}...'
         else:
@@ -373,7 +395,7 @@ def _specifiers_fixup(cursor, basetype):
     Returns:
         List of C++ specifiers for the cursor.
     """
-    tokens = [t.spelling for t in cursor.get_tokens()]
+    tokens = [t.spelling for t in _cursor_get_tokens(cursor)]
     type_elem = []
 
     if 'mutable' in tokens:
@@ -397,7 +419,7 @@ def _get_scopedenum_type(cursor):
         ``None`` otherwise.
     """
     if cursor.kind == CursorKind.ENUM_DECL and cursor.is_scoped_enum():
-        if list(cursor.get_tokens())[3].spelling == ':':
+        if list(_cursor_get_tokens(cursor))[3].spelling == ':':
             return f': {cursor.enum_type.spelling}'
     return None
 
@@ -666,7 +688,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
         # Show enumerator value if it's explicitly set in source
-        if '=' in [t.spelling for t in cursor.get_tokens()]:
+        if '=' in [t.spelling for t in _cursor_get_tokens(cursor)]:
             value = cursor.enum_value
         else:
             value = None
@@ -727,7 +749,7 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
     # For some reason, the Python bindings don't return the cursor kind
     # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
     if cursor.kind == CursorKind.UNEXPOSED_DECL:
-        tokens = cursor.get_tokens()
+        tokens = _cursor_get_tokens(cursor)
         ntoken = next(tokens, None)
         if ntoken and ntoken.spelling == 'extern':
             ntoken = next(tokens, None)
