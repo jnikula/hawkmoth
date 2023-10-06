@@ -85,6 +85,27 @@ See also additional configuration options in the :ref:`built-in extensions
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
 
+.. py:data:: hawkmoth_source_uri
+   :type: str
+
+   A template URI to source code. If set, add links to externally hosted source
+   code for each documented symbol, similar to the :external+sphinx:doc:`Sphinx
+   linkcode extension <usage/extensions/linkcode>`. Defaults to ``None``.
+
+   The template URI will be formatted using
+   :external+python:py:meth:`str.format`, with the following replacement fields:
+
+   ``{source}``
+     Path to source file relative to :py:data:`hawkmoth_root`.
+   ``{line}``
+     Line number in source file.
+
+   Example:
+
+   .. code-block:: python
+
+      hawkmoth_source_uri = 'https://example.org/src/{source}#L{line}'
+
 .. py:data:: cautodoc_root
    :type: str
 
