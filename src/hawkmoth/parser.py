@@ -426,9 +426,26 @@ def _get_scopedenum_type(cursor):
 def _normalize_type(type_string):
     return 'bool' if type_string == '_Bool' else type_string
 
+def _symbolic_dims(cursor):
+    dim = None
+    for spelling in [t.spelling for t in _cursor_get_tokens(cursor)]:
+        if spelling == '[':
+            # dim should be None here
+            dim = []
+        elif spelling == ']':
+            # dim should not be None here
+            yield ' '.join(dim)
+            dim = None
+        elif dim is not None:
+            dim.append(spelling)
+
 def _dims_fixup(cursor, dims):
     if not dims:
         return ''
+
+    symbolic_dims = list(_symbolic_dims(cursor))
+    if len(symbolic_dims) == len(dims):
+        dims = symbolic_dims
 
     return ''.join([f'[{d}]' for d in dims])
 
