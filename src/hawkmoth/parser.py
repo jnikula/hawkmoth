@@ -426,6 +426,12 @@ def _get_scopedenum_type(cursor):
 def _normalize_type(type_string):
     return 'bool' if type_string == '_Bool' else type_string
 
+def _dims_fixup(cursor, dims):
+    if not dims:
+        return ''
+
+    return ''.join([f'[{d}]' for d in dims])
+
 def _var_type_fixup(cursor, domain):
     """Fix non trivial variable and argument types.
 
@@ -437,7 +443,7 @@ def _var_type_fixup(cursor, domain):
     cursor_type = cursor.type
 
     stars_and_quals = ''
-    dims = ''
+    dims = []
     while True:
         if cursor_type.kind == TypeKind.POINTER:
             quals = []
@@ -453,13 +459,15 @@ def _var_type_fixup(cursor, domain):
 
             cursor_type = cursor_type.get_pointee()
         elif cursor_type.kind == TypeKind.CONSTANTARRAY:
-            dims += f'[{cursor_type.element_count}]'
+            dims.append(cursor_type.element_count)
             cursor_type = cursor_type.get_array_element_type()
         elif cursor_type.kind == TypeKind.INCOMPLETEARRAY:
-            dims += '[]'
+            dims.append('')
             cursor_type = cursor_type.get_array_element_type()
         else:
             break
+
+    dims = _dims_fixup(cursor, dims)
 
     type_elem = []
 
