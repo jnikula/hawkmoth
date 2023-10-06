@@ -13,6 +13,7 @@ import os
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
+from sphinx import addnodes
 from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
@@ -303,6 +304,47 @@ class CppAutoClassDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.ClassDocstring]
 
+def _uri_format(env, signode):
+    """Generate a source URI for signode"""
+    uri_template = env.config.hawkmoth_source_uri
+
+    if signode.source is None or signode.line is None:
+        return None
+
+    source = os.path.relpath(signode.source, start=env.config.hawkmoth_root)
+
+    # Note: magic +1 to take into account we've added signode ourselves and its
+    # not present in source
+    uri = uri_template.format(source=source, line=signode.line + 1)
+
+    return uri
+
+def _doctree_read(app, doctree):
+    env = app.builder.env
+
+    # Bail out early if not configured
+    uri_template = env.config.hawkmoth_source_uri
+    if uri_template is None:
+        return
+
+    for objnode in list(doctree.findall(addnodes.desc)):
+        if objnode.get('domain') not in ['c', 'cpp']:
+            continue
+
+        for signode in objnode:
+            if not isinstance(signode, addnodes.desc_signature):
+                continue
+
+            uri = _uri_format(env, signode)
+            if not uri:
+                continue
+
+            # Similar to sphinx.ext.linkcode
+            inline = nodes.inline('', '[source]', classes=['viewcode-link'])
+            onlynode = addnodes.only(expr='html')
+            onlynode += nodes.reference('', '', inline, internal=False, refuri=uri)
+            signode += onlynode
+
 def _deprecate(conf, old, new, default=None):
     if conf[old]:
         logger = logging.getLogger(__name__)
@@ -356,6 +398,10 @@ def setup(app):
 
     # Setup transformations for compatibility.
     app.setup_extension('hawkmoth.ext.transformations')
+
+    # Source code link
+    app.add_config_value('hawkmoth_source_uri', None, 'env', [str])
+    app.connect('doctree-read', _doctree_read)
 
     return dict(version=__version__,
                 parallel_read_safe=True, parallel_write_safe=True)
