@@ -61,6 +61,11 @@ if 'READTHEDOCS' in os.environ:
 
 hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test/examples')
 
+source_uri = 'https://github.com/jnikula/hawkmoth/tree/{version}/test/examples/{{source}}#L{{line}}'
+source_version = f'v{version}' if len(version.split('.')) == 3 else 'master'
+
+hawkmoth_source_uri = source_uri.format(version=source_version)
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
