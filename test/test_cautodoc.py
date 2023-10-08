@@ -8,6 +8,7 @@ import tempfile
 
 import pytest
 from sphinx.application import Sphinx
+from sphinx.util.docutils import docutils_namespace, patch_docutils
 
 from test import testenv
 
@@ -22,21 +23,23 @@ class ExtensionTestcase(testenv.Testcase):
     def _sphinx_build(self, srcdir):
         outdir = os.path.join(srcdir, self._buildername)
         doctreedir = os.path.join(srcdir, 'doctrees')
+        confdir = testenv.testdir
 
-        app = Sphinx(srcdir=srcdir, confdir=testenv.testdir, outdir=outdir,
-                     doctreedir=doctreedir, buildername=self._buildername)
+        with patch_docutils(confdir), docutils_namespace():
+            app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
+                         doctreedir=doctreedir, buildername=self._buildername)
 
-        # Set root to the directory the testcase yaml is in, because the
-        # filenames in yaml are relative to it.
-        app.config.hawkmoth_root = os.path.dirname(self.filename)
+            # Set root to the directory the testcase yaml is in, because the
+            # filenames in yaml are relative to it.
+            app.config.hawkmoth_root = os.path.dirname(self.filename)
 
-        # Hack: It's not possible to disable search via configuration
-        app.builder.search = False
+            # Hack: It's not possible to disable search via configuration
+            app.builder.search = False
 
-        app.build()
+            app.build()
 
-        output_suffix = self._get_suffix()
-        output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
+            output_suffix = self._get_suffix()
+            output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
 
         return testenv.read_file(output_filename), None
 
