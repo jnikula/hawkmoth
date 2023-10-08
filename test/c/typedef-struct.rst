@@ -9,7 +9,7 @@
       named member
 
 
-.. c:struct:: @anonymous_7f9a1d628cd33f3227f3fcdc3a405aa6
+.. c:struct:: typedef_struct
 
    unnamed typedeffed struct
 
