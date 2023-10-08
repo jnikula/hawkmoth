@@ -9,7 +9,7 @@
       named enumeration
 
 
-.. cpp:enum:: @anonymous_90372874a3c8c25dccf983612f39e93f
+.. cpp:enum:: unnamed_t
 
    unnamed typedeffed enum
 

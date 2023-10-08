@@ -9,7 +9,7 @@
       named enumeration
 
 
-.. c:enum:: @anonymous_90372874a3c8c25dccf983612f39e93f
+.. c:enum:: unnamed_t
 
    unnamed typedeffed enum
 

@@ -507,8 +507,14 @@ def _type_definition_fixup(cursor):
     type_elem = []
 
     # Short cut for anonymous symbols.
-    if cursor.spelling == '':
+    if cursor.is_anonymous():
         return None
+
+    # libclang 16 and later have cursor.spelling == cursor.type.spelling for
+    # typedefs of anonymous entities, while libclang 15 and earlier have an
+    # empty string. Match the behaviour across libclang versions.
+    if cursor.spelling == '':
+        return cursor.type.spelling
 
     type_elem.extend(_specifiers_fixup(cursor, cursor.type))
 
