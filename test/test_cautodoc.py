@@ -4,6 +4,7 @@
 
 import io
 import os
+import re
 import shutil
 import tempfile
 
@@ -52,7 +53,11 @@ class ExtensionTestcase(testenv.Testcase):
             output_suffix = self._get_suffix()
             output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
 
-        return testenv.read_file(output_filename), None
+        # Remove paths from warning output for comparison
+        output_errors = re.sub(rf'(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
+                               '\\1', warning.getvalue())
+
+        return testenv.read_file(output_filename), output_errors
 
     def _sphinx_build_str(self, input_str):
         with tempfile.TemporaryDirectory() as srcdir:
@@ -71,7 +76,10 @@ class ExtensionTestcase(testenv.Testcase):
         return self._sphinx_build_str(input_str)
 
     def get_expected(self):
-        return self._sphinx_build_file(self.get_expected_filename())
+        expected_docs, _ = self._sphinx_build_file(self.get_expected_filename())
+        expected_errors = testenv.read_file(self.get_stderr_filename(), optional=True)
+
+        return expected_docs, expected_errors
 
 def _get_extension_testcases(path, buildername):
     for f in testenv.get_testcase_filenames(path):
