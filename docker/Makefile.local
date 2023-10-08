@@ -16,7 +16,7 @@ DOCKER_TEST_TAG = hawkmoth
 
 .PHONY: docker-test-build
 docker-test-build: $(HAWKMOTH_ARCHIVE)
-	docker build --file $(docker_dir)/test/Dockerfile --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $(DOCKER_TEST_TAG) .
+	docker build --file $(docker_dir)/Dockerfile.debian-bullseye --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $(DOCKER_TEST_TAG) .
 
 .PHONY: docker-test
 docker-test: docker-test-build
