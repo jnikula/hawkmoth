@@ -12,19 +12,20 @@ $(HAWKMOTH_ARCHIVE): $(shell git ls-files)
 
 # Containers for local testing
 DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
-DOCKER_TEST_TAG = hawkmoth
 
-.PHONY: docker-test-build
-docker-test-build: $(HAWKMOTH_ARCHIVE)
-	docker build --file $(docker_dir)/Dockerfile.debian-bullseye --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $(DOCKER_TEST_TAG) .
+hawkmoth-test.%: $(HAWKMOTH_ARCHIVE) FORCE
+	docker build --file $(docker_dir)/Dockerfile$(suffix $@) --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $@ .
 
-.PHONY: docker-test
-docker-test: docker-test-build
-	docker run $(DOCKER_TEST_TAG) make test
+docker-test.%: hawkmoth-test.% FORCE
+	docker run $< make test
 
-.PHONY: docker-test-html
-docker-test-html: docker-test-build
+docker-test-html.%: hawkmoth-test.% FORCE
 	mkdir -p doc/_build
-	docker run $(DOCKER_TEST_OUT_MOUNT) $(DOCKER_TEST_TAG) make BUILDDIR=/out html
+	docker run $(DOCKER_TEST_OUT_MOUNT) $< make BUILDDIR=/out html
+
+docker-test: docker-test.debian-bullseye FORCE
+docker-test-html: docker-test-html.debian-bullseye FORCE
+
+FORCE:
 
 CLEAN := $(CLEAN) $(HAWKMOTH_ARCHIVE)
