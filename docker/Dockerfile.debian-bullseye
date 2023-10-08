@@ -1,11 +1,12 @@
 FROM debian:bullseye
 
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
 	python3-clang \
 	python3-venv \
-	make
-RUN apt-get clean
+	make && \
+    apt-get clean
 
 ARG UID=1000
 ARG GID=1000
