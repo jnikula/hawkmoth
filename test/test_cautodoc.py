@@ -9,6 +9,7 @@ import tempfile
 import pytest
 from sphinx.application import Sphinx
 from sphinx.util.docutils import docutils_namespace, patch_docutils
+from sphinx.util import console
 
 from test import testenv
 
@@ -24,6 +25,9 @@ class ExtensionTestcase(testenv.Testcase):
         outdir = os.path.join(srcdir, self._buildername)
         doctreedir = os.path.join(srcdir, 'doctrees')
         confdir = testenv.testdir
+
+        # Don't emit color codes in Sphinx status/warning output
+        console.nocolor()
 
         with patch_docutils(confdir), docutils_namespace():
             app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
