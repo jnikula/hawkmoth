@@ -2,6 +2,7 @@
 # Copyright (c) 2018-2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
+import io
 import os
 import shutil
 import tempfile
@@ -29,9 +30,15 @@ class ExtensionTestcase(testenv.Testcase):
         # Don't emit color codes in Sphinx status/warning output
         console.nocolor()
 
+        warning = io.StringIO()
+
         with patch_docutils(confdir), docutils_namespace():
             app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
-                         doctreedir=doctreedir, buildername=self._buildername)
+                         doctreedir=doctreedir, buildername=self._buildername,
+                         warning=warning)
+
+            # Ensure there are no errors with app creation.
+            assert warning.getvalue() == ''
 
             # Set root to the directory the testcase yaml is in, because the
             # filenames in yaml are relative to it.
