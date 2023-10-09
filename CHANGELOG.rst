@@ -6,6 +6,30 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Normalization of _Bool to bool
+* Symbolic dimensions to array documentation
+* Dockerfiles for running tests in more distros
+
+Changed
+~~~~~~~
+
+* Naming of typedef anonymous struct/union/enum to use typedef name instead of
+  generated ``@anonymous_*``
+
+Fixed
+~~~~~
+
+* setup.cfg license_file deprecation warning
+* Documentation intersphinx references to Sphinx documentation
+* Test suite docutils warnings
+* Test suite system include path for e.g. Fedora
+* Handling of anonymous struct/union/enum with libclang v16 and later
+* Workaround libclang tokenization issue
+* Running test suite with plain ``pytest`` in root directory
+
 Hawkmoth `0.15.0`_
 ------------------
 
