@@ -7,9 +7,13 @@ import sys
 import pytest
 import strictyaml
 
+from hawkmoth.util import compiler
+
 testext = '.yaml'
 testdir = os.path.dirname(os.path.abspath(__file__))
 rootdir = os.path.dirname(testdir)
+
+_clang_include_args = compiler.get_include_args()
 
 sys.path.insert(0, rootdir)
 
@@ -47,6 +51,8 @@ class Directive:
         # can use C sources for C++ tests. The yaml may override this in cases
         # where we want to force a mismatch.
         clang_args = ['-xc++'] if self.domain == 'cpp' else ['-xc']
+
+        clang_args.extend(_clang_include_args.copy())
 
         clang_args.extend(self.options.get('clang', []))
 
