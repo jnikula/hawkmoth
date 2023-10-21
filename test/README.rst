@@ -65,12 +65,12 @@ plugin parallelizes test execution.
 
 Running individual test approaches, for examples ``test_parser``::
 
-  $ pytest -k test_parser test
+  $ pytest -k test_parser
 
 Run individual test cases, for example ``struct``::
 
-  $ pytest -k [struct] test
+  $ pytest -k [struct]
 
 Combined, with verbose output, for example::
 
-  $ pytest -v -k test_cli[struct] test
+  $ pytest -v -k test_cli[struct]
