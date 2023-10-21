@@ -22,7 +22,8 @@ There are three test files, with different levels and approaches, run by
   Test the parser and the command-line interface. The documentation comments are
   extracted through the command-line interface.
 
-* ``test_text()`` and ``test_html()`` in ``test_cautodoc.py``
+* ``test_directive_text()`` and ``test_directive_html()`` in
+  ``test_cautodoc.py``
 
   Test the parser and the Sphinx extension, using two builders: text and
   html. The documentation comments are extracted through the Sphinx build
@@ -40,22 +41,23 @@ Test Cases
 
 The test functions described above are parametrized using what we call test
 cases. Each test case is defined by a ``.yaml`` file. The ``.yaml`` defines the
-configuration, the input C source file, the expected reStructuredText output
-file, and optionally a diagnostics (error messages) output file.
+configuration, the input C or C++ source file, the expected reStructuredText
+output file, and optionally a diagnostics (error messages) output file.
 
 The YAML is parsed using StrictYAML, using a schema defined in ``testenv.py``.
 
-The basename of the ``.yaml`` file becomes the parametrized test case name in
-``pytest``.
+The test approach, the relative path and the basename of the ``.yaml`` file
+define the parametrized test case name in ``pytest``, for example
+``test_parser[c/struct]``.
 
 Test Cases as Examples
 ----------------------
 
-The examples in the documentation are generated from test cases named
-``example-*``, ensuring the examples actually work.
+The examples in the documentation are generated from test cases under the
+``examples`` subdirectory, ensuring the examples actually work.
 
 ``make update-examples`` runs ``update-examples.py`` to generate
-``doc/examples.rst``.
+``doc/examples.rst`` from the example test cases.
 
 Running
 -------
@@ -67,10 +69,10 @@ Running individual test approaches, for examples ``test_parser``::
 
   $ pytest -k test_parser
 
-Run individual test cases, for example ``struct``::
+Run individual test cases, for example ``c/struct``::
 
-  $ pytest -k [struct]
+  $ pytest -k c/struct
 
 Combined, with verbose output, for example::
 
-  $ pytest -v -k test_cli[struct]
+  $ pytest -v -k test_cli[c/struct]
