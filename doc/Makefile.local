@@ -10,7 +10,7 @@ docdir := $(dir)
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
+SPHINXOPTS    ?= -t use-installed-hawkmoth
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = $(docdir)
 BUILDDIR      = $(docdir)/_build
