@@ -66,4 +66,4 @@ jobs:
       - name: Documentation build check
         run: |
           . venv
-          make SPHINXOPTS=-Wn html
+          make O=-Wn html
