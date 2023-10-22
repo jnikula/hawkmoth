@@ -1,6 +1,16 @@
 directives:
 - domain: c
-  directive: autodoc
+  directive: autostruct
   arguments:
-  - typedef-struct.c
+  - named
+  options:
+    file: typedef-struct.c
+    members:
+- domain: c
+  directive: autostruct
+  arguments:
+  - typedef_struct
+  options:
+    file: typedef-struct.c
+    members:
 expected: typedef-struct.rst
