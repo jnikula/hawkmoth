@@ -44,7 +44,7 @@ class _AutoBaseDirective(SphinxDirective):
             ErrorLevel.INFO: 'VERBOSE',
             ErrorLevel.WARNING: 'WARNING',
             ErrorLevel.ERROR: 'ERROR',
-            ErrorLevel.CRITICAL: 'CRITICAL',
+            ErrorLevel.CRITICAL: 'ERROR',
         }
 
         for error in errors:
