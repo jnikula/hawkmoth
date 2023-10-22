@@ -34,11 +34,11 @@ jobs:
       - name: Build docs
         run: |
           . venv
-          sphinx-build doc _build
+          make html
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.name }}
-          path: _build
+          path: doc/_build/html
           if-no-files-found: error
 
   deploy-docs:
