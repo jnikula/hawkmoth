@@ -6,6 +6,11 @@
 import os
 import sys
 
+# Use the installed Hawkmoth package for CI, testing, and Read the Docs, while
+# allowing documentation build using Hawkmoth from the source tree.
+if not tags.has('use-installed-hawkmoth') and 'READTHEDOCS' not in os.environ:
+    sys.path.insert(0, os.path.abspath('../src'))
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
