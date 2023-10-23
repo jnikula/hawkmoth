@@ -113,7 +113,12 @@ class Docstring():
 
     @staticmethod
     def _remove_comment_markers(lines):
-        """Remove comment markers and line prefixes from comment lines."""
+        """Remove comment markers and line prefixes from comment lines.
+
+        Return the number of lines removed from the beginning.
+        """
+        line_offset = 0
+
         lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
         lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
 
@@ -121,10 +126,13 @@ class Docstring():
         lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
 
         while lines and (not lines[0] or lines[0].isspace()):
+            line_offset += 1
             del lines[0]
 
         while lines and (not lines[-1] or lines[-1].isspace()):
             del lines[-1]
+
+        return line_offset
 
     @staticmethod
     def _nest(lines, nest):
@@ -143,10 +151,7 @@ class Docstring():
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
-        # FIXME: This changes the number of lines in output. This impacts the
-        # error reporting via meta['line']. Adjust meta to take this into
-        # account.
-        Docstring._remove_comment_markers(comment_lines)
+        line_offset = Docstring._remove_comment_markers(comment_lines)
 
         if process_docstring is not None:
             process_docstring(comment_lines)
@@ -161,6 +166,8 @@ class Docstring():
         if header_lines[-1] != '':
             header_lines.append('')
 
+        line_offset -= len(header_lines)
+
         lines = header_lines + comment_lines
 
         Docstring._nest(lines, self._nest)
@@ -169,7 +176,7 @@ class Docstring():
         if lines[-1] != '':
             lines.append('')
 
-        return lines
+        return lines, self.get_line() + line_offset
 
     def get_meta(self):
         return self._meta

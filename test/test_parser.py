@@ -111,7 +111,7 @@ class ParserTestcase(testenv.Testcase):
                 for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
                                             filter_names=_filter_names(directive)):
                     for docstr in docstrings.walk(filter_names=_filter_members(directive)):
-                        lines = docstr.get_docstring(process_docstring=process_docstring)
+                        lines, _ = docstr.get_docstring(process_docstring=process_docstring)
                         docs_str += '\n'.join(lines) + '\n'
 
         return docs_str, errors_str
