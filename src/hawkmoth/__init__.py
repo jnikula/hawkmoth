@@ -109,11 +109,11 @@ class _AutoBaseDirective(SphinxDirective):
                                     filter_names=self._get_names()):
             num_matches += 1
             for docstr in docstrings.walk(filter_names=self._get_members()):
-                lineoffset = docstr.get_line() - 1
-                lines = docstr.get_docstring(process_docstring=process_docstring)
+                lines, line_number = docstr.get_docstring(process_docstring=process_docstring)
                 for line in lines:
-                    viewlist.append(line, root.get_filename(), lineoffset)
-                    lineoffset += 1
+                    # viewlist line numbers are 0-based
+                    viewlist.append(line, root.get_filename(), line_number - 1)
+                    line_number += 1
 
         return num_matches
 
