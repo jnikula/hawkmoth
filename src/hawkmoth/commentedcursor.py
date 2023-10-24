@@ -460,22 +460,54 @@ class CommentedCursor:
         self._cursor = cursor
         self._comment = comment
 
+    def get_meta(self):
+        return _get_meta(self._comment, self._cursor)
+
+    def get_domain(self):
+        return self._domain
+
+    def get_comment(self):
+        return self._comment.spelling
+
+    def get_name(self):
+        return self._cursor.spelling
+
+    def get_decl_name(self):
+        return None
+
+    def get_args(self):
+        return None
+
+    def get_quals(self):
+        return ''
+
+    def get_type(self):
+        return self._cursor.type.spelling
+
 class TopLevelComment(CommentedCursor):
-    pass
+    def get_name(self):
+        return None
+
+    def get_type(self):
+        return None
 
 class MacroDefinition(CommentedCursor):
     def get_args(self):
         return _get_macro_args(self._cursor)
 
 class VarFieldDecl(CommentedCursor):
-    def var_type_fixup(self):
-        return _var_type_fixup(self._cursor, self._domain)
+    def get_type(self):
+        return _var_type_fixup(self._cursor, self._domain)[0]
+
+    def get_decl_name(self):
+        return _var_type_fixup(self._cursor, self._domain)[1]
 
 class TypedefDecl(CommentedCursor):
-    pass
+    def get_name(self):
+        return self.get_type()
 
 class CompoundDecl(CommentedCursor):
-    def type_definition_fixup(self):
+    def get_decl_name(self):
         return _type_definition_fixup(self._cursor)
 
 class EnumConstantDecl(CommentedCursor):
@@ -487,9 +519,18 @@ class EnumConstantDecl(CommentedCursor):
         return None
 
 class FunctionDecl(CommentedCursor):
-    def function_fixup(self):
-        return _function_fixup(self._cursor, self._domain)
+    def get_type(self):
+        return _function_fixup(self._cursor, self._domain)[0]
+
+    def get_args(self):
+        return _function_fixup(self._cursor, self._domain)[1]
 
 class MethodDecl(CommentedCursor):
-    def method_fixup(self):
-        return _method_fixup(self._cursor)
+    def get_type(self):
+        return _method_fixup(self._cursor)[0]
+
+    def get_args(self):
+        return _method_fixup(self._cursor)[1]
+
+    def get_quals(self):
+        return _method_fixup(self._cursor)[2]

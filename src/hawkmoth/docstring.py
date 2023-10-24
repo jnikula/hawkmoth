@@ -50,18 +50,16 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, domain='c', text=None, name=None,
-                 decl_name=None, ttype=None, args=None,
-                 quals=None, meta=None, nest=0):
-        self._text = text
-        self._name = name
-        self._decl_name = decl_name
-        self._ttype = ttype
-        self._args = args
-        self._quals = quals
-        self._meta = meta
+    def __init__(self, cc, nest=0):
+        self._text = cc.get_comment()
+        self._name = cc.get_name()
+        self._decl_name = cc.get_decl_name()
+        self._ttype = cc.get_type()
+        self._args = cc.get_args()
+        self._quals = cc.get_quals()
+        self._domain = cc.get_domain()
         self._nest = nest
-        self._domain = domain
+        self._meta = cc.get_meta()
         self._children = []
 
     def _match(self, filter_types=None, filter_names=None):
@@ -265,9 +263,20 @@ class _CompoundDocstring(Docstring):
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename=None, domain='c', clang_args=None):
-        super().__init__(domain=domain)
         self._filename = filename
+        self._domain = domain
         self._clang_args = clang_args
+        self._children = []
+
+        # FIXME
+        self._text = None
+        self._name = None
+        self._decl_name = None
+        self._ttype = None
+        self._args = None
+        self._quals = None
+        self._nest = 0
+        self._meta = None
 
     def get_filename(self):
         return self._filename
@@ -294,9 +303,9 @@ class EnumeratorDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:enumerator:: {name}{value}'
 
-    def __init__(self, domain, name, value, text, meta, nest):
-        self._value = value
-        super().__init__(domain=domain, name=name, text=text, meta=meta, nest=nest)
+    def __init__(self, cc, nest=0):
+        self._value = cc.get_value()
+        super().__init__(cc=cc, nest=nest)
 
     def _get_header_lines(self):
         value = f' = {self._value}' if self._value is not None else ''
