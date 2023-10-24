@@ -25,15 +25,6 @@ def _cursor_get_tokens(cursor):
 
     yield from tu.get_tokens(extent=extent)
 
-def _get_meta(comment, cursor=None):
-    meta = {'line': comment.extent.start.line}
-    if cursor:
-        meta['cursor.kind'] = cursor.kind
-        meta['cursor.displayname'] = cursor.displayname
-        meta['cursor.spelling'] = cursor.spelling
-
-    return meta
-
 # Return None for simple macros, a potentially empty list of arguments for
 # function-like macros
 def _get_macro_args(cursor):
@@ -461,7 +452,13 @@ class CommentedCursor:
         self._comment = comment
 
     def get_meta(self):
-        return _get_meta(self._comment, self._cursor)
+        meta = {'line': self._comment.extent.start.line}
+        if self._cursor:
+            meta['cursor.kind'] = self._cursor.kind
+            meta['cursor.displayname'] = self._cursor.displayname
+            meta['cursor.spelling'] = self._cursor.spelling
+
+        return meta
 
     def get_domain(self):
         return self._domain
