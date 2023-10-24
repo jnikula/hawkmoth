@@ -453,3 +453,43 @@ def _get_inheritance(cursor):
             inherited.append(f'{pad(access_spec)}{child.type.spelling}')
 
     return ': ' + ', '.join(inherited) if len(inherited) > 0 else None
+
+class CommentedCursor:
+    def __init__(self, domain=None, cursor=None, comment=None):
+        self._domain = domain
+        self._cursor = cursor
+        self._comment = comment
+
+class TopLevelComment(CommentedCursor):
+    pass
+
+class MacroDefinition(CommentedCursor):
+    def get_args(self):
+        return _get_macro_args(self._cursor)
+
+class VarFieldDecl(CommentedCursor):
+    def var_type_fixup(self):
+        return _var_type_fixup(self._cursor, self._domain)
+
+class TypedefDecl(CommentedCursor):
+    pass
+
+class CompoundDecl(CommentedCursor):
+    def type_definition_fixup(self):
+        return _type_definition_fixup(self._cursor)
+
+class EnumConstantDecl(CommentedCursor):
+    def get_value(self):
+        # Show enumerator value if it's explicitly set in source
+        if '=' in [t.spelling for t in _cursor_get_tokens(self._cursor)]:
+            return self._cursor.enum_value
+
+        return None
+
+class FunctionDecl(CommentedCursor):
+    def function_fixup(self):
+        return _function_fixup(self._cursor, self._domain)
+
+class MethodDecl(CommentedCursor):
+    def method_fixup(self):
+        return _method_fixup(self._cursor)

@@ -41,12 +41,15 @@ from clang.cindex import Diagnostic
 from hawkmoth import docstring
 from hawkmoth.commentedcursor import (
     _cursor_get_tokens,
-    _function_fixup,
-    _get_macro_args,
     _get_meta,
-    _method_fixup,
-    _type_definition_fixup,
-    _var_type_fixup,
+    CompoundDecl,
+    EnumConstantDecl,
+    FunctionDecl,
+    MacroDefinition,
+    MethodDecl,
+    TopLevelComment,
+    TypedefDecl,
+    VarFieldDecl,
 )
 
 class ErrorLevel(enum.IntEnum):
@@ -201,8 +204,9 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
     meta = _get_meta(comment, cursor)
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
-        # FIXME: check args against comment
-        args = _get_macro_args(cursor)
+        cc = MacroDefinition(domain, cursor, comment)
+
+        args = cc.get_args()
 
         if args is None:
             ds = docstring.MacroDocstring(domain=domain, text=text,
@@ -215,8 +219,10 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
+        cc = VarFieldDecl(domain, cursor, comment)
+
         # Note: Preserve original name
-        ttype, decl_name = _var_type_fixup(cursor, domain)
+        ttype, decl_name = cc.var_type_fixup()
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(domain=domain, text=text, nest=nest,
@@ -231,6 +237,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
+        cc = TypedefDecl(domain, cursor, comment)
 
         ds = docstring.TypeDocstring(domain=domain, text=text,
                                      nest=nest, name=ttype, meta=meta)
@@ -242,8 +249,9 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                          CursorKind.ENUM_DECL,
                          CursorKind.CLASS_DECL,
                          CursorKind.CLASS_TEMPLATE]:
+        cc = CompoundDecl(domain, cursor, comment)
 
-        decl_name = _type_definition_fixup(cursor)
+        decl_name = cc.type_definition_fixup()
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(domain=domain, text=text,
@@ -275,11 +283,9 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        # Show enumerator value if it's explicitly set in source
-        if '=' in [t.spelling for t in _cursor_get_tokens(cursor)]:
-            value = cursor.enum_value
-        else:
-            value = None
+        cc = EnumConstantDecl(domain, cursor, comment)
+
+        value = cc.get_value()
 
         ds = docstring.EnumeratorDocstring(domain=domain, name=name,
                                            value=value, text=text,
@@ -288,7 +294,10 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        ttype, args = _function_fixup(cursor, domain)
+        cc = FunctionDecl(domain, cursor, comment)
+
+        ttype, args = cc.function_fixup()
+
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
@@ -299,7 +308,10 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                          CursorKind.DESTRUCTOR,
                          CursorKind.CXX_METHOD,
                          CursorKind.FUNCTION_TEMPLATE]:
-        ttype, args, quals = _method_fixup(cursor)
+        cc = MethodDecl(domain, cursor, comment)
+
+        ttype, args, quals = cc.method_fixup()
+
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
@@ -312,6 +324,7 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
     errors.append(ParserError(ErrorLevel.WARNING, cursor.location.file.name,
                               cursor.location.line, message))
 
+    cc = TopLevelComment(comment=comment)
     ds = docstring.TextDocstring(text=text, meta=meta)
 
     return [ds]
@@ -394,6 +407,8 @@ def parse(filename, domain=None, clang_args=None):
     top_level_comments, comments = _comment_extract(tu)
 
     for comment in top_level_comments:
+        cc = TopLevelComment(comment=comment)
+
         text = comment.spelling
         meta = _get_meta(comment)
         ds = docstring.TextDocstring(text=text, meta=meta)
