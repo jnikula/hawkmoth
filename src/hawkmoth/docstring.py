@@ -51,15 +51,8 @@ class Docstring():
     _fmt = ''
 
     def __init__(self, cc, nest=0):
-        self._text = cc.get_comment()
-        self._name = cc.get_name()
-        self._decl_name = cc.get_decl_name()
-        self._ttype = cc.get_type()
-        self._args = cc.get_args()
-        self._quals = cc.get_quals()
-        self._domain = cc.get_domain()
+        self._cc = cc
         self._nest = nest
-        self._meta = cc.get_meta()
         self._children = []
 
     def _match(self, filter_types=None, filter_names=None):
@@ -72,7 +65,7 @@ class Docstring():
         return True
 
     def walk(self, recurse=True, filter_types=None, filter_names=None):
-        if self._text:
+        if self._cc is not None and self._cc.get_comment():
             yield self
 
     @staticmethod
@@ -82,14 +75,15 @@ class Docstring():
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        domain = self._domain
+        domain = self._cc.get_domain()
 
         header = self._fmt.format(domain=domain, name=name)
 
         return header.splitlines()
 
     def _get_comment_lines(self):
-        return statemachine.string2lines(self._text, 8, convert_whitespace=True)
+        comment = self._cc.get_comment()
+        return statemachine.string2lines(comment, 8, convert_whitespace=True)
 
     @staticmethod
     def _remove_comment_markers(lines):
@@ -159,16 +153,16 @@ class Docstring():
         return lines, self.get_line() + line_offset
 
     def get_meta(self):
-        return self._meta
+        return self._cc.get_meta()
 
     def _get_decl_name(self):
-        return self._decl_name if self._decl_name else self._name
+        return self._cc.get_decl_name() if self._cc.get_decl_name() else self._cc.get_name()
 
     def get_name(self):
-        return self._name
+        return self._cc.get_name()
 
     def get_line(self):
-        return self._meta['line']
+        return self.get_meta()['line']
 
 class TextDocstring(Docstring):
     _indent = 0
@@ -196,10 +190,10 @@ class TextDocstring(Docstring):
         Not perfect, but good enough.
         """
         # If the parser passed in a name, use it (unlikely)
-        if self._name:
-            return self._name
+        if self._cc.get_name():
+            self._cc.get_name()
 
-        mo = re.search(r'[\W_]*(?P<name>\w[^:.\n\r]*)', self._text)
+        mo = re.search(r'[\W_]*(?P<name>\w[^:.\n\r]*)', self._cc.get_comment())
 
         return mo.group('name') if mo else None
 
@@ -209,8 +203,8 @@ class VarDocstring(Docstring):
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        domain = self._domain
-        ttype = self._ttype
+        domain = self._cc.get_domain()
+        ttype = self._cc.get_type()
 
         type_spacer = ''
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
@@ -228,14 +222,14 @@ class TypeDocstring(Docstring):
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
         # If decl_name is empty, it means this is an anonymous declaration.
-        if self._decl_name is None:
+        if self._cc.get_decl_name() is None:
             # Sphinx expects @name for anonymous entities. The name must be both
             # stable and unique. Create one.
-            decl_name = hashlib.md5(f'{self._text}{self.get_line()}'.encode()).hexdigest()
+            decl_name = hashlib.md5(f'{self._cc.get_comment()}{self.get_line()}'.encode()).hexdigest()
 
             return f'@anonymous_{decl_name}'
 
-        return self._decl_name
+        return self._cc.get_decl_name()
 
     def add_child(self, comment):
         self._children.append(comment)
@@ -249,7 +243,7 @@ class _CompoundDocstring(Docstring):
         # grandchildren.
 
         # The contents of the parent will always be before children.
-        if self._text:
+        if self._cc is not None and self._cc.get_comment():
             yield self
 
         # Sort the children by order of appearance. We may add other sort
@@ -268,15 +262,8 @@ class RootDocstring(_CompoundDocstring):
         self._clang_args = clang_args
         self._children = []
 
-        # FIXME
-        self._text = None
-        self._name = None
-        self._decl_name = None
-        self._ttype = None
-        self._args = None
-        self._quals = None
+        self._cc = None
         self._nest = 0
-        self._meta = None
 
     def get_filename(self):
         return self._filename
@@ -303,13 +290,12 @@ class EnumeratorDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:enumerator:: {name}{value}'
 
-    def __init__(self, cc, nest=0):
-        self._value = cc.get_value()
-        super().__init__(cc=cc, nest=nest)
-
     def _get_header_lines(self):
-        value = f' = {self._value}' if self._value is not None else ''
-        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(),
+        domain = self._cc.get_domain()
+        value = self._cc.get_value()
+        value = f' = {value}' if value is not None else ''
+
+        header = self._fmt.format(domain=domain, name=self._get_decl_name(),
                                   value=value)
 
         return header.splitlines()
@@ -320,8 +306,8 @@ class MemberDocstring(Docstring):
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        domain = self._domain
-        ttype = self._ttype
+        domain = self._cc.get_domain()
+        ttype = self._cc.get_type()
 
         type_spacer = ''
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
@@ -342,7 +328,7 @@ class MacroFunctionDocstring(Docstring):
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        args = ', '.join([n for _, n in self._args])
+        args = ', '.join([n for _, n in self._cc.get_args()])
 
         header = self._fmt.format(name=name, args=args)
 
@@ -354,9 +340,9 @@ class FunctionDocstring(Docstring):
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        domain = self._domain
-        ttype = self._ttype
-        quals = self._quals
+        domain = self._cc.get_domain()
+        ttype = self._cc.get_type()
+        quals = self._cc.get_quals()
 
         type_spacer = ''
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
@@ -367,10 +353,10 @@ class FunctionDocstring(Docstring):
             quals_spacer = ' '
 
         args = ''
-        if self._args and len(self._args) > 0:
+        if self._cc.get_args() and len(self._cc.get_args()) > 0:
             pad_type = lambda t: '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
             arg_fmt = lambda t, n: f"{t}{pad_type(t)}{n}"
-            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
+            args = ', '.join([arg_fmt(t, n) for t, n in self._cc.get_args()])
 
         header = self._fmt.format(domain=domain, name=name, ttype=ttype,
                                   type_spacer=type_spacer, args=args,
