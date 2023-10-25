@@ -361,13 +361,16 @@ class CommentedCursor:
         self._comment = comment
 
     def get_meta(self):
-        meta = {'line': self._comment.extent.start.line}
+        meta = {'line': self.get_line()}
         if self._cursor:
             meta['cursor.kind'] = self._cursor.kind
             meta['cursor.displayname'] = self._cursor.displayname
             meta['cursor.spelling'] = self._cursor.spelling
 
         return meta
+
+    def get_line(self):
+        return self._comment.extent.start.line
 
     def get_domain(self):
         return self._domain

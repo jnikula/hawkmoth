@@ -162,7 +162,7 @@ class Docstring():
         return self._cc.get_name()
 
     def get_line(self):
-        return self.get_meta()['line']
+        return self._cc.get_line()
 
 class TextDocstring(Docstring):
     _indent = 0
