@@ -356,32 +356,6 @@ def _get_args(cursor, domain):
 
     return args
 
-def _method_fixup(cursor):
-    """Parse additional details of a method declaration."""
-    args = _get_args(cursor, 'cpp')
-
-    full_type = []
-
-    access_spec = _get_access_specifier(cursor)
-    if access_spec:
-        full_type.append(access_spec)
-
-    pre_quals, pos_quals = _get_method_quals(cursor)
-
-    full_type.extend(pre_quals)
-
-    template_line = _get_template_line(cursor)
-    if template_line:
-        full_type.append(template_line)
-
-    if cursor.kind not in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
-        full_type.append(cursor.result_type.spelling)
-
-    ttype = ' '.join(full_type)
-    quals = ' '.join(pos_quals)
-
-    return ttype, args, quals
-
 def _get_inheritance(cursor):
     """Get the full inheritance list of a cursor in C++ syntax.
 
@@ -521,11 +495,37 @@ class FunctionDecl(CommentedCursor):
         return self._function_fixup()[1]
 
 class MethodDecl(CommentedCursor):
+    def _method_fixup(self):
+        """Parse additional details of a method declaration."""
+        args = _get_args(self._cursor, 'cpp')
+
+        full_type = []
+
+        access_spec = _get_access_specifier(self._cursor)
+        if access_spec:
+            full_type.append(access_spec)
+
+        pre_quals, pos_quals = _get_method_quals(self._cursor)
+
+        full_type.extend(pre_quals)
+
+        template_line = _get_template_line(self._cursor)
+        if template_line:
+            full_type.append(template_line)
+
+        if self._cursor.kind not in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
+            full_type.append(self._cursor.result_type.spelling)
+
+        ttype = ' '.join(full_type)
+        quals = ' '.join(pos_quals)
+
+        return ttype, args, quals
+
     def get_type(self):
-        return _method_fixup(self._cursor)[0]
+        return self._method_fixup()[0]
 
     def get_args(self):
-        return _method_fixup(self._cursor)[1]
+        return self._method_fixup()[1]
 
     def get_quals(self):
-        return _method_fixup(self._cursor)[2]
+        return self._method_fixup()[2]
