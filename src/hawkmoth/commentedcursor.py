@@ -431,11 +431,15 @@ class MacroDefinition(CommentedCursor):
         return None
 
 class VarFieldDecl(CommentedCursor):
+    def __init__(self, domain=None, cursor=None, comment=None):
+        super().__init__(domain=domain, cursor=cursor, comment=comment)
+        self._type, self._decl_name = _var_type_fixup(self._cursor, self._domain)
+
     def get_type(self):
-        return _var_type_fixup(self._cursor, self._domain)[0]
+        return self._type
 
     def get_decl_name(self):
-        return _var_type_fixup(self._cursor, self._domain)[1]
+        return self._decl_name
 
 class TypedefDecl(CommentedCursor):
     def get_name(self):
