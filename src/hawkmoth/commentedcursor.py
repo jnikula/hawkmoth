@@ -489,11 +489,15 @@ class FunctionDecl(_CallableDecl):
 
         return ttype, args
 
+    def __init__(self, domain=None, cursor=None, comment=None):
+        super().__init__(domain=domain, cursor=cursor, comment=comment)
+        self._type, self._args = self._function_fixup()
+
     def get_type(self):
-        return self._function_fixup()[0]
+        return self._type
 
     def get_args(self):
-        return self._function_fixup()[1]
+        return self._args
 
 class MethodDecl(_CallableDecl):
     def _method_fixup(self):
@@ -525,11 +529,15 @@ class MethodDecl(_CallableDecl):
 
         return ttype, args, quals
 
+    def __init__(self, domain=None, cursor=None, comment=None):
+        super().__init__(domain=domain, cursor=cursor, comment=comment)
+        self._type, self._args, self._quals = self._method_fixup()
+
     def get_type(self):
-        return self._method_fixup()[0]
+        return self._type
 
     def get_args(self):
-        return self._method_fixup()[1]
+        return self._args
 
     def get_quals(self):
-        return self._method_fixup()[2]
+        return self._quals
