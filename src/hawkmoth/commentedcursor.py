@@ -25,37 +25,6 @@ def _cursor_get_tokens(cursor):
 
     yield from tu.get_tokens(extent=extent)
 
-# Return None for simple macros, a potentially empty list of arguments for
-# function-like macros
-def _get_macro_args(cursor):
-    if cursor.kind != CursorKind.MACRO_DEFINITION:
-        return None
-
-    tokens = _cursor_get_tokens(cursor)
-
-    # Use the first two tokens to make sure this starts with 'IDENTIFIER('
-    one = next(tokens)
-    two = next(tokens, None)
-    if two is None or one.extent.end != two.extent.start or two.spelling != '(':
-        return None
-
-    # Naïve parsing of macro arguments
-    # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
-    args = []
-    for token in tokens:
-        if token.spelling == ')':
-            return args
-        elif token.spelling == ',':
-            continue
-        elif token.kind == TokenKind.IDENTIFIER:
-            args.extend([('', token.spelling)])
-        elif token.spelling == '...':
-            args.extend([('', token.spelling)])
-        else:
-            break
-
-    return None
-
 def _get_storage_class(cursor):
     """Get the storage class of a cursor.
 
@@ -490,7 +459,36 @@ class TopLevelComment(CommentedCursor):
 
 class MacroDefinition(CommentedCursor):
     def get_args(self):
-        return _get_macro_args(self._cursor)
+        """Return None for simple macros, a potentially empty list of arguments
+        for function-like macros."""
+
+        if self._cursor.kind != CursorKind.MACRO_DEFINITION:
+            return None
+
+        tokens = _cursor_get_tokens(self._cursor)
+
+        # Use the first two tokens to make sure this starts with 'IDENTIFIER('
+        one = next(tokens)
+        two = next(tokens, None)
+        if two is None or one.extent.end != two.extent.start or two.spelling != '(':
+            return None
+
+        # Naïve parsing of macro arguments
+        # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
+        args = []
+        for token in tokens:
+            if token.spelling == ')':
+                return args
+            elif token.spelling == ',':
+                continue
+            elif token.kind == TokenKind.IDENTIFIER:
+                args.extend([('', token.spelling)])
+            elif token.spelling == '...':
+                args.extend([('', token.spelling)])
+            else:
+                break
+
+        return None
 
 class VarFieldDecl(CommentedCursor):
     def get_type(self):
