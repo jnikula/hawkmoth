@@ -338,24 +338,6 @@ def _type_definition_fixup(cursor):
 
     return f'{template}{cursor.spelling}{colon_suffix}'
 
-def _get_args(cursor, domain):
-    """Get function / method arguments."""
-    args = []
-
-    # Only fully prototyped functions will have argument lists to process.
-    if cursor.type.kind == TypeKind.FUNCTIONPROTO:
-        for c in cursor.get_children():
-            if c.kind == CursorKind.PARM_DECL:
-                arg_ttype, arg_name = _var_type_fixup(c, domain)
-                args.extend([(arg_ttype, arg_name)])
-
-        if cursor.type.is_function_variadic():
-            args.extend([('', '...')])
-        if len(args) == 0:
-            args.extend([('', 'void')])
-
-    return args
-
 def _get_inheritance(cursor):
     """Get the full inheritance list of a cursor in C++ syntax.
 
@@ -471,10 +453,29 @@ class EnumConstantDecl(CommentedCursor):
 
         return None
 
-class FunctionDecl(CommentedCursor):
+class _CallableDecl(CommentedCursor):
+    def _get_args(self):
+        """Get function / method arguments."""
+        args = []
+
+        # Only fully prototyped functions will have argument lists to process.
+        if self._cursor.type.kind == TypeKind.FUNCTIONPROTO:
+            for c in self._cursor.get_children():
+                if c.kind == CursorKind.PARM_DECL:
+                    arg_ttype, arg_name = _var_type_fixup(c, self._domain)
+                    args.extend([(arg_ttype, arg_name)])
+
+            if self._cursor.type.is_function_variadic():
+                args.extend([('', '...')])
+            if len(args) == 0:
+                args.extend([('', 'void')])
+
+        return args
+
+class FunctionDecl(_CallableDecl):
     def _function_fixup(self):
         """Parse additional details of a function declaration."""
-        args = _get_args(self._cursor, self._domain)
+        args = self._get_args()
 
         full_type = _get_function_quals(self._cursor)
 
@@ -494,10 +495,13 @@ class FunctionDecl(CommentedCursor):
     def get_args(self):
         return self._function_fixup()[1]
 
-class MethodDecl(CommentedCursor):
+class MethodDecl(_CallableDecl):
     def _method_fixup(self):
         """Parse additional details of a method declaration."""
-        args = _get_args(self._cursor, 'cpp')
+
+        assert self._domain == 'cpp'
+
+        args = self._get_args()
 
         full_type = []
 
