@@ -356,22 +356,6 @@ def _get_args(cursor, domain):
 
     return args
 
-def _function_fixup(cursor, domain):
-    """Parse additional details of a function declaration."""
-    args = _get_args(cursor, domain)
-
-    full_type = _get_function_quals(cursor)
-
-    template_line = _get_template_line(cursor)
-    if template_line:
-        full_type.append(template_line)
-
-    full_type.append(_normalize_type(cursor.result_type.spelling))
-
-    ttype = ' '.join(full_type)
-
-    return ttype, args
-
 def _method_fixup(cursor):
     """Parse additional details of a method declaration."""
     args = _get_args(cursor, 'cpp')
@@ -514,11 +498,27 @@ class EnumConstantDecl(CommentedCursor):
         return None
 
 class FunctionDecl(CommentedCursor):
+    def _function_fixup(self):
+        """Parse additional details of a function declaration."""
+        args = _get_args(self._cursor, self._domain)
+
+        full_type = _get_function_quals(self._cursor)
+
+        template_line = _get_template_line(self._cursor)
+        if template_line:
+            full_type.append(template_line)
+
+        full_type.append(_normalize_type(self._cursor.result_type.spelling))
+
+        ttype = ' '.join(full_type)
+
+        return ttype, args
+
     def get_type(self):
-        return _function_fixup(self._cursor, self._domain)[0]
+        return self._function_fixup()[0]
 
     def get_args(self):
-        return _function_fixup(self._cursor, self._domain)[1]
+        return self._function_fixup()[1]
 
 class MethodDecl(CommentedCursor):
     def get_type(self):
