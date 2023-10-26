@@ -449,6 +449,9 @@ class TypedefDecl(CommentedCursor):
         return self.get_type()
 
 class CompoundDecl(CommentedCursor):
+    def get_name(self):
+        return self._cursor.spelling if self._cursor.spelling else self.get_decl_name()
+
     def get_decl_name(self):
         return _type_definition_fixup(self._cursor)
 
