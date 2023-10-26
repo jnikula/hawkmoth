@@ -74,7 +74,7 @@ class Docstring():
         return comment.startswith('/**') and comment != '/**/'
 
     def _get_header_lines(self):
-        name = self._get_decl_name()
+        name = self._cc.get_decl_name()
         domain = self._cc.get_domain()
 
         header = self._fmt.format(domain=domain, name=name)
@@ -155,9 +155,6 @@ class Docstring():
     def get_meta(self):
         return self._cc.get_meta()
 
-    def _get_decl_name(self):
-        return self._cc.get_decl_name() if self._cc.get_decl_name() else self._cc.get_name()
-
     def get_name(self):
         return self._cc.get_name()
 
@@ -202,7 +199,7 @@ class VarDocstring(Docstring):
     _fmt = '.. {domain}:var:: {ttype}{type_spacer}{name}'
 
     def _get_header_lines(self):
-        name = self._get_decl_name()
+        name = self._cc.get_decl_name()
         domain = self._cc.get_domain()
         ttype = self._cc.get_type()
 
@@ -220,16 +217,19 @@ class TypeDocstring(Docstring):
     _fmt = '.. {domain}:type:: {name}'
 
 class _CompoundDocstring(Docstring):
-    def _get_decl_name(self):
-        # If decl_name is empty, it means this is an anonymous declaration.
-        if self._cc.get_decl_name() is None:
+    def _get_header_lines(self):
+        name = self._cc.get_decl_name()
+        if name is None:
             # Sphinx expects @name for anonymous entities. The name must be both
             # stable and unique. Create one.
-            decl_name = hashlib.md5(f'{self._cc.get_comment()}{self.get_line()}'.encode()).hexdigest()
+            name = hashlib.md5(f'{self._cc.get_comment()}{self.get_line()}'.encode()).hexdigest()
+            name = f'@anonymous_{name}'
 
-            return f'@anonymous_{decl_name}'
+        domain = self._cc.get_domain()
 
-        return self._cc.get_decl_name()
+        header = self._fmt.format(domain=domain, name=name)
+
+        return header.splitlines()
 
     def add_child(self, comment):
         self._children.append(comment)
@@ -292,11 +292,11 @@ class EnumeratorDocstring(Docstring):
 
     def _get_header_lines(self):
         domain = self._cc.get_domain()
+        name = self._cc.get_decl_name()
         value = self._cc.get_value()
         value = f' = {value}' if value is not None else ''
 
-        header = self._fmt.format(domain=domain, name=self._get_decl_name(),
-                                  value=value)
+        header = self._fmt.format(domain=domain, name=name, value=value)
 
         return header.splitlines()
 
@@ -305,7 +305,7 @@ class MemberDocstring(Docstring):
     _fmt = '.. {domain}:member:: {ttype}{type_spacer}{name}'
 
     def _get_header_lines(self):
-        name = self._get_decl_name()
+        name = self._cc.get_decl_name()
         domain = self._cc.get_domain()
         ttype = self._cc.get_type()
 
@@ -327,7 +327,7 @@ class MacroFunctionDocstring(Docstring):
     _fmt = '.. c:macro:: {name}({args})'
 
     def _get_header_lines(self):
-        name = self._get_decl_name()
+        name = self._cc.get_decl_name()
         args = ', '.join([n for _, n in self._cc.get_args()])
 
         header = self._fmt.format(name=name, args=args)
@@ -339,7 +339,7 @@ class FunctionDocstring(Docstring):
     _fmt = '.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}'
 
     def _get_header_lines(self):
-        name = self._get_decl_name()
+        name = self._cc.get_decl_name()
         domain = self._cc.get_domain()
         ttype = self._cc.get_type()
         quals = self._cc.get_quals()

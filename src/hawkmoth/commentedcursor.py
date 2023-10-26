@@ -382,7 +382,7 @@ class CommentedCursor:
         return self._cursor.spelling
 
     def get_decl_name(self):
-        return None
+        return self.get_name()
 
     def get_args(self):
         return None
