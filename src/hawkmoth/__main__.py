@@ -24,6 +24,16 @@ def _process_docstring(args, lines):
     text = doccompat.convert(text, transform=args.compat)
     lines[:] = [line for line in text.splitlines()]
 
+def _read_version():
+    try:
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                               'VERSION')) as version_file:
+            version = version_file.read().strip()
+    except OSError:
+        version = '(unknown version)'
+
+    return version
+
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
     Hawkmoth parser debug tool. Print the documentation comments extracted
@@ -45,6 +55,9 @@ def main():
                         help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')  # noqa: E501
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
+    parser.add_argument('--version', action='version',
+                        version=f'%(prog)s {_read_version()}',
+                        help='Show version and exit')
     args = parser.parse_args()
 
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
