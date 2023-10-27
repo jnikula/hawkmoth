@@ -47,7 +47,6 @@ def main():
                         help='Verbose output.')
     args = parser.parse_args()
 
-    comments, errors = parse(args.file, clang_args=args.clang)
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
     process_docstring = lambda lines: _process_docstring(args, lines)
