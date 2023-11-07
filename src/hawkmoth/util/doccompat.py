@@ -23,9 +23,21 @@ def javadoc(comment):
     # @param[direction]
     comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
                      "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
+    # @tparam
+    comment = re.sub(r"(?m)^([ \t]*)@tparam([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:tparam\\2\\3:\\4", comment)
     # @return
     comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
                      "\n\\1:return:\\2", comment)
+    # @retval
+    comment = re.sub(r"(?m)^([ \t]*)@retvals?([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:retval\\2\\3:\\4", comment)
+    # @throw
+    comment = re.sub(r"(?m)^([ \t]*)@thows?([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:throw\\2\\3:\\4", comment)
+    # @exception
+    comment = re.sub(r"(?m)^([ \t]*)@exception([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
+                     "\n\\1:throw\\2\\3:\\4", comment)
     # @code/@endcode blocks. Works if the code is indented.
     comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
                      "\n::\n", comment)
