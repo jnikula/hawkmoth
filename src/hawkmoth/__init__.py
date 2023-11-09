@@ -53,9 +53,7 @@ class _AutoBaseDirective(SphinxDirective):
                             location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
-        # Always pass `-xc++` to the compiler on 'cpp' domain as the first
-        # option so that the user can override it.
-        clang_args = ['-xc++'] if self._domain == 'cpp' else []
+        clang_args = []
 
         clang_args.extend(self.env.config.hawkmoth_clang.copy())
 
