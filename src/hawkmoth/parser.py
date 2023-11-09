@@ -805,6 +805,18 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
 
     return ret
 
+def _language_option(filename, domain):
+    """Return clang -x<language> option depending on domain and filename."""
+    if domain == 'cpp':
+        language = '-xc++'
+    else:
+        language = '-xc'
+
+    if os.path.splitext(filename)[1] in ['.h', '.H', '.hh', '.hpp', '.hxx']:
+        language += '-header'
+
+    return language
+
 # Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, domain=None, clang_args=None):
     # Empty root comment with just children
@@ -813,8 +825,14 @@ def parse(filename, domain=None, clang_args=None):
     errors = []
     index = Index.create()
 
+    # Note: Preserve the passed in clang_args in RootDocstring, as it's used for
+    # filtering by the callers
+    full_args = [_language_option(filename, domain)]
+    if clang_args:
+        full_args.extend(clang_args)
+
     try:
-        tu = index.parse(filename, args=clang_args,
+        tu = index.parse(filename, args=full_args,
                          options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD |
                          TranslationUnit.PARSE_SKIP_FUNCTION_BODIES)
     except TranslationUnitLoadError as e:

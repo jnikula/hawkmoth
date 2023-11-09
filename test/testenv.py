@@ -47,10 +47,7 @@ class Directive:
         return directive_str
 
     def get_clang_args(self):
-        # Default to compile as C++ if the test is for the C++ domain so that we
-        # can use C sources for C++ tests. The yaml may override this in cases
-        # where we want to force a mismatch.
-        clang_args = ['-xc++'] if self.domain == 'cpp' else ['-xc']
+        clang_args = []
 
         clang_args.extend(_clang_include_args.copy())
 
