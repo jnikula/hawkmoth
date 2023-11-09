@@ -77,7 +77,7 @@ class ParserTestcase(testenv.Testcase):
 
             clang_args = directive.get_clang_args()
 
-            key = (filename, tuple(clang_args))
+            key = (filename, directive.domain, tuple(clang_args))
             if key in roots:
                 continue
 
@@ -91,10 +91,14 @@ class ParserTestcase(testenv.Testcase):
         for directive in self.directives:
             filename = directive.get_input_filename()
             filter_filenames = [filename] if filename is not None else None
+            filter_domains = [directive.domain]
             filter_clang_args = [directive.get_clang_args()]
 
             for root in roots.values():
                 if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                    continue
+
+                if filter_domains is not None and root.get_domain() not in filter_domains:
                     continue
 
                 if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
