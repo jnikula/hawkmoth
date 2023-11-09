@@ -69,8 +69,8 @@ class _AutoBaseDirective(SphinxDirective):
         # Cached parse results per rst document
         parsed_files = self.env.temp_data.setdefault('hawkmoth_parsed_files', {})
 
-        # The output depends on clang args
-        key = (filename, tuple(clang_args))
+        # The output depends on domain and clang args
+        key = (filename, self._domain, tuple(clang_args))
 
         if key in parsed_files:
             return
@@ -85,11 +85,15 @@ class _AutoBaseDirective(SphinxDirective):
 
         parsed_files[key] = docstrings
 
-    def __parsed_files(self, filter_filenames=None, filter_clang_args=None):
+    def __parsed_files(self, filter_filenames=None, filter_domains=None,
+                       filter_clang_args=None):
         parsed_files = self.env.temp_data.get('hawkmoth_parsed_files', {})
 
         for root in parsed_files.values():
             if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                continue
+
+            if filter_domains is not None and root.get_domain() not in filter_domains:
                 continue
 
             if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
@@ -121,6 +125,7 @@ class _AutoBaseDirective(SphinxDirective):
     def __get_docstrings(self, viewlist):
         num_matches = 0
         for root in self.__parsed_files(filter_filenames=self._get_filenames(),
+                                        filter_domains=[self._domain],
                                         filter_clang_args=[self.__get_clang_args()]):
             num_matches += self.__get_docstrings_for_root(viewlist, root)
 
