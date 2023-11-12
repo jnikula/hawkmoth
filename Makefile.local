@@ -17,15 +17,10 @@ dir := .
 
 RST := $(RST) CHANGELOG.rst CONTRIBUTING.rst README.rst
 
-FLAKE8_IGNORE=\
-	E302,\
-	E305,\
-	E731
-
 # Static analysis
 .PHONY: check
 check:
-	flake8 --extend-ignore="$(FLAKE8_IGNORE)" --max-line-length=100 src/hawkmoth test
+	flake8 src/hawkmoth test
 
 .PHONY: check-rst
 check-rst:
