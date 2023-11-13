@@ -65,7 +65,7 @@ class CliTestcase(testenv.Testcase):
 
             transform = directive.options.get('transform')
             if transform is not None:
-                pytest.skip('cli does not support generic transformations')
+                args += [f'--process-docstring={transform}']
 
             clang_args = directive.get_clang_args()
             if clang_args:
