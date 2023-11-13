@@ -11,6 +11,12 @@ def _process_docstring(app, lines, transform, options):
     comment = javadoc_liberal(comment)
     lines[:] = comment.splitlines()[:]
 
+def process_docstring(lines):
+    """Simple interface for CLI and testing."""
+    comment = '\n'.join(lines)
+    comment = javadoc_liberal(comment)
+    lines[:] = comment.splitlines()[:]
+
 def setup(app):
     app.setup_extension('hawkmoth')
 
