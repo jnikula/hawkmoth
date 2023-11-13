@@ -4,28 +4,23 @@
 
 import os
 
-from sphinx.ext import napoleon
 import pytest
 
 from hawkmoth import docstring
+from hawkmoth.ext import javadoc
+from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
-from hawkmoth.util import doccompat
 from test import testenv
 
-def napoleon_transform(comment):
-    config = napoleon.Config(napoleon_use_rtype=False)
-    return str(napoleon.docstring.GoogleDocstring(comment, config))
-
-parser_transformations = {
-    'napoleon': napoleon_transform,
-    'javadoc': doccompat.javadoc_liberal,
-}
-
 def _process_docstring(transform, lines):
-    if transform:
-        text = '\n'.join(lines)
-        text = transform(text)
-        lines[:] = [line for line in text.splitlines()]
+    transformations = {
+        'napoleon': napoleon.process_docstring,
+        'javadoc': javadoc.process_docstring,
+    }
+
+    fn = transformations.get(transform)
+    if fn:
+        fn(lines)
 
 def _filter_types(directive):
     types = {
@@ -104,12 +99,7 @@ class ParserTestcase(testenv.Testcase):
                 if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
                     continue
 
-                tropt = directive.options.get('transform')
-                if tropt is not None:
-                    transform = parser_transformations[tropt]
-                else:
-                    transform = None
-
+                transform = directive.options.get('transform')
                 process_docstring = lambda lines: _process_docstring(transform, lines)
 
                 for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
