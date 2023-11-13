@@ -11,6 +11,8 @@ import argparse
 import os
 import sys
 
+from hawkmoth.ext import javadoc
+from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
 from hawkmoth.util import doccompat
 
@@ -19,7 +21,17 @@ def filename(file):
         return file
     raise ValueError
 
-def _process_docstring(args, lines):
+def _process_docstring(transform, lines):
+    transformations = {
+        'napoleon': napoleon.process_docstring,
+        'javadoc': javadoc.process_docstring,
+    }
+
+    fn = transformations.get(transform)
+    if fn:
+        fn(lines)
+
+def _process_docstring_compat(args, lines):
     text = '\n'.join(lines)
     text = doccompat.convert(text, transform=args.compat)
     lines[:] = [line for line in text.splitlines()]
@@ -45,11 +57,20 @@ def main():
                         choices=['c', 'cpp'],
                         default='c',
                         help='Sphinx domain to be used.')
-    parser.add_argument('--compat',
-                        choices=['none',
-                                 'javadoc-basic',
-                                 'javadoc-liberal',
-                                 'kernel-doc'],
+    compat = parser.add_mutually_exclusive_group()
+    compat.add_argument('--process-docstring',
+                        choices=[
+                            'javadoc',
+                            'napoleon',
+                        ],
+                        help='Process docstring.')
+    compat.add_argument('--compat',
+                        choices=[
+                            'none',
+                            'javadoc-basic',
+                            'javadoc-liberal',
+                            'kernel-doc'
+                        ],
                         help='Compatibility options. See cautodoc_compat.')
     parser.add_argument('--clang', metavar='PARAM', action='append',
                         help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')  # noqa: E501
@@ -62,7 +83,10 @@ def main():
 
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
-    process_docstring = lambda lines: _process_docstring(args, lines)
+    if args.process_docstring:
+        process_docstring = lambda lines: _process_docstring(args.process_docstring, lines)
+    else:
+        process_docstring = lambda lines: _process_docstring_compat(args, lines)
 
     for comment in comments.walk():
         if args.verbose:
