@@ -29,36 +29,110 @@ class DocCursor:
     def __init__(self, domain=None, cursor=None, comments=None):
         self._comments = comments if comments else {}
         self._cc = cursor
-
-        self.domain = domain
-        self.hash = self._cc.hash
-        self.kind = self._cc.kind
+        self._domain = domain
 
         if self._cc.hash in self._comments:
-            self.comment = self._comments[self._cc.hash]
+            self._comment = self._comments[self._cc.hash]
         else:
-            self.comment = None
-
-        self.displayname = self._cc.displayname
-        if self._cc.kind == CursorKind.ENUM_CONSTANT_DECL:
-            if '=' in [t.spelling for t in self.get_tokens()]:
-                self.enum_value = self._cc.enum_value
-            else:
-                self.enum_value = None
-        self.is_scoped_enum = self._cc.is_scoped_enum
-        self.spelling = self._cc.spelling
-        self.type = self._cc.type
+            self._comment = None
 
     def __hash__(self):
         return self._cc.hash
 
-    def get_meta(self):
+    @property
+    def meta(self):
         return {
-            'line': self.comment.extent.start.line if self.comment else '',
+            'line': self.line,
             'cursor.kind': self._cc.kind,
             'cursor.displayname': self._cc.displayname,
             'cursor.spelling': self._cc.spelling,
         }
+
+    @property
+    def comment(self):
+        return self._comment.spelling if self._comment else None
+
+    @property
+    def domain(self):
+        return self._domain
+
+    @property
+    def kind(self):
+        return self._cc.kind
+
+    @property
+    def name(self):
+        return self._cc.spelling
+
+    @property
+    def decl_name(self):
+        if self._cc.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
+            return self._var_type_fixup(self)[1]
+        if self._cc.kind in [CursorKind.STRUCT_DECL,
+                             CursorKind.UNION_DECL,
+                             CursorKind.ENUM_DECL,
+                             CursorKind.CLASS_DECL,
+                             CursorKind.CLASS_TEMPLATE]:
+            return self._type_definition_fixup()
+        else:
+            return self.name
+
+    @property
+    def type(self):
+        if self._cc.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
+            return self._var_type_fixup(self)[0]
+        if self._cc.kind == CursorKind.FUNCTION_DECL:
+            return self._function_fixup()
+        if self._cc.kind in [CursorKind.CONSTRUCTOR,
+                             CursorKind.DESTRUCTOR,
+                             CursorKind.CXX_METHOD,
+                             CursorKind.FUNCTION_TEMPLATE]:
+            return self._method_fixup()
+        else:
+            return self._cc.type.spelling
+
+    @property
+    def line(self):
+        return self._comment.extent.start.line if self._comment else None
+
+    @property
+    def args(self):
+        if self._cc.kind == CursorKind.MACRO_DEFINITION:
+            return self._get_macro_args()
+        if self._cc.kind in [CursorKind.FUNCTION_DECL,
+                             CursorKind.CONSTRUCTOR,
+                             CursorKind.DESTRUCTOR,
+                             CursorKind.CXX_METHOD,
+                             CursorKind.FUNCTION_TEMPLATE]:
+            return self._get_fn_args()
+        else:
+            return None
+
+    @property
+    def quals(self):
+        if self._cc.kind == CursorKind.FUNCTION_DECL:
+            return ''
+        if self._cc.kind in [CursorKind.CONSTRUCTOR,
+                             CursorKind.DESTRUCTOR,
+                             CursorKind.CXX_METHOD,
+                             CursorKind.FUNCTION_TEMPLATE]:
+            return ' '.join(self._get_method_quals()[1])
+        else:
+            return None
+
+    @property
+    def is_scoped_enum(self):
+        return self._cc.is_scoped_enum()
+
+    @property
+    def value(self):
+        if self._cc.kind == CursorKind.ENUM_CONSTANT_DECL:
+            if '=' in [t.spelling for t in self.get_tokens()]:
+                return self._cc.enum_value
+            else:
+                return None
+        else:
+            return None
 
     def get_children(self):
         """Get children cursors."""
@@ -102,17 +176,7 @@ class DocCursor:
 
         yield from tu.get_tokens(extent=extent)
 
-    def var_type_fixup(self):
-        """Fix non trivial variable and argument types.
-
-        If this is an array, the dimensions should be applied to the name, not
-        the type. If this is a function pointer, or an array of function
-        pointers, the name should be within the parenthesis as in ``(*name)``
-        or ``(*name[N])``.
-        """
-        return self._var_type_fixup(self)
-
-    def get_args(self):
+    def _get_fn_args(self):
         """Get function / method arguments."""
         args = []
 
@@ -130,10 +194,8 @@ class DocCursor:
 
         return args
 
-    def function_fixup(self):
+    def _function_fixup(self):
         """Parse additional details of a function declaration."""
-        args = self.get_args()
-
         full_type = self._get_function_quals()
 
         template_line = self._get_template_line()
@@ -144,19 +206,17 @@ class DocCursor:
 
         ttype = ' '.join(full_type)
 
-        return ttype, args
+        return ttype
 
-    def method_fixup(self):
+    def _method_fixup(self):
         """Parse additional details of a method declaration."""
-        args = self.get_args()
-
         full_type = []
 
         access_spec = self._get_access_specifier()
         if access_spec:
             full_type.append(access_spec)
 
-        pre_quals, pos_quals = self._get_method_quals()
+        pre_quals, _ = self._get_method_quals()
 
         full_type.extend(pre_quals)
 
@@ -168,11 +228,10 @@ class DocCursor:
             full_type.append(self._cc.result_type.spelling)
 
         ttype = ' '.join(full_type)
-        quals = ' '.join(pos_quals)
 
-        return ttype, args, quals
+        return ttype
 
-    def type_definition_fixup(self):
+    def _type_definition_fixup(self):
         """Fix non trivial type definitions."""
         type_elem = []
 
@@ -205,16 +264,13 @@ class DocCursor:
 
         return f'{template}{self._cc.spelling}{colon_suffix}'
 
-    def get_macro_args(self):
+    def _get_macro_args(self):
         """Get macro arguments.
 
         Returns:
             None for simple macros, a potentially empty list of arguments for
             function-like macros
         """
-        if self._cc.kind != CursorKind.MACRO_DEFINITION:
-            return None
-
         tokens = self.get_tokens()
 
         # Use the first two tokens to make sure this starts with 'IDENTIFIER('
@@ -464,6 +520,13 @@ class DocCursor:
 
     @staticmethod
     def _var_type_fixup(cursor):
+        """Fix non trivial variable and argument types.
+
+        If this is an array, the dimensions should be applied to the name, not
+        the type. If this is a function pointer, or an array of function
+        pointers, the name should be within the parenthesis as in ``(*name)``
+        or ``(*name[N])``.
+        """
         cursor_type = cursor._cc.type
 
         stars_and_quals = ''
