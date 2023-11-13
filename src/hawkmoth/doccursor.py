@@ -13,6 +13,14 @@ from clang.cindex import (
     SourceRange,
 )
 
+def _get_meta(cursor):
+    return {
+        'line': cursor.comment.extent.start.line if cursor.comment else '',
+        'cursor.kind': cursor.kind,
+        'cursor.displayname': cursor.displayname,
+        'cursor.spelling': cursor.spelling,
+    }
+
 # Workaround for clang cursor.get_tokens() being unreliable for cursors whose
 # extent contains macro expansions. The result may be empty or contain bogus
 # tokens, depending on the case.
@@ -453,3 +461,79 @@ def _get_inheritance(cursor):
             inherited.append(f'{pad(access_spec)}{child.type.spelling}')
 
     return ': ' + ', '.join(inherited) if len(inherited) > 0 else None
+
+
+class DocCursor:
+    """Documentation centric wrapper for Clang's own ``Cursor``.
+
+    This class abstracts a documentation worthy cursor so the user can query
+    relevant bits for documentation purpose, but otherwise hide all the
+    complications behind Clang's AST traversal and extraction of said bits of
+    information.
+
+    Technically, this class can hold any Clang cursor within itself, but it
+    won't expose any relevant information for those.
+    """
+
+    def __init__(self, domain=None, cursor=None, comments=None):
+        self._comments = comments if comments else {}
+        self._cc = cursor
+
+        self.domain = domain
+        self.hash = self._cc.hash
+        self.kind = self._cc.kind
+
+        if self.hash in self._comments:
+            self.comment = self._comments[self.hash]
+        else:
+            self.comment = None
+
+        # TODO:
+        # We mimic everything we need from Clang's cursor for a drop in
+        # replacement. Later these will likely be more intelligent versions
+        # that incorporate logic from the helper parser functions.
+        self.access_specifier = self._cc.access_specifier
+        self.displayname = self._cc.displayname
+        if self.kind == CursorKind.ENUM_DECL:
+            self.enum_type = self._cc.enum_type
+        if self.kind == CursorKind.ENUM_CONSTANT_DECL:
+            if '=' in [t.spelling for t in _cursor_get_tokens(self._cc)]:
+                self.enum_value = self._cc.enum_value
+            else:
+                self.enum_value = None
+        self.exception_specification_kind = self._cc.exception_specification_kind
+        self.extent = self._cc.extent
+        self.is_anonymous = self._cc.is_anonymous
+        self.is_const_method = self._cc.is_const_method
+        self.is_default_method = self._cc.is_default_method
+        self.is_pure_virtual_method = self._cc.is_pure_virtual_method
+        self.is_scoped_enum = self._cc.is_scoped_enum
+        self.is_static_method = self._cc.is_static_method
+        self.is_virtual_method = self._cc.is_virtual_method
+        self.result_type = self._cc.result_type
+        self.semantic_parent = self._cc.semantic_parent
+        self.spelling = self._cc.spelling
+        self.storage_class = self._cc.storage_class
+        self.translation_unit = self._cc.translation_unit
+        self.type = self._cc.type
+
+    def __hash__(self):
+        return self.hash
+
+    def get_children(self):
+        """Get children cursors."""
+        domain = self.domain
+
+        # Identify `extern "C"` blocks and change domain accordingly. For some
+        # reason, the Python bindings don't return the cursor kind LINKAGE_SPEC
+        # as one would expect, so we need to do it the hard way.
+        if domain == 'cpp' and self.kind == CursorKind.UNEXPOSED_DECL:
+            tokens = _cursor_get_tokens(self)
+            ntoken = next(tokens, None)
+            if ntoken and ntoken.spelling == 'extern':
+                ntoken = next(tokens, None)
+                if ntoken and ntoken.spelling == '"C"':
+                    domain = 'c'
+
+        for c in self._cc.get_children():
+            yield DocCursor(domain=domain, cursor=c, comments=self._comments)
