@@ -45,6 +45,8 @@ from hawkmoth import docstring
 from hawkmoth.doccursor import (
     CursorKind,
     TokenKind,
+    DocCursor,
+    _get_meta,
     _cursor_get_tokens,
     _function_fixup,
     _get_macro_args,
@@ -197,21 +199,13 @@ def _comment_extract(tu):
 
     return top_level_comments, comments
 
-def _get_meta(comment, cursor=None):
-    meta = {'line': comment.extent.start.line}
-    if cursor:
-        meta['cursor.kind'] = cursor.kind
-        meta['cursor.displayname'] = cursor.displayname
-        meta['cursor.spelling'] = cursor.spelling
-
-    return meta
-
-def _recursive_parse(domain, comments, errors, cursor, nest):
-    comment = comments[cursor.hash]
+def _recursive_parse(errors, cursor, nest):
+    domain = cursor.domain
+    comment = cursor.comment
     name = cursor.spelling
     ttype = cursor.type.spelling
     text = comment.spelling
-    meta = _get_meta(comment, cursor)
+    meta = _get_meta(cursor)
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         # FIXME: check args against comment
@@ -281,21 +275,14 @@ def _recursive_parse(domain, comments, errors, cursor, nest):
                                           decl_name=decl_name, meta=meta)
 
         for c in cursor.get_children():
-            if c.hash in comments:
-                ds.add_children(_recursive_parse(domain, comments,
-                                                 errors, c, nest + 1))
+            if c.comment:
+                ds.add_children(_recursive_parse(errors, c, nest + 1))
 
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        # Show enumerator value if it's explicitly set in source
-        if '=' in [t.spelling for t in _cursor_get_tokens(cursor)]:
-            value = cursor.enum_value
-        else:
-            value = None
-
         ds = docstring.EnumeratorDocstring(domain=domain, name=name,
-                                           value=value, text=text,
+                                           value=cursor.enum_value, text=text,
                                            meta=meta, nest=nest)
 
         return [ds]
@@ -335,7 +322,7 @@ def _clang_diagnostics(diagnostics, errors):
         errors.append(ParserError(ErrorLevel(diag.severity), filename,
                                   diag.location.line, diag.spelling))
 
-def _parse_undocumented_block(domain, comments, errors, cursor, nest):
+def _parse_undocumented_block(errors, cursor, nest):
     """Parse undocumented blocks.
 
     Some blocks define plenty of children that may be documented themselves
@@ -345,8 +332,7 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
     ret = []
 
     # Identify `extern "C"` and `extern "C++"` blocks and recursively parse
-    # their contents. Only `extern "C"` is of any relevance in choosing a
-    # different domain.
+    # their contents.
     # For some reason, the Python bindings don't return the cursor kind
     # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
     if cursor.kind == CursorKind.UNEXPOSED_DECL:
@@ -358,11 +344,7 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
             if not ntoken:
                 return ret
 
-            if ntoken.spelling == '"C"':
-                domain = 'c'
-            elif ntoken.spelling == '"C++"':
-                domain = 'cpp'
-            else:
+            if ntoken.spelling not in ['"C"', '"C++"']:
                 message = f'unhandled `extern {ntoken.spelling}` block will mask all children'
                 errors.append(ParserError(ErrorLevel.WARNING,
                                           cursor.location.file.name,
@@ -370,8 +352,8 @@ def _parse_undocumented_block(domain, comments, errors, cursor, nest):
                 return ret
 
             for c in cursor.get_children():
-                if c.hash in comments:
-                    ret.extend(_recursive_parse(domain, comments, errors, c, nest))
+                if c.comment:
+                    ret.extend(_recursive_parse(errors, c, nest))
 
     return ret
 
@@ -426,16 +408,15 @@ def parse(filename, domain=None, clang_args=None):
 
     for comment in top_level_comments:
         text = comment.spelling
-        meta = _get_meta(comment)
+        meta = {'line': comment.extent.start.line}
         ds = docstring.TextDocstring(text=text, meta=meta)
         result.add_child(ds)
 
-    for cursor in tu.cursor.get_children():
-        if cursor.hash in comments:
-            result.add_children(_recursive_parse(domain, comments,
-                                                 errors, cursor, 0))
+    for cc in tu.cursor.get_children():
+        cursor = DocCursor(domain=domain, cursor=cc, comments=comments)
+        if cursor.comment:
+            result.add_children(_recursive_parse(errors, cursor, 0))
         else:
-            result.add_children(_parse_undocumented_block(domain, comments,
-                                                          errors, cursor, 0))
+            result.add_children(_parse_undocumented_block(errors, cursor, 0))
 
     return result, errors
