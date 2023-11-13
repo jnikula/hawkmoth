@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
-from sphinx.ext.napoleon import _process_docstring
+from sphinx.ext import napoleon
 
 def _process_docstring_proxy(app, lines, transform, options):
     if transform != app.config.hawkmoth_napoleon_transform:
@@ -12,7 +12,14 @@ def _process_docstring_proxy(app, lines, transform, options):
     # directly, but the alternative is duplicating all it does, which is also
     # ugly.
 
-    return _process_docstring(app, None, None, None, options, lines)
+    return napoleon._process_docstring(app, None, None, None, options, lines)
+
+def process_docstring(lines):
+    """Simple interface for CLI and testing."""
+    comment = '\n'.join(lines)
+    config = napoleon.Config(napoleon_use_rtype=False)
+    comment = str(napoleon.docstring.GoogleDocstring(comment, config))
+    lines[:] = comment.splitlines()[:]
 
 def setup(app):
     app.setup_extension('sphinx.ext.napoleon')
