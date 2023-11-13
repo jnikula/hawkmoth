@@ -46,13 +46,6 @@ from hawkmoth.doccursor import (
     CursorKind,
     TokenKind,
     DocCursor,
-    _get_meta,
-    _cursor_get_tokens,
-    _function_fixup,
-    _get_macro_args,
-    _method_fixup,
-    _type_definition_fixup,
-    _var_type_fixup,
 )
 
 class ErrorLevel(enum.IntEnum):
@@ -205,11 +198,11 @@ def _recursive_parse(errors, cursor, nest):
     name = cursor.spelling
     ttype = cursor.type.spelling
     text = comment.spelling
-    meta = _get_meta(cursor)
+    meta = cursor.get_meta()
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         # FIXME: check args against comment
-        args = _get_macro_args(cursor)
+        args = cursor.get_macro_args()
 
         if args is None:
             ds = docstring.MacroDocstring(domain=domain, text=text,
@@ -223,7 +216,7 @@ def _recursive_parse(errors, cursor, nest):
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
         # Note: Preserve original name
-        ttype, decl_name = _var_type_fixup(cursor, domain)
+        ttype, decl_name = cursor.var_type_fixup()
 
         if cursor.kind == CursorKind.VAR_DECL:
             ds = docstring.VarDocstring(domain=domain, text=text, nest=nest,
@@ -250,7 +243,7 @@ def _recursive_parse(errors, cursor, nest):
                          CursorKind.CLASS_DECL,
                          CursorKind.CLASS_TEMPLATE]:
 
-        decl_name = _type_definition_fixup(cursor)
+        decl_name = cursor.type_definition_fixup()
 
         if cursor.kind == CursorKind.STRUCT_DECL:
             ds = docstring.StructDocstring(domain=domain, text=text,
@@ -288,7 +281,7 @@ def _recursive_parse(errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        ttype, args = _function_fixup(cursor, domain)
+        ttype, args = cursor.function_fixup()
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
@@ -299,7 +292,7 @@ def _recursive_parse(errors, cursor, nest):
                          CursorKind.DESTRUCTOR,
                          CursorKind.CXX_METHOD,
                          CursorKind.FUNCTION_TEMPLATE]:
-        ttype, args, quals = _method_fixup(cursor)
+        ttype, args, quals = cursor.method_fixup()
         ds = docstring.FunctionDocstring(domain=domain, text=text,
                                          nest=nest, name=name,
                                          ttype=ttype, args=args,
@@ -336,7 +329,7 @@ def _parse_undocumented_block(errors, cursor, nest):
     # For some reason, the Python bindings don't return the cursor kind
     # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
     if cursor.kind == CursorKind.UNEXPOSED_DECL:
-        tokens = _cursor_get_tokens(cursor)
+        tokens = cursor.get_tokens()
         ntoken = next(tokens, None)
         if ntoken and ntoken.spelling == 'extern':
             ntoken = next(tokens, None)
