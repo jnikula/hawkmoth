@@ -50,18 +50,27 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, domain='c', text=None, name=None,
-                 decl_name=None, ttype=None, args=None,
-                 quals=None, meta=None, nest=0):
-        self._text = text
-        self._name = name
-        self._decl_name = decl_name
-        self._ttype = ttype
-        self._args = args
-        self._quals = quals
-        self._meta = meta
+    def __init__(self, cursor=None, text=None, meta=None, nest=0):
+        if cursor:
+            self._args = cursor.args
+            self._decl_name = cursor.decl_name
+            self._domain = cursor.domain
+            self._meta = cursor.meta
+            self._name = cursor.name
+            self._quals = cursor.quals
+            self._text = cursor.comment
+            self._ttype = cursor.type
+        else:
+            self._args = None
+            self._decl_name = None
+            self._domain = None
+            self._meta = meta
+            self._name = None
+            self._quals = None
+            self._text = text
+            self._ttype = None
+
         self._nest = nest
-        self._domain = domain
         self._children = []
 
     def _match(self, filter_types=None, filter_names=None):
@@ -265,8 +274,9 @@ class _CompoundDocstring(Docstring):
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename=None, domain='c', clang_args=None):
-        super().__init__(domain=domain)
+        super().__init__()
         self._filename = filename
+        self._domain = domain
         self._clang_args = clang_args
 
     def get_filename(self):
@@ -294,9 +304,9 @@ class EnumeratorDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:enumerator:: {name}{value}'
 
-    def __init__(self, domain, name, value, text, meta, nest):
-        self._value = value
-        super().__init__(domain=domain, name=name, text=text, meta=meta, nest=nest)
+    def __init__(self, cursor, nest=0):
+        self._value = cursor.value
+        super().__init__(cursor=cursor, nest=nest)
 
     def _get_header_lines(self):
         value = f' = {self._value}' if self._value is not None else ''
