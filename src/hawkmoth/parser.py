@@ -193,47 +193,29 @@ def _comment_extract(tu):
     return top_level_comments, comments
 
 def _recursive_parse(errors, cursor, nest):
-    domain = cursor.domain
-    name = cursor.name
-    decl_name = cursor.decl_name
-    ttype = cursor.type
-    text = cursor.comment
-    meta = cursor.meta
-    args = cursor.args
-    quals = cursor.quals
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         # FIXME: check args against comment
-        args = cursor.args
-
-        if args is None:
-            ds = docstring.MacroDocstring(domain=domain, text=text,
-                                          nest=nest, name=name, meta=meta)
+        if cursor.args is None:
+            ds = docstring.MacroDocstring(cursor=cursor, nest=nest)
         else:
-            ds = docstring.MacroFunctionDocstring(domain=domain, text=text,
-                                                  nest=nest, name=name,
-                                                  args=args, meta=meta)
+            ds = docstring.MacroFunctionDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
     elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
 
         if cursor.kind == CursorKind.VAR_DECL:
-            ds = docstring.VarDocstring(domain=domain, text=text, nest=nest,
-                                        name=name, decl_name=decl_name,
-                                        ttype=ttype, meta=meta)
+            ds = docstring.VarDocstring(cursor=cursor, nest=nest)
         else:
-            ds = docstring.MemberDocstring(domain=domain, text=text, nest=nest,
-                                           name=name, decl_name=decl_name,
-                                           ttype=ttype, meta=meta)
+            ds = docstring.MemberDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
         # FIXME: function pointers typedefs.
 
-        ds = docstring.TypeDocstring(domain=domain, text=text,
-                                     nest=nest, name=ttype, meta=meta)
+        ds = docstring.TypeDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
@@ -244,26 +226,16 @@ def _recursive_parse(errors, cursor, nest):
                          CursorKind.CLASS_TEMPLATE]:
 
         if cursor.kind == CursorKind.STRUCT_DECL:
-            ds = docstring.StructDocstring(domain=domain, text=text,
-                                           nest=nest, name=name,
-                                           decl_name=decl_name, meta=meta)
+            ds = docstring.StructDocstring(cursor=cursor, nest=nest)
         elif cursor.kind == CursorKind.UNION_DECL:
-            ds = docstring.UnionDocstring(domain=domain, text=text,
-                                          nest=nest, name=name,
-                                          decl_name=decl_name, meta=meta)
+            ds = docstring.UnionDocstring(cursor=cursor, nest=nest)
         elif cursor.kind == CursorKind.ENUM_DECL:
             if cursor.is_scoped_enum:
-                ds = docstring.EnumClassDocstring(domain=domain, text=text,
-                                                  nest=nest, name=name,
-                                                  decl_name=decl_name, meta=meta)
+                ds = docstring.EnumClassDocstring(cursor=cursor, nest=nest)
             else:
-                ds = docstring.EnumDocstring(domain=domain, text=text,
-                                             nest=nest, name=name,
-                                             decl_name=decl_name, meta=meta)
+                ds = docstring.EnumDocstring(cursor=cursor, nest=nest)
         elif cursor.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE]:
-            ds = docstring.ClassDocstring(domain=domain, text=text,
-                                          nest=nest, name=name,
-                                          decl_name=decl_name, meta=meta)
+            ds = docstring.ClassDocstring(cursor=cursor, nest=nest)
 
         for c in cursor.get_children():
             if c.comment:
@@ -272,27 +244,19 @@ def _recursive_parse(errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
-        ds = docstring.EnumeratorDocstring(domain=domain, name=name,
-                                           value=cursor.value, text=text,
-                                           meta=meta, nest=nest)
+        ds = docstring.EnumeratorDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
-        ds = docstring.FunctionDocstring(domain=domain, text=text,
-                                         nest=nest, name=name,
-                                         ttype=ttype, args=args,
-                                         quals='', meta=meta)
+        ds = docstring.FunctionDocstring(cursor=cursor, nest=nest)
         return [ds]
 
     elif cursor.kind in [CursorKind.CONSTRUCTOR,
                          CursorKind.DESTRUCTOR,
                          CursorKind.CXX_METHOD,
                          CursorKind.FUNCTION_TEMPLATE]:
-        ds = docstring.FunctionDocstring(domain=domain, text=text,
-                                         nest=nest, name=name,
-                                         ttype=ttype, args=args,
-                                         quals=quals, meta=meta)
+        ds = docstring.FunctionDocstring(cursor=cursor, nest=nest)
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
@@ -301,7 +265,7 @@ def _recursive_parse(errors, cursor, nest):
     errors.append(ParserError(ErrorLevel.WARNING, cursor.location.file.name,
                               cursor.location.line, message))
 
-    ds = docstring.TextDocstring(text=text, meta=meta)
+    ds = docstring.TextDocstring(text=cursor.comment, meta=cursor.meta)
 
     return [ds]
 
