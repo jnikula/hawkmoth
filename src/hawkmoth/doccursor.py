@@ -34,13 +34,13 @@ class DocCursor:
         self.hash = self._cc.hash
         self.kind = self._cc.kind
 
-        if self.hash in self._comments:
-            self.comment = self._comments[self.hash]
+        if self._cc.hash in self._comments:
+            self.comment = self._comments[self._cc.hash]
         else:
             self.comment = None
 
         self.displayname = self._cc.displayname
-        if self.kind == CursorKind.ENUM_CONSTANT_DECL:
+        if self._cc.kind == CursorKind.ENUM_CONSTANT_DECL:
             if '=' in [t.spelling for t in self.get_tokens()]:
                 self.enum_value = self._cc.enum_value
             else:
@@ -50,14 +50,14 @@ class DocCursor:
         self.type = self._cc.type
 
     def __hash__(self):
-        return self.hash
+        return self._cc.hash
 
     def get_meta(self):
         return {
             'line': self.comment.extent.start.line if self.comment else '',
-            'cursor.kind': self.kind,
-            'cursor.displayname': self.displayname,
-            'cursor.spelling': self.spelling,
+            'cursor.kind': self._cc.kind,
+            'cursor.displayname': self._cc.displayname,
+            'cursor.spelling': self._cc.spelling,
         }
 
     def get_children(self):
@@ -117,13 +117,13 @@ class DocCursor:
         args = []
 
         # Only fully prototyped functions will have argument lists to process.
-        if self.type.kind == TypeKind.FUNCTIONPROTO:
+        if self._cc.type.kind == TypeKind.FUNCTIONPROTO:
             for c in self.get_children():
-                if c.kind == CursorKind.PARM_DECL:
+                if c._cc.kind == CursorKind.PARM_DECL:
                     arg_ttype, arg_name = self._var_type_fixup(c)
                     args.extend([(arg_ttype, arg_name)])
 
-            if self.type.is_function_variadic():
+            if self._cc.type.is_function_variadic():
                 args.extend([('', '...')])
             if len(args) == 0:
                 args.extend([('', 'void')])
@@ -164,7 +164,7 @@ class DocCursor:
         if template_line:
             full_type.append(template_line)
 
-        if self.kind not in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
+        if self._cc.kind not in [CursorKind.CONSTRUCTOR, CursorKind.DESTRUCTOR]:
             full_type.append(self._cc.result_type.spelling)
 
         ttype = ' '.join(full_type)
@@ -183,19 +183,19 @@ class DocCursor:
         # libclang 16 and later have cursor.spelling == cursor.type.spelling
         # for typedefs of anonymous entities, while libclang 15 and earlier
         # have an empty string. Match the behaviour across libclang versions.
-        if self.spelling == '':
-            return self.type.spelling
+        if self._cc.spelling == '':
+            return self._cc.type.spelling
 
-        type_elem.extend(self._specifiers_fixup(self.type))
+        type_elem.extend(self._specifiers_fixup(self._cc.type))
 
         colon_suffix = ''
-        if self.kind in [CursorKind.STRUCT_DECL,
-                         CursorKind.CLASS_DECL,
-                         CursorKind.CLASS_TEMPLATE]:
+        if self._cc.kind in [CursorKind.STRUCT_DECL,
+                             CursorKind.CLASS_DECL,
+                             CursorKind.CLASS_TEMPLATE]:
             inheritance = self._get_inheritance()
             if inheritance:
                 colon_suffix = inheritance
-        elif self.kind == CursorKind.ENUM_DECL:
+        elif self._cc.kind == CursorKind.ENUM_DECL:
             scopedenum_type = self._get_scopedenum_type()
             if scopedenum_type:
                 colon_suffix = scopedenum_type
@@ -203,7 +203,7 @@ class DocCursor:
         template = self._get_template_line()
         template = template + ' ' if template else ''
 
-        return f'{template}{self.spelling}{colon_suffix}'
+        return f'{template}{self._cc.spelling}{colon_suffix}'
 
     def get_macro_args(self):
         """Get macro arguments.
@@ -212,7 +212,7 @@ class DocCursor:
             None for simple macros, a potentially empty list of arguments for
             function-like macros
         """
-        if self.kind != CursorKind.MACRO_DEFINITION:
+        if self._cc.kind != CursorKind.MACRO_DEFINITION:
             return None
 
         tokens = self.get_tokens()
@@ -395,9 +395,9 @@ class DocCursor:
         # not part of the template arguments.
         name = ''
 
-        if self.kind not in [CursorKind.CLASS_TEMPLATE,
-                             CursorKind.FUNCTION_TEMPLATE,
-                             CursorKind.TEMPLATE_TEMPLATE_PARAMETER]:
+        if self._cc.kind not in [CursorKind.CLASS_TEMPLATE,
+                                 CursorKind.FUNCTION_TEMPLATE,
+                                 CursorKind.TEMPLATE_TEMPLATE_PARAMETER]:
             return None
 
         # The type of type parameters can be 'typename' and 'class'. These are
@@ -413,17 +413,17 @@ class DocCursor:
 
         # We need to add the keyword 'typename' or 'class' if we have recursed
         # and therefore we are inside the template argument list.
-        if self.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
-            name = f' {typetype(self)} {self.spelling}'
+        if self._cc.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
+            name = f' {typetype(self)} {self._cc.spelling}'
 
         template_args = []
         for child in self.get_children():
-            if child.kind == CursorKind.TEMPLATE_TYPE_PARAMETER:
-                template_args.append(f'{typetype(child)} {child.spelling}')
-            elif child.kind == CursorKind.TEMPLATE_NON_TYPE_PARAMETER:
-                arg_name = f' {child.spelling}' if child.spelling != '' else '...'
-                template_args.append(f'{child.type.spelling}{arg_name}')
-            elif child.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
+            if child._cc.kind == CursorKind.TEMPLATE_TYPE_PARAMETER:
+                template_args.append(f'{typetype(child)} {child._cc.spelling}')
+            elif child._cc.kind == CursorKind.TEMPLATE_NON_TYPE_PARAMETER:
+                arg_name = f' {child._cc.spelling}' if child._cc.spelling != '' else '...'
+                template_args.append(f'{child._cc.type.spelling}{arg_name}')
+            elif child._cc.kind == CursorKind.TEMPLATE_TEMPLATE_PARAMETER:
                 arg = child._get_template_line()
                 if arg:
                     template_args.append(arg)
@@ -439,10 +439,10 @@ class DocCursor:
         """
         inherited = []
         for child in self.get_children():
-            if child.kind == CursorKind.CXX_BASE_SPECIFIER:
+            if child._cc.kind == CursorKind.CXX_BASE_SPECIFIER:
                 pad = lambda s: s + ' ' if s else ''
                 access_spec = child._get_access_specifier()
-                inherited.append(f'{pad(access_spec)}{child.type.spelling}')
+                inherited.append(f'{pad(access_spec)}{child._cc.type.spelling}')
 
         return ': ' + ', '.join(inherited) if len(inherited) > 0 else None
 
@@ -453,7 +453,7 @@ class DocCursor:
             Underlying type of a scoped enumerator that has been explicitly
             defined. ``None`` otherwise.
         """
-        if self.kind == CursorKind.ENUM_DECL and self._cc.is_scoped_enum():
+        if self._cc.kind == CursorKind.ENUM_DECL and self._cc.is_scoped_enum():
             if list(self.get_tokens())[3].spelling == ':':
                 return f': {self._cc.enum_type.spelling}'
         return None
@@ -464,7 +464,7 @@ class DocCursor:
 
     @staticmethod
     def _var_type_fixup(cursor):
-        cursor_type = cursor.type
+        cursor_type = cursor._cc.type
 
         stars_and_quals = ''
         dims = []
@@ -504,7 +504,7 @@ class DocCursor:
 
             args = []
             for c in cursor.get_children():
-                if c.kind == CursorKind.PARM_DECL:
+                if c._cc.kind == CursorKind.PARM_DECL:
                     arg_ttype, arg_name = cursor._var_type_fixup(c)
                     args.append(f'{pad(arg_ttype)}{arg_name}' if arg_name else arg_ttype)
             if cursor_type.is_function_variadic():
@@ -514,7 +514,7 @@ class DocCursor:
 
             ret_type = cursor._normalize_type(cursor_type.get_result().spelling)
 
-            name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor.spelling}{dims})({', '.join(args)})'''  # noqa: E501
+            name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor._cc.spelling}{dims})({', '.join(args)})'''  # noqa: E501
         else:
 
             storage_class = cursor._get_storage_class()
@@ -526,7 +526,7 @@ class DocCursor:
             if stars_and_quals:
                 type_elem.append(stars_and_quals)
 
-            name = cursor.spelling + dims
+            name = cursor._cc.spelling + dims
 
         # Convert _Bool to bool
         type_elem = [cursor._normalize_type(t) for t in type_elem]
