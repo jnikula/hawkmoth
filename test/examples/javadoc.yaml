@@ -5,6 +5,6 @@ directives:
   - javadoc.c
   options:
     transform: javadoc
-example-title: Javadoc-style comments
+example-title: Javadoc/Doxygen-style comments
 example-priority: 95
 expected: javadoc.rst
