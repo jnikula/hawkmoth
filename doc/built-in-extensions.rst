@@ -31,7 +31,7 @@ Installation and configuration in ``conf.py``:
 
    Name of the transformation to handle. Defaults to ``'javadoc'``. Only convert
    the comment if the ``transform`` option matches this name, otherwise do
-   nothing.
+   nothing. Usually there's no need to modify this option.
 
 For example:
 
@@ -39,6 +39,10 @@ For example:
    :caption: conf.py
 
    extensions.append('hawkmoth.ext.javadoc')
+   hawkmoth_transform_default = 'javadoc'  # Transform everything
+
+:data:`hawkmoth_transform_default` sets the default for the ``transform``
+option.
 
 .. code-block:: c
    :caption: file.c
@@ -58,7 +62,6 @@ For example:
 
    .. c:autofunction:: baz
       :file: file.c
-      :transform: javadoc
 
 .. _hawkmoth.ext.napoleon:
 
@@ -81,7 +84,7 @@ Installation and configuration in ``conf.py``:
 
    Name of the transformation to handle. Defaults to ``'napoleon'``. Only
    convert the comment if the ``transform`` option matches this name, otherwise
-   do nothing.
+   do nothing. Usually there's no need to modify this option.
 
 For example:
 
@@ -89,7 +92,8 @@ For example:
    :caption: conf.py
 
    extensions.append('hawkmoth.ext.napoleon')
-   hawkmoth_transform_default = 'napoleon'
+   # Uncomment to transform everything, example below uses :transform: option
+   # hawkmoth_transform_default = 'napoleon'
 
 .. code-block:: c
    :caption: file.c
@@ -111,6 +115,7 @@ For example:
 
    .. c:autofunction:: baz
       :file: file.c
+      :transform: napoleon
 
 .. _hawkmoth.ext.transformations:
 
