@@ -8,7 +8,7 @@ source code must be documented using specific documentation comment style, and
 the comments must follow reStructuredText markup.
 
 Optionally, the syntax may be :ref:`extended <extending-the-syntax>` to support
-e.g. Javadoc and Napoleon style comments.
+e.g. Javadoc/Doxygen and Napoleon style comments.
 
 See :ref:`the examples section <examples>` for a quick tour of what's possible,
 and read on for documentation comment formatting details.
@@ -78,10 +78,13 @@ Hawkmoth supports :ref:`extending <extending>` the syntax using :ref:`built-in
 reStructuredText.
 
 The :ref:`hawkmoth.ext.javadoc` extension provides limited support for Javadoc_
-style comments, and the :ref:`hawkmoth.ext.napoleon` extension provides support
-for :external+sphinx:py:mod:`sphinx.ext.napoleon` style comments.
+and Doxygen_ style comments, and the :ref:`hawkmoth.ext.napoleon` extension
+provides support for :external+sphinx:py:mod:`sphinx.ext.napoleon` style
+comments.
 
 .. _Javadoc: https://www.oracle.com/java/technologies/javase/javadoc.html
+
+.. _Doxygen: https://www.doxygen.nl/
 
 .. _cross-referencing:
 
