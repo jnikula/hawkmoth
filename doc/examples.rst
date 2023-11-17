@@ -387,8 +387,8 @@ Output
    :transform: napoleon
 
 
-Javadoc-style comments
-----------------------
+Javadoc/Doxygen-style comments
+------------------------------
 
 Source
 ~~~~~~
