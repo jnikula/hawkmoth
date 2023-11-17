@@ -11,14 +11,19 @@ extensions.
 hawkmoth.ext.javadoc
 --------------------
 
-This extension converts Javadoc_ comments to reStructuredText, using the
-:event:`hawkmoth-process-docstring` event.
+This extension converts Javadoc_ and Doxygen_ comments to reStructuredText,
+using the :event:`hawkmoth-process-docstring` event.
 
-.. note::
+The most commonly used commands are covered, including some inline markup, using
+either \@ or \\ command character. The support is not complete, and mainly
+covers the basic API documentation needs.
 
-   The Javadoc support is rudimentary at best.
+Note that this does not change the comment block format, only the contents of
+the comments. Only the ``/** ... */`` format is supported.
 
 .. _Javadoc: https://www.oracle.com/java/technologies/javase/javadoc.html
+
+.. _Doxygen: https://www.doxygen.nl/
 
 Installation and configuration in ``conf.py``:
 
