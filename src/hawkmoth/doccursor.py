@@ -49,6 +49,10 @@ class DocCursor:
         }
 
     @property
+    def location(self):
+        return self._cc.location
+
+    @property
     def comment(self):
         return self._comment.spelling if self._comment else None
 
