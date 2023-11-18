@@ -62,7 +62,7 @@ class DocCursor:
 
     @property
     def name(self):
-        return self._cc.spelling
+        return self._cc.spelling if self._cc.spelling else self.decl_name
 
     @property
     def decl_name(self):
@@ -75,7 +75,8 @@ class DocCursor:
                              CursorKind.CLASS_TEMPLATE]:
             return self._type_definition_fixup()
         else:
-            return self.name
+            # self.name would recurse back here if self._cc.spelling is None
+            return self._cc.spelling
 
     @property
     def type(self):
