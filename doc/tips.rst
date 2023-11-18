@@ -59,3 +59,16 @@ The Sphinx alternative is :external+sphinx:rst:dir:`literalinclude`. The
 .. _@include: https://www.doxygen.nl/manual/commands.html#cmdinclude
 
 .. _@snippet: https://www.doxygen.nl/manual/commands.html#cmdsnippet
+
+Using sphinx-autobuild with Hawkmoth
+------------------------------------
+
+`sphinx-autobuild`_ is a handy tool to automatically rebuild Sphinx
+documentation when you modify the ``.rst`` files, with live-reload in the
+browser.
+
+It's possible to have it auto rebuild and live-reload source documentation on
+source code changes by adding ``--watch <source root>`` option to
+``sphinx-autobuild``, where ``<source root>`` matches :py:data:`hawkmoth_root`.
+
+.. _sphinx-autobuild: https://github.com/executablebooks/sphinx-autobuild
