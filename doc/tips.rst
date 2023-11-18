@@ -39,3 +39,23 @@ one place. Instead of ``**[in]**``, you might use ``⇒``, or whatever you prefe
 .. _@param[dir]: https://www.doxygen.nl/manual/commands.html#cmdparam
 
 .. _replacement texts: https://docutils.sourceforge.io/docs/ref/rst/directives.html#replacement-text
+
+Including Source Code Blocks
+----------------------------
+
+Doxygen has the `@include`_ and `@snippet`_ commands to include a source file or
+a fragment of one into documentation as a block of code.
+
+The Sphinx alternative is :external+sphinx:rst:dir:`literalinclude`. The
+``:start-after:`` and ``:end-before:`` options can be used to mimic the
+``block_id`` of ``@snippet``, but there's plenty more.
+
+.. code-block:: rst
+
+   .. literalinclude:: path/to/source.c
+      :start-after: Adding a resource
+      :end-before: Adding a resource
+
+.. _@include: https://www.doxygen.nl/manual/commands.html#cmdinclude
+
+.. _@snippet: https://www.doxygen.nl/manual/commands.html#cmdsnippet
