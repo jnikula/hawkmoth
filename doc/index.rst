@@ -46,6 +46,7 @@ Contents:
    examples
    extending
    built-in-extensions
+   tips
    troubleshooting
 
 Indices and tables
