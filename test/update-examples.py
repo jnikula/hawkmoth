@@ -33,6 +33,9 @@ Examples
 
 This page showcases Hawkmoth in action.
 
+The ``[source]`` links are optional, and can be enabled via the
+:py:data:`hawkmoth_source_uri` option.
+
 .. contents::
    :local:
    :depth: 1
