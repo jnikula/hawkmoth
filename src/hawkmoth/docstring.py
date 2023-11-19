@@ -126,7 +126,7 @@ class Docstring():
         return line_offset
 
     @staticmethod
-    def _nest(lines, nest):
+    def _nest_lines(lines, nest):
         """
         Indent documentation block for nesting.
 
@@ -147,7 +147,7 @@ class Docstring():
         if process_docstring is not None:
             process_docstring(comment_lines)
 
-        Docstring._nest(comment_lines, self._indent)
+        Docstring._nest_lines(comment_lines, self._indent)
 
         # ensure we have cushion blank line before the docstring
         if len(header_lines) == 0 or header_lines[0] != '':
@@ -161,7 +161,7 @@ class Docstring():
 
         lines = header_lines + comment_lines
 
-        Docstring._nest(lines, self._nest)
+        Docstring._nest_lines(lines, self._nest)
 
         # ensure we have cushion blank line after the docstring
         if lines[-1] != '':
