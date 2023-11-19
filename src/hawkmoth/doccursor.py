@@ -501,7 +501,7 @@ class DocCursor:
         inherited = []
         for child in self.get_children():
             if child._cc.kind == CursorKind.CXX_BASE_SPECIFIER:
-                pad = lambda s: s + ' ' if s else ''
+                def pad(s): return s + ' ' if s else ''
                 access_spec = child._get_access_specifier()
                 inherited.append(f'{pad(access_spec)}{child._cc.type.spelling}')
 
@@ -568,7 +568,7 @@ class DocCursor:
             type_elem.append(access_spec)
 
         if cursor_type.kind == TypeKind.FUNCTIONPROTO:
-            pad = lambda s: s if s.endswith('*') or s.endswith('&') else s + ' '
+            def pad(s): return s if s.endswith('*') or s.endswith('&') else s + ' '
 
             args = []
             for c in cursor.get_children():

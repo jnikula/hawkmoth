@@ -105,7 +105,7 @@ class _AutoBaseDirective(SphinxDirective):
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
     def __get_docstrings_for_root(self, viewlist, root):
-        process_docstring = lambda lines: self.__process_docstring(lines)
+        def process_docstring(lines): self.__process_docstring(lines)
 
         num_matches = 0
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,

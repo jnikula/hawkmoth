@@ -100,7 +100,7 @@ class ParserTestcase(testenv.Testcase):
                     continue
 
                 transform = directive.options.get('transform')
-                process_docstring = lambda lines: _process_docstring(transform, lines)
+                def process_docstring(lines): return _process_docstring(transform, lines)
 
                 for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
                                             filter_names=_filter_names(directive)):
