@@ -6,6 +6,29 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Considerably improved Javadoc/Doxygen support
+* Started making GitHub releases
+* Support for adding automated source links
+* Tips and tricks documentation
+* ``hawkmoth --version`` option to CLI
+* ``hawkmoth --process-docstring={javadoc,napoleon}`` option to CLI
+
+Changed
+~~~~~~~
+
+* Switched from CRITICAL to ERROR level for Sphinx errors
+* Internally, refactored cursor handling
+
+Fixed
+~~~~~
+
+* Clang language option to handle headers better
+* Line number references in error messages
+* Referencing typedefed anonymous structs, unions, and enums on Clang 15 and earlier
+
 Hawkmoth `0.16.0`_
 ------------------
 
