@@ -20,7 +20,7 @@ RST := $(RST) CHANGELOG.rst CONTRIBUTING.rst README.rst
 # Static analysis
 .PHONY: check
 check:
-	flake8 src/hawkmoth test
+	flake8
 
 .PHONY: check-rst
 check-rst:
