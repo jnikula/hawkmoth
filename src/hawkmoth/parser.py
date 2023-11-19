@@ -147,7 +147,7 @@ def _comment_extract(tu):
     comments = {}
     current_comment = None
 
-    is_doc = lambda cursor: cursor and docstring.Docstring.is_doc(cursor.spelling)
+    def is_doc(cursor): return cursor and docstring.Docstring.is_doc(cursor.spelling)
 
     for token in tu.get_tokens(extent=tu.cursor.extent):
         # Handle all comments we come across.

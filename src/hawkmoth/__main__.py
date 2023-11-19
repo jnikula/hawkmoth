@@ -84,9 +84,9 @@ def main():
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
     if args.process_docstring:
-        process_docstring = lambda lines: _process_docstring(args.process_docstring, lines)
+        def process_docstring(lines): return _process_docstring(args.process_docstring, lines)
     else:
-        process_docstring = lambda lines: _process_docstring_compat(args, lines)
+        def process_docstring(lines): return _process_docstring_compat(args, lines)
 
     for comment in comments.walk():
         if args.verbose:
