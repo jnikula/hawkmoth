@@ -195,7 +195,7 @@ def _comment_extract(tu):
 def _recursive_parse(errors, cursor, nest):
 
     if cursor.kind == CursorKind.MACRO_DEFINITION:
-        # FIXME: check args against comment
+
         if cursor.args is None:
             ds = docstring.MacroDocstring(cursor=cursor, nest=nest)
         else:
@@ -213,7 +213,6 @@ def _recursive_parse(errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
-        # FIXME: function pointers typedefs.
 
         ds = docstring.TypeDocstring(cursor=cursor, nest=nest)
 
@@ -244,19 +243,24 @@ def _recursive_parse(errors, cursor, nest):
         return [ds]
 
     elif cursor.kind == CursorKind.ENUM_CONSTANT_DECL:
+
         ds = docstring.EnumeratorDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
     elif cursor.kind == CursorKind.FUNCTION_DECL:
+
         ds = docstring.FunctionDocstring(cursor=cursor, nest=nest)
+
         return [ds]
 
     elif cursor.kind in [CursorKind.CONSTRUCTOR,
                          CursorKind.DESTRUCTOR,
                          CursorKind.CXX_METHOD,
                          CursorKind.FUNCTION_TEMPLATE]:
+
         ds = docstring.FunctionDocstring(cursor=cursor, nest=nest)
+
         return [ds]
 
     # If we reach here, nothing matched i.e. there's a documentation comment
