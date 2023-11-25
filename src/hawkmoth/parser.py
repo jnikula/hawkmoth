@@ -203,12 +203,15 @@ def _recursive_parse(errors, cursor, nest):
 
         return [ds]
 
-    elif cursor.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
+    elif cursor.kind == CursorKind.VAR_DECL:
 
-        if cursor.kind == CursorKind.VAR_DECL:
-            ds = docstring.VarDocstring(cursor=cursor, nest=nest)
-        else:
-            ds = docstring.MemberDocstring(cursor=cursor, nest=nest)
+        ds = docstring.VarDocstring(cursor=cursor, nest=nest)
+
+        return [ds]
+
+    elif cursor.kind == CursorKind.FIELD_DECL:
+
+        ds = docstring.MemberDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
