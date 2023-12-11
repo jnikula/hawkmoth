@@ -1,0 +1,6 @@
+directives:
+- domain: cpp
+  directive: autodoc
+  arguments:
+  - using-alias.cpp
+expected: using-alias.rst

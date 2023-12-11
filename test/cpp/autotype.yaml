@@ -1,0 +1,8 @@
+directives:
+- domain: cpp
+  directive: autotype
+  arguments:
+  - foonestalias
+  options:
+    file: using-alias.cpp
+expected: autotype.rst
