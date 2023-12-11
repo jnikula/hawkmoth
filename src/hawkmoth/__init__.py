@@ -244,7 +244,7 @@ class CAutoVarDirective(_AutoSymbolDirective):
 
 class CAutoTypeDirective(_AutoSymbolDirective):
     _domain = 'c'
-    _docstring_types = [docstring.TypeDocstring]
+    _docstring_types = [docstring.TypedefDocstring]
 
 class CAutoMacroDirective(_AutoSymbolDirective):
     _domain = 'c'
@@ -281,7 +281,7 @@ class CppAutoVarDirective(_AutoSymbolDirective):
 
 class CppAutoTypeDirective(_AutoSymbolDirective):
     _domain = 'cpp'
-    _docstring_types = [docstring.TypeDocstring]
+    _docstring_types = [docstring.TypedefDocstring]
 
 class CppAutoMacroDirective(_AutoSymbolDirective):
     _domain = 'cpp'

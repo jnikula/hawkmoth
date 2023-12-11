@@ -232,7 +232,7 @@ class VarDocstring(Docstring):
 
         return header.splitlines()
 
-class TypeDocstring(Docstring):
+class TypedefDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:type:: {name}'
 

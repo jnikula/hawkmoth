@@ -217,7 +217,7 @@ def _recursive_parse(errors, cursor, nest):
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
 
-        ds = docstring.TypeDocstring(cursor=cursor, nest=nest)
+        ds = docstring.TypedefDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 
