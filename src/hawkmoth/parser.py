@@ -221,6 +221,12 @@ def _recursive_parse(errors, cursor, nest):
 
         return [ds]
 
+    elif cursor.kind in [CursorKind.TYPE_ALIAS_DECL, CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
+
+        ds = docstring.TypeAliasDocstring(cursor=cursor, nest=nest)
+
+        return [ds]
+
     elif cursor.kind in [CursorKind.STRUCT_DECL,
                          CursorKind.UNION_DECL,
                          CursorKind.ENUM_DECL,
