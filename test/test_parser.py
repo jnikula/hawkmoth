@@ -27,7 +27,7 @@ def _filter_types(directive):
         'autodoc': None,
         'autosection': [docstring.TextDocstring],
         'autovar': [docstring.VarDocstring],
-        'autotype': [docstring.TypedefDocstring],
+        'autotype': [docstring.TypedefDocstring, docstring.TypeAliasDocstring],
         'autostruct': [docstring.StructDocstring],
         'autounion': [docstring.UnionDocstring],
         'autoenum': [docstring.EnumDocstring],

@@ -76,7 +76,8 @@ class DocCursor:
                              CursorKind.UNION_DECL,
                              CursorKind.ENUM_DECL,
                              CursorKind.CLASS_DECL,
-                             CursorKind.CLASS_TEMPLATE]:
+                             CursorKind.CLASS_TEMPLATE,
+                             CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
             return self._type_definition_fixup()
         else:
             # self.name would recurse back here if self._cc.spelling is None
@@ -136,6 +137,8 @@ class DocCursor:
                 return self._cc.enum_value
             else:
                 return None
+        if self._cc.kind in [CursorKind.TYPE_ALIAS_DECL, CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
+            return self._get_underlying_type()
         else:
             return None
 
@@ -458,7 +461,8 @@ class DocCursor:
 
         if self._cc.kind not in [CursorKind.CLASS_TEMPLATE,
                                  CursorKind.FUNCTION_TEMPLATE,
-                                 CursorKind.TEMPLATE_TEMPLATE_PARAMETER]:
+                                 CursorKind.TEMPLATE_TEMPLATE_PARAMETER,
+                                 CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
             return None
 
         # The type of type parameters can be 'typename' and 'class'. These are
@@ -601,3 +605,12 @@ class DocCursor:
 
         ttype = ' '.join(type_elem)
         return ttype, name
+
+    def _get_underlying_type(self):
+        if self._cc.kind == CursorKind.TYPE_ALIAS_DECL:
+            return self._cc.underlying_typedef_type
+        elif self._cc.kind == CursorKind.TYPE_ALIAS_TEMPLATE_DECL:
+            for child in self._cc.get_children():
+                if child.kind == CursorKind.TYPE_ALIAS_DECL:
+                    return child.underlying_typedef_type
+        return None

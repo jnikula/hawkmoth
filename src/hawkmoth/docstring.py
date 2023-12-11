@@ -236,6 +236,22 @@ class TypedefDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:type:: {name}'
 
+class TypeAliasDocstring(Docstring):
+    _indent = 1
+    _fmt = '.. cpp:type:: {name} = {underlying_type}'
+
+    def __init__(self, cursor, nest):
+        self._underlying_type = cursor.value
+        super().__init__(cursor=cursor, nest=nest)
+
+    def _get_header_lines(self):
+        name = self._get_decl_name()
+        underlying_type = self._underlying_type.spelling
+
+        header = self._fmt.format(name=name, underlying_type=underlying_type)
+
+        return header.splitlines()
+
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
         # If decl_name is empty, it means this is an anonymous declaration.
