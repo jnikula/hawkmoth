@@ -535,7 +535,12 @@ class DocCursor:
             if child._cc.kind == CursorKind.CXX_BASE_SPECIFIER:
                 def pad(s): return s + ' ' if s else ''
                 access_spec = child._get_access_specifier()
-                inherited.append(f'{pad(access_spec)}{child._cc.type.spelling}')
+                if child._cc.referenced.kind == CursorKind.CLASS_DECL:
+                    # use referenced type if possible for full namespace
+                    spelling = child._cc.referenced.type.spelling
+                else:
+                    spelling = child._cc.type.spelling
+                inherited.append(f'{pad(access_spec)}{spelling}')
 
         return ': ' + ', '.join(inherited) if len(inherited) > 0 else None
 
