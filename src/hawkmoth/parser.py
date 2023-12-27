@@ -321,6 +321,17 @@ def _parse_undocumented_block(errors, cursor, nest):
                 if c.comment:
                     ret.extend(_recursive_parse(errors, c, nest))
 
+    elif cursor.kind == CursorKind.NAMESPACE:
+        # ignore internal STL namespaces
+        if cursor.name in ['std', '__gnu_cxx', '__cxxabiv1', '__gnu_debug']:
+            return ret
+        # iterate over namespace
+        for c in cursor.get_children():
+            if c.comment:
+                ret.extend(_recursive_parse(errors, c, nest))
+            else:
+                ret.extend(_parse_undocumented_block(errors, c, nest))
+
     return ret
 
 def _language_option(filename, domain):

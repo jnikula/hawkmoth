@@ -14,6 +14,23 @@ from clang.cindex import (
 )
 
 
+def _get_semantic_parent_namespace(cursor, namespace):
+    semantic_parent = cursor.semantic_parent
+    if not semantic_parent:
+        return namespace
+
+    if semantic_parent.kind == CursorKind.NAMESPACE:
+        # parent is a namespace => add namespace in front
+        if namespace is not None:
+            namespace = f'{semantic_parent.spelling}::{namespace}'
+        else:
+            namespace = semantic_parent.spelling
+        # check again for nested namespaces
+        return _get_semantic_parent_namespace(semantic_parent, namespace)
+
+    return namespace
+
+
 class DocCursor:
     """Documentation centric wrapper for Clang's own ``Cursor``.
 
@@ -66,7 +83,7 @@ class DocCursor:
 
     @property
     def name(self):
-        return self._cc.spelling if self._cc.spelling else self.decl_name
+        return self.namespace_prefix + self._cc.spelling if self._cc.spelling else self.decl_name
 
     @property
     def decl_name(self):
@@ -81,7 +98,14 @@ class DocCursor:
             return self._type_definition_fixup()
         else:
             # self.name would recurse back here if self._cc.spelling is None
-            return self._cc.spelling
+            return self.namespace_prefix + self._cc.spelling if self._cc.spelling else None
+
+    @property
+    def namespace_prefix(self):
+        if self.domain != 'cpp':
+            return ''
+        namespace = _get_semantic_parent_namespace(self._cc, None)
+        return f'{namespace}::' if namespace else ''
 
     @property
     def type(self):
@@ -270,7 +294,7 @@ class DocCursor:
         template = self._get_template_line()
         template = template + ' ' if template else ''
 
-        return f'{template}{self._cc.spelling}{colon_suffix}'
+        return f'{template}{self.namespace_prefix}{self._cc.spelling}{colon_suffix}'
 
     def _get_macro_args(self):
         """Get macro arguments.
