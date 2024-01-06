@@ -22,6 +22,10 @@ RST := $(RST) CHANGELOG.rst CONTRIBUTING.rst README.rst
 check:
 	flake8 src/hawkmoth test
 
+.PHONY: check-typing
+check-typing:
+	mypy
+
 .PHONY: check-rst
 check-rst:
 	rst-lint --level warning $(RST)
