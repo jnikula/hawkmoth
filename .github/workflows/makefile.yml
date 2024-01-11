@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v4
       - run: pip install flake8
       - name: Style check
-        run: make check
+        run: make check-style
 
   rst:
     name: Check reStructuredText
@@ -28,6 +28,17 @@ jobs:
       - run: pip install restructuredtext_lint
       - name: reStructuredText check
         run: make check-rst
+
+  typing:
+    name: Check typing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Type check
+        run: |
+          . venv
+          make check-typing
 
   examples:
     name: Check examples
@@ -40,7 +51,7 @@ jobs:
       - name: Examples check
         run: |
           . venv
-          make test-examples
+          make check-examples
 
   test:
     name: Run test suite

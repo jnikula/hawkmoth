@@ -1,7 +1,9 @@
 flake8
+mypy
 pytest
 pytest-cov
 pytest-xdist
 restructuredtext_lint
 sphinx
 strictyaml
+types-docutils
