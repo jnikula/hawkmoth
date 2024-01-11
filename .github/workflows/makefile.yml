@@ -40,7 +40,7 @@ jobs:
       - name: Examples check
         run: |
           . venv
-          make test-examples
+          make check-examples
 
   test:
     name: Run test suite
