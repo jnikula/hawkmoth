@@ -39,7 +39,7 @@ Contribution Checklist
 
     make docker-test
 
-* Make sure the style check passes for every commit::
+* Make sure the static analysis (style checks, etc.) passes for every commit::
 
     make check
 
