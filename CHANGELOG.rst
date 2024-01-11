@@ -6,6 +6,12 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Changed
+~~~~~~~
+
+* Bumped Python dependency requirement to v3.8, as the earlier versions have
+  reached end of life
+
 Hawkmoth `0.17.0`_
 ------------------
 
