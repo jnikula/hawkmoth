@@ -2,4 +2,4 @@
 
 dir := src/hawkmoth
 
-CLEAN := $(CLEAN) $(dir)/hawkmoth.pyc $(dir)/cautodoc.pyc $(dir)/__init__.pyc
+CLEAN := $(CLEAN) $(shell find $(dir) -type d -name __pycache__)
