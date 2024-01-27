@@ -1,26 +1,11 @@
 # -*- makefile -*-
 
-RM := rm
-
-# The user has not set any verbosity, default to quiet mode and inform the
-# user how to enable verbose compiles.
-ifeq ($(V),)
-quiet_help := "Use \"$(MAKE) V=1\" to see the verbose build lines.\n"
-quiet = @printf $(quiet_help)$(eval quiet_help:=)"$(if $2,$2,$1 $@)\n"; $($1)
-endif
-# The user has explicitly enabled quiet compilation.
-ifeq ($(V),0)
-quiet = @printf "$(if $2,$2,$1 $@)\n"; $($1)
-endif
-# Otherwise, print the full command line.
-quiet ?= $($1)
-
 .PHONY: clean
 clean:
-	$(call quiet,RM,CLEAN) -rf $(CLEAN)
+	rm -rf $(CLEAN)
 
 .PHONY: distclean
 distclean: clean
-	$(call quiet,RM,DISTCLEAN) -rf $(DISTCLEAN)
+	rm -rf $(DISTCLEAN)
 
 .SUFFIXES:
