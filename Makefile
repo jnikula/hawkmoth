@@ -2,6 +2,4 @@
 .PHONY: all
 all: help
 
-subdirs := . test doc src/hawkmoth docker
-
-include $(subdirs:%=%/Makefile.local)
+include $(shell find -name Makefile.local)
