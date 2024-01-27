@@ -10,19 +10,24 @@ RST := $(RST) $(test_dir)/README.rst
 test:
 	pytest -n auto
 
+.PHONY: test-verbose
 test-verbose:
 	pytest -n auto -vv
 
 # Ensure a) update-examples works, and b) examples have been updated.
+.PHONY: check-examples
 check-examples:
 	$(test_dir)/update-examples.py | diff -u $(doc_dir)/examples.rst -
 
+.PHONY: quick-test
 quick-test:
 	pytest -n auto -m "not full"
 
+.PHONY: test-coverage
 test-coverage:
 	pytest -n auto --cov=src/hawkmoth --cov-report=term
 
+.PHONY: test-coverage-html
 test-coverage-html:
 	pytest -n auto --cov=src/hawkmoth --cov-report=term --cov-report=html:$(test_dir)/coverage-report
 	@echo "Coverage report: file://$(CURDIR)/$(test_dir)/coverage-report/index.html"
