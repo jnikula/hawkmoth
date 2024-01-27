@@ -47,4 +47,14 @@ test-upload:
 upload:
 	twine upload dist/*
 
+.PHONY: clean
+clean:
+	rm -rf $(CLEAN)
+
+.PHONY: distclean
+distclean: clean
+	rm -rf $(DISTCLEAN)
+
+.SUFFIXES:
+
 DISTCLEAN := $(DISTCLEAN) build dist hawkmoth.egg-info
