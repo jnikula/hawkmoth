@@ -1,5 +1,5 @@
 # -*- makefile -*-
 
-dir := src/hawkmoth
+src_dir := src/hawkmoth
 
-CLEAN := $(CLEAN) $(shell find $(dir) -type d -name __pycache__)
+CLEAN := $(CLEAN) $(shell find $(src_dir) -type d -name __pycache__)
