@@ -27,4 +27,5 @@ test-coverage-html:
 	pytest -n auto --cov=src/hawkmoth --cov-report=term --cov-report=html:$(test_dir)/coverage-report
 	@echo "Coverage report: file://$(CURDIR)/$(test_dir)/coverage-report/index.html"
 
-CLEAN := $(CLEAN) .coverage $(test_dir)/coverage-report
+CLEAN := $(CLEAN) .coverage $(test_dir)/coverage-report \
+	$(shell find $(test_dir) -type d -name __pycache__)
