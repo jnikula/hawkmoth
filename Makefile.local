@@ -1,17 +1,6 @@
 # -*- makefile -*-
 # Copyright (c) 2018, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
-#
-# Helpers for packaging and releasing.
-#
-# FIXME:
-#
-# * Add helpers for releasing
-#   - release checks
-#   - updating the version
-#   - tagging
-#   - uploading tagged versions to pypi
-#
 
 dir := .
 
