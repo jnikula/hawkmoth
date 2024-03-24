@@ -283,23 +283,26 @@ class DocCursor:
         tokens = self.get_tokens()
 
         # Use the first two tokens to make sure this starts with 'IDENTIFIER('
-        one = next(tokens)
-        two = next(tokens, None)
-        if two is None or one.extent.end != two.extent.start or two.spelling != '(':
+        # *without* a space before the paren.
+        identifier = next(tokens)
+        paren = next(tokens, None)
+        if paren is None or identifier.extent.end != paren.extent.start or paren.spelling != '(':
             return None
 
         # Naïve parsing of macro arguments
-        # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
         args = []
+        arg_spellings = []
         for token in tokens:
-            if token.spelling == ')':
-                return args
-            elif token.spelling == ',':
+            if token.spelling in [')', ',']:
+                if arg_spellings:
+                    args.extend([('', ''.join(arg_spellings))])
+                    arg_spellings = []
+
+                if token.spelling == ')':
+                    return args
                 continue
-            elif token.kind == TokenKind.IDENTIFIER:
-                args.extend([('', token.spelling)])
-            elif token.spelling == '...':
-                args.extend([('', token.spelling)])
+            elif token.kind == TokenKind.IDENTIFIER or token.spelling == '...':
+                arg_spellings.append(token.spelling)
             else:
                 break
 
