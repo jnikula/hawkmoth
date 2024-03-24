@@ -23,8 +23,8 @@ docker-html.%: hawkmoth-test.% FORCE
 	mkdir -p doc/_build
 	docker run $(DOCKER_TEST_OUT_MOUNT) $< make BUILDDIR=/out html
 
-docker-test: docker-test.debian-bullseye FORCE
-docker-html: docker-test-html.debian-bullseye FORCE
+# Generate targets for auto-completion
+$(shell find $(docker_dir) -name 'Dockerfile.*' | sed 's/.*\.\(.*\)/docker-test.\1 docker-html.\1/'):
 
 FORCE:
 
