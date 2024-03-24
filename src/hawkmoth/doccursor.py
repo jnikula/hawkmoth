@@ -283,9 +283,10 @@ class DocCursor:
         tokens = self.get_tokens()
 
         # Use the first two tokens to make sure this starts with 'IDENTIFIER('
-        one = next(tokens)
-        two = next(tokens, None)
-        if two is None or one.extent.end != two.extent.start or two.spelling != '(':
+        # *without* a space before the paren.
+        identifier = next(tokens)
+        paren = next(tokens, None)
+        if paren is None or identifier.extent.end != paren.extent.start or paren.spelling != '(':
             return None
 
         # Naïve parsing of macro arguments
