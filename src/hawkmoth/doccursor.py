@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2023 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2023 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2024 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 from clang.cindex import (
@@ -146,10 +146,11 @@ class DocCursor:
         """Get children cursors."""
         domain = self.domain
 
-        # Identify `extern "C"` blocks and change domain accordingly. For some
-        # reason, the Python bindings don't return the cursor kind LINKAGE_SPEC
-        # as one would expect, so we need to do it the hard way.
-        if domain == 'cpp' and self.kind == CursorKind.UNEXPOSED_DECL:
+        # Identify `extern "C"` blocks and change domain accordingly.
+        # Prior to Clang 18, the Python bindings don't return the cursor kind
+        # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
+        if domain == 'cpp' and self.kind in [CursorKind.LINKAGE_SPEC,
+                                             CursorKind.UNEXPOSED_DECL]:
             tokens = self.get_tokens()
             ntoken = next(tokens, None)
             if ntoken and ntoken.spelling == 'extern':
