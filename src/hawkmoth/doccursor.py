@@ -290,17 +290,19 @@ class DocCursor:
             return None
 
         # Naïve parsing of macro arguments
-        # FIXME: This doesn't handle GCC named vararg extension FOO(vararg...)
         args = []
+        arg_spellings = []
         for token in tokens:
-            if token.spelling == ')':
-                return args
-            elif token.spelling == ',':
+            if token.spelling in [')', ',']:
+                if arg_spellings:
+                    args.extend([('', ''.join(arg_spellings))])
+                    arg_spellings = []
+
+                if token.spelling == ')':
+                    return args
                 continue
-            elif token.kind == TokenKind.IDENTIFIER:
-                args.extend([('', token.spelling)])
-            elif token.spelling == '...':
-                args.extend([('', token.spelling)])
+            elif token.kind == TokenKind.IDENTIFIER or token.spelling == '...':
+                arg_spellings.append(token.spelling)
             else:
                 break
 
