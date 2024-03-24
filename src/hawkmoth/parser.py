@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2023 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# Copyright (c) 2018-2024 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 """
 Documentation comment extractor
@@ -174,7 +174,8 @@ def _comment_extract(tu):
 
         # Cursors that are 1) never documented themselves, and 2) not allowed
         # between the comment and the actual cursor being documented.
-        if token_cursor.kind in [CursorKind.UNEXPOSED_DECL]:
+        if token_cursor.kind in [CursorKind.LINKAGE_SPEC,
+                                 CursorKind.UNEXPOSED_DECL]:
             if is_doc(current_comment):
                 top_level_comments.append(current_comment)
             current_comment = None
@@ -299,9 +300,9 @@ def _parse_undocumented_block(errors, cursor, nest):
 
     # Identify `extern "C"` and `extern "C++"` blocks and recursively parse
     # their contents.
-    # For some reason, the Python bindings don't return the cursor kind
+    # Prior to Clang 18, the Python bindings don't return the cursor kind
     # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
-    if cursor.kind == CursorKind.UNEXPOSED_DECL:
+    if cursor.kind in [CursorKind.LINKAGE_SPEC, CursorKind.UNEXPOSED_DECL]:
         tokens = cursor.get_tokens()
         ntoken = next(tokens, None)
         if ntoken and ntoken.spelling == 'extern':
