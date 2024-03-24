@@ -1,6 +1,7 @@
 FROM fedora:38
 
 RUN dnf -y update && \
+    dnf -y upgrade && \
     dnf -y install \
 	python3-clang \
 	make && \
