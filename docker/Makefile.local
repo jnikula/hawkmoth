@@ -8,6 +8,8 @@ HAWKMOTH_VERSION := $(shell cat src/hawkmoth/VERSION)
 HAWKMOTH_ARCHIVE := $(docker_dir)/hawkmoth-$(HAWKMOTH_VERSION).tar.gz
 
 $(HAWKMOTH_ARCHIVE): $(shell git ls-files)
+	@test -z "$(shell git status --porcelain --untracked-files=no)" || \
+		(echo "error: git working directory is not clean" && false)
 	git archive -o $@ HEAD
 
 # Containers for local testing
