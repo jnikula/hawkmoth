@@ -19,12 +19,12 @@ hawkmoth-test.%: $(HAWKMOTH_ARCHIVE) FORCE
 docker-test.%: hawkmoth-test.% FORCE
 	docker run $< make test
 
-docker-test-html.%: hawkmoth-test.% FORCE
+docker-html.%: hawkmoth-test.% FORCE
 	mkdir -p doc/_build
 	docker run $(DOCKER_TEST_OUT_MOUNT) $< make BUILDDIR=/out html
 
 docker-test: docker-test.debian-bullseye FORCE
-docker-test-html: docker-test-html.debian-bullseye FORCE
+docker-html: docker-test-html.debian-bullseye FORCE
 
 FORCE:
 
