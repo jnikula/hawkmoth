@@ -13,7 +13,7 @@ jobs:
     name: Check style
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
       - run: pip install flake8
       - name: Style check
@@ -23,7 +23,7 @@ jobs:
     name: Check reStructuredText
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
       - run: pip install restructuredtext_lint
       - name: reStructuredText check
@@ -33,7 +33,7 @@ jobs:
     name: Check examples
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
@@ -46,7 +46,7 @@ jobs:
     name: Run test suite
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
@@ -60,7 +60,7 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
       - name: Documentation build check
