@@ -12,9 +12,9 @@ jobs:
     outputs:
       matrix: ${{ steps.version-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Fetch tags
-        run: git fetch --tags origin
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - name: Set version matrix
         id: version-matrix
         run: echo "matrix=$(./.github/config.sh)" | tee $GITHUB_OUTPUT
@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.ref }}
       - name: Install dependencies (apt)
