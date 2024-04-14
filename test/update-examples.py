@@ -43,7 +43,7 @@ The ``[source]`` links are optional, and can be enabled via the
 ''')
 
 def print_title(testcases):
-    titles = set(get_title(testcase) for testcase in testcases if get_title(testcase))
+    titles = {get_title(testcase) for testcase in testcases if get_title(testcase)}
     title = ', '.join(sorted(titles))
 
     print(f'''{title}

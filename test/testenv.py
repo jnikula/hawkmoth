@@ -79,7 +79,7 @@ class Testcase:
 
     def __init__(self, filename):
         self.filename = filename
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             self.options = strictyaml.load(f.read(), self._options_schema).data
         self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
@@ -131,5 +131,5 @@ def read_file(filename, optional=False):
 
     assert os.path.isfile(filename)
 
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         return f.read()

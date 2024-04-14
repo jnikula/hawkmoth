@@ -42,7 +42,7 @@ def _get_include_paths(cc_path):
     return _get_paths_from_output(result.stderr)
 
 def get_include_args(cc_path='clang'):
-    return ['-I{path}'.format(path=path) for path in _get_include_paths(cc_path)]
+    return [f'-I{path}' for path in _get_include_paths(cc_path)]
 
 if __name__ == '__main__':
     import pprint
