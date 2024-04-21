@@ -1,9 +1,6 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "hawkmoth"
@@ -53,8 +50,23 @@ hawkmoth = "hawkmoth.__main__:main"
 Homepage = "https://github.com/jnikula/hawkmoth"
 Documentation = "https://jnikula.github.io/hawkmoth/stable/"
 
-[tool.setuptools.dynamic]
-version = {file = ["src/hawkmoth/VERSION"]}
+[tool.hatch.version]
+path = "src/hawkmoth/VERSION"
+pattern = "(?P<version>[a-zA-Z0-9._-]*)"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/setup.py",
+    "/src",
+]
+exclude = [
+    "**/Makefile*",
+]
+
+[tool.hatch.build.targets.wheel]
+exclude = [
+    "**/Makefile*",
+]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
