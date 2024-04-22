@@ -2,7 +2,5 @@
 *~
 .coverage
 .venv
-build
 dist
-hawkmoth.egg-info
 test/coverage-report

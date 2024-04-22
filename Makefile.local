@@ -16,23 +16,18 @@ check-style:
 check-rst:
 	rst-lint --level warning $(RST)
 
-# assume virtual environment is used for dist and upload
-.PHONY: build-tools
-build-tools:
-	pip install --upgrade build twine
-
+# Build and publish
 .PHONY: build
 build:
-	rm -rf build dist hawkmoth.egg-info
-	python3 -m build
+	hatch build
 
 .PHONY: test-upload
 test-upload:
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	hatch publish --repo test
 
 .PHONY: upload
 upload:
-	twine upload dist/*
+	hatch publish
 
 .PHONY: clean
 clean:
@@ -44,4 +39,4 @@ distclean: clean
 
 .SUFFIXES:
 
-DISTCLEAN := $(DISTCLEAN) build dist hawkmoth.egg-info
+DISTCLEAN := $(DISTCLEAN) dist
