@@ -35,7 +35,7 @@ jobs:
         run: |
           . venv
           make html
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: doc/_build/html
@@ -52,7 +52,7 @@ jobs:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           path: .
       - name: Add redirect to stable documentation
