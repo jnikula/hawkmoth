@@ -86,7 +86,7 @@ class _block_with_end_command(_handler):
     """Paragraph with a dedicated command to end it.
 
     For example, @code/@endcode."""
-    _end_command = None
+    _end_command: str | None = None
 
     def end_command(self):
         """Get the name of the command that ends this paragraph."""
@@ -135,7 +135,7 @@ class _strip_command(_handler):
 
 class _field_list(_handler):
     """Paragraph which becomes a single field list item."""
-    _field_name = None
+    _field_name: str | None = None
     _indented_paragraph = True
 
     def field_name(self):

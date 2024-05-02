@@ -29,6 +29,17 @@ jobs:
       - name: reStructuredText check
         run: make check-rst
 
+  typing:
+    name: Check typing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Type check
+        run: |
+          . venv
+          make check-typing
+
   examples:
     name: Check examples
     runs-on: ubuntu-latest

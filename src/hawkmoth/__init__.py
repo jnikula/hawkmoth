@@ -35,8 +35,8 @@ class _AutoBaseDirective(SphinxDirective):
     }
     has_content = False
 
-    _domain = None
-    _docstring_types = None
+    _domain: str | None = None
+    _docstring_types: list[type[docstring.Docstring]] | None = None
 
     def __display_parser_diagnostics(self, errors):
         # Map parser diagnostic level to Sphinx level name
