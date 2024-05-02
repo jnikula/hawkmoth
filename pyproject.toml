@@ -36,11 +36,13 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "flake8",
+    "mypy",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
     "restructuredtext_lint",
     "strictyaml",
+    "types-docutils",
 ]
 
 [project.scripts]
@@ -67,6 +69,21 @@ exclude = [
 exclude = [
     "**/Makefile*",
 ]
+
+[tool.mypy]
+files = [
+    "src",
+    "test",
+]
+exclude = "(test/conf\\.py|test/update-examples\\.py)"
+
+[[tool.mypy.overrides]]
+module = "clang.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "strictyaml.*"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
