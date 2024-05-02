@@ -1,6 +1,6 @@
 # Copyright (c) 2016-2017 Jani Nikula <jani@nikula.org>
 # Copyright (c) 2018-2024 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
-# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+# SPDX-License-Identifier: BSD-2-Clause
 """
 Documentation comment extractor
 ===============================
