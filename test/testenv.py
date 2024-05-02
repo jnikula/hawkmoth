@@ -1,5 +1,5 @@
 # Copyright (c) 2018, Jani Nikula <jani@nikula.org>
-# Licensed under the terms of BSD 2-Clause, see LICENSE for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 import os
 import sys
