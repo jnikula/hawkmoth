@@ -42,8 +42,8 @@ jobs:
           . venv
           make check-examples
 
-  test:
-    name: Run test suite
+  test-ubuntu:
+    name: Run test suite (Ubuntu)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -54,6 +54,26 @@ jobs:
         run: |
           . venv
           make test
+
+  test-macos:
+    name: Run test suite (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: brew --prefix llvm@15
+      - run: $(brew --prefix llvm@15)/bin/llvm-config --libdir
+      - run: printenv
+      - name: Test
+        run: |
+          export DYLD_LIBRARY_PATH=$($(brew --prefix llvm@15)/bin/llvm-config --libdir)
+          . venv
+          pip install clang==15.0.7
+          echo "C header search path:"
+          python3 -m hawkmoth.util.compiler --output=args --lang=c $(brew --prefix llvm@15)/bin/clang
+          echo "C++ header search path:"
+          python3 -m hawkmoth.util.compiler --output=args --lang=c++ $(brew --prefix llvm@15)/bin/clang
+          pytest -n auto --cc-path="$(brew --prefix llvm@15)/bin/clang"
 
   docs:
     name: Check documentation
