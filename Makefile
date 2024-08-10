@@ -2,4 +2,4 @@
 .PHONY: default
 default: help
 
-include $(shell find -name Makefile.local)
+include $(shell find . -name Makefile.local)
