@@ -85,6 +85,22 @@ jobs:
           pip install clang==15.0.7
           make test
 
+  test-windows:
+    name: Run test suite (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Environment
+        shell: bash
+        run: printenv | sort
+      - name: Test
+        shell: bash
+        run: |
+          . venv
+          pip install clang==15.0.7
+          make test
+
   docs:
     name: Check documentation
     if: github.event_name == 'pull_request'
