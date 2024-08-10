@@ -53,8 +53,8 @@ jobs:
           . venv
           make check-examples
 
-  test:
-    name: Run test suite
+  test-ubuntu:
+    name: Run test suite (Ubuntu)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -64,6 +64,25 @@ jobs:
       - name: Test
         run: |
           . venv
+          make test
+
+  test-macos-homebrew:
+    name: Run test suite (macOS homebrew)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Environment
+        run: |
+          brew --prefix llvm@15
+          $(brew --prefix llvm@15)/bin/llvm-config --libdir
+          $(brew --prefix llvm@15)/bin/llvm-config --bindir
+      - name: Test
+        run: |
+          export DYLD_LIBRARY_PATH=$($(brew --prefix llvm@15)/bin/llvm-config --libdir)
+          export PATH=$($(brew --prefix llvm@15)/bin/llvm-config --bindir):$PATH
+          . venv
+          pip install clang==15.0.7
           make test
 
   docs:
