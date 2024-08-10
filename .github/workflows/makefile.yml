@@ -85,6 +85,20 @@ jobs:
           pip install clang==15.0.7
           make test
 
+  test-macos-xcode:
+    name: Run test suite (macOS xcode)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: printenv | sort
+      - name: Test
+        run: |
+          export DYLD_LIBRARY_PATH=${XCODE_15_DEVELOPER_DIR}/Toolchains/XcodeDefault.xctoolchain/usr/lib
+          . venv
+          pip install clang==15.0.7
+          make test
+
   docs:
     name: Check documentation
     if: github.event_name == 'pull_request'
