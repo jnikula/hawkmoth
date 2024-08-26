@@ -159,11 +159,12 @@ class _param(_field_list):
     _field_name = 'param'
 
     def header(self):
-        mo = re.match(r'^(\[(?P<direction>[a-zA-Z, ]+)\])?(?P<sp1>\s*)(?P<name>([a-zA-Z0-9_]+|\.\.\.))(?P<sp2>\s*(?P<desc>.*))',  # noqa: E501
+        mo = re.match(r'^((?P<sp0>\s*)\[(?P<direction>[a-zA-Z, ]+)\])?(?P<sp1>\s*)(?P<name>([a-zA-Z0-9_]+|\.\.\.))(?P<sp2>\s*(?P<desc>.*))',  # noqa: E501
                       self.rest())
         if mo is None:
             # FIXME
             yield ''
+            return
 
         direction = mo.group('direction')
         name = mo.group('name')
