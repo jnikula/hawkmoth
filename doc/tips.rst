@@ -71,4 +71,4 @@ It's possible to have it auto rebuild and live-reload source documentation on
 source code changes by adding ``--watch <source root>`` option to
 ``sphinx-autobuild``, where ``<source root>`` matches :py:data:`hawkmoth_root`.
 
-.. _sphinx-autobuild: https://github.com/executablebooks/sphinx-autobuild
+.. _sphinx-autobuild: https://github.com/sphinx-doc/sphinx-autobuild
