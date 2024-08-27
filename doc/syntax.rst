@@ -95,8 +95,9 @@ Under the hood, the :ref:`Hawkmoth directives <directives>` generate
 corresponding :external+sphinx:doc:`C <usage/domains/c>` and
 :external+sphinx:doc:`C++ <usage/domains/cpp>` domain directives. For example,
 :rst:dir:`c:autovar` produces :external+sphinx:rst:dir:`c:var`. Use the Sphinx
-:external+sphinx:ref:`C Domain Roles <c-roles>` and :external+sphinx:ref:`C++
-Domain Roles<cpp-roles>` for cross-referencing accordingly.
+:external+sphinx:ref:`C Domain Roles <c-xref-roles>` and
+:external+sphinx:ref:`C++ Domain Roles<cpp-xref-roles>` for cross-referencing
+accordingly.
 
 For example:
 
