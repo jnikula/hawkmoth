@@ -9,6 +9,10 @@ syntaxes into 'native' reST ones.
 """
 
 import re
+from sphinx.util import logging
+
+logger = logging.getLogger(__name__)
+logger.warning('hawkmoth.util.doccompat module has been deprecated.')
 
 # Basic Javadoc/Doxygen/kernel-doc import
 #

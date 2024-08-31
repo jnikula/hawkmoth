@@ -10,6 +10,16 @@ Changed
 ~~~~~~~
 
 * Bumped Python dependency requirement to v3.9, as v3.8 is reaching end of life
+* The ``hawkmoth.ext.transformations`` extension is no longer loaded
+  automatically as it has been deprecated
+
+Deprecated
+~~~~~~~~~~
+
+* The ``hawkmoth.ext.transformations`` extension and the
+  ``hawkmoth.util.doccompat`` module in favour of the ``hawkmoth.ext.javadoc``
+  and ``hawkmoth.ext.napoleon`` extensions and the
+  ``hawkmoth-process-docstring`` event.
 
 Hawkmoth `0.18.0`_
 ------------------

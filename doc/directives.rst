@@ -30,8 +30,6 @@ included.
       Override :data:`hawkmoth_transform_default` for the ``transform``
       parameter value of the :event:`hawkmoth-process-docstring` event.
 
-      See also :ref:`hawkmoth.ext.transformations`.
-
    .. rst:directive:option:: clang
       :type: text
 
