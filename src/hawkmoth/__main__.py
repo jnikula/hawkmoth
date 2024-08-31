@@ -14,7 +14,6 @@ import sys
 from hawkmoth.ext import javadoc
 from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
-from hawkmoth.util import doccompat
 
 def filename(file):
     if os.path.isfile(file):
@@ -30,11 +29,6 @@ def _process_docstring(transform, lines):
     fn = transformations.get(transform)
     if fn:
         fn(lines)
-
-def _process_docstring_compat(args, lines):
-    text = '\n'.join(lines)
-    text = doccompat.convert(text, transform=args.compat)
-    lines[:] = [line for line in text.splitlines()]
 
 def _read_version():
     try:
@@ -64,14 +58,6 @@ def main():
                             'napoleon',
                         ],
                         help='Process docstring.')
-    compat.add_argument('--compat',
-                        choices=[
-                            'none',
-                            'javadoc-basic',
-                            'javadoc-liberal',
-                            'kernel-doc'
-                        ],
-                        help='Compatibility options. See cautodoc_compat.')
     parser.add_argument('--clang', metavar='PARAM', action='append',
                         help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')  # noqa: E501
     parser.add_argument('--verbose', dest='verbose', action='store_true',
@@ -86,7 +72,7 @@ def main():
     if args.process_docstring:
         def process_docstring(lines): return _process_docstring(args.process_docstring, lines)
     else:
-        def process_docstring(lines): return _process_docstring_compat(args, lines)
+        process_docstring = None
 
     for comment in comments.walk():
         if args.verbose:

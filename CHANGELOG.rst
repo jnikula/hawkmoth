@@ -21,6 +21,12 @@ Deprecated
   and ``hawkmoth.ext.napoleon`` extensions and the
   ``hawkmoth-process-docstring`` event.
 
+Removed
+~~~~~~~
+
+* ``hawkmoth --compat={none,javadoc-basic,javadoc-liberal,kernel-doc}`` option
+  from CLI
+
 Hawkmoth `0.18.0`_
 ------------------
 
