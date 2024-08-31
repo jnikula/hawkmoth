@@ -1,6 +1,8 @@
 # Copyright (c) 2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
+from sphinx.util import logging
+
 def _process_docstring(app, lines, transform, options):
     transformations = app.config.cautodoc_transformations
     tropt = options.get('transform')
@@ -22,6 +24,9 @@ def _process_docstring(app, lines, transform, options):
     lines[:] = comment.splitlines()[:]
 
 def setup(app):
+    logger = logging.getLogger(__name__)
+    logger.warning('hawkmoth.ext.transformations extension has been deprecated.')
+
     app.add_config_value('cautodoc_transformations', None, 'env', [dict])
 
     # Run before event handlers with default priority.

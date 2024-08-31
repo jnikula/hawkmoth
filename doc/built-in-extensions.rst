@@ -130,14 +130,12 @@ hawkmoth.ext.transformations
 This extension handles the :py:data:`cautodoc_transformations` feature, using
 the :event:`hawkmoth-process-docstring` event.
 
-.. note::
+.. warning::
 
-   Going forward, it's recommended to handle transformations using the event
-   directly instead of :py:data:`cautodoc_transformations`. This built-in
-   extension provides backward compatibility for the functionality.
-
-   For now, this extension is loaded by default, and the installation step below
-   is not strictly necessary. This will change in the future.
+   The ``hawkmoth.ext.transformations`` extension has been deprecated, and will
+   be removed in the future. Please use either the :ref:`hawkmoth.ext.javadoc`
+   or :ref:`hawkmoth.ext.napoleon` extensions, or, for more flexibility, the
+   :event:`hawkmoth-process-docstring` event directly.
 
 Installation and configuration in ``conf.py``:
 
@@ -184,3 +182,8 @@ Installation and configuration in ``conf.py``:
           'javadoc-liberal': doccompat.javadoc_liberal,
           'kernel-doc': doccompat.kerneldoc,
       }
+
+   .. warning::
+
+      The ``hawkmoth.util.doccompat`` package has been deprecated, and will be
+      removed in the future.

@@ -399,9 +399,6 @@ def setup(app):
 
     app.add_event('hawkmoth-process-docstring')
 
-    # Setup transformations for compatibility.
-    app.setup_extension('hawkmoth.ext.transformations')
-
     # Source code link
     app.add_config_value('hawkmoth_source_uri', None, 'env', [str])
     app.connect('doctree-read', _doctree_read)
