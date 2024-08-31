@@ -54,7 +54,7 @@ class ExtensionTestcase(testenv.Testcase):
             output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
 
         # Remove paths from warning output for comparison
-        output_errors = re.sub(rf'(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
+        output_errors = re.sub(rf'(?m)^.*{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
                                '\\1', warning.getvalue())
 
         return testenv.read_file(output_filename), output_errors
