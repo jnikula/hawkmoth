@@ -63,12 +63,12 @@ class ExtensionTestcase(testenv.Testcase):
         with tempfile.TemporaryDirectory() as srcdir:
             with open(os.path.join(srcdir, 'index.rst'), 'w') as f:
                 f.write(input_str)
-            return self._sphinx_build(srcdir)
+            return self._sphinx_build(os.path.realpath(srcdir))
 
     def _sphinx_build_file(self, input_filename):
         with tempfile.TemporaryDirectory() as srcdir:
             shutil.copyfile(input_filename, os.path.join(srcdir, 'index.rst'))
-            return self._sphinx_build(srcdir)
+            return self._sphinx_build(os.path.realpath(srcdir))
 
     def get_output(self):
         input_str = ''.join([d.get_directive_string() for d in self.directives])
