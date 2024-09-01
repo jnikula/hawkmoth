@@ -65,12 +65,14 @@ class ParserError:
     line: int
     message: str
 
-    def get_message(self):
+    def get_message(self, basename=False):
         if self.filename:
+            filename = os.path.basename(self.filename) if basename else self.filename
+
             if self.line is not None:
-                return f'{self.filename}:{self.line}: {self.message}'
+                return f'{filename}:{self.line}: {self.message}'
             else:
-                return f'{self.filename}: {self.message}'
+                return f'{filename}: {self.message}'
         else:
             return f'{self.message}'
 
