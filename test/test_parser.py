@@ -2,8 +2,6 @@
 # Copyright (c) 2018-2023, Jani Nikula <jani@nikula.org>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
-import os
-
 import pytest
 
 from hawkmoth import docstring
@@ -81,7 +79,7 @@ class ParserTestcase(testenv.Testcase):
             roots[key] = root
 
             for error in errors:
-                errors_str += f'{error.level.name}: {os.path.basename(error.filename)}:{error.line}: {error.message}\n'  # noqa: E501
+                errors_str += f'{error.level.name}: {error.get_message(basename=True)}\n'
 
         for directive in self.directives:
             filename = directive.get_input_filename()
