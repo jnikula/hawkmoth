@@ -17,7 +17,7 @@ test-verbose:
 # Ensure a) update-examples works, and b) examples have been updated.
 .PHONY: check-examples
 check-examples:
-	$(test_dir)/update-examples.py | diff -u $(doc_dir)/examples.rst -
+	python3 -m $(test_dir).update_examples | diff -u $(doc_dir)/examples.rst -
 
 .PHONY: quick-test
 quick-test:
