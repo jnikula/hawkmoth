@@ -75,7 +75,7 @@ files = [
     "src",
     "test",
 ]
-exclude = "(test/conf\\.py|test/update-examples\\.py)"
+exclude = "(test/conf\\.py)"
 
 [[tool.mypy.overrides]]
 module = "clang.*"
