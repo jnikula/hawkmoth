@@ -6,7 +6,7 @@ import os
 import re
 import sys
 
-import testenv
+from test import testenv
 
 class ExampleTestcase(testenv.Testcase):
     pass

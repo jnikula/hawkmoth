@@ -56,7 +56,7 @@ Test Cases as Examples
 The examples in the documentation are generated from test cases under the
 ``examples`` subdirectory, ensuring the examples actually work.
 
-``make update-examples`` runs ``update-examples.py`` to generate
+``make update-examples`` runs ``update_examples.py`` to generate
 ``doc/examples.rst`` from the example test cases.
 
 Running
