@@ -32,8 +32,11 @@ def _get_paths_from_output(output):
 
         yield line.strip()
 
-def _get_include_paths(cc_path):
-    result = subprocess.run([cc_path, '-E', '-Wp,-v', '-'],
+def _get_include_paths(cc_path, lang):
+    if lang == 'cpp':
+        lang = 'c++'
+
+    result = subprocess.run([cc_path, '-x', lang, '-E', '-Wp,-v', '-'],
                             stdin=subprocess.DEVNULL,
                             capture_output=True,
                             check=True,
@@ -41,13 +44,34 @@ def _get_include_paths(cc_path):
 
     return _get_paths_from_output(result.stderr)
 
-def get_include_args(cc_path='clang'):
-    return [f'-I{path}' for path in _get_include_paths(cc_path)]
+def get_include_args(cc_path='clang', lang='c'):
+    return [f'-I{path}' for path in _get_include_paths(cc_path=cc_path, lang=lang)]
 
 if __name__ == '__main__':
+    import argparse
+    import os
     import pprint
-    import sys
 
-    cc_path = sys.argv[1] if len(sys.argv) > 1 else 'clang'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('cc_path', action='store', nargs='?', default='clang')
+    parser.add_argument('--lang',
+                        choices=[
+                            'c',
+                            'c++',
+                            'cpp',
+                        ], default='c')
+    parser.add_argument('--output',
+                        choices=[
+                            'path',
+                            'args',
+                            'default',
+                        ], default='default')
 
-    pprint.pprint(get_include_args(cc_path))
+    args = parser.parse_args()
+
+    if args.output == 'path':
+        print(os.pathsep.join(_get_include_paths(cc_path=args.cc_path, lang=args.lang)))
+    elif args.output == 'args':
+        print('\n'.join(get_include_args(cc_path=args.cc_path, lang=args.lang)))
+    else:
+        pprint.pprint(get_include_args(cc_path=args.cc_path, lang=args.lang))
