@@ -7,13 +7,11 @@ import sys
 import pytest
 import strictyaml
 
-from hawkmoth.util import compiler
+from test import conftest
 
 testext = '.yaml'
 testdir = os.path.dirname(os.path.abspath(__file__))
 rootdir = os.path.dirname(testdir)
-
-_clang_include_args = compiler.get_include_args()
 
 sys.path.insert(0, rootdir)
 
@@ -49,7 +47,7 @@ class Directive:
     def get_clang_args(self):
         clang_args = []
 
-        clang_args.extend(_clang_include_args.copy())
+        clang_args.extend(conftest.clang_include_args.copy())
 
         clang_args.extend(self.options.get('clang', []))
 
