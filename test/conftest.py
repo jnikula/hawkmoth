@@ -3,7 +3,7 @@
 
 from hawkmoth.util import compiler
 
-clang_include_args = []
+clang_include_args = {}
 
 def pytest_addoption(parser):
     parser.addoption('--cc-path', action='store', default='clang')
@@ -13,4 +13,7 @@ def pytest_configure(config):
 
     cc_path = config.getoption('--cc-path')
 
-    clang_include_args = compiler.get_include_args(cc_path=cc_path)
+    clang_include_args = {
+        lang: compiler.get_include_args(cc_path=cc_path, lang=lang)
+        for lang in ['c', 'cpp']
+    }

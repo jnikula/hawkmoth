@@ -47,7 +47,7 @@ class Directive:
     def get_clang_args(self):
         clang_args = []
 
-        clang_args.extend(conftest.clang_include_args.copy())
+        clang_args.extend(conftest.clang_include_args[self.domain].copy())
 
         clang_args.extend(self.options.get('clang', []))
 
