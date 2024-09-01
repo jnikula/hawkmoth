@@ -35,8 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - name: Install dependencies (apt)
-        run: sudo apt-get install -y python3-clang python3-pip
       - name: Examples check
         run: |
           . venv
