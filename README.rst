@@ -131,7 +131,7 @@ Dependencies
 
 Dependencies and their minimum versions:
 
-- Python 3.8
+- Python 3.9
 - Sphinx 3
 - Clang library 6
 - Python 3 Bindings for Clang library 6
