@@ -2,6 +2,9 @@
 # Copyright (c) 2018-2024 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
+import os
+import functools
+
 from clang.cindex import (
     TokenKind,
     CursorKind,
@@ -43,6 +46,17 @@ class DocCursor:
     won't expose any relevant information for those.
     """
 
+    _CACHE_SIZE = os.environ.get('HAWKMOTH_CURSOR_CACHE_SIZE', None)
+    if _CACHE_SIZE:
+        if _CACHE_SIZE.isdigit():
+            _CACHE_SIZE = int(_CACHE_SIZE)
+        elif _CACHE_SIZE == '' or _CACHE_SIZE == 'None':
+            _CACHE_SIZE = None
+        else:
+            _CACHE_SIZE = 128
+    else:
+        _CACHE_SIZE = 128
+
     def __init__(self, domain=None, cursor=None, comments=None):
         self._comments = comments if comments else {}
         self._cc = cursor
@@ -55,6 +69,11 @@ class DocCursor:
 
     def __hash__(self):
         return self._cc.hash
+
+    def __eq__(self, other):
+        return self._cc == other._cc and \
+            self._domain == other._domain and \
+            self._comments == other._comments
 
     @property
     def meta(self):
@@ -156,15 +175,7 @@ class DocCursor:
 
     @property
     def value(self):
-        if self._cc.kind == CursorKind.ENUM_CONSTANT_DECL:
-            if '=' in [t.spelling for t in self.get_tokens()]:
-                return self._cc.enum_value
-            else:
-                return None
-        if self._cc.kind in [CursorKind.TYPE_ALIAS_DECL, CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
-            return self._get_underlying_type()
-        else:
-            return None
+        return self._get_value()
 
     def get_children(self):
         """Get children cursors."""
@@ -209,6 +220,7 @@ class DocCursor:
 
         yield from tu.get_tokens(extent=extent)
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _get_fn_args(self):
         """Get function / method arguments."""
         args = []
@@ -227,6 +239,7 @@ class DocCursor:
 
         return args
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _function_fixup(self):
         """Parse additional details of a function declaration."""
         full_type = self._get_function_quals()
@@ -241,6 +254,7 @@ class DocCursor:
 
         return ttype
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _method_fixup(self):
         """Parse additional details of a method declaration."""
         full_type = []
@@ -264,6 +278,7 @@ class DocCursor:
 
         return ttype
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _type_definition_fixup(self):
         """Fix non trivial type definitions."""
         type_elem = []
@@ -297,6 +312,7 @@ class DocCursor:
 
         return f'{template}{self.namespace_prefix}{self._cc.spelling}{colon_suffix}'
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _get_macro_args(self):
         """Get macro arguments.
 
@@ -387,6 +403,7 @@ class DocCursor:
 
         return quals
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _get_method_quals(self):
         """Get all the qualifiers of a method.
 
@@ -448,6 +465,7 @@ class DocCursor:
 
         return type_elem
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _get_access_specifier(self):
         """Get the access specifier of a cursor, if any.
 
@@ -471,6 +489,7 @@ class DocCursor:
 
         return name_map.get(self._cc.access_specifier, None)
 
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _get_template_line(self):
         """Get the template arguments of a cursor.
 
@@ -561,6 +580,7 @@ class DocCursor:
         return 'bool' if type_string == '_Bool' else type_string
 
     @staticmethod
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
     def _var_type_fixup(cursor):
         """Fix non trivial variable and argument types.
 
@@ -647,3 +667,40 @@ class DocCursor:
                 if child.kind == CursorKind.TYPE_ALIAS_DECL:
                     return child.underlying_typedef_type
         return None
+
+    @functools.lru_cache(maxsize=_CACHE_SIZE)
+    def _get_value(self):
+
+        if self._cc.kind == CursorKind.ENUM_CONSTANT_DECL:
+            if '=' in [t.spelling for t in self.get_tokens()]:
+                return self._cc.enum_value
+            else:
+                return None
+        if self._cc.kind in [CursorKind.TYPE_ALIAS_DECL,
+                             CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
+            return self._get_underlying_type()
+        else:
+            return None
+
+    @staticmethod
+    def _for_each_cached_method():
+        for c in dir(DocCursor):
+            child = DocCursor.__dict__.get(c, None)
+            if type(child) is staticmethod:
+                child = child.__wrapped__
+            if type(child) is functools._lru_cache_wrapper:
+                yield child
+
+    @staticmethod
+    def cache_info():
+        """Print out the cache status of all supported cursor's methods."""
+        status = []
+        for obj in DocCursor._for_each_cached_method():
+            status.append('{0:25} {1}'.format(obj.__name__, obj.cache_info()))
+        return '\n'.join(status)
+
+    @staticmethod
+    def cache_wipe():
+        """Wipe out the cache of all supported cursor's methods."""
+        for obj in DocCursor._for_each_cached_method():
+            obj.cache_clear()
