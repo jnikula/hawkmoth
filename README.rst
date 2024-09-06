@@ -37,12 +37,6 @@ documentation, and more. In short, Hawkmoth is Sphinx Autodoc for C/C++.
 Hawkmoth aims to be a compelling alternative for documenting C and C++ projects
 using Sphinx, mainly through its simplicity of design, implementation and use.
 
-**Note**
-
-   The C++ support is still in early stages of development, and lacks some
-   fundamental features such as handling namespaces and documenting C++ specific
-   features other than classes.
-
 .. _Sphinx: http://www.sphinx-doc.org
 
 .. _C and C++ Domain: http://www.sphinx-doc.org/en/stable/domains.html
