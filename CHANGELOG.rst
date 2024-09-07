@@ -26,6 +26,8 @@ Removed
 
 * ``hawkmoth --compat={none,javadoc-basic,javadoc-liberal,kernel-doc}`` option
   from CLI
+* ``cautodoc_root`` configuration option in favour of ``hawkmoth_root``
+* ``cautodoc_clang`` configuration option in favour of ``hawkmoth_clang``
 
 Hawkmoth `0.18.0`_
 ------------------

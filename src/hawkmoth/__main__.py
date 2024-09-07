@@ -59,7 +59,7 @@ def main():
                         ],
                         help='Process docstring.')
     parser.add_argument('--clang', metavar='PARAM', action='append',
-                        help='Argument to pass to Clang. May be specified multiple times. See cautodoc_clang.')  # noqa: E501
+                        help='Argument to pass to Clang. May be specified multiple times. See hawkmoth_clang.')  # noqa: E501
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
     parser.add_argument('--version', action='version',

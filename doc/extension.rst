@@ -105,24 +105,3 @@ See also additional configuration options in the :ref:`built-in extensions
    .. code-block:: python
 
       hawkmoth_source_uri = 'https://example.org/src/{source}#L{line}'
-
-.. py:data:: cautodoc_root
-   :type: str
-
-   Equivalent to :py:data:`hawkmoth_root`.
-
-   .. warning::
-
-      The ``cautodoc_root`` option has been deprecated in favour of the
-      :py:data:`hawkmoth_root` option and will be removed in the future.
-
-.. py:data:: cautodoc_clang
-   :type: str
-
-   Equivalent to :py:data:`hawkmoth_clang`.
-
-   .. warning::
-
-      The ``cautodoc_clang`` option has been deprecated in favour of
-      the :py:data:`hawkmoth_clang` option and will be removed in the
-      future.
