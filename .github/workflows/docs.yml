@@ -13,8 +13,8 @@ jobs:
       matrix: ${{ steps.version-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
+      - name: Fetch tags
+        run: git fetch --tags origin
       - name: Set version matrix
         id: version-matrix
         run: echo "matrix=$(./.github/config.sh)" | tee $GITHUB_OUTPUT
