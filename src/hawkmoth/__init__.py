@@ -348,31 +348,11 @@ def _doctree_read(app, doctree):
             onlynode += nodes.reference('', '', inline, internal=False, refuri=uri)
             signode += onlynode
 
-def _deprecate(conf, old, new, default=None):
-    if conf[old]:
-        logger = logging.getLogger(__name__)
-        logger.warning(f'{old} is deprecated in favour of {new}')
-        conf[new] = conf[old]
-        del conf[old]
-        return conf[new]
-    return default
-
 def setup(app):
     app.require_sphinx('3.0')
 
-    app.add_config_value('cautodoc_root', None, 'env', [str])
-    app.add_config_value('cautodoc_clang', None, 'env', [list])
-
-    app.add_config_value(
-        'hawkmoth_root',
-        lambda conf: _deprecate(conf, 'cautodoc_root', 'hawkmoth_root', app.confdir),
-        'env', [str]
-    )
-    app.add_config_value(
-        'hawkmoth_clang',
-        lambda conf: _deprecate(conf, 'cautodoc_clang', 'hawkmoth_clang', []),
-        'env', [list]
-    )
+    app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
+    app.add_config_value('hawkmoth_clang', [], 'env', [list])
 
     app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
 
