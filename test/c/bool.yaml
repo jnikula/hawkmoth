@@ -1,0 +1,6 @@
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - bool.c
+expected: bool.rst

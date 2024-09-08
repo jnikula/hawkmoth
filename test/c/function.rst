@@ -4,11 +4,6 @@
    Foo function.
 
 
-.. c:function:: bool boolean(bool bar, bool baz)
-
-   Bool function.
-
-
 .. c:function:: int no_parameters(void)
 
    No parameters.
