@@ -29,7 +29,7 @@
    Named struct.
 
 
-   .. c:struct:: @anonymous_0a4d6f0b47cde0e9872b6dbde2ad1c1a
+   .. c:struct:: @anonymous_a63d10331be1a527625db63b8ace540f
 
       Anonymous sub-struct.
 
@@ -39,7 +39,7 @@
          Member foo.
 
 
-   .. c:union:: @anonymous_22cf17aa0fa6d83246282a58013db249
+   .. c:union:: @anonymous_69382278a84175c1cbff40d522114b38
 
       Anonymous sub-union.
 
