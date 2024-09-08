@@ -1,0 +1,25 @@
+FROM fedora:40
+
+RUN dnf -y update && \
+    dnf -y upgrade && \
+    dnf -y install \
+	python3-clang \
+	make && \
+    dnf clean all
+
+ARG UID=1000
+ARG GID=1000
+ARG ARCHIVE
+
+WORKDIR /src
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ADD ${ARCHIVE} .
+
+RUN sh venv
+
+ENV PATH=".venv/bin:${PATH}"
+
+USER ${UID}:${GID}
