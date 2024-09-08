@@ -3,6 +3,7 @@ FROM alpine:latest
 RUN apk add \
     py3-clang \
     clang-dev \
+    musl-dev \
     make
 
 ARG UID=1000
