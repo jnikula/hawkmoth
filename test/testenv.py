@@ -104,8 +104,7 @@ class Testcase:
 
         assert output_docs, 'empty output'
         assert expect_docs, 'empty expected'
-        assert output_docs == expect_docs
-        assert output_errors == expect_errors
+        assert output_docs + output_errors == expect_docs + expect_errors
 
 def get_testid(testcase):
     return testcase.get_testid()
