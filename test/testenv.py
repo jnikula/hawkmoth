@@ -7,6 +7,8 @@ import sys
 import pytest
 import strictyaml
 
+from test import conf
+
 testext = '.yaml'
 testdir = os.path.dirname(os.path.abspath(__file__))
 rootdir = os.path.dirname(testdir)
@@ -43,7 +45,12 @@ class Directive:
         return directive_str
 
     def get_clang_args(self):
-        clang_args = []
+        clang_args = getattr(conf, 'hawkmoth_clang', [])
+
+        if self.domain == 'c':
+            clang_args.extend(getattr(conf, 'hawkmoth_clang_c', []))
+        else:
+            clang_args.extend(getattr(conf, 'hawkmoth_clang_cpp', []))
 
         clang_args.extend(self.options.get('clang', []))
 
