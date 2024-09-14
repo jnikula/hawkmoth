@@ -22,8 +22,8 @@ There are three test files, with different levels and approaches, run by
   Test the parser and the command-line interface. The documentation comments are
   extracted through the command-line interface.
 
-* ``test_directive_text()`` and ``test_directive_html()`` in
-  ``test_cautodoc.py``
+* ``test_extension_text()`` and ``test_extension_html()`` in
+  ``test_extension.py``
 
   Test the parser and the Sphinx extension, using two builders: text and
   html. The documentation comments are extracted through the Sphinx build
