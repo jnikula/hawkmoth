@@ -71,11 +71,16 @@ exclude = [
 ]
 
 [tool.mypy]
-files = [
-    "src",
+mypy_path = "src:."
+packages = [
+    "hawkmoth",
     "test",
 ]
 exclude = "(test/conf\\.py)"
+
+[[tool.mypy.overrides]]
+module = "test.*"
+follow_imports = "skip"
 
 [[tool.mypy.overrides]]
 module = "clang.*"
