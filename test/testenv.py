@@ -30,11 +30,19 @@ class Directive:
 
         return self.testcase.get_relative_filename(basename)
 
-    def get_directive_string(self):
+    def get_directive_string(self, example=False):
         arguments_str = ' '.join(self.arguments)
         directive_str = f'.. {self.domain}:{self.directive}:: {arguments_str}\n'
 
-        for key, value in self.options.items():
+        if example:
+            # Use the options verbatim in documenting the examples.
+            options = self.options
+        else:
+            # Insert the default clang args for testing.
+            options = self.options.copy()
+            options['clang'] = self.get_clang_args()
+
+        for key, value in options.items():
             if isinstance(value, list):
                 value = ', '.join(value)
             space = ' ' if len(value) else ''
@@ -42,8 +50,16 @@ class Directive:
 
         return directive_str
 
+    def _get_default_clang_args(self):
+        if self.domain == 'c':
+            return ['-std=c17']
+        else:
+            return ['-std=c++17']
+
     def get_clang_args(self):
         clang_args = []
+
+        clang_args.extend(self._get_default_clang_args())
 
         clang_args.extend(self.options.get('clang', []))
 

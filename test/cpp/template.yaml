@@ -3,7 +3,4 @@ directives:
   directive: autodoc
   arguments:
   - template.cpp
-  options:
-    clang:
-    - --std=c++17
 expected: template.rst

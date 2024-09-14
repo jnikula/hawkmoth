@@ -85,7 +85,7 @@ def print_example(testcase):
         namespace_push = ''
         namespace_pop = ''
 
-    directive_str = testcase.directives[0].get_directive_string()
+    directive_str = testcase.directives[0].get_directive_string(example=True)
 
     print(f'''Directive
 ~~~~~~~~~
