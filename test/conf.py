@@ -29,6 +29,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
+# -- Options for Hawkmoth ----------------------------------------------------
+# https://jnikula.github.io/hawkmoth/dev/extension.html#configuration
+
+hawkmoth_clang_c = ['-std=c17']
+hawkmoth_clang_cpp = ['-std=c++17']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
