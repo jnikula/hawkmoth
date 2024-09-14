@@ -85,6 +85,18 @@ See also additional configuration options in the :ref:`built-in extensions
    You can also pass in the compiler to use, for example
    ``get_include_args('gcc')``.
 
+.. py:data:: hawkmoth_clang_c
+   :type: list
+
+   Arguments to pass to ``clang`` after :data:`hawkmoth_clang` in the C domain
+   only.
+
+.. py:data:: hawkmoth_clang_cpp
+   :type: list
+
+   Arguments to pass to ``clang`` after :data:`hawkmoth_clang` in the C++ domain
+   only.
+
 .. py:data:: hawkmoth_source_uri
    :type: str
 

@@ -6,6 +6,12 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Domain specific config options ``hawkmoth_clang_c`` and
+  ``hawkmoth_clang_cpp``.
+
 Changed
 ~~~~~~~
 

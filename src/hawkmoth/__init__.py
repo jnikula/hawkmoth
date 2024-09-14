@@ -57,6 +57,11 @@ class _AutoBaseDirective(SphinxDirective):
 
         clang_args.extend(self.env.config.hawkmoth_clang.copy())
 
+        if self._domain == 'c':
+            clang_args.extend(self.env.config.hawkmoth_clang_c.copy())
+        else:
+            clang_args.extend(self.env.config.hawkmoth_clang_cpp.copy())
+
         clang_args.extend(self.options.get('clang', []))
 
         return clang_args
@@ -353,6 +358,8 @@ def setup(app):
 
     app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
     app.add_config_value('hawkmoth_clang', [], 'env', [list])
+    app.add_config_value('hawkmoth_clang_c', [], 'env', [list])
+    app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list])
 
     app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
 
