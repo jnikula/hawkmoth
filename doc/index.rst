@@ -42,6 +42,7 @@ Contents:
    built-in-extensions
    tips
    troubleshooting
+   developer/index
 
 Indices and tables
 ==================
