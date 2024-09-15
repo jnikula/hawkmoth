@@ -51,8 +51,8 @@ jobs:
           . venv
           make check-examples
 
-  test:
-    name: Run test suite
+  test-ubuntu:
+    name: Run test suite (Ubuntu)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,6 +62,36 @@ jobs:
       - name: Test
         run: |
           . venv
+          make test
+
+  test-macos-xcode:
+    name: Run test suite (macOS xcode)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: printenv | sort
+      - name: Test
+        run: |
+          export DYLD_LIBRARY_PATH=${XCODE_15_DEVELOPER_DIR}/Toolchains/XcodeDefault.xctoolchain/usr/lib
+          . venv
+          pip install clang==15.0.7
+          make test
+
+  test-macos-homebrew:
+    name: Run test suite (macOS homebrew)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: brew --prefix llvm@15
+      - run: $(brew --prefix llvm@15)/bin/llvm-config --libdir
+      - run: printenv | sort
+      - name: Test
+        run: |
+          export DYLD_LIBRARY_PATH=$($(brew --prefix llvm@15)/bin/llvm-config --libdir)
+          . venv
+          pip install clang==15.0.7
           make test
 
   docs:
