@@ -27,7 +27,7 @@ Contribution Checklist
 ----------------------
 
 * New or modified features need test coverage. Add or update the tests in the
-  ``test`` directory accordingly. See `test/README.rst`_ for an overview of the
+  ``test`` directory accordingly. See :ref:`testing` for an overview of the
   approach to testing.
 
 * Bug fixes need test coverage. Ideally add an expected failure test case
@@ -50,5 +50,3 @@ Contribution Checklist
 * Make sure the documentation build passes for every commit::
 
     make html
-
-.. _test/README.rst: https://github.com/jnikula/hawkmoth/blob/master/test/README.rst

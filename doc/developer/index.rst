@@ -9,3 +9,4 @@ Documentation for contributors and developers.
    :maxdepth: 2
 
    contributing
+   testing
