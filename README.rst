@@ -120,11 +120,11 @@ checked out via ``git`` using this command::
 Please file bugs and feature requests as GitHub issues_. Contributions are
 welcome as GitHub pull requests.
 
-See `CONTRIBUTING.rst`_ for more details.
+See the `developer documentation`_ for details.
 
 .. _GitHub: https://github.com/jnikula/hawkmoth
 
-.. _CONTRIBUTING.rst: https://github.com/jnikula/hawkmoth/blob/master/CONTRIBUTING.rst
+.. _developer documentation: https://jnikula.github.io/hawkmoth/dev/developer/
 
 Dependencies
 ------------
