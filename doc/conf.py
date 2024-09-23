@@ -83,7 +83,9 @@ html_theme_options = {
     'extra_nav_links': {
         'GitHub': 'https://github.com/jnikula/hawkmoth',
         'PyPI': 'https://pypi.org/project/hawkmoth',
-    }
+    },
+    'sidebar_width': '280px',
+    'page_width': '1000px',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
