@@ -4,6 +4,7 @@ RUN dnf -y update && \
     dnf -y upgrade && \
     dnf -y install \
 	python3-clang \
+	diffutils \
 	make && \
     dnf clean all
 
