@@ -7,10 +7,17 @@ docker_dir := docker
 HAWKMOTH_VERSION := $(shell cat src/hawkmoth/VERSION)
 HAWKMOTH_ARCHIVE := $(docker_dir)/hawkmoth-$(HAWKMOTH_VERSION).tar.gz
 
+INSIDE_WORK_TREE := $(shell git rev-parse --is-inside-work-tree 2>/dev/null)
+
+ifeq ($(INSIDE_WORK_TREE),true)
 $(HAWKMOTH_ARCHIVE): $(shell git ls-files)
 	@test -z "$(shell git status --porcelain --untracked-files=no)" || \
-		(echo "error: git working directory is not clean" && false)
+		(echo "error: git work tree is not clean" && false)
 	git archive -o $@ HEAD
+else
+$(HAWKMOTH_ARCHIVE): FORCE
+	@echo "error: git not available or not inside a git work tree" && false
+endif
 
 # Containers for local testing
 DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
