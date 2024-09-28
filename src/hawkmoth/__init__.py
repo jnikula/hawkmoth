@@ -9,6 +9,7 @@ Sphinx C Domain autodoc directive extension.
 
 import glob
 import os
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -35,8 +36,8 @@ class _AutoBaseDirective(SphinxDirective):
     }
     has_content = False
 
-    _domain: str | None = None
-    _docstring_types: list[type[docstring.Docstring]] | None = None
+    _domain: Optional[str] = None
+    _docstring_types: Optional[list[type[docstring.Docstring]]] = None
 
     def __display_parser_diagnostics(self, errors):
         # Map parser diagnostic level to Sphinx level name

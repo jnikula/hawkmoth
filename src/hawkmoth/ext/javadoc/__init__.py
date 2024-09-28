@@ -2,6 +2,7 @@
 # Licensed under the terms of BSD 2-Clause, see LICENSE for details.
 
 import re
+from typing import Optional
 
 # The "operator" character, either \ or @, but not escaped with \
 OP = r'(?<!\\)(?P<op>[\\@])'
@@ -86,7 +87,7 @@ class _block_with_end_command(_handler):
     """Paragraph with a dedicated command to end it.
 
     For example, @code/@endcode."""
-    _end_command: str | None = None
+    _end_command: Optional[str] = None
 
     def end_command(self):
         """Get the name of the command that ends this paragraph."""
@@ -135,7 +136,7 @@ class _strip_command(_handler):
 
 class _field_list(_handler):
     """Paragraph which becomes a single field list item."""
-    _field_name: str | None = None
+    _field_name: Optional[str] = None
     _indented_paragraph = True
 
     def field_name(self):
