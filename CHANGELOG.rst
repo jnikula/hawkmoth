@@ -9,6 +9,7 @@ Unreleased `master`_
 Added
 ~~~~~
 
+* Support for C++ namespaces
 * Domain specific config options ``hawkmoth_clang_c`` and
   ``hawkmoth_clang_cpp``.
 
@@ -18,6 +19,9 @@ Changed
 * Bumped Python dependency requirement to v3.9, as v3.8 is reaching end of life
 * The ``hawkmoth.ext.transformations`` extension is no longer loaded
   automatically as it has been deprecated
+* Moved developer documentation under doc/developer/
+* Switched from ``setup.cfg`` to ``pyproject.toml``
+* Switched build backend to hatchling
 
 Deprecated
 ~~~~~~~~~~
