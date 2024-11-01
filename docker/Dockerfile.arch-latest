@@ -1,0 +1,25 @@
+FROM archlinux:latest
+
+RUN pacman -Syu --noconfirm \
+    clang \
+    diffutils \
+    make \
+    python
+
+ARG UID=1000
+ARG GID=1000
+ARG ARCHIVE
+
+WORKDIR /src
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PYTEST_ADDOPTS "-p no:cacheprovider"
+
+ADD ${ARCHIVE} .
+
+RUN sh venv
+
+ENV PATH=".venv/bin:${PATH}"
+
+USER ${UID}:${GID}
