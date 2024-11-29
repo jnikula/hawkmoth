@@ -9,6 +9,9 @@ the Clang Python Bindings, for example system include paths.
 """
 
 import subprocess
+from sphinx.util import logging
+
+logger = logging.getLogger(__name__)
 
 def _removesuffix(s, suffix):
     if suffix and s.endswith(suffix):
@@ -32,22 +35,38 @@ def _get_paths_from_output(output):
 
         yield line.strip()
 
-def _get_include_paths(cc_path):
-    result = subprocess.run([cc_path, '-E', '-Wp,-v', '-'],
-                            stdin=subprocess.DEVNULL,
-                            capture_output=True,
-                            check=True,
-                            text=True)
+def _get_include_paths(cpath, lang):
+    try:
+        result = subprocess.run([cpath, '-x', lang, '-E', '-Wp,-v', '-'],
+                                stdin=subprocess.DEVNULL,
+                                capture_output=True,
+                                check=True,
+                                text=True)
+    except FileNotFoundError:
+        logger.warning(f"get_include_args: {lang} compiler not found ('{cpath}')")
+        return []
+
+    except subprocess.CalledProcessError:
+        logger.warning(f"get_include_args: incompatible {lang} compiler ('{cpath}')")
+        return []
+
+    if result.returncode != 0:
+        logger.warning(f"get_include_args: incompatible {lang} compiler ('{cpath}')")
+        return []
 
     return _get_paths_from_output(result.stderr)
 
-def get_include_args(cc_path='clang'):
-    return [f'-I{path}' for path in _get_include_paths(cc_path)]
+def get_include_args(cpath='clang', lang='c', cc_path=None):
+    if cc_path is not None:
+        cpath = cc_path
+        logger.warning('get_include_args: `cc_path` argument has been deprecated; use `cpath` instead')  # noqa: E501
+
+    return ['-nostdinc'] + [f'-I{path}' for path in _get_include_paths(cpath, lang)]
 
 if __name__ == '__main__':
     import pprint
     import sys
 
-    cc_path = sys.argv[1] if len(sys.argv) > 1 else 'clang'
+    compiler = sys.argv[1] if len(sys.argv) > 1 else 'clang'
 
-    pprint.pprint(get_include_args(cc_path))
+    pprint.pprint(get_include_args(compiler))
