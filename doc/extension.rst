@@ -56,9 +56,38 @@ See also additional configuration options in the :ref:`built-in extensions
    :type: str
 
    The default transform parameter to be passed to the
-   :event:`hawkmoth-process-docstring` event. It can be overriden with the
+   :event:`hawkmoth-process-docstring` event. It can be overridden with the
    ``transform`` option of the :ref:`directives <directives>`. Defaults to
    ``None``.
+
+.. py:data:: hawkmoth_compiler
+   :type: str
+
+   The (path to the) default compiler used by the project. This is used to
+   determine the exact options needed to parse the code files by libclang
+   provided the relevant options are enabled in :data:`hawkmoth_autoconf`.
+
+   Notably, it allows hawkmoth to override libclang's default search path for
+   system headers with those of the specified compiler.
+
+   This presumes the compiler supports being called as
+   ``<compiler> -x <c|c++> -E -Wp,-v /dev/null``.
+
+   Defaults to ``clang``, which may differ from libclang's own default includes.
+   It will use libclang's defaults if set to ``None`` though.
+
+.. py:data:: hawkmoth_autoconf
+   :type: list
+
+   List of options that control the automatic configuration features of
+   hawkmoth. Currently supported options:
+
+   * ``'stdinc'``: override the standard include paths of libclang with those of
+     the specified compiler (see :data:`hawkmoth_compiler`).
+
+     This is a shortcut to specify ``-nostdinc -I<dir 1> ... -I<dir n>`` in
+     :data:`hawkmoth_clang` with the search directories of the specified
+     compiler.
 
 .. py:data:: hawkmoth_clang
    :type: list
@@ -72,18 +101,6 @@ See also additional configuration options in the :ref:`built-in extensions
    .. code-block:: python
 
       hawkmoth_clang = ['-I/path/to/include', '-DHAWKMOTH']
-
-   Hawkmoth provides a convenience helper for querying the include path from the
-   compiler, and providing them as ``-I`` options:
-
-   .. code-block:: python
-
-      from hawkmoth.util import compiler
-
-      hawkmoth_clang = compiler.get_include_args()
-
-   You can also pass in the compiler to use, for example
-   ``get_include_args('gcc')``.
 
 .. py:data:: hawkmoth_clang_c
    :type: list
