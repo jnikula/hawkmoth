@@ -7,6 +7,7 @@ import sys
 import pytest
 import strictyaml
 
+from hawkmoth.util import compiler
 from test import conf
 
 testext = '.yaml'
@@ -49,10 +50,12 @@ class Directive:
 
         if self.domain == 'c':
             clang_args.extend(getattr(conf, 'hawkmoth_clang_c', []))
+            clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(compiler.get_include_args('clang', 'c'))
         else:
             clang_args.extend(getattr(conf, 'hawkmoth_clang_cpp', []))
-
-        clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(compiler.get_include_args('clang', 'c++'))
 
         return clang_args
 
