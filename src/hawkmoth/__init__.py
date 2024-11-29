@@ -19,6 +19,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
 
+from hawkmoth.util import compiler
 from hawkmoth.parser import parse, ErrorLevel
 from hawkmoth.util import strutil
 from hawkmoth import docstring
@@ -54,16 +55,16 @@ class _AutoBaseDirective(SphinxDirective):
                             location=(self.env.docname, self.lineno))
 
     def __get_clang_args(self):
-        clang_args = []
-
-        clang_args.extend(self.env.config.hawkmoth_clang.copy())
+        clang_args = self.env.config.hawkmoth_clang.copy()
 
         if self._domain == 'c':
             clang_args.extend(self.env.config.hawkmoth_clang_c.copy())
+            clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(self.env.config._clang_args_post_c.copy())
         else:
             clang_args.extend(self.env.config.hawkmoth_clang_cpp.copy())
-
-        clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(self.options.get('clang', []))
+            clang_args.extend(self.env.config._clang_args_post_cpp.copy())
 
         return clang_args
 
@@ -354,10 +355,31 @@ def _doctree_read(app, doctree):
             onlynode += nodes.reference('', '', inline, internal=False, refuri=uri)
             signode += onlynode
 
+def _autoconf(app, config):
+    logger = logging.getLogger(__name__)
+    cpath = config.hawkmoth_compiler
+    autoconf = config.hawkmoth_autoconf
+
+    ignored_options = [x for x in autoconf if x not in ['stdinc']]
+    if len(ignored_options) > 0:
+        logger.warning(f'autoconf: {ignored_options} unsupported option(s) ignored')
+
+    config._clang_args_post_c = []
+    config._clang_args_post_cpp = []
+
+    if 'stdinc' in autoconf:
+        if cpath:
+            config._clang_args_post_c = compiler.get_include_args(cpath, 'c')
+            config._clang_args_post_cpp = compiler.get_include_args(cpath, 'c++')
+        else:
+            logger.warning('autoconf: \'stdinc\' option ignored (missing compiler)')
+
 def setup(app):
     app.require_sphinx('3.0')
 
     app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
+    app.add_config_value('hawkmoth_compiler', 'clang', 'env', [str, type(None)])
+    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list])
     app.add_config_value('hawkmoth_clang', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_c', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list])
@@ -386,6 +408,9 @@ def setup(app):
     app.add_directive_to_domain('cpp', 'autoclass', CppAutoClassDirective)
 
     app.add_event('hawkmoth-process-docstring')
+
+    # Auto configure once during initialization.
+    app.connect('config-inited', _autoconf)
 
     # Source code link
     app.add_config_value('hawkmoth_source_uri', None, 'env', [str])
