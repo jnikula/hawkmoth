@@ -20,6 +20,9 @@ class ExtensionTestcase(testenv.Testcase):
         super().__init__(filename)
         self._buildername = buildername
 
+    def valid(self):
+        return 'extension' in self.options.get('test', ['extension'])
+
     def _get_suffix(self):
         return 'txt' if self._buildername == 'text' else self._buildername
 
@@ -27,6 +30,7 @@ class ExtensionTestcase(testenv.Testcase):
         outdir = os.path.join(srcdir, self._buildername)
         doctreedir = os.path.join(srcdir, 'doctrees')
         confdir = testenv.testdir
+        confoverrides = self.get_conf_overrides()
 
         # Don't emit color codes in Sphinx status/warning output
         console.nocolor()
@@ -36,7 +40,7 @@ class ExtensionTestcase(testenv.Testcase):
         with patch_docutils(confdir), docutils_namespace():
             app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
                          doctreedir=doctreedir, buildername=self._buildername,
-                         warning=warning)
+                         confoverrides=confoverrides, warning=warning)
 
             # Ensure there are no errors with app creation.
             assert warning.getvalue() == ''
@@ -83,7 +87,9 @@ class ExtensionTestcase(testenv.Testcase):
 
 def _get_extension_testcases(path, buildername):
     for f in testenv.get_testcase_filenames(path):
-        yield ExtensionTestcase(f, buildername)
+        testcase = ExtensionTestcase(f, buildername)
+        if testcase.valid():
+            yield testcase
 
 # Test using Sphinx plain text builder
 @pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),

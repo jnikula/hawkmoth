@@ -32,6 +32,10 @@ def _stderr_basename(errors_str):
 
 
 class CliTestcase(testenv.Testcase):
+
+    def valid(self):
+        return 'cli' in self.options.get('test', ['cli'])
+
     def set_monkeypatch(self, monkeypatch):
         self.monkeypatch = monkeypatch
         self.mock_args([])
@@ -88,7 +92,9 @@ class CliTestcase(testenv.Testcase):
 
 def _get_cli_testcases(path):
     for f in testenv.get_testcase_filenames(path):
-        yield CliTestcase(f)
+        testcase = CliTestcase(f)
+        if testcase.valid():
+            yield testcase
 
 @pytest.mark.full
 @pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir),
