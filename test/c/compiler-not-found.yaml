@@ -1,0 +1,11 @@
+test:
+- extension
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - doc.c
+conf-overrides:
+  hawkmoth_compiler: invalid
+errors: compiler-not-found.stderr
+expected: doc.rst

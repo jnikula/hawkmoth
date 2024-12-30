@@ -1,0 +1,13 @@
+test:
+- extension
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - bool.c
+conf-overrides:
+  hawkmoth_clang: -nostdinc
+  hawkmoth_compiler: clang
+  hawkmoth_autoconf:
+  - 'stdinc'
+expected: bool.rst
