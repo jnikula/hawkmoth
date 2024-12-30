@@ -19,6 +19,7 @@ from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
 
+from hawkmoth.util import compiler
 from hawkmoth.parser import parse, ErrorLevel
 from hawkmoth.util import strutil
 from hawkmoth import docstring
@@ -39,6 +40,31 @@ class _AutoBaseDirective(SphinxDirective):
     _domain: Optional[str] = None
     _docstring_types: Optional[list[type[docstring.Docstring]]] = None
 
+    def __init__(self, name, arguments, options,
+                 content, lineno, content_offset,
+                 block_text, state, state_machine):
+
+        super().__init__(name, arguments, options,
+                         content, lineno, content_offset,
+                         block_text, state, state_machine)
+
+        cpath = self.env.config.hawkmoth_compiler
+        autoconf = self.env.config.hawkmoth_autoconf
+
+        ignored_options = [x for x in autoconf if x not in ['stdinc']]
+        if len(ignored_options) > 0:
+            self.logger.warning(f'autoconf: {ignored_options} unsupported option(s) ignored')
+
+        self._clang_args_post = []
+        if 'stdinc' in autoconf:
+            if cpath:
+                if self._domain == 'c':
+                    self._clang_args_post = compiler.get_include_args(cpath, 'c')
+                else:
+                    self._clang_args_post = compiler.get_include_args(cpath, 'c++')
+            else:
+                self.logger.warning('autoconf: \'stdinc\' option ignored (missing compiler)')
+
     def __display_parser_diagnostics(self, errors):
         # Map parser diagnostic level to Sphinx level name
         log_level_map = {
@@ -56,8 +82,6 @@ class _AutoBaseDirective(SphinxDirective):
     def __get_clang_args(self):
         clang_args = []
 
-        clang_args.extend(self.env.config.hawkmoth_clang.copy())
-
         if self._domain == 'c':
             clang_args.extend(self.env.config.hawkmoth_clang_c.copy())
         else:
@@ -65,6 +89,7 @@ class _AutoBaseDirective(SphinxDirective):
 
         clang_args.extend(self.options.get('clang', []))
 
+        clang_args.extend(self._clang_args_post)
         return clang_args
 
     def __parse(self, filename):
@@ -358,6 +383,8 @@ def setup(app):
     app.require_sphinx('3.0')
 
     app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
+    app.add_config_value('hawkmoth_compiler', 'clang', 'env', [str, type(None)])
+    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list])
     app.add_config_value('hawkmoth_clang', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_c', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list])

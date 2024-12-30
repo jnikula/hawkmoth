@@ -7,6 +7,7 @@ import sys
 import pytest
 import strictyaml
 
+from hawkmoth.util import compiler
 from test import conf
 
 testext = '.yaml'
@@ -49,8 +50,10 @@ class Directive:
 
         if self.domain == 'c':
             clang_args.extend(getattr(conf, 'hawkmoth_clang_c', []))
+            clang_args.extend(compiler.get_include_args('clang', 'c'))
         else:
             clang_args.extend(getattr(conf, 'hawkmoth_clang_cpp', []))
+            clang_args.extend(compiler.get_include_args('clang', 'c++'))
 
         clang_args.extend(self.options.get('clang', []))
 
@@ -58,6 +61,7 @@ class Directive:
 
 class Testcase:
     _options_schema = strictyaml.Map({
+        strictyaml.Optional('test'): strictyaml.Seq(strictyaml.Str()),
         'directives': strictyaml.Seq(strictyaml.Map({
             'domain': strictyaml.Enum(['c', 'cpp']),
             'directive': strictyaml.Str(),
@@ -70,6 +74,9 @@ class Testcase:
                 strictyaml.Optional('transform'): strictyaml.Str(),
             }),
         })),
+        strictyaml.Optional('conf-overrides'): strictyaml.MapPattern(
+            strictyaml.Str(), strictyaml.NullNone() | strictyaml.EmptyList() | strictyaml.Any(),
+        ),
         strictyaml.Optional('expected-failure'): strictyaml.Bool(),
         strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
         strictyaml.Optional('example-title'): strictyaml.Str(),
@@ -82,6 +89,8 @@ class Testcase:
         self.filename = filename
         with open(filename) as f:
             self.options = strictyaml.load(f.read(), self._options_schema).data
+            if self.options.get('test', None) is None:
+                self.options['test'] = ['cli', 'parser', 'extension']
         self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
         self.directives = [Directive(self, directive_config) for
@@ -101,6 +110,9 @@ class Testcase:
 
     def get_stderr_filename(self):
         return self.get_relative_filename(self.options.get('errors'))
+
+    def get_conf_overrides(self):
+        return self.options.get('conf-overrides', {})
 
     def run_test(self):
         if self.options.get('expected-failure'):

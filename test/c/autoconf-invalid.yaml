@@ -1,0 +1,12 @@
+test:
+- extension
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - doc.c
+conf-overrides:
+  hawkmoth_autoconf:
+  - 'invalid'
+errors: autoconf-invalid.stderr
+expected: doc.rst
