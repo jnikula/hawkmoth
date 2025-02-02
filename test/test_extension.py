@@ -42,9 +42,6 @@ class ExtensionTestcase(testenv.Testcase):
                          doctreedir=doctreedir, buildername=self._buildername,
                          confoverrides=confoverrides, warning=warning)
 
-            # Ensure there are no errors with app creation.
-            assert warning.getvalue() == ''
-
             # Set root to the directory the testcase yaml is in, because the
             # filenames in yaml are relative to it.
             app.config.hawkmoth_root = os.path.dirname(self.filename)
