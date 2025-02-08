@@ -61,6 +61,7 @@ class Directive:
 
 class Testcase:
     _options_schema = strictyaml.Map({
+        strictyaml.Optional('test'): strictyaml.Seq(strictyaml.Str()),
         'directives': strictyaml.Seq(strictyaml.Map({
             'domain': strictyaml.Enum(['c', 'cpp']),
             'directive': strictyaml.Str(),
@@ -85,6 +86,8 @@ class Testcase:
         self.filename = filename
         with open(filename) as f:
             self.options = strictyaml.load(f.read(), self._options_schema).data
+            if self.options.get('test', None) is None:
+                self.options['test'] = ['cli', 'parser', 'extension']
         self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
         self.directives = [Directive(self, directive_config) for
