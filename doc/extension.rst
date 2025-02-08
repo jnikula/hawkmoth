@@ -74,7 +74,6 @@ See also additional configuration options in the :ref:`built-in extensions
    ``<compiler> -x <c|c++> -E -Wp,-v /dev/null``.
 
    Defaults to ``clang``, which may differ from libclang's own default includes.
-   It will use libclang's defaults if set to ``None`` though.
 
 .. py:data:: hawkmoth_autoconf
    :type: list[str]|None
@@ -88,6 +87,9 @@ See also additional configuration options in the :ref:`built-in extensions
      This is a shortcut to specify ``-nostdinc -I<dir 1> ... -I<dir n>`` in
      :data:`hawkmoth_clang` with the search directories of the specified
      compiler.
+
+   Defaults to ``['stdinc']``. Set to ``None`` (or ``[]``) to disable automatic
+   configuration, falling back to libclang's defaults.
 
 .. py:data:: hawkmoth_clang
    :type: list[str]
