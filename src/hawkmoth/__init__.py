@@ -379,12 +379,12 @@ def setup(app):
 
     app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
     app.add_config_value('hawkmoth_compiler', 'clang', 'env', [str, type(None)])
-    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list, type(None)])
-    app.add_config_value('hawkmoth_clang', [], 'env', [list])
-    app.add_config_value('hawkmoth_clang_c', [], 'env', [list])
-    app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list])
+    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list[str], type(None)])
+    app.add_config_value('hawkmoth_clang', [], 'env', [list[str]])
+    app.add_config_value('hawkmoth_clang_c', [], 'env', [list[str]])
+    app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list[str]])
 
-    app.add_config_value('hawkmoth_transform_default', None, 'env', [str])
+    app.add_config_value('hawkmoth_transform_default', None, 'env', [str, type(None)])
 
     app.add_directive_to_domain('c', 'autodoc', CAutoDocDirective)
     app.add_directive_to_domain('c', 'autosection', CAutoSectionDirective)
@@ -413,7 +413,7 @@ def setup(app):
     app.connect('config-inited', _autoconf, priority=850)
 
     # Source code link
-    app.add_config_value('hawkmoth_source_uri', None, 'env', [str])
+    app.add_config_value('hawkmoth_source_uri', None, 'env', [str, type(None)])
     app.connect('doctree-read', _doctree_read)
 
     return dict(version=__version__,

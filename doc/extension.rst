@@ -53,7 +53,7 @@ See also additional configuration options in the :ref:`built-in extensions
       hawkmoth_root = os.path.abspath('my/sources/dir')
 
 .. py:data:: hawkmoth_transform_default
-   :type: str
+   :type: str|None
 
    The default transform parameter to be passed to the
    :event:`hawkmoth-process-docstring` event. It can be overridden with the
@@ -61,7 +61,7 @@ See also additional configuration options in the :ref:`built-in extensions
    ``None``.
 
 .. py:data:: hawkmoth_compiler
-   :type: str
+   :type: str|None
 
    The (path to the) default compiler used by the project. This is used to
    determine the exact options needed to parse the code files by libclang
@@ -77,7 +77,7 @@ See also additional configuration options in the :ref:`built-in extensions
    It will use libclang's defaults if set to ``None`` though.
 
 .. py:data:: hawkmoth_autoconf
-   :type: list
+   :type: list[str]|None
 
    List of options that control the automatic configuration features of
    hawkmoth. Currently supported options:
@@ -90,7 +90,7 @@ See also additional configuration options in the :ref:`built-in extensions
      compiler.
 
 .. py:data:: hawkmoth_clang
-   :type: list
+   :type: list[str]
 
    A list of arguments to pass to ``clang`` while parsing the source, typically
    to add directories to include file search path, or to define macros for
@@ -103,19 +103,19 @@ See also additional configuration options in the :ref:`built-in extensions
       hawkmoth_clang = ['-I/path/to/include', '-DHAWKMOTH']
 
 .. py:data:: hawkmoth_clang_c
-   :type: list
+   :type: list[str]
 
    Arguments to pass to ``clang`` after :data:`hawkmoth_clang` in the C domain
    only.
 
 .. py:data:: hawkmoth_clang_cpp
-   :type: list
+   :type: list[str]
 
    Arguments to pass to ``clang`` after :data:`hawkmoth_clang` in the C++ domain
    only.
 
 .. py:data:: hawkmoth_source_uri
-   :type: str
+   :type: str|None
 
    A template URI to source code. If set, add links to externally hosted source
    code for each documented symbol, similar to the :external+sphinx:doc:`Sphinx
