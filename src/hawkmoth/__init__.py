@@ -409,8 +409,8 @@ def setup(app):
 
     app.add_event('hawkmoth-process-docstring')
 
-    # Auto configure once during initialization.
-    app.connect('config-inited', _autoconf)
+    # Auto configure once during initialization, after Sphinx config type checks
+    app.connect('config-inited', _autoconf, priority=850)
 
     # Source code link
     app.add_config_value('hawkmoth_source_uri', None, 'env', [str])
