@@ -358,7 +358,7 @@ def _doctree_read(app, doctree):
 def _autoconf(app, config):
     logger = logging.getLogger(__name__)
     cpath = config.hawkmoth_compiler
-    autoconf = config.hawkmoth_autoconf
+    autoconf = config.hawkmoth_autoconf if config.hawkmoth_autoconf else []
 
     ignored_options = [x for x in autoconf if x not in ['stdinc']]
     if len(ignored_options) > 0:
@@ -379,7 +379,7 @@ def setup(app):
 
     app.add_config_value('hawkmoth_root', app.confdir, 'env', [str])
     app.add_config_value('hawkmoth_compiler', 'clang', 'env', [str, type(None)])
-    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list])
+    app.add_config_value('hawkmoth_autoconf', ['stdinc'], 'env', [list, type(None)])
     app.add_config_value('hawkmoth_clang', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_c', [], 'env', [list])
     app.add_config_value('hawkmoth_clang_cpp', [], 'env', [list])
