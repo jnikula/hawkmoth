@@ -74,6 +74,9 @@ class Testcase:
                 strictyaml.Optional('transform'): strictyaml.Str(),
             }),
         })),
+        strictyaml.Optional('conf-overrides'): strictyaml.MapPattern(
+            strictyaml.Str(), strictyaml.NullNone() | strictyaml.EmptyList() | strictyaml.Any(),
+        ),
         strictyaml.Optional('expected-failure'): strictyaml.Bool(),
         strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
         strictyaml.Optional('example-title'): strictyaml.Str(),
@@ -107,6 +110,9 @@ class Testcase:
 
     def get_stderr_filename(self):
         return self.get_relative_filename(self.options.get('errors'))
+
+    def get_conf_overrides(self):
+        return self.options.get('conf-overrides', {})
 
     def run_test(self):
         if self.options.get('expected-failure'):

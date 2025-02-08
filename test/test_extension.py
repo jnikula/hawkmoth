@@ -30,6 +30,7 @@ class ExtensionTestcase(testenv.Testcase):
         outdir = os.path.join(srcdir, self._buildername)
         doctreedir = os.path.join(srcdir, 'doctrees')
         confdir = testenv.testdir
+        confoverrides = self.get_conf_overrides()
 
         # Don't emit color codes in Sphinx status/warning output
         console.nocolor()
@@ -39,7 +40,7 @@ class ExtensionTestcase(testenv.Testcase):
         with patch_docutils(confdir), docutils_namespace():
             app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
                          doctreedir=doctreedir, buildername=self._buildername,
-                         warning=warning)
+                         confoverrides=confoverrides, warning=warning)
 
             # Ensure there are no errors with app creation.
             assert warning.getvalue() == ''
