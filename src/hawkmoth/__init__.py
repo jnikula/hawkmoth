@@ -374,6 +374,9 @@ def _autoconf(app, config):
         else:
             logger.warning('autoconf: \'stdinc\' option ignored (missing compiler)')
 
+    logger.verbose(f'autoconf: Using C include args: {config._clang_args_post_c}')
+    logger.verbose(f'autoconf: Using C++ include args: {config._clang_args_post_cpp}')
+
 def setup(app):
     app.require_sphinx('3.0')
 
