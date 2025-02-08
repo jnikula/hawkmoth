@@ -58,6 +58,9 @@ def _filter_members(directive):
     return members
 
 class ParserTestcase(testenv.Testcase):
+    def valid(self):
+        return 'parser' in self.options.get('test', ['parser'])
+
     def get_output(self):
         roots = {}
         docs_str = ''
@@ -114,7 +117,9 @@ class ParserTestcase(testenv.Testcase):
 
 def _get_parser_testcases(path):
     for f in testenv.get_testcase_filenames(path):
-        yield ParserTestcase(f)
+        testcase = ParserTestcase(f)
+        if testcase.valid():
+            yield testcase
 
 @pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir),
                          ids=testenv.get_testid)

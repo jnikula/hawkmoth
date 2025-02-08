@@ -20,6 +20,9 @@ class ExtensionTestcase(testenv.Testcase):
         super().__init__(filename)
         self._buildername = buildername
 
+    def valid(self):
+        return 'extension' in self.options.get('test', ['extension'])
+
     def _get_suffix(self):
         return 'txt' if self._buildername == 'text' else self._buildername
 
@@ -83,7 +86,9 @@ class ExtensionTestcase(testenv.Testcase):
 
 def _get_extension_testcases(path, buildername):
     for f in testenv.get_testcase_filenames(path):
-        yield ExtensionTestcase(f, buildername)
+        testcase = ExtensionTestcase(f, buildername)
+        if testcase.valid():
+            yield testcase
 
 # Test using Sphinx plain text builder
 @pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),
