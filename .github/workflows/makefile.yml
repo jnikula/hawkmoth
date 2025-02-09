@@ -91,7 +91,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - run: printenv | sort
+      - name: Environment
+        run: printenv | sort
+      - name: xcode-select
+        run: xcode-select --print-path
+      - name: Files
+        run: find $(xcode-select --print-path)
       - name: Test
         run: |
           export DYLD_LIBRARY_PATH=${XCODE_15_DEVELOPER_DIR}/Toolchains/XcodeDefault.xctoolchain/usr/lib
