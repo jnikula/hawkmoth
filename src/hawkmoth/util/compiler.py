@@ -64,9 +64,13 @@ def get_include_args(cpath='clang', lang='c', cc_path=None):
     return ['-nostdinc'] + [f'-isystem{path}' for path in _get_include_paths(cpath, lang)]
 
 if __name__ == '__main__':
+    import argparse
     import pprint
-    import sys
 
-    compiler = sys.argv[1] if len(sys.argv) > 1 else 'clang'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('compiler', nargs='?', default='clang')
+    parser.add_argument('--lang', choices=['c', 'c++'], default='c')
 
-    pprint.pprint(get_include_args(compiler))
+    args = parser.parse_args()
+
+    pprint.pprint(get_include_args(cpath=args.compiler, lang=args.lang))
