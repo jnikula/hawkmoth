@@ -61,7 +61,7 @@ def get_include_args(cpath='clang', lang='c', cc_path=None):
         cpath = cc_path
         logger.warning('get_include_args: `cc_path` argument has been deprecated; use `cpath` instead')  # noqa: E501
 
-    return ['-nostdinc'] + [f'-I{path}' for path in _get_include_paths(cpath, lang)]
+    return ['-nostdinc'] + [f'-isystem{path}' for path in _get_include_paths(cpath, lang)]
 
 if __name__ == '__main__':
     import pprint
