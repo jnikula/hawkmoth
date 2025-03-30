@@ -137,9 +137,9 @@ Dependencies and their minimum versions:
 - Python 3 Bindings for Clang library 6
 
 There are additional development and testing dependencies recorded in
-`setup.cfg`_.
+`pyproject.toml`_.
 
-.. _setup.cfg: https://github.com/jnikula/hawkmoth/blob/master/setup.cfg
+.. _pyproject.toml: https://github.com/jnikula/hawkmoth/blob/master/pyproject.toml
 
 License
 -------
