@@ -6,6 +6,20 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Automatic configuration of system header search paths, enabled by default, and
+  configurable via ``hawkmoth_autoconf`` option
+* ``hawkmoth_compiler`` option to set the compiler for autoconf
+* CI on macOS
+* Dockerfile for testing on Arch Linux
+
+Deprecated
+~~~~~~~~~~
+
+* Direct use of ``compiler.get_include_args()`` in favour of ``hawkmoth_autoconf``
+
 Hawkmoth `0.19.0`_
 ------------------
 
