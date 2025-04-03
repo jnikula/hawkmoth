@@ -6,6 +6,11 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Hawkmoth `0.20.0`_
+------------------
+
+:Date: 2025-04-03
+
 Added
 ~~~~~
 
@@ -463,7 +468,8 @@ Changed
 * Parser refactoring
 * Testing overhaul, switch to sphinx_testing
 
-.. _master: https://github.com/jnikula/hawkmoth/compare/v0.19.0..master
+.. _master: https://github.com/jnikula/hawkmoth/compare/v0.20.0..master
+.. _0.20.0: https://github.com/jnikula/hawkmoth/compare/v0.19.0..v0.20.0
 .. _0.19.0: https://github.com/jnikula/hawkmoth/compare/v0.18.0..v0.19.0
 .. _0.18.0: https://github.com/jnikula/hawkmoth/compare/v0.17.0..v0.18.0
 .. _0.17.0: https://github.com/jnikula/hawkmoth/compare/v0.16.0..v0.17.0
