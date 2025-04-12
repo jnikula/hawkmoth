@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2023, Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2023 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
 # Output a json matrix for building multiple versions of documentation

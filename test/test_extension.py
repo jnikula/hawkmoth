@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018-2023, Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2018 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
 import io

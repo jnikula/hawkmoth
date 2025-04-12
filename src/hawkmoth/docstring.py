@@ -1,5 +1,5 @@
-# Copyright (c) 2016-2021 Jani Nikula <jani@nikula.org>
-# Copyright (c) 2018-2023 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# SPDX-FileCopyrightText: 2016 Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2018 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # SPDX-License-Identifier: BSD-2-Clause
 """
 Documentation comment storage and converter
