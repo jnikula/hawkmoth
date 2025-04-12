@@ -22,8 +22,14 @@ def indent(s, prefix=''):
 
     return '\n'.join(lines)
 
+# Even though we're generating the file, we're generating it from sources that
+# have copyright and license, so replicate that here too.
 def print_header():
     print('''
+.. SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+.. SPDX-FileCopyrightText: 2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+.. SPDX-License-Identifier: BSD-2-Clause
+
 .. Generated using update-examples, do not edit manually!
 
 .. _examples:

@@ -1,4 +1,8 @@
 
+.. SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+.. SPDX-FileCopyrightText: 2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+.. SPDX-License-Identifier: BSD-2-Clause
+
 .. Generated using update-examples, do not edit manually!
 
 .. _examples:
