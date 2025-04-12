@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2018 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+# SPDX-License-Identifier: BSD-2-Clause
+#
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:

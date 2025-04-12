@@ -1,3 +1,5 @@
+.. SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+.. SPDX-License-Identifier: BSD-2-Clause
 
 |badge-tag| |badge-license| |badge-ci| |badge-docs| |badge-rtd| |badge-pypi|
 

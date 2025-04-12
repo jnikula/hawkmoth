@@ -1,3 +1,7 @@
+.. SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+.. SPDX-FileCopyrightText: 2018 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
+.. SPDX-License-Identifier: BSD-2-Clause
+
 .. _extension:
 
 Autodoc Extension
