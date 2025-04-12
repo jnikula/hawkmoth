@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2021 Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2022 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # SPDX-License-Identifier: BSD-2-Clause
 
 import os
