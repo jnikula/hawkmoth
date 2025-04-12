@@ -1,3 +1,6 @@
+.. SPDX-FileCopyrightText: 2024 Jani Nikula <jani@nikula.org>
+.. SPDX-License-Identifier: BSD-2-Clause
+
 .. _contributing:
 
 Contributing

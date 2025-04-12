@@ -1,4 +1,6 @@
 # -*- makefile -*-
+# SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
+# SPDX-License-Identifier: BSD-2-Clause
 
 src_dir := src/hawkmoth
 
