@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2016 Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2024 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 # SPDX-License-Identifier: BSD-2-Clause
 """
 Hawkmoth
