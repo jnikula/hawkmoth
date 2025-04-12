@@ -4,6 +4,7 @@ pytest
 pytest-cov
 pytest-xdist
 restructuredtext_lint
+reuse
 sphinx
 strictyaml
 types-docutils

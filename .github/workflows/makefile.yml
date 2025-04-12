@@ -56,6 +56,17 @@ jobs:
           . venv
           make check-examples
 
+  reuse:
+    name: Check REUSE compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: REUSE compliance check
+        run: |
+          . venv
+          make check-reuse
+
   test-ubuntu:
     name: Run test suite (Ubuntu)
     runs-on: ubuntu-latest

@@ -6,7 +6,7 @@ RST := $(RST) CHANGELOG.rst CONTRIBUTING.rst README.rst
 
 # Static analysis
 .PHONY: check
-check: check-style check-typing check-rst check-examples
+check: check-style check-typing check-rst check-examples check-reuse
 
 .PHONY: check-style
 check-style:
@@ -19,6 +19,10 @@ check-typing:
 .PHONY: check-rst
 check-rst:
 	rst-lint --level warning $(RST)
+
+.PHONY: check-reuse
+check-reuse:
+	reuse lint
 
 # Build and publish
 .PHONY: build

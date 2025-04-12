@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: 2025 Jani Nikula <jani@nikula.org>
+# SPDX-License-Identifier: BSD-2-Clause
+
+version = 1
+
+[[annotations]]
+path = [
+	".gitignore",
+	"doc/.gitignore",
+	"doc/readthedocs.txt",
+	"docker/.gitignore",
+	"requirements.txt",
+	"src/hawkmoth/VERSION",
+]
+SPDX-FileCopyrightText = "2017 Jani Nikula <jani@nikula.org>"
+SPDX-License-Identifier = "BSD-2-Clause"
+
+# All test C and C++ source, configuration, and expected results.
+[[annotations]]
+path = [
+	"test/c/**",
+	"test/cpp/**",
+	"test/examples/**",
+]
+SPDX-FileCopyrightText = [
+	"2017 Jani Nikula <jani@nikula.org>",
+	"2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>",
+]
+SPDX-License-Identifier = "BSD-2-Clause"
