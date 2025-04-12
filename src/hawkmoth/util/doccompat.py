@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2017, Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2016 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 """
 Alternative docstring syntax

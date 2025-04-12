@@ -1,4 +1,4 @@
-# Copyright (c) 2018, Jani Nikula <jani@nikula.org>
+# SPDX-FileCopyrightText: 2018 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
 import os
