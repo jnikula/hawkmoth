@@ -14,6 +14,7 @@ import sys
 from hawkmoth.ext import javadoc
 from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
+from hawkmoth.doccursor import DocCursor
 
 def filename(file):
     if os.path.isfile(file):
@@ -62,6 +63,9 @@ def main():
                         help='Argument to pass to Clang. May be specified multiple times. See hawkmoth_clang.')  # noqa: E501
     parser.add_argument('--verbose', dest='verbose', action='store_true',
                         help='Verbose output.')
+    parser.add_argument('--cursor-cache-info', dest='cursor_cache_info',
+                        action='store_true',
+                        help='Print cursor cache information.')
     parser.add_argument('--version', action='version',
                         version=f'%(prog)s {_read_version()}',
                         help='Show version and exit')
@@ -82,6 +86,10 @@ def main():
 
     for error in errors:
         print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
+
+    if args.cursor_cache_info:
+        print('>>> Cursor cache info:')
+        print(DocCursor.cache_info())
 
 if __name__ == '__main__':
     main()
