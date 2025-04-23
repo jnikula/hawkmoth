@@ -236,6 +236,30 @@ class TypedefDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:type:: {name}'
 
+class TypedefFunctionDocstring(Docstring):
+    _indent = 1
+    _fmt = '.. {domain}:type:: {ttype}{type_spacer}(*{name})({args})'
+
+    def _get_header_lines(self):
+        domain = self._domain
+        ttype = self._ttype
+        name = self._get_decl_name()
+
+        type_spacer = ''
+        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
+            type_spacer = ' '
+
+        args = ''
+        if self._args and len(self._args) > 0:
+            def pad_type(t): return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+            def arg_fmt(t, n): return f'{t}{pad_type(t)}{n}'
+            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
+
+        header = self._fmt.format(domain=domain, ttype=ttype, type_spacer=type_spacer,
+                                  name=name, args=args)
+
+        return header.splitlines()
+
 class TypeAliasDocstring(Docstring):
     _indent = 1
     _fmt = '.. cpp:type:: {name} = {underlying_type}'

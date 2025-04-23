@@ -220,7 +220,10 @@ def _recursive_parse(errors, cursor, nest):
 
     elif cursor.kind == CursorKind.TYPEDEF_DECL:
 
-        ds = docstring.TypedefDocstring(cursor=cursor, nest=nest)
+        if cursor.is_function_pointer_typedef:
+            ds = docstring.TypedefFunctionDocstring(cursor=cursor, nest=nest)
+        else:
+            ds = docstring.TypedefDocstring(cursor=cursor, nest=nest)
 
         return [ds]
 

@@ -121,6 +121,9 @@ class DocCursor:
                              CursorKind.FUNCTION_TEMPLATE]:
             return self._method_fixup()
 
+        if self.is_function_pointer_typedef:
+            return self._function_pointer_typedef_fixup()
+
         return self._cc.type.spelling
 
     @property
@@ -137,6 +140,9 @@ class DocCursor:
                              CursorKind.DESTRUCTOR,
                              CursorKind.CXX_METHOD,
                              CursorKind.FUNCTION_TEMPLATE]:
+            return self._get_fn_args()
+
+        if self.is_function_pointer_typedef:
             return self._get_fn_args()
 
         return None
@@ -157,6 +163,18 @@ class DocCursor:
     @property
     def is_scoped_enum(self):
         return self._cc.is_scoped_enum()
+
+    @property
+    def is_function_pointer_typedef(self):
+        canonical = self._cc.type.get_canonical()
+        if canonical.kind != TypeKind.POINTER:
+            return False
+
+        pointee = canonical.get_pointee()
+        if pointee.kind != TypeKind.FUNCTIONPROTO:
+            return False
+
+        return True
 
     @property
     def value(self):
@@ -215,17 +233,17 @@ class DocCursor:
         yield from tu.get_tokens(extent=extent)
 
     def _get_fn_args(self):
-        """Get function / method arguments."""
+        """Get function / method / function pointer typedef arguments."""
         args = []
 
         # Only fully prototyped functions will have argument lists to process.
-        if self._cc.type.kind == TypeKind.FUNCTIONPROTO:
+        if self._cc.type.kind == TypeKind.FUNCTIONPROTO or self.is_function_pointer_typedef:
             for c in self.get_children():
                 if c._cc.kind == CursorKind.PARM_DECL:
                     arg_ttype, arg_name = self._var_type_fixup(c)
                     args.extend([(arg_ttype, arg_name)])
 
-            if self._cc.type.is_function_variadic():
+            if not self.is_function_pointer_typedef and self._cc.type.is_function_variadic():
                 args.extend([('', '...')])
             if len(args) == 0:
                 args.extend([('', 'void')])
@@ -245,6 +263,14 @@ class DocCursor:
         ttype = ' '.join(full_type)
 
         return ttype
+
+    def _function_pointer_typedef_fixup(self):
+        """Parse the return type of a function pointer typedef."""
+        canonical = self._cc.type.get_canonical()
+
+        pointee = canonical.get_pointee()
+
+        return pointee.get_result().spelling
 
     def _method_fixup(self):
         """Parse additional details of a method declaration."""
