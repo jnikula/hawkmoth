@@ -1,0 +1,21 @@
+directives:
+- domain: c
+  directive: autostruct
+  arguments:
+  - sample_struct
+  options:
+    file: struct.c
+    clang:
+    - -DRANDOM_CLANG_ARG
+    members:
+    - array_member
+    - function_pointer_member
+    - other_function_pointer_member
+- domain: c
+  directive: autostruct
+  arguments:
+  - foo_struct
+  options:
+    members:
+expected-failure: true
+expected: autostruct.rst
