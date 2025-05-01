@@ -1,10 +1,8 @@
 directives:
 - domain: c
-  directive: autotype
+  directive: autodoc
   arguments:
-  - list_data_t
-  options:
-    file: typedef.c
+  - typedef.c
 example-title: Typedef
 example-priority: 20
 expected: typedef.rst
