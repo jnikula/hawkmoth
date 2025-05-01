@@ -17,5 +17,4 @@ directives:
   - foo_struct
   options:
     members:
-expected-failure: true
 expected: autostruct.rst

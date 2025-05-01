@@ -91,6 +91,12 @@ class ParserTestcase(testenv.Testcase):
             filter_domains = [directive.domain]
             filter_clang_args = [directive.get_clang_args()]
 
+            # If filenames is None, we're relying on a previous directive to have
+            # parsed the file. In that case, only filter by clang arguments if
+            # they're explicitly specified.
+            if filter_filenames is None and 'clang' not in directive.options:
+                filter_clang_args = None
+
             for root in roots.values():
                 if filter_filenames is not None and root.get_filename() not in filter_filenames:
                     continue

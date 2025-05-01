@@ -129,10 +129,19 @@ class _AutoBaseDirective(SphinxDirective):
         return num_matches
 
     def __get_docstrings(self, viewlist):
+        filter_filenames = self._get_filenames()
+        filter_clang_args = [self.__get_clang_args()]
+
+        # If filenames is None, we're relying on a previous directive to have
+        # parsed the file. In that case, only filter by clang arguments if
+        # they're explicitly specified.
+        if filter_filenames is None and 'clang' not in self.options:
+            filter_clang_args = None
+
         num_matches = 0
-        for root in self.__parsed_files(filter_filenames=self._get_filenames(),
+        for root in self.__parsed_files(filter_filenames=filter_filenames,
                                         filter_domains=[self._domain],
-                                        filter_clang_args=[self.__get_clang_args()]):
+                                        filter_clang_args=filter_clang_args):
             num_matches += self.__get_docstrings_for_root(viewlist, root)
 
         if num_matches == 0:
