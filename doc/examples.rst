@@ -100,14 +100,31 @@ Directive
 
 .. code-block:: rest
 
+   .. c:autodoc:: typedef.c
+
+Output
+~~~~~~
+
+.. c:autodoc:: typedef.c
+
+
+Directive
+~~~~~~~~~
+
+.. code-block:: rest
+
    .. c:autotype:: list_data_t
       :file: typedef.c
 
 Output
 ~~~~~~
 
+.. c:namespace-push:: namespace_examples_autotype
+
 .. c:autotype:: list_data_t
    :file: typedef.c
+
+.. c:namespace-pop::
 
 
 Macro

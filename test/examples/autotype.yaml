@@ -1,0 +1,11 @@
+directives:
+- domain: c
+  directive: autotype
+  arguments:
+  - list_data_t
+  options:
+    file: typedef.c
+example-use-namespace: yes
+example-title: Typedef
+example-priority: 21
+expected: autotype.rst
