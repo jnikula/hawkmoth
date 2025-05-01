@@ -111,15 +111,17 @@ class DocCursor:
     def type(self):
         if self._cc.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
             return self._var_type_fixup(self)[0]
+
         if self._cc.kind == CursorKind.FUNCTION_DECL:
             return self._function_fixup()
+
         if self._cc.kind in [CursorKind.CONSTRUCTOR,
                              CursorKind.DESTRUCTOR,
                              CursorKind.CXX_METHOD,
                              CursorKind.FUNCTION_TEMPLATE]:
             return self._method_fixup()
-        else:
-            return self._cc.type.spelling
+
+        return self._cc.type.spelling
 
     @property
     def line(self):
@@ -129,26 +131,28 @@ class DocCursor:
     def args(self):
         if self._cc.kind == CursorKind.MACRO_DEFINITION:
             return self._get_macro_args()
+
         if self._cc.kind in [CursorKind.FUNCTION_DECL,
                              CursorKind.CONSTRUCTOR,
                              CursorKind.DESTRUCTOR,
                              CursorKind.CXX_METHOD,
                              CursorKind.FUNCTION_TEMPLATE]:
             return self._get_fn_args()
-        else:
-            return None
+
+        return None
 
     @property
     def quals(self):
         if self._cc.kind == CursorKind.FUNCTION_DECL:
             return ''
+
         if self._cc.kind in [CursorKind.CONSTRUCTOR,
                              CursorKind.DESTRUCTOR,
                              CursorKind.CXX_METHOD,
                              CursorKind.FUNCTION_TEMPLATE]:
             return ' '.join(self._get_method_quals()[1])
-        else:
-            return None
+
+        return None
 
     @property
     def is_scoped_enum(self):
@@ -161,10 +165,11 @@ class DocCursor:
                 return self._cc.enum_value
             else:
                 return None
+
         if self._cc.kind in [CursorKind.TYPE_ALIAS_DECL, CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
             return self._get_underlying_type()
-        else:
-            return None
+
+        return None
 
     def get_children(self):
         """Get children cursors."""
