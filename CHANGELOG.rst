@@ -9,6 +9,25 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Better support for documenting typedefs of function pointers
+* CI checks for `REUSE compliance`_.
+
+.. _REUSE compliance: https://reuse.software/
+
+Changed
+~~~~~~~
+
+* Switched to ``SPDX-FileCopyrightText`` and ``SPDX-License-Identifier``
+  copyright and license headers
+
+Fixed
+~~~~~
+
+* Parsed file lookups when `:clang:` option is being used (#273)
+
 Hawkmoth `0.20.0`_
 ------------------
 
