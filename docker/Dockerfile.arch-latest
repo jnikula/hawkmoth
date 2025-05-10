@@ -12,9 +12,9 @@ RUN pacman -Syu --noconfirm \
 ARG UID=1000
 ARG GID=1000
 ARG ARCHIVE
+ARG WORKDIR
 
-# Make it harder for libclang to find headers by coincidence
-WORKDIR /path/to/src
+WORKDIR ${WORKDIR}
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
