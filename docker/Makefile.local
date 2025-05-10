@@ -30,6 +30,7 @@ hawkmoth-test.%: $(HAWKMOTH_ARCHIVE) FORCE
 		--build-arg GID=$(shell id -g) \
 		--build-arg ARCHIVE=$< \
 		--build-arg WORKDIR=/path/to/src \
+		--build-arg VENV=/path/to/venv \
 		--tag $@ .
 
 .NOTPARALLEL: docker-test-all

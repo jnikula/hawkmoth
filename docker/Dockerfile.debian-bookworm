@@ -16,6 +16,7 @@ ARG UID=1000
 ARG GID=1000
 ARG ARCHIVE
 ARG WORKDIR
+ARG VENV
 
 WORKDIR ${WORKDIR}
 
@@ -25,8 +26,8 @@ ENV PYTEST_ADDOPTS "-p no:cacheprovider"
 
 ADD ${ARCHIVE} .
 
-RUN sh venv
+RUN sh venv ${VENV}
 
-ENV PATH=".venv/bin:${PATH}"
+ENV PATH="${VENV}/bin:${PATH}"
 
 USER ${UID}:${GID}
