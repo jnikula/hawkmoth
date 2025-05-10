@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2025 Jani Nikula <jani@nikula.org>
+# SPDX-License-Identifier: BSD-2-Clause
+
+FROM ubuntu:rolling
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+	python3-clang \
+	python3-venv \
+	clang \
+	make && \
+    apt-get clean
+
+ARG UID=1000
+ARG GID=1000
+ARG ARCHIVE
+ARG WORKDIR
+ARG VENV
+
+WORKDIR ${WORKDIR}
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PYTEST_ADDOPTS "-p no:cacheprovider"
+
+ADD ${ARCHIVE} .
+
+RUN sh venv ${VENV}
+
+ENV PATH="${VENV}/bin:${PATH}"
+
+USER ${UID}:${GID}
