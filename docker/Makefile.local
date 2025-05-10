@@ -27,16 +27,19 @@ DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
 hawkmoth-test.%: $(HAWKMOTH_ARCHIVE) FORCE
 	docker build --file $(docker_dir)/Dockerfile$(suffix $@) --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $@ .
 
+.NOTPARALLEL: docker-test-all
 docker-test-all: $(foreach distro,$(DOCKER_DISTROS),docker-test.$(distro)) FORCE
 
 docker-test.%: hawkmoth-test.% FORCE
 	docker run $< make test
 
+.NOTPARALLEL: docker-check-all
 docker-check-all: $(foreach distro,$(DOCKER_DISTROS),docker-check.$(distro)) FORCE
 
 docker-check.%: hawkmoth-test.% FORCE
 	docker run $< make check
 
+.NOTPARALLEL: docker-html-all
 docker-html-all: $(foreach distro,$(DOCKER_DISTROS),docker-html.$(distro)) FORCE
 
 docker-html.%: hawkmoth-test.% FORCE
