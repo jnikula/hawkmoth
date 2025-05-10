@@ -25,7 +25,12 @@ DOCKER_DISTROS := $(shell find $(docker_dir) -name 'Dockerfile.*' | sed 's/.*\./
 DOCKER_TEST_OUT_MOUNT = --mount type=bind,src=$(PWD)/doc/_build,dst=/out
 
 hawkmoth-test.%: $(HAWKMOTH_ARCHIVE) FORCE
-	docker build --file $(docker_dir)/Dockerfile$(suffix $@) --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg ARCHIVE=$< --tag $@ .
+	docker build --file $(docker_dir)/Dockerfile$(suffix $@) \
+		--build-arg UID=$(shell id -u) \
+		--build-arg GID=$(shell id -g) \
+		--build-arg ARCHIVE=$< \
+		--build-arg WORKDIR=/path/to/src \
+		--tag $@ .
 
 .NOTPARALLEL: docker-test-all
 docker-test-all: $(foreach distro,$(DOCKER_DISTROS),docker-test.$(distro)) FORCE
