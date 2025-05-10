@@ -26,7 +26,7 @@ Changed
 Fixed
 ~~~~~
 
-* Parsed file lookups when `:clang:` option is being used (#273)
+* Parsed file lookups when ``:clang:`` option is being used (#273)
 
 Hawkmoth `0.20.0`_
 ------------------
