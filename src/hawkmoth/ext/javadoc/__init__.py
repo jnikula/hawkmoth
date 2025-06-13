@@ -47,7 +47,7 @@ class _handler:
 
         # references to previous anchors
         # FIXME: link title
-        line = re.sub(fr'{OP}ref\s+(?P<ref>\w+)', r':ref:`\g<ref>`', line)
+        line = re.sub(fr'{OP}ref\s+(?P<ref>\w+)', r':any:`\g<ref>`', line)
 
         # FIXME:
         # - copybrief
