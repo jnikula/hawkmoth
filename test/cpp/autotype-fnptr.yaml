@@ -1,0 +1,8 @@
+directives:
+- domain: cpp
+  directive: autotype
+  arguments:
+  - function_pointer
+  options:
+    file: ../c/autotype-fnptr.c
+expected: autotype-fnptr.rst
