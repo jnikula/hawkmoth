@@ -1,0 +1,6 @@
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - trailing-comment.c
+expected: trailing-comment.rst
