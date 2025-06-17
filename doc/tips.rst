@@ -75,3 +75,23 @@ source code changes by adding ``--watch <source root>`` option to
 ``sphinx-autobuild``, where ``<source root>`` matches :py:data:`hawkmoth_root`.
 
 .. _sphinx-autobuild: https://github.com/sphinx-doc/sphinx-autobuild
+
+Ad-hoc Sphinx Extension
+-----------------------
+
+If you need access to sphinx internals to modify the behavior of Hawkmoth, or
+to write your own sphinx extensions, you can just add `def setup()` to your
+`conf.py` configuration, and it will be loaded as an
+:external+sphinx:confval:`Ad-Hoc Sphinx Extension <extensions>`.
+
+For example:
+
+.. code-block:: python
+   :caption: conf.py
+
+   def setup(app):
+       app.add_config_value('<config-key>', '<default-value>', 'env', [str])
+
+The `setup()` function will grant access to a Sphinx application context
+(:external+sphinx:py:class:`sphinx.application.Sphinx`) and can thus be used
+to adjust Sphinx to your needs.
