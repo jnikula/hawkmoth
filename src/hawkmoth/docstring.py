@@ -73,11 +73,14 @@ class Docstring():
         self._nest = nest
         self._children = []
 
-    def _match(self, filter_types=None, filter_names=None):
+    def _match(self, filter_types=None, filter_names=None, filter_func=None):
         if filter_types is not None and type(self) not in filter_types:
             return False
 
         if filter_names is not None and self.get_name() not in filter_names:
+            return False
+
+        if filter_func is not None and filter_func(self):
             return False
 
         return True
@@ -180,6 +183,9 @@ class Docstring():
 
     def get_line(self):
         return self._meta['line']
+
+    def is_static(self):
+        return 'static' in self._ttype
 
 class TextDocstring(Docstring):
     _indent = 0
@@ -294,7 +300,7 @@ class _CompoundDocstring(Docstring):
     def add_children(self, comments):
         self._children.extend(comments)
 
-    def walk(self, recurse=True, filter_types=None, filter_names=None):
+    def walk(self, recurse=True, filter_types=None, filter_names=None, filter_func=None):
         # Note: The filtering is pretty specialized for our use case here. It
         # only filters the immediate children, not this comment, nor
         # grandchildren.
@@ -306,7 +312,7 @@ class _CompoundDocstring(Docstring):
         # Sort the children by order of appearance. We may add other sort
         # options later.
         for comment in sorted(self._children, key=lambda c: c.get_line()):
-            if comment._match(filter_types=filter_types, filter_names=filter_names):
+            if comment._match(filter_types=filter_types, filter_names=filter_names, filter_func=filter_func):
                 if recurse:
                     yield from comment.walk()
                 else:
