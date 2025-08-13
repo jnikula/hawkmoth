@@ -55,31 +55,20 @@ as normal paragraphs in the order they appear.
 Trailing Comments
 ~~~~~~~~~~~~~~~~~
 
-Trailing documentation comments are line comments that begin with ``///<``. They
-are attached to the C or C++ construct they follow and should be placed
+Trailing documentation comments are block comments of that start with ``/**<``.
+They are attached to the C or C++ construct they follow and should be placed
 immediately after the construct.
 
 .. code-block:: c
 
-  int foo; ///< The quick brown fox jumps over the lazy dog.
-  int bar; ///< The quick brown foo jumps over the lazy dog, too.
+  int foo; /**< The quick brown fox jumps over the lazy dog. */
+  int bar; /**< The quick brown foo jumps over the lazy dog, too. */
 
 Trailing comments are intended to be used for documenting lists of declarations,
 struct/class members, and enumerators in a more compact form than leading
-comments.  Using trailing comments for multi-line constructs may lead to weird
-behavior and is not recommended.
-
-Trailing comments are limited to one line. Trailing comments for a construct
-that already has a leading documentation comment are ignored, and continuations
-of trailing comments are not supported.
-
-.. code-block:: c
-
-  /** This documentation will be added. */
-  int foo; ///< This documentation will be ignored.
-
-  int bar; ///< This documentation will be added.
-           ///< This documentation will be ignored.
+comments.  Using trailing comments for multi-line constructs, function
+definitions, or other constructs is not recommended and may lead to unexpected
+results.
 
 
 Info Field Lists

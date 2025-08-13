@@ -1,227 +1,138 @@
 
 .. c:macro:: SAMPLE_MACRO
 
-   macro with trailing comment
+   macro
 
 
 .. c:macro:: FUNCTION_MACRO(a, b)
 
-   function-like macro with trailing comment
-
-
-.. c:macro:: MULTILINE_MACRO(a, b)
-
-   multiline macro with trailing comment
-
-
-.. cpp:var:: int leading_comment_with_trailing_marker
-
-   leading comment with a trailing comment marker ///< should not be treated as a trailing comment
-
-
-.. cpp:var:: int leading_comment_with_trailing_marker2
-
-   ///< trailing comment marker at beginning of line
+   function-like macro
 
 
 .. cpp:enum:: sample_enum
 
-   enum trailing comment for c style enum
+   Documented enum
 
 
    .. cpp:enumerator:: VALUE_ONE
 
-      enum value with trailing comment
+      enumerator 1
 
 
    .. cpp:enumerator:: VALUE_TWO
 
-      another enum value with trailing comment
+      enumerator 2
 
 
    .. cpp:enumerator:: VALUE_THREE
 
-      yet another enum value with trailing comment
-
-
-.. cpp:enum:: sample_enum2
-
-   trailing comment for c++ style enum
-
-
-   .. cpp:enumerator:: VALUE_FOUR
-
-      another enum value with trailing comment
-
-
-   .. cpp:enumerator:: VALUE_FIVE
-
-      yet another enum value with trailing comment
-
-
-.. cpp:enum-class:: sample_enum3
-
-   trailing comment for c++ enum class
-
-
-   .. cpp:enumerator:: VALUE_SIX
-
-      enum class value with trailing comment
-
-
-   .. cpp:enumerator:: VALUE_SEVEN
-
-      another enum class value with trailing comment
+      enumerator 3
 
 
 .. cpp:union:: sample_union
 
-   union trailing comment
+   Documented union
 
 
    .. cpp:member:: int int_value
 
-      union member with trailing comment
+      union member 1
 
 
    .. cpp:member:: float float_value
 
-      another union member with trailing comment
-
-
-.. cpp:union:: sample_union2
-
-   trailing comment for c++ style union
-
-
-   .. cpp:member:: int int_value2
-
-      union member with trailing comment
-
-
-   .. cpp:member:: double double_value
-
-      another union member with trailing comment
+      union member 2
 
 
 .. cpp:struct:: sample_struct
 
-   trailing comment for struct
+   Documented struct
 
 
    .. cpp:member:: public int trailing1
 
-      trailing comment for member
+      struct member 1
 
 
    .. cpp:member:: public double trailing2
 
-      trailing comment only
+      struct member 2
 
 
    .. cpp:member:: public void *trailing3
 
-      trailing comment
+      struct member 3
 
 
-.. cpp:struct:: sample_struct2
+.. cpp:struct:: outer_struct
 
-   trailing comment for c++ style struct
-
-
-   .. cpp:member:: public int trailing1
-
-      trailing comment for member
+   Documented compound struct
 
 
-   .. cpp:member:: public double trailing2
+   .. cpp:member:: public int outer
 
-      trailing comment only
-
-
-   .. cpp:member:: public void *trailing3
-
-      trailing comment
+      outer member
 
 
-.. cpp:class:: SampleClass
+   .. cpp:struct:: inner_struct
 
-   class with trailing comment
+      inner struct type
+
+
+      .. cpp:member:: public int innerb
+
+         inner member
+
+
+.. cpp:class:: sample_class
+
+   Documented class
 
 
    .. cpp:member:: public int member1
 
-      class member with trailing comment
+      class member 1
 
 
    .. cpp:member:: public double member2
 
-      another class member with trailing comment
+      class member 2
 
 
-   .. cpp:member:: public struct InnerStruct inner
+   .. cpp:member:: public void *member3
 
-      trailing comment for inner struct member
-
-
-   .. cpp:struct:: InnerStructType
-
-      trailing comment for nested struct type
+      class member 3
 
 
-      .. cpp:member:: public int inner_member2
+   .. cpp:function:: public int method(int a)
 
-         inner struct member with trailing comment
-
-
-   .. cpp:function:: private void private_function(void)
-
-      private helper function with trailing comment
+      class method
 
 
-   .. cpp:member:: private int private_variable
+   .. cpp:member:: private int private_member
 
-      private variable with trailing comment
+      private member
 
 
 .. cpp:type:: void (*sample_func_ptr)(int )
 
-   typedef with trailing comment
+   function typedef
 
 
-.. cpp:type:: sample_func_ptr_alias = sample_func_ptr
+.. cpp:function:: int fxn(int a, int b)
 
-   using alias with trailing comment
-
-
-.. cpp:function:: int sample_func(int a, int b)
-
-   function with trailing comment after line
+   function declaration
 
 
-.. cpp:function:: int sample_func2(int a, int b)
-
-   function with trailing comment after block
-
-
-.. cpp:function:: int sample_func3(int a, int b)
-
-   function with trailing comment before parameters
-
-
-.. cpp:function:: int sample_func4(int a, int b)
-
-   function declaration with trailing comment
-
-
-.. cpp:var:: int tester
-
-   trailing comment 1
-
-
-.. cpp:var:: int tester2
+.. cpp:var:: int b
 
    This leading comment should still apply
+
+
+.. cpp:var:: int multiline_comment
+
+   trailing comment that has multiple lines
+   should wrap correctly.
 
 
 .. cpp:var:: int tester3

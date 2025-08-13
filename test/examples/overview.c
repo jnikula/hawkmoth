@@ -24,16 +24,16 @@
  * Struct documentation.
  */
 struct foo {
-	const char *m1; ///< Member documentation.
-	int m2;         ///< Member documentation.
+	const char *m1; /**< Member documentation. */
+	int m2;         /**< Member documentation. */
 };
 
 /**
  * Enum documentation.
  */
 enum bar {
-	E1, ///< Enumeration constant documentation.
-	E2, ///< Enumeration constant documentation.
+	E1, /**< Enumeration constant documentation. */
+	E2, /**< Enumeration constant documentation. */
 };
 
 /**

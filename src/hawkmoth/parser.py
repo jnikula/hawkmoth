@@ -175,7 +175,7 @@ def _comment_extract(tu):
         # instead of accessing the `cursor` property multiple times.
         token_cursor = token.cursor
 
-        # Semicolons and commans belong to cursor of the outer scope.  We want
+        # Semicolons and commas belong to cursor of the outer scope.  We want
         # to be able to add trailing comments after the semicolon on the line,
         # so skip them here.
         if token.kind == TokenKind.PUNCTUATION and (
@@ -220,7 +220,10 @@ def _comment_extract(tu):
             current_trailing_token = None
 
         elif token_type == TokenType.TRAILING_COMMENT:
-            if current_trailing_token is not None:
+            if (
+                current_trailing_token is not None
+                and current_trailing_token.location.line == token.location.line
+            ):
                 if current_trailing_token.hash not in comments:
                     # Set the comment if no other comment has been set so far
                     comments[current_trailing_token.hash] = token
@@ -234,17 +237,11 @@ def _comment_extract(tu):
         elif token_type == TokenType.SKIPPABLE:
             pass  # Do nothing
         elif token_type == TokenType.DOCUMENTABLE:
-            # Skip typedefs that apply to a struct, union, or enum, and retarget
-            # trailing comments to the existing cursor. Otherwise, update the
-            # current trailing token to the current cursor.
-            if not (
-                token_cursor.kind == CursorKind.TYPEDEF_DECL
-                and current_trailing_token is not None
-                and current_trailing_token.kind
-                in [CursorKind.STRUCT_DECL, CursorKind.UNION_DECL, CursorKind.ENUM_DECL]
-                and current_trailing_token.spelling == token_cursor.spelling
-            ):
+            # Only if it's a one line construct can we have a trailing comment.
+            if token_cursor.extent.start.line == token_cursor.extent.end.line:
                 current_trailing_token = token_cursor
+            else:
+                current_trailing_token = None
 
             # If we have a leading comment, it applies to this cursor.
             if current_leading_comment is not None:

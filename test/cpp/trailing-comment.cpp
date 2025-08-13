@@ -1,134 +1,86 @@
-//////////////////////////
-// Macro permutations
-//////////////////////////
 
-#define SAMPLE_MACRO 42 ///< macro with trailing comment
-#define FUNCTION_MACRO(a, b) (a + b) ///< function-like macro with trailing comment
+#define SAMPLE_MACRO 42              /**< macro */
 
-#define MULTILINE_MACRO(a, b) \
-    do { \
-        a += b; \
-        b += a; \
-    } while (0) ///< multiline macro with trailing comment
+#define FUNCTION_MACRO(a, b) (a + b) /**< function-like macro */
 
-//////////////////////////
-// Check trailing comment markers inside leading comments
-//////////////////////////
-
-/** leading comment with a trailing comment marker ///< should not be treated as a trailing comment */
-int leading_comment_with_trailing_marker;
-
-/**
-///< trailing comment marker at beginning of line
+/** 
+ * Documented enum
  */
-int leading_comment_with_trailing_marker2;
+enum sample_enum {
+    VALUE_ONE,     /**< enumerator 1 */
+    VALUE_TWO,     /**< enumerator 2 */
+    VALUE_THREE    /**< enumerator 3 */
+}; 
 
-//////////////////////////
-// Apply trailing comments to the underlying enum/struct/union, not the typedef
-//////////////////////////
+/** 
+ * Documented union 
+ */
+union sample_union {
+    int int_value;     /**< union member 1 */
+    float float_value; /**< union member 2 */
+}; 
 
-typedef enum {
-    VALUE_ONE, ///< enum value with trailing comment
-    VALUE_TWO, ///< another enum value with trailing comment
-    VALUE_THREE ///< yet another enum value with trailing comment
-} sample_enum; ///< enum trailing comment for c style enum
-
-enum sample_enum2 {
-    VALUE_FOUR, ///< another enum value with trailing comment
-    VALUE_FIVE ///< yet another enum value with trailing comment
-}; ///< trailing comment for c++ style enum
-
-enum class sample_enum3 {
-    VALUE_SIX, ///< enum class value with trailing comment
-    VALUE_SEVEN ///< another enum class value with trailing comment
-}; ///< trailing comment for c++ enum class
-
-
-typedef union {
-    int int_value; ///< union member with trailing comment
-    float float_value; ///< another union member with trailing comment
-} sample_union; ///< union trailing comment
-
-union sample_union2 {
-    int int_value2; ///< union member with trailing comment
-    double double_value; ///< another union member with trailing comment
-}; ///< trailing comment for c++ style union
-
-
-typedef struct  {
-    int trailing1; ///< trailing comment for member
-    double trailing2; ///< trailing comment only
-    void* trailing3; ///< trailing comment
-} sample_struct; ///< trailing comment for struct
-
-struct sample_struct2 {
-    int trailing1; ///< trailing comment for member
-    double trailing2; ///< trailing comment only
-    void* trailing3; ///< trailing comment
-}; ///< trailing comment for c++ style struct
-
-
-class SampleClass { ///< class with trailing comment
-public:
-    int member1; ///< class member with trailing comment
-    double member2; ///< another class member with trailing comment
-
-    struct InnerStruct {
-        int inner_member; ///< inner struct member with trailing comment
-    } inner; ///< trailing comment for inner struct member
-
-    struct InnerStructType {
-        int inner_member2; ///< inner struct member with trailing comment
-    }; ///< trailing comment for nested struct type
-private:
-    void private_function(); ///< private helper function with trailing comment
-    int private_variable; ///< private variable with trailing comment
+/** 
+ * Documented struct 
+ */
+struct sample_struct {
+    int trailing1;    /**< struct member 1 */
+    double trailing2; /**< struct member 2 */
+    void* trailing3;  /**< struct member 3 */
 };
 
-//////////////////////////
-// Typedefs (no special handling needed)
-//////////////////////////
+/**
+ * Documented compound struct
+ */
+struct outer_struct {
 
-typedef void (*sample_func_ptr)(int); ///< typedef with trailing comment
+    int outer;                   /**< outer member */
 
-using sample_func_ptr_alias = sample_func_ptr; ///< using alias with trailing comment
+    /** inner struct type */
+    struct inner_struct {
+        int innera;
+        int innerb;              /**< inner member */
+    } a;
+};
 
-//////////////////////////
-// Handle different locations inside function definitions
-//////////////////////////
 
-int sample_func(int a, int b) ///< function with trailing comment after line
-{
-    return a + b;
-}
+/**
+ * Documented class
+ */
+class sample_class {
+    public:
+        int member1;            /**< class member 1 */
+        double member2;         /**< class member 2 */
+        void* member3;          /**< class member 3 */
+        int method(int a);      /**< class method */
+    private:
+        int private_member;     /**< private member */
+};
 
-int sample_func2(int a, int b)
-{
-    return a + b;
-} ///< function with trailing comment after block
+typedef void (*sample_func_ptr)(int); /**< function typedef */
 
-int sample_func3( ///< function with trailing comment before parameters
-    int a, 
-    int b
-)
-{
-    return a + b;
-}
+int fxn(int a, int b);                /**< function declaration */
 
-int sample_func4(int a, int b); ///< function declaration with trailing comment
+// Exceptions
 
-//////////////////////////
-// Clear the trailing comment context correctly
-//////////////////////////
+typedef struct {
+    int a;
+    int b; 
+} multiline; /**< Multiline construct not documented */
 
-int tester; ///< trailing comment 1
+int a;
+/**< trailing comment must start on the same line as the construct */
 
 /** This leading comment should still apply */
-int tester2; // This should clear the trailing comment context
-///< this comment is ignored since it applies to the global scope and trailing comments don't work at global scope
+int b; /**< trailing comment does not merge with leading comment */
 
-//////////////////////////
+int multiline_comment; /**<
+                        * trailing comment that has multiple lines
+                        * should wrap correctly.
+                        */
+
+/**< trailing comment at global scope should not apply to anything */
+
 // Check EOF handling
-//////////////////////////
 
-int tester3; ///< trailing comment at end of file
+int tester3; /**< trailing comment at end of file */

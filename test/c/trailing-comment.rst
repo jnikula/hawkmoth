@@ -1,137 +1,108 @@
 
 .. c:macro:: SAMPLE_MACRO
 
-   macro with trailing comment
+   macro
 
 
 .. c:macro:: FUNCTION_MACRO(a, b)
 
-   function-like macro with trailing comment
-
-
-.. c:macro:: MULTILINE_MACRO(a, b)
-
-   multiline macro with trailing comment
-
-
-.. c:var:: int leading_comment_with_trailing_marker
-
-   leading comment with a trailing comment marker ///< should not be treated as a trailing comment
-
-
-.. c:var:: int leading_comment_with_trailing_marker2
-
-   ///< trailing comment marker at beginning of line
+   function-like macro
 
 
 .. c:enum:: sample_enum
 
-   enum trailing comment
+   Documented enum
 
 
    .. c:enumerator:: VALUE_ONE
 
-      enum value with trailing comment
+      enumerator 1
 
 
    .. c:enumerator:: VALUE_TWO
 
-      another enum value with trailing comment
+      enumerator 2
 
 
    .. c:enumerator:: VALUE_THREE
 
-      yet another enum value with trailing comment
+      enumerator 3
 
 
 .. c:union:: sample_union
 
-   union trailing comment
+   Documented union
 
 
    .. c:member:: int int_value
 
-      union member with trailing comment
+      union member 1
 
 
    .. c:member:: float float_value
 
-      another union member with trailing comment
+      union member 2
 
 
 .. c:struct:: sample_struct
 
-   trailing comment for struct
+   Documented struct
 
 
    .. c:member:: int trailing1
 
-      trailing comment for member
+      struct member 1
 
 
    .. c:member:: double trailing2
 
-      trailing comment only
+      struct member 2
 
 
    .. c:member:: void *trailing3
 
-      trailing comment
+      struct member 3
 
 
-.. c:struct:: sample_struct_2
+.. c:struct:: outer_struct
 
-   trailing doc comment for outer struct
+   Documented compound struct
+
+
+   .. c:member:: int outer
+
+      outer member
 
 
    .. c:struct:: inner_struct
 
-      leading comment for inner struct type
+      inner struct type
 
 
       .. c:member:: int innerb
 
-         inner trailing comment, prior not documented
-
-
-   .. c:member:: struct inner_struct a
-
-      trailing doc comment for inner struct member
+         inner member
 
 
 .. c:type:: void (*sample_func_ptr)(int )
 
-   typedef with trailing comment
+   function typedef
 
 
-.. c:function:: int sample_func(int a, int b)
+.. c:function:: int fxn(int a, int b)
 
-   function with trailing comment after line
-
-
-.. c:function:: int sample_func2(int a, int b)
-
-   function with trailing comment after block
+   function declaration
 
 
-.. c:function:: int sample_func3(int a, int b)
-
-   function with trailing comment before parameters
-
-
-.. c:function:: int sample_func4(int a, int b)
-
-   function declaration with trailing comment
-
-
-.. c:var:: int tester
-
-   trailing comment 1
-
-
-.. c:var:: int tester2
+.. c:var:: int b
 
    This leading comment should still apply
+
+
+.. c:var:: int multiline_comment
+
+   trailing comment that has multiple lines
+   should wrap correctly.
 
 
 .. c:var:: int tester3
