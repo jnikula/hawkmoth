@@ -47,26 +47,9 @@ typedef void (*sample_func_ptr)(int); /**< function typedef */
 
 int fxn(int a, int b);                /**< function declaration */
 
-// Exceptions
-
-typedef struct {
-    int a;
-    int b; 
-} multiline; /**< Multiline construct not documented */
-
-int a;
-/**< trailing comment must start on the same line as the construct */
-
-/** This leading comment should still apply */
-int b; /**< trailing comment does not merge with leading comment */
-
 int multiline_comment; /**<
                         * trailing comment that has multiple lines
                         * should wrap correctly.
                         */
 
-/**< trailing comment at global scope should not apply to anything */
-
-// Check EOF handling
-
-int tester3; /**< trailing comment at end of file */
+int eof_variable; /**< trailing comment at end of file */

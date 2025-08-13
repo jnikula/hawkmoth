@@ -137,7 +137,7 @@ def _domain_is_valid(tu, domain, errors):
         return False
     return True
 
-def _comment_extract(tu):
+def _comment_extract(tu, errors):
 
     # FIXME: How to handle top level comments above a cursor that it does *not*
     # describe? Parsing @file or @doc at this stage would not be a clean design.
@@ -223,10 +223,19 @@ def _comment_extract(tu):
             if (
                 current_trailing_token is not None
                 and current_trailing_token.location.line == token.location.line
+                and current_trailing_token.hash not in comments
             ):
-                if current_trailing_token.hash not in comments:
-                    # Set the comment if no other comment has been set so far
-                    comments[current_trailing_token.hash] = token
+                # Set the comment if no other comment has been set so far
+                comments[current_trailing_token.hash] = token
+            else:
+                errors.append(
+                    ParserError(
+                        ErrorLevel.WARNING,
+                        token.location.file.name,
+                        token.location.line,
+                        'trailing comment without anything to document was dropped.',
+                    )
+                )
 
         elif token_type == TokenType.SEPARATOR:
             if current_leading_comment is not None:
@@ -447,7 +456,7 @@ def parse(filename, domain=None, clang_args=None):
     if not _domain_is_valid(tu, domain, errors):
         return result, errors
 
-    top_level_comments, comments = _comment_extract(tu)
+    top_level_comments, comments = _comment_extract(tu, errors)
 
     for comment in top_level_comments:
         text = comment.spelling

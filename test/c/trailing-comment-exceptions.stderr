@@ -1,0 +1,3 @@
+WARNING: trailing-comment-exceptions.c:4: trailing comment without anything to document was dropped.
+WARNING: trailing-comment-exceptions.c:7: trailing comment without anything to document was dropped.
+WARNING: trailing-comment-exceptions.c:10: trailing comment without anything to document was dropped.

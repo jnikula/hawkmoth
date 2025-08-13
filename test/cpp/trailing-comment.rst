@@ -124,18 +124,7 @@
    function declaration
 
 
-.. cpp:var:: int b
-
-   This leading comment should still apply
-
-
-.. cpp:var:: int multiline_comment
-
-   trailing comment that has multiple lines
-   should wrap correctly.
-
-
-.. cpp:var:: int tester3
+.. cpp:var:: int eof_variable
 
    trailing comment at end of file
 
