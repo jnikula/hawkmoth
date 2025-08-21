@@ -73,6 +73,10 @@ class Docstring():
         self._nest = nest
         self._children = []
 
+    def __iter__(self):
+        # Sort the children by order of appearance.
+        yield from sorted(self._children, key=lambda c: c.get_line())
+
     def _match(self, filter_types=None, filter_names=None):
         if filter_types is not None and type(self) not in filter_types:
             return False
@@ -303,9 +307,7 @@ class _CompoundDocstring(Docstring):
         if self._text:
             yield self
 
-        # Sort the children by order of appearance. We may add other sort
-        # options later.
-        for comment in sorted(self._children, key=lambda c: c.get_line()):
+        for comment in self:
             if comment._match(filter_types=filter_types, filter_names=filter_names):
                 if recurse:
                     yield from comment.walk()
