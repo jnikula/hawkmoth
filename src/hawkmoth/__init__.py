@@ -131,8 +131,15 @@ class _AutoBaseDirective(SphinxDirective):
                 continue
 
             num_matches += 1
-            for docstr in primary.walk(filter_names=self._get_members()):
-                self.__add_docstring_to_viewlist(viewlist, root, docstr)
+
+            self.__add_docstring_to_viewlist(viewlist, root, primary)
+
+            for member in primary:
+                if self._get_members() is not None and member.get_name() not in self._get_members():
+                    continue
+
+                for ds in member.walk():
+                    self.__add_docstring_to_viewlist(viewlist, root, ds)
 
         return num_matches
 
