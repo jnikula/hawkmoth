@@ -121,8 +121,14 @@ class ParserTestcase(testenv.Testcase):
                     if _filter_names(directive) is not None and primary.get_name() not in _filter_names(directive):  # noqa: E501
                         continue
 
-                    for docstr in primary.walk(filter_names=_filter_members(directive)):
-                        docs_str += get_docstring(docstr)
+                    docs_str += get_docstring(primary)
+
+                    for member in primary:
+                        if _filter_members(directive) is not None and member.get_name() not in _filter_members(directive):  # noqa: E501
+                            continue
+
+                        for ds in member.walk():
+                            docs_str += get_docstring(ds)
 
         return docs_str, errors_str
 
