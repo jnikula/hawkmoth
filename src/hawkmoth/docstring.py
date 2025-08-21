@@ -86,7 +86,7 @@ class Docstring():
 
         return True
 
-    def walk(self, recurse=True, filter_types=None, filter_names=None):
+    def walk(self, filter_types=None, filter_names=None):
         if self._text:
             yield self
 
@@ -298,7 +298,7 @@ class _CompoundDocstring(Docstring):
     def add_children(self, comments):
         self._children.extend(comments)
 
-    def walk(self, recurse=True, filter_types=None, filter_names=None):
+    def walk(self, filter_types=None, filter_names=None):
         # Note: The filtering is pretty specialized for our use case here. It
         # only filters the immediate children, not this comment, nor
         # grandchildren.
@@ -309,10 +309,7 @@ class _CompoundDocstring(Docstring):
 
         for comment in self:
             if comment._match(filter_types=filter_types, filter_names=filter_names):
-                if recurse:
-                    yield from comment.walk()
-                else:
-                    yield comment
+                yield from comment.walk()
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename=None, domain='c', clang_args=None):
