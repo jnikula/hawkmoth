@@ -123,10 +123,15 @@ class _AutoBaseDirective(SphinxDirective):
 
     def __get_docstrings_for_root(self, viewlist, root):
         num_matches = 0
-        for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
-                                    filter_names=self._get_names()):
+        for primary in root:
+            if self._docstring_types is not None and type(primary) not in self._docstring_types:
+                continue
+
+            if self._get_names() is not None and primary.get_name() not in self._get_names():
+                continue
+
             num_matches += 1
-            for docstr in docstrings.walk(filter_names=self._get_members()):
+            for docstr in primary.walk(filter_names=self._get_members()):
                 self.__add_docstring_to_viewlist(viewlist, root, docstr)
 
         return num_matches
