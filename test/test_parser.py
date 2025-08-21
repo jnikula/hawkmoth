@@ -114,9 +114,14 @@ class ParserTestcase(testenv.Testcase):
                 if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
                     continue
 
-                for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
-                                            filter_names=_filter_names(directive)):
-                    for docstr in docstrings.walk(filter_names=_filter_members(directive)):
+                for primary in root:
+                    if _filter_types(directive) is not None and type(primary) not in _filter_types(directive):  # noqa: E501
+                        continue
+
+                    if _filter_names(directive) is not None and primary.get_name() not in _filter_names(directive):  # noqa: E501
+                        continue
+
+                    for docstr in primary.walk(filter_names=_filter_members(directive)):
                         docs_str += get_docstring(docstr)
 
         return docs_str, errors_str
