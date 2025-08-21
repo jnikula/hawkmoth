@@ -112,19 +112,22 @@ class _AutoBaseDirective(SphinxDirective):
 
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
-    def __get_docstrings_for_root(self, viewlist, root):
+    def __add_docstring_to_viewlist(self, viewlist, root, ds):
         def process_docstring(lines): self.__process_docstring(lines)
 
+        lines, line_number = ds.get_docstring(process_docstring=process_docstring)
+        for line in lines:
+            # viewlist line numbers are 0-based
+            viewlist.append(line, root.get_filename(), line_number - 1)
+            line_number += 1
+
+    def __get_docstrings_for_root(self, viewlist, root):
         num_matches = 0
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
                                     filter_names=self._get_names()):
             num_matches += 1
             for docstr in docstrings.walk(filter_names=self._get_members()):
-                lines, line_number = docstr.get_docstring(process_docstring=process_docstring)
-                for line in lines:
-                    # viewlist line numbers are 0-based
-                    viewlist.append(line, root.get_filename(), line_number - 1)
-                    line_number += 1
+                self.__add_docstring_to_viewlist(viewlist, root, docstr)
 
         return num_matches
 
