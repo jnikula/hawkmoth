@@ -97,6 +97,13 @@ class ParserTestcase(testenv.Testcase):
             if filter_filenames is None and 'clang' not in directive.options:
                 filter_clang_args = None
 
+            def get_docstring(ds):
+                transform = directive.options.get('transform')
+                def process_docstring(lines): return _process_docstring(transform, lines)
+
+                lines, _ = ds.get_docstring(process_docstring=process_docstring)
+                return '\n'.join(lines) + '\n'
+
             for root in roots.values():
                 if filter_filenames is not None and root.get_filename() not in filter_filenames:
                     continue
@@ -107,14 +114,10 @@ class ParserTestcase(testenv.Testcase):
                 if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
                     continue
 
-                transform = directive.options.get('transform')
-                def process_docstring(lines): return _process_docstring(transform, lines)
-
                 for docstrings in root.walk(recurse=False, filter_types=_filter_types(directive),
                                             filter_names=_filter_names(directive)):
                     for docstr in docstrings.walk(filter_names=_filter_members(directive)):
-                        lines, _ = docstr.get_docstring(process_docstring=process_docstring)
-                        docs_str += '\n'.join(lines) + '\n'
+                        docs_str += get_docstring(docstr)
 
         return docs_str, errors_str
 
