@@ -77,16 +77,13 @@ class Docstring():
         # Sort the children by order of appearance.
         yield from sorted(self._children, key=lambda c: c.get_line())
 
-    def _match(self, filter_types=None, filter_names=None):
-        if filter_types is not None and type(self) not in filter_types:
-            return False
-
+    def _match(self, filter_names=None):
         if filter_names is not None and self.get_name() not in filter_names:
             return False
 
         return True
 
-    def walk(self, filter_types=None, filter_names=None):
+    def walk(self, filter_names=None):
         if self._text:
             yield self
 
@@ -298,7 +295,7 @@ class _CompoundDocstring(Docstring):
     def add_children(self, comments):
         self._children.extend(comments)
 
-    def walk(self, filter_types=None, filter_names=None):
+    def walk(self, filter_names=None):
         # Note: The filtering is pretty specialized for our use case here. It
         # only filters the immediate children, not this comment, nor
         # grandchildren.
@@ -308,7 +305,7 @@ class _CompoundDocstring(Docstring):
             yield self
 
         for comment in self:
-            if comment._match(filter_types=filter_types, filter_names=filter_names):
+            if comment._match(filter_names=filter_names):
                 yield from comment.walk()
 
 class RootDocstring(_CompoundDocstring):
