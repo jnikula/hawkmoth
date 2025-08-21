@@ -110,13 +110,17 @@ class _AutoBaseDirective(SphinxDirective):
             viewlist.append(line, root.get_filename(), line_number - 1)
             line_number += 1
 
+    @staticmethod
+    def _skip(thing, iterable):
+        return iterable is not None and thing not in iterable
+
     def __get_docstrings_for_root(self, viewlist, root):
         num_matches = 0
         for primary in root:
-            if self._docstring_types is not None and type(primary) not in self._docstring_types:
+            if self._skip(type(primary), self._docstring_types):
                 continue
 
-            if self._get_names() is not None and primary.get_name() not in self._get_names():
+            if self._skip(primary.get_name(), self._get_names()):
                 continue
 
             num_matches += 1
@@ -124,7 +128,7 @@ class _AutoBaseDirective(SphinxDirective):
             self.__add_docstring_to_viewlist(viewlist, root, primary)
 
             for member in primary:
-                if self._get_members() is not None and member.get_name() not in self._get_members():
+                if self._skip(member.get_name(), self._get_members()):
                     continue
 
                 for ds in member.walk():
@@ -145,13 +149,13 @@ class _AutoBaseDirective(SphinxDirective):
 
         num_matches = 0
         for root in self.__parsed_files():
-            if filter_filenames is not None and root.get_filename() not in filter_filenames:
+            if self._skip(root.get_filename(), filter_filenames):
                 continue
 
-            if filter_domains is not None and root.get_domain() not in filter_domains:
+            if self._skip(root.get_domain(), filter_domains):
                 continue
 
-            if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
+            if self._skip(root.get_clang_args(), filter_clang_args):
                 continue
 
             num_matches += self.__get_docstrings_for_root(viewlist, root)
