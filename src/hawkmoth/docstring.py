@@ -78,8 +78,12 @@ class Docstring():
         yield from sorted(self._children, key=lambda c: c.get_line())
 
     def walk(self):
+        # The contents of the parent will always be before children.
         if self._text:
             yield self
+
+        for comment in self:
+            yield from comment.walk()
 
     @staticmethod
     def is_doc(comment):
@@ -288,14 +292,6 @@ class _CompoundDocstring(Docstring):
 
     def add_children(self, comments):
         self._children.extend(comments)
-
-    def walk(self):
-        # The contents of the parent will always be before children.
-        if self._text:
-            yield self
-
-        for comment in self:
-            yield from comment.walk()
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename=None, domain='c', clang_args=None):
