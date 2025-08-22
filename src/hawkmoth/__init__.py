@@ -117,7 +117,8 @@ class _AutoBaseDirective(SphinxDirective):
 
         num_matches = 0
         for docstrings in root.walk(recurse=False, filter_types=self._docstring_types,
-                                    filter_names=self._get_names()):
+                                    filter_names=self._get_names(),
+                                    filter_func=self._get_filter()):
             num_matches += 1
             for docstr in docstrings.walk(filter_names=self._get_members()):
                 lines, line_number = docstr.get_docstring(process_docstring=process_docstring)
@@ -163,6 +164,9 @@ class _AutoBaseDirective(SphinxDirective):
 
     def _get_members(self):
         return None
+
+    def _get_filter(self):
+        return lambda comment: False
 
     def _get_filenames(self):
         raise NotImplementedError(self.__class__.__name__ + '._get_filenames')
@@ -246,8 +250,30 @@ class _AutoCompoundDirective(_AutoSymbolDirective):
         # By default use [] as a filter that does not match any members.
         return self.options.get('members', [])
 
+def _filter_private_members(comment: docstring.Docstring):
+    if comment.is_static():
+        return True
+
+    if isinstance(comment, docstring.MacroDocstring):
+        return True
+
+    if isinstance(comment, docstring.TypedefDocstring):
+        return True
+
+    return False
+
 class CAutoDocDirective(_AutoDocDirective):
     _domain = 'c'
+    option_spec = _AutoDocDirective.option_spec.copy()
+    option_spec.update({
+        'exclude-private-members': lambda arg: True,
+    })
+
+    def _get_filter(self):
+        if self.options.get('exclude-private-members', False):
+            return _filter_private_members
+        else:
+            return super()._get_filter()
 
 class CAutoSectionDirective(_AutoSymbolDirective):
     # Allow spaces in the directive argument (the name)
