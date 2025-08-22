@@ -141,16 +141,13 @@ class Docstring():
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
-    def get_docstring(self, process_docstring=None, processor=None):
+    def get_docstring(self, processor):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
         line_offset = Docstring._remove_comment_markers(comment_lines)
 
-        if process_docstring is not None:
-            process_docstring(comment_lines)
-        elif processor is not None:
-            processor.process_docstring(comment_lines)
+        processor.process_docstring(comment_lines)
 
         Docstring._nest_lines(comment_lines, self._indent)
 
