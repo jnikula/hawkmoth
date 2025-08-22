@@ -29,7 +29,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
     __version__ = version_file.read().strip()
 
-class _AutoBaseDirective(SphinxDirective):
+class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
     logger = logging.getLogger(__name__)
 
     option_spec = {
@@ -96,15 +96,13 @@ class _AutoBaseDirective(SphinxDirective):
 
         return parsed_files.values()
 
-    def __process_docstring(self, lines):
+    def process_docstring(self, lines):
         transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
 
         self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
     def __add_docstring_to_viewlist(self, viewlist, root, ds):
-        def process_docstring(lines): self.__process_docstring(lines)
-
-        lines, line_number = ds.get_docstring(process_docstring=process_docstring)
+        lines, line_number = ds.get_docstring(processor=self)
         for line in lines:
             # viewlist line numbers are 0-based
             viewlist.append(line, root.get_filename(), line_number - 1)
