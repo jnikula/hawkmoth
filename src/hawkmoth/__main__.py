@@ -11,6 +11,7 @@ import argparse
 import os
 import sys
 
+from hawkmoth import docstring
 from hawkmoth.ext import javadoc
 from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
@@ -19,16 +20,6 @@ def filename(file):
     if os.path.isfile(file):
         return file
     raise ValueError
-
-def _process_docstring(transform, lines):
-    transformations = {
-        'napoleon': napoleon.process_docstring,
-        'javadoc': javadoc.process_docstring,
-    }
-
-    fn = transformations.get(transform)
-    if fn:
-        fn(lines)
 
 def _read_version():
     try:
@@ -39,6 +30,20 @@ def _read_version():
         version = '(unknown version)'
 
     return version
+
+class Processor(docstring.DocstringProcessor):
+    def __init__(self, transform):
+        self._transform = transform
+
+    def process_docstring(self, lines):
+        transformations = {
+            'napoleon': napoleon.process_docstring,
+            'javadoc': javadoc.process_docstring,
+        }
+
+        fn = transformations.get(self._transform)
+        if fn:
+            fn(lines)
 
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""
@@ -69,15 +74,12 @@ def main():
 
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)
 
-    if args.process_docstring:
-        def process_docstring(lines): return _process_docstring(args.process_docstring, lines)
-    else:
-        process_docstring = None
+    processor = Processor(args.process_docstring)
 
     for comment in comments.walk():
         if args.verbose:
             print(f'# {comment.get_meta()}')
-        lines, _ = comment.get_docstring(process_docstring=process_docstring)
+        lines, _ = comment.get_docstring(processor=processor)
         print('\n'.join(lines))
 
     for error in errors:
