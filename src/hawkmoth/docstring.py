@@ -46,6 +46,10 @@ def _get_prefix_len(lines):
 
     return prefix_len
 
+class DocstringProcessor():
+    def process_docstring(self, lines):
+        pass
+
 class Docstring():
     _indent = 0
     _fmt = ''
@@ -137,7 +141,7 @@ class Docstring():
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
-    def get_docstring(self, process_docstring=None):
+    def get_docstring(self, process_docstring=None, processor=None):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
@@ -145,6 +149,8 @@ class Docstring():
 
         if process_docstring is not None:
             process_docstring(comment_lines)
+        elif processor is not None:
+            processor.process_docstring(comment_lines)
 
         Docstring._nest_lines(comment_lines, self._indent)
 
