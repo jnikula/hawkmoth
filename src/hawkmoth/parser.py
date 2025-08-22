@@ -183,6 +183,13 @@ def _comment_extract(tu, errors):
         ):
             token_type = TokenType.SKIPPABLE
 
+        elif token_cursor.kind in [CursorKind.INTEGER_LITERAL,
+                                   CursorKind.FLOATING_LITERAL,
+                                   CursorKind.IMAGINARY_LITERAL,
+                                   CursorKind.STRING_LITERAL,
+                                   CursorKind.CHARACTER_LITERAL, ]:
+            token_type = TokenType.SKIPPABLE
+
         # Handle all comments we come across.
         elif token.kind == TokenKind.COMMENT:
             if is_doc(token):

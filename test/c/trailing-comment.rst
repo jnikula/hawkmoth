@@ -19,12 +19,12 @@
       enumerator 1
 
 
-   .. c:enumerator:: VALUE_TWO
+   .. c:enumerator:: VALUE_TWO = 1
 
       enumerator 2
 
 
-   .. c:enumerator:: VALUE_THREE
+   .. c:enumerator:: VALUE_THREE = 2
 
       enumerator 3
 

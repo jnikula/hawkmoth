@@ -7,9 +7,9 @@
  * Documented enum
  */
 typedef enum {
-    VALUE_ONE,     /**< enumerator 1 */
-    VALUE_TWO,     /**< enumerator 2 */
-    VALUE_THREE    /**< enumerator 3 */
+    VALUE_ONE,         /**< enumerator 1 */
+    VALUE_TWO = 1,     /**< enumerator 2 */
+    VALUE_THREE = 2    /**< enumerator 3 */
 } sample_enum; 
 
 /** 
