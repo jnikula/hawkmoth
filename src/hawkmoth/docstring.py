@@ -50,6 +50,28 @@ class DocstringProcessor():
     def process_docstring(self, lines):
         pass
 
+    def remove_comment_markers(self, lines):
+        """Remove comment markers and line prefixes from comment lines.
+
+        Return the number of lines removed from the beginning.
+        """
+        line_offset = 0
+
+        lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
+        lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
+
+        prefix_len = _get_prefix_len(lines[1:-1])
+        lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
+
+        while lines and (not lines[0] or lines[0].isspace()):
+            line_offset += 1
+            del lines[0]
+
+        while lines and (not lines[-1] or lines[-1].isspace()):
+            del lines[-1]
+
+        return line_offset
+
 class Docstring():
     _indent = 0
     _fmt = ''
@@ -106,29 +128,6 @@ class Docstring():
         return statemachine.string2lines(self._text, 8, convert_whitespace=True)
 
     @staticmethod
-    def _remove_comment_markers(lines):
-        """Remove comment markers and line prefixes from comment lines.
-
-        Return the number of lines removed from the beginning.
-        """
-        line_offset = 0
-
-        lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
-        lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
-
-        prefix_len = _get_prefix_len(lines[1:-1])
-        lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
-
-        while lines and (not lines[0] or lines[0].isspace()):
-            line_offset += 1
-            del lines[0]
-
-        while lines and (not lines[-1] or lines[-1].isspace()):
-            del lines[-1]
-
-        return line_offset
-
-    @staticmethod
     def _nest_lines(lines, nest):
         """
         Indent documentation block for nesting.
@@ -145,7 +144,7 @@ class Docstring():
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
 
-        line_offset = Docstring._remove_comment_markers(comment_lines)
+        line_offset = processor.remove_comment_markers(comment_lines)
 
         processor.process_docstring(comment_lines)
 
