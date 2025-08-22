@@ -94,12 +94,6 @@
    function declaration
 
 
-.. c:var:: int multiline_comment
-
-   trailing comment that has multiple lines
-   should wrap correctly.
-
-
 .. c:var:: int eof_variable
 
    trailing comment at end of file

@@ -47,9 +47,4 @@ typedef void (*sample_func_ptr)(int); /**< function typedef */
 
 int fxn(int a, int b);                /**< function declaration */
 
-int multiline_comment; /**<
-                        * trailing comment that has multiple lines
-                        * should wrap correctly.
-                        */
-
 int eof_variable; /**< trailing comment at end of file */

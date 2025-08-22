@@ -148,7 +148,7 @@ def _comment_extract(tu, errors):
     top_level_comments = []
     comments = {}
     current_leading_comment = None
-    current_trailing_token = None
+    current_trailing_cursor = None
 
     def is_doc(cursor):
         return cursor and docstring.Docstring.is_doc(cursor.spelling)
@@ -220,27 +220,58 @@ def _comment_extract(tu, errors):
         else:
             token_type = TokenType.DOCUMENTABLE
 
+        # If on the same line as the last trailing comment, that means the
+        # comment wasn't the last thing on its line
+        if (current_trailing_cursor is not None and
+            current_trailing_cursor.hash in comments and
+            comments[current_trailing_cursor.hash].extent.start.line ==
+                token.extent.start.line):
+            # If we have a trailing comment for this token, we can use it.
+            del comments[current_trailing_cursor.hash]
+            errors.append(
+                ParserError(
+                    ErrorLevel.WARNING,
+                    token.location.file.name,
+                    token.location.line,
+                    'trailing comment was not the last token on a line.',
+                )
+            )
+
         if token_type == TokenType.LEADING_COMMENT:
             if current_leading_comment is not None:
                 top_level_comments.append(current_leading_comment)
             current_leading_comment = token
-            current_trailing_token = None
+            current_trailing_cursor = None
 
         elif token_type == TokenType.TRAILING_COMMENT:
-            if (
-                current_trailing_token is not None
-                and current_trailing_token.location.line == token.location.line
-                and current_trailing_token.hash not in comments
-            ):
-                # Set the comment if no other comment has been set so far
-                comments[current_trailing_token.hash] = token
+
+            # Handle prohibited trailing comment constructions
+            errorString = None
+            if (current_trailing_cursor is None):
+                errorString = 'trailing comment without anything to document was dropped.'
+            elif (current_trailing_cursor.hash in comments):
+                errorString = 'multiple comments for a single construct; only first was kept.'
+            elif (current_trailing_cursor.extent.start.line
+                  != current_trailing_cursor.extent.end.line):
+                errorString = 'trailing comment for multiline construct was dropped.'
+            elif (current_trailing_cursor.extent.start.line
+                  != token.extent.start.line):
+                errorString = (
+                    'trailing comment on separate line from documented construct was dropped.')
+            elif (current_trailing_cursor.extent.end.column > token.extent.start.column):
+                errorString = 'trailing comment in the middle of a construct was dropped.'
+            elif (token.extent.start.line != token.extent.end.line):
+                errorString = 'multiline trailing comment was dropped.'
             else:
+                comments[current_trailing_cursor.hash] = token
+
+            if errorString is not None:
                 errors.append(
                     ParserError(
                         ErrorLevel.WARNING,
                         token.location.file.name,
                         token.location.line,
-                        'trailing comment without anything to document was dropped.',
+                        errorString,
                     )
                 )
 
@@ -248,16 +279,12 @@ def _comment_extract(tu, errors):
             if current_leading_comment is not None:
                 top_level_comments.append(current_leading_comment)
             current_leading_comment = None
-            current_trailing_token = None
+            current_trailing_cursor = None
 
         elif token_type == TokenType.SKIPPABLE:
             pass  # Do nothing
         elif token_type == TokenType.DOCUMENTABLE:
-            # Only if it's a one line construct can we have a trailing comment.
-            if token_cursor.extent.start.line == token_cursor.extent.end.line:
-                current_trailing_token = token_cursor
-            else:
-                current_trailing_token = None
+            current_trailing_cursor = token_cursor
 
             # If we have a leading comment, it applies to this cursor.
             if current_leading_comment is not None:

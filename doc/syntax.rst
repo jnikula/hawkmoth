@@ -55,9 +55,9 @@ as normal paragraphs in the order they appear.
 Trailing Comments
 ~~~~~~~~~~~~~~~~~
 
-Trailing documentation comments are block comments of that start with ``/**<``.
-They are attached to the C or C++ construct they follow and should be placed
-immediately after the construct.
+Trailing documentation comments are block comments that start with ``/**<``.
+These are attached to the C or C++ construct they follow and should be placed
+on the same line, immediately after the construct.
 
 .. code-block:: c
 
