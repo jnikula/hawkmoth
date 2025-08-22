@@ -88,7 +88,7 @@ class Docstring():
     _indent = 0
     _fmt = ''
 
-    def __init__(self, cursor=None, text=None, meta=None, nest=0):
+    def __init__(self, cursor, nest):
         if cursor:
             self._args = cursor.args
             self._decl_name = cursor.decl_name
@@ -102,10 +102,10 @@ class Docstring():
             self._args = None
             self._decl_name = None
             self._domain = None
-            self._meta = meta
+            self._meta = None
             self._name = None
             self._quals = None
-            self._text = text
+            self._text = None
             self._ttype = None
 
         self._nest = nest
@@ -184,6 +184,11 @@ class Docstring():
 class TextDocstring(Docstring):
     _indent = 0
     _fmt = ''
+
+    def __init__(self, text, meta):
+        super().__init__(cursor=None, nest=0)
+        self._text = text
+        self._meta = meta
 
     def get_name(self):
         """Figure out a name for the text comment based on the comment contents.
@@ -295,8 +300,8 @@ class _CompoundDocstring(Docstring):
         self._children.extend(comments)
 
 class RootDocstring(_CompoundDocstring):
-    def __init__(self, filename=None, domain='c', clang_args=None):
-        super().__init__()
+    def __init__(self, filename, domain, clang_args):
+        super().__init__(cursor=None, nest=0)
         self._filename = filename
         self._domain = domain
         self._clang_args = clang_args
@@ -326,7 +331,7 @@ class EnumeratorDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:enumerator:: {name}{value}'
 
-    def __init__(self, cursor, nest=0):
+    def __init__(self, cursor, nest):
         self._value = cursor.value
         super().__init__(cursor=cursor, nest=nest)
 
