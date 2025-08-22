@@ -11,15 +11,19 @@ from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
 from test import testenv
 
-def _process_docstring(transform, lines):
-    transformations = {
-        'napoleon': napoleon.process_docstring,
-        'javadoc': javadoc.process_docstring,
-    }
+class Processor(docstring.DocstringProcessor):
+    def __init__(self, transform):
+        self._transform = transform
 
-    fn = transformations.get(transform)
-    if fn:
-        fn(lines)
+    def process_docstring(self, lines):
+        transformations = {
+            'napoleon': napoleon.process_docstring,
+            'javadoc': javadoc.process_docstring,
+        }
+
+        fn = transformations.get(self._transform)
+        if fn:
+            fn(lines)
 
 def _filter_types(directive):
     types = {
@@ -97,11 +101,10 @@ class ParserTestcase(testenv.Testcase):
             if filter_filenames is None and 'clang' not in directive.options:
                 filter_clang_args = None
 
-            def get_docstring(ds):
-                transform = directive.options.get('transform')
-                def process_docstring(lines): return _process_docstring(transform, lines)
+            processor = Processor(directive.options.get('transform'))
 
-                lines, _ = ds.get_docstring(process_docstring=process_docstring)
+            def get_docstring(ds):
+                lines, _ = ds.get_docstring(processor=processor)
                 return '\n'.join(lines) + '\n'
 
             def skip(thing, iterable):
