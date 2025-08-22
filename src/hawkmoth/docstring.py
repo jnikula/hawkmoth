@@ -72,6 +72,18 @@ class DocstringProcessor():
 
         return line_offset
 
+    def nest_lines(self, lines, nest):
+        """
+        Indent documentation block for nesting.
+
+        Args:
+            lines (List[str]): Documentation body as list of strings,
+                modified in-place.
+            nest (int): Nesting level. For each level, the final block is indented
+                one level. Useful for (e.g.) declaring structure members.
+        """
+        lines[:] = ['   ' * nest + line if line else '' for line in lines]
+
 class Docstring():
     _indent = 0
     _fmt = ''
@@ -127,19 +139,6 @@ class Docstring():
     def _get_comment_lines(self):
         return statemachine.string2lines(self._text, 8, convert_whitespace=True)
 
-    @staticmethod
-    def _nest_lines(lines, nest):
-        """
-        Indent documentation block for nesting.
-
-        Args:
-            lines (List[str]): Documentation body as list of strings,
-                modified in-place.
-            nest (int): Nesting level. For each level, the final block is indented
-                one level. Useful for (e.g.) declaring structure members.
-        """
-        lines[:] = ['   ' * nest + line if line else '' for line in lines]
-
     def get_docstring(self, processor):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
@@ -148,7 +147,7 @@ class Docstring():
 
         processor.process_docstring(comment_lines)
 
-        Docstring._nest_lines(comment_lines, self._indent)
+        processor.nest_lines(comment_lines, self._indent)
 
         # ensure we have cushion blank line before the docstring
         if len(header_lines) == 0 or header_lines[0] != '':
@@ -162,7 +161,7 @@ class Docstring():
 
         lines = header_lines + comment_lines
 
-        Docstring._nest_lines(lines, self._nest)
+        processor.nest_lines(lines, self._nest)
 
         # ensure we have cushion blank line after the docstring
         if lines[-1] != '':
