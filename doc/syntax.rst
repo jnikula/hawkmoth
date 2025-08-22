@@ -19,7 +19,10 @@ and read on for documentation comment formatting details.
 Documentation Comments
 ----------------------
 
-Documentation comments are C/C++ language block comments that begin with
+Leading Comments
+~~~~~~~~~~~~~~~~
+
+Leading documentation comments are C/C++ language block comments that begin with
 ``/**``.
 
 Because reStructuredText is sensitive about indentation, it's strongly
@@ -48,6 +51,25 @@ includes macros, functions, struct and union members, enumerations, etc.
 
 Documentation comments followed by comments (documentation or not) are included
 as normal paragraphs in the order they appear.
+
+Trailing Comments
+~~~~~~~~~~~~~~~~~
+
+Trailing documentation comments are block comments that start with ``/**<``.
+These are attached to the C or C++ construct they follow and should be placed
+on the same line, immediately after the construct.
+
+.. code-block:: c
+
+  int foo; /**< The quick brown fox jumps over the lazy dog. */
+  int bar; /**< The quick brown foo jumps over the lazy dog, too. */
+
+Trailing comments are intended to be used for documenting lists of declarations,
+struct/class members, and enumerators in a more compact form than leading
+comments.  Using trailing comments for multi-line constructs, function
+definitions, or other constructs is not recommended and may lead to unexpected
+results.
+
 
 Info Field Lists
 ----------------
