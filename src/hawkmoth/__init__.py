@@ -134,7 +134,9 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
 
         return num_matches
 
-    def __get_docstrings(self, viewlist):
+    def __get_docstrings(self):
+        viewlist = ViewList()
+
         filter_filenames = self._get_filenames()
         filter_domains = [self._domain]
         filter_clang_args = [self.__get_clang_args()]
@@ -172,6 +174,8 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
             self.logger.warning(f'"{self.name}:: {args}" matches {num_matches} documented symbols.',
                                 location=(self.env.docname, self.lineno))
 
+        return viewlist
+
     def _get_names(self):
         return None
 
@@ -186,9 +190,7 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
             for filename in self._get_filenames():
                 self.__parse(filename)
 
-        result = ViewList()
-
-        self.__get_docstrings(result)
+        result = self.__get_docstrings()
 
         # Parse the extracted reST
         with switch_source_input(self.state, result):
