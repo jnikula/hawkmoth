@@ -91,21 +91,10 @@ class _AutoBaseDirective(SphinxDirective):
 
         parsed_files[key] = docstrings
 
-    def __parsed_files(self, filter_filenames=None, filter_domains=None,
-                       filter_clang_args=None):
+    def __parsed_files(self):
         parsed_files = self.env.temp_data.get('hawkmoth_parsed_files', {})
 
-        for root in parsed_files.values():
-            if filter_filenames is not None and root.get_filename() not in filter_filenames:
-                continue
-
-            if filter_domains is not None and root.get_domain() not in filter_domains:
-                continue
-
-            if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
-                continue
-
-            yield root
+        return parsed_files.values()
 
     def __process_docstring(self, lines):
         transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
@@ -145,6 +134,7 @@ class _AutoBaseDirective(SphinxDirective):
 
     def __get_docstrings(self, viewlist):
         filter_filenames = self._get_filenames()
+        filter_domains = [self._domain]
         filter_clang_args = [self.__get_clang_args()]
 
         # If filenames is None, we're relying on a previous directive to have
@@ -154,9 +144,16 @@ class _AutoBaseDirective(SphinxDirective):
             filter_clang_args = None
 
         num_matches = 0
-        for root in self.__parsed_files(filter_filenames=filter_filenames,
-                                        filter_domains=[self._domain],
-                                        filter_clang_args=filter_clang_args):
+        for root in self.__parsed_files():
+            if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                continue
+
+            if filter_domains is not None and root.get_domain() not in filter_domains:
+                continue
+
+            if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
+                continue
+
             num_matches += self.__get_docstrings_for_root(viewlist, root)
 
         if num_matches == 0:
