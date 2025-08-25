@@ -1,0 +1,6 @@
+directives:
+- domain: cpp
+  directive: autodoc
+  arguments:
+  - trailing-comment.cpp
+expected: trailing-comment.rst
