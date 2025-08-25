@@ -149,13 +149,14 @@ def _comment_extract(tu):
     comments = {}
     current_comment = None
 
-    def is_doc(cursor): return cursor and docstring.Docstring.is_doc(cursor.spelling)
+    def is_leading_doc(cursor):
+        return cursor and docstring.Docstring.is_leading_doc(cursor.spelling)
 
     for token in tu.get_tokens(extent=tu.cursor.extent):
         # Handle all comments we come across.
         if token.kind == TokenKind.COMMENT:
             # If we already have a comment, it wasn't related to another cursor.
-            if is_doc(current_comment):
+            if is_leading_doc(current_comment):
                 top_level_comments.append(current_comment)
             current_comment = token
             continue
@@ -178,19 +179,19 @@ def _comment_extract(tu):
         # between the comment and the actual cursor being documented.
         if token_cursor.kind in [CursorKind.LINKAGE_SPEC,
                                  CursorKind.UNEXPOSED_DECL]:
-            if is_doc(current_comment):
+            if is_leading_doc(current_comment):
                 top_level_comments.append(current_comment)
             current_comment = None
             continue
 
         # Otherwise the current comment documents _this_ cursor. I.e.: not a top
         # level comment.
-        if is_doc(current_comment):
+        if is_leading_doc(current_comment):
             comments[token_cursor.hash] = current_comment
         current_comment = None
 
     # Comment at the end of file.
-    if is_doc(current_comment):
+    if is_leading_doc(current_comment):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments

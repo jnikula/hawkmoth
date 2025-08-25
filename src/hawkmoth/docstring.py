@@ -87,9 +87,13 @@ class Docstring():
             yield self
 
     @staticmethod
-    def is_doc(comment):
+    def is_leading_doc(comment):
         """Test if comment is a C documentation comment."""
-        return comment.startswith('/**') and comment != '/**/'
+        return (
+            comment.startswith("/**")
+            and comment != "/**/"
+            and not comment.startswith("/**<")
+        )
 
     def _get_header_lines(self):
         name = self._get_decl_name()
