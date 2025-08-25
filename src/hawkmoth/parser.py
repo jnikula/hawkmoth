@@ -220,6 +220,23 @@ def _comment_extract(tu, errors):
         else:
             token_type = TokenType.DOCUMENTABLE
 
+        # If on the same line as the last trailing comment, that means the
+        # comment wasn't the last thing on its line
+        if (current_trailing_cursor is not None and
+            current_trailing_cursor.hash in comments and
+            comments[current_trailing_cursor.hash].extent.start.line ==
+                token.extent.start.line):
+            # If we have a trailing comment for this token, we can use it.
+            del comments[current_trailing_cursor.hash]
+            errors.append(
+                ParserError(
+                    ErrorLevel.WARNING,
+                    token.location.file.name,
+                    token.location.line,
+                    'trailing comment was not the last token on a line.',
+                )
+            )
+
         if token_type == TokenType.LEADING_COMMENT:
             if current_leading_comment is not None:
                 top_level_comments.append(current_leading_comment)
@@ -228,9 +245,25 @@ def _comment_extract(tu, errors):
 
         elif token_type == TokenType.TRAILING_COMMENT:
 
+            # Handle prohibited trailing comment constructions
             error_string = None
-            if (current_trailing_cursor is None):
+            if current_trailing_cursor is None:
                 error_string = 'trailing comment without anything to document was dropped.'
+            elif current_trailing_cursor.hash in comments:
+                error_string = 'multiple comments for a single construct; only first was kept.'
+            elif (current_trailing_cursor.extent.start.line
+                  != current_trailing_cursor.extent.end.line):
+                error_string = 'trailing comment for multiline construct was dropped.'
+            elif (current_trailing_cursor.extent.start.line
+                  != token.extent.start.line):
+                error_string = (
+                    'trailing comment on separate line from documented construct was dropped.'
+                )
+            elif (current_trailing_cursor.extent.end.column
+                  > token.extent.start.column):
+                error_string = 'trailing comment in the middle of a construct was dropped.'
+            elif token.extent.start.line != token.extent.end.line:
+                error_string = 'multiline trailing comment was dropped.'
             else:
                 comments[current_trailing_cursor.hash] = token
 
