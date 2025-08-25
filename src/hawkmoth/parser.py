@@ -148,9 +148,13 @@ def _comment_extract(tu, errors):
     top_level_comments = []
     comments = {}
     current_leading_comment = None
+    current_trailing_cursor = None
 
     def is_leading_doc(cursor):
         return cursor and docstring.Docstring.is_leading_doc(cursor.spelling)
+
+    def is_trailing_doc(cursor):
+        return cursor and docstring.Docstring.is_trailing_doc(cursor.spelling)
 
     class TokenType(enum.Enum):
         """
@@ -158,6 +162,7 @@ def _comment_extract(tu, errors):
         """
 
         LEADING_COMMENT = enum.auto()
+        TRAILING_COMMENT = enum.auto()
         SKIPPABLE = enum.auto()
         DOCUMENTABLE = enum.auto()
         SEPARATOR = enum.auto()
@@ -189,6 +194,8 @@ def _comment_extract(tu, errors):
         elif token.kind == TokenKind.COMMENT:
             if is_leading_doc(token):
                 token_type = TokenType.LEADING_COMMENT
+            elif is_trailing_doc(token):
+                token_type = TokenType.TRAILING_COMMENT
             else:
                 token_type = TokenType.SEPARATOR
 
@@ -217,15 +224,37 @@ def _comment_extract(tu, errors):
             if current_leading_comment is not None:
                 top_level_comments.append(current_leading_comment)
             current_leading_comment = token
+            current_trailing_cursor = None
+
+        elif token_type == TokenType.TRAILING_COMMENT:
+
+            error_string = None
+            if (current_trailing_cursor is None):
+                error_string = 'trailing comment without anything to document was dropped.'
+            else:
+                comments[current_trailing_cursor.hash] = token
+
+            if error_string is not None:
+                errors.append(
+                    ParserError(
+                        ErrorLevel.WARNING,
+                        token.location.file.name,
+                        token.location.line,
+                        error_string,
+                    )
+                )
 
         elif token_type == TokenType.SEPARATOR:
             if current_leading_comment is not None:
                 top_level_comments.append(current_leading_comment)
             current_leading_comment = None
+            current_trailing_cursor = None
 
         elif token_type == TokenType.SKIPPABLE:
             pass  # Do nothing
         elif token_type == TokenType.DOCUMENTABLE:
+            current_trailing_cursor = token_cursor
+
             # If we have a leading comment, it applies to this cursor.
             if current_leading_comment is not None:
                 comments[token_cursor.hash] = current_leading_comment
