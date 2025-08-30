@@ -104,27 +104,30 @@ class ParserTestcase(testenv.Testcase):
                 lines, _ = ds.get_docstring(process_docstring=process_docstring)
                 return '\n'.join(lines) + '\n'
 
+            def skip(thing, iterable):
+                return iterable is not None and thing not in iterable
+
             for root in roots.values():
-                if filter_filenames is not None and root.get_filename() not in filter_filenames:
+                if skip(root.get_filename(), filter_filenames):
                     continue
 
-                if filter_domains is not None and root.get_domain() not in filter_domains:
+                if skip(root.get_domain(), filter_domains):
                     continue
 
-                if filter_clang_args is not None and root.get_clang_args() not in filter_clang_args:
+                if skip(root.get_clang_args(), filter_clang_args):
                     continue
 
                 for primary in root:
-                    if _filter_types(directive) is not None and type(primary) not in _filter_types(directive):  # noqa: E501
+                    if skip(type(primary), _filter_types(directive)):
                         continue
 
-                    if _filter_names(directive) is not None and primary.get_name() not in _filter_names(directive):  # noqa: E501
+                    if skip(primary.get_name(), _filter_names(directive)):
                         continue
 
                     docs_str += get_docstring(primary)
 
                     for member in primary:
-                        if _filter_members(directive) is not None and member.get_name() not in _filter_members(directive):  # noqa: E501
+                        if skip(member.get_name(), _filter_members(directive)):
                             continue
 
                         for ds in member.walk():
