@@ -1,0 +1,7 @@
+directives:
+- domain: c
+  directive: autodoc
+  arguments:
+  - trailing-comment-exceptions.c
+expected: trailing-comment-exceptions.rst
+errors: trailing-comment-exceptions.stderr

@@ -137,7 +137,7 @@ def _domain_is_valid(tu, domain, errors):
         return False
     return True
 
-def _comment_extract(tu):
+def _comment_extract(tu, errors):
 
     # FIXME: How to handle top level comments above a cursor that it does *not*
     # describe? Parsing @file or @doc at this stage would not be a clean design.
@@ -147,51 +147,155 @@ def _comment_extract(tu):
 
     top_level_comments = []
     comments = {}
-    current_comment = None
+    current_leading_comment = None
+    current_trailing_cursor = None
 
-    def is_doc(cursor): return cursor and docstring.Docstring.is_doc(cursor.spelling)
+    def is_leading_doc(cursor):
+        return cursor and docstring.Docstring.is_leading_doc(cursor.spelling)
+
+    def is_trailing_doc(cursor):
+        return cursor and docstring.Docstring.is_trailing_doc(cursor.spelling)
+
+    class TokenType(enum.Enum):
+        """
+        Token types used in the parser
+        """
+
+        LEADING_COMMENT = enum.auto()
+        TRAILING_COMMENT = enum.auto()
+        SKIPPABLE = enum.auto()
+        DOCUMENTABLE = enum.auto()
+        SEPARATOR = enum.auto()
+        UNKNOWN = enum.auto()
 
     for token in tu.get_tokens(extent=tu.cursor.extent):
-        # Handle all comments we come across.
-        if token.kind == TokenKind.COMMENT:
-            # If we already have a comment, it wasn't related to another cursor.
-            if is_doc(current_comment):
-                top_level_comments.append(current_comment)
-            current_comment = token
-            continue
+        token_type = TokenType.UNKNOWN
 
         # Store off the token's cursor for a slight performance improvement
         # instead of accessing the `cursor` property multiple times.
         token_cursor = token.cursor
 
+        # Semicolons and commas belong to cursor of the outer scope.  We want
+        # to be able to add trailing comments after the semicolon on the line,
+        # so skip them here.
+        if token.kind == TokenKind.PUNCTUATION and (
+            token.spelling == ";" or token.spelling == ","
+        ):
+            token_type = TokenType.SKIPPABLE
+
+        elif token_cursor.kind in [CursorKind.INTEGER_LITERAL,
+                                   CursorKind.FLOATING_LITERAL,
+                                   CursorKind.IMAGINARY_LITERAL,
+                                   CursorKind.STRING_LITERAL,
+                                   CursorKind.CHARACTER_LITERAL, ]:
+            token_type = TokenType.SKIPPABLE
+
+        # Handle all comments we come across.
+        elif token.kind == TokenKind.COMMENT:
+            if is_leading_doc(token):
+                token_type = TokenType.LEADING_COMMENT
+            elif is_trailing_doc(token):
+                token_type = TokenType.TRAILING_COMMENT
+            else:
+                token_type = TokenType.SEPARATOR
+
         # Cursors that are 1) never documented themselves, and 2) allowed
         # between the comment and the actual cursor being documented.
-        if token_cursor.kind in [CursorKind.INVALID_FILE,
-                                 CursorKind.TYPE_REF,
-                                 CursorKind.TEMPLATE_REF,
-                                 CursorKind.NAMESPACE_REF,
-                                 CursorKind.PREPROCESSING_DIRECTIVE,
-                                 CursorKind.MACRO_INSTANTIATION]:
-            continue
+        elif token_cursor.kind in [
+            CursorKind.INVALID_FILE,
+            CursorKind.TYPE_REF,
+            CursorKind.TEMPLATE_REF,
+            CursorKind.NAMESPACE_REF,
+            CursorKind.PREPROCESSING_DIRECTIVE,
+            CursorKind.MACRO_INSTANTIATION,
+        ]:
+            token_type = TokenType.SKIPPABLE
 
         # Cursors that are 1) never documented themselves, and 2) not allowed
         # between the comment and the actual cursor being documented.
-        if token_cursor.kind in [CursorKind.LINKAGE_SPEC,
-                                 CursorKind.UNEXPOSED_DECL]:
-            if is_doc(current_comment):
-                top_level_comments.append(current_comment)
-            current_comment = None
-            continue
+        elif token_cursor.kind in [CursorKind.LINKAGE_SPEC, CursorKind.UNEXPOSED_DECL]:
+            token_type = TokenType.SEPARATOR
 
-        # Otherwise the current comment documents _this_ cursor. I.e.: not a top
-        # level comment.
-        if is_doc(current_comment):
-            comments[token_cursor.hash] = current_comment
-        current_comment = None
+        # All other cursors can be documented
+        else:
+            token_type = TokenType.DOCUMENTABLE
 
-    # Comment at the end of file.
-    if is_doc(current_comment):
-        top_level_comments.append(current_comment)
+        # If on the same line as the last trailing comment, that means the
+        # comment wasn't the last thing on its line
+        if (current_trailing_cursor is not None and
+            current_trailing_cursor.hash in comments and
+            comments[current_trailing_cursor.hash].extent.start.line ==
+                token.extent.start.line):
+            # If we have a trailing comment for this token, we can use it.
+            del comments[current_trailing_cursor.hash]
+            errors.append(
+                ParserError(
+                    ErrorLevel.WARNING,
+                    token.location.file.name,
+                    token.location.line,
+                    'trailing comment was not the last token on a line.',
+                )
+            )
+
+        if token_type == TokenType.LEADING_COMMENT:
+            if current_leading_comment is not None:
+                top_level_comments.append(current_leading_comment)
+            current_leading_comment = token
+            current_trailing_cursor = None
+
+        elif token_type == TokenType.TRAILING_COMMENT:
+
+            # Handle prohibited trailing comment constructions
+            error_string = None
+            if current_trailing_cursor is None:
+                error_string = 'trailing comment without anything to document was dropped.'
+            elif current_trailing_cursor.hash in comments:
+                error_string = 'multiple comments for a single construct; only first was kept.'
+            elif (current_trailing_cursor.extent.start.line
+                  != current_trailing_cursor.extent.end.line):
+                error_string = 'trailing comment for multiline construct was dropped.'
+            elif (current_trailing_cursor.extent.start.line
+                  != token.extent.start.line):
+                error_string = (
+                    'trailing comment on separate line from documented construct was dropped.'
+                )
+            elif (current_trailing_cursor.extent.end.column
+                  > token.extent.start.column):
+                error_string = 'trailing comment in the middle of a construct was dropped.'
+            elif token.extent.start.line != token.extent.end.line:
+                error_string = 'multiline trailing comment was dropped.'
+            else:
+                comments[current_trailing_cursor.hash] = token
+
+            if error_string is not None:
+                errors.append(
+                    ParserError(
+                        ErrorLevel.WARNING,
+                        token.location.file.name,
+                        token.location.line,
+                        error_string,
+                    )
+                )
+
+        elif token_type == TokenType.SEPARATOR:
+            if current_leading_comment is not None:
+                top_level_comments.append(current_leading_comment)
+            current_leading_comment = None
+            current_trailing_cursor = None
+
+        elif token_type == TokenType.SKIPPABLE:
+            pass  # Do nothing
+        elif token_type == TokenType.DOCUMENTABLE:
+            current_trailing_cursor = token_cursor
+
+            # If we have a leading comment, it applies to this cursor.
+            if current_leading_comment is not None:
+                comments[token_cursor.hash] = current_leading_comment
+                current_leading_comment = None
+
+    # Unattached comment at the end of file.
+    if current_leading_comment is not None:
+        top_level_comments.append(current_leading_comment)
 
     return top_level_comments, comments
 
@@ -387,7 +491,7 @@ def parse(filename, domain=None, clang_args=None):
     if not _domain_is_valid(tu, domain, errors):
         return result, errors
 
-    top_level_comments, comments = _comment_extract(tu)
+    top_level_comments, comments = _comment_extract(tu, errors)
 
     for comment in top_level_comments:
         text = comment.spelling

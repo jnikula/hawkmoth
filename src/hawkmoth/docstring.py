@@ -86,9 +86,18 @@ class Docstring():
             yield from comment.walk()
 
     @staticmethod
-    def is_doc(comment):
+    def is_leading_doc(comment):
         """Test if comment is a C documentation comment."""
-        return comment.startswith('/**') and comment != '/**/'
+        return (
+            comment.startswith("/**")
+            and comment != "/**/"
+            and not comment.startswith("/**<")
+        )
+
+    @staticmethod
+    def is_trailing_doc(comment):
+        """Test if comment is a C++-style trailing documentation comment."""
+        return comment.startswith('/**<')
 
     def _get_header_lines(self):
         name = self._get_decl_name()
@@ -109,7 +118,7 @@ class Docstring():
         """
         line_offset = 0
 
-        lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
+        lines[0] = re.sub(r'^/\*\*<?[ \t]*', '', lines[0])
         lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
 
         prefix_len = _get_prefix_len(lines[1:-1])

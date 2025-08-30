@@ -1,0 +1,6 @@
+WARNING: trailing-comment-exceptions.c:4: trailing comment for multiline construct was dropped.
+WARNING: trailing-comment-exceptions.c:7: trailing comment on separate line from documented construct was dropped.
+WARNING: trailing-comment-exceptions.c:10: multiple comments for a single construct; only first was kept.
+WARNING: trailing-comment-exceptions.c:12: multiline trailing comment was dropped.
+WARNING: trailing-comment-exceptions.c:17: trailing comment was not the last token on a line.
+WARNING: trailing-comment-exceptions.c:19: trailing comment in the middle of a construct was dropped.
