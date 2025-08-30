@@ -82,7 +82,7 @@ jobs:
 
   test-macos-homebrew:
     name: Run test suite (macOS homebrew)
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
