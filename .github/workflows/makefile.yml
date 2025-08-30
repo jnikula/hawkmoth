@@ -82,21 +82,21 @@ jobs:
 
   test-macos-homebrew:
     name: Run test suite (macOS homebrew)
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
       - name: Environment
         run: |
-          brew --prefix llvm@15
-          $(brew --prefix llvm@15)/bin/llvm-config --libdir
-          $(brew --prefix llvm@15)/bin/llvm-config --bindir
+          brew --prefix llvm@18
+          $(brew --prefix llvm@18)/bin/llvm-config --libdir
+          $(brew --prefix llvm@18)/bin/llvm-config --bindir
       - name: Test
         run: |
-          export DYLD_LIBRARY_PATH=$($(brew --prefix llvm@15)/bin/llvm-config --libdir)
-          export PATH=$($(brew --prefix llvm@15)/bin/llvm-config --bindir):$PATH
+          export DYLD_LIBRARY_PATH=$($(brew --prefix llvm@18)/bin/llvm-config --libdir)
+          export PATH=$($(brew --prefix llvm@18)/bin/llvm-config --bindir):$PATH
           . venv
-          pip install clang==15.0.7
+          pip install clang==18.1.8
           make test
 
   docs:
