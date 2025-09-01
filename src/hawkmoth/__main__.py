@@ -85,5 +85,6 @@ def main():
     for error in errors:
         print(f'{error.level.name}: {error.get_message()}', file=sys.stderr)
 
+
 if __name__ == '__main__':
     main()

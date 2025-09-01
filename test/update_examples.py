@@ -132,6 +132,7 @@ def get_examples():
 
     return examples
 
+
 if __name__ == '__main__':
     print_header()
 
