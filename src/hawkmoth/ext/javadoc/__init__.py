@@ -193,6 +193,7 @@ class _admonition(_handler):
         if rest:
             yield f'   {rest}'
 
+
 # Map non-inline commands to handler classes.
 #
 # All the non-inline commands in the order listed at
