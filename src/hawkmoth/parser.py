@@ -39,6 +39,7 @@ from clang.cindex import (
     TranslationUnit,
     TranslationUnitLoadError,
     Diagnostic,
+    conf,
 )
 
 from hawkmoth import docstring
@@ -151,6 +152,14 @@ def _comment_extract(tu):
 
     def is_doc(cursor): return cursor and docstring.Docstring.is_doc(cursor.spelling)
 
+    # Check for null cursors. Clang 21's cindex.py should be replacing all
+    # returned null cursors with None. However, due to a bug (as of 21.1.3) it
+    # still returns null cursors from tu.get_tokens.
+    #
+    # We need to explicitly check for these because cindex.py 21 also raises an
+    # exception when any property of a null cursor is accessed.
+    def is_null(cursor): return cursor is None or cursor == conf.lib.clang_getNullCursor()
+
     for token in tu.get_tokens(extent=tu.cursor.extent):
         # Handle all comments we come across.
         if token.kind == TokenKind.COMMENT:
@@ -163,6 +172,8 @@ def _comment_extract(tu):
         # Store off the token's cursor for a slight performance improvement
         # instead of accessing the `cursor` property multiple times.
         token_cursor = token.cursor
+        if is_null(token_cursor):
+            continue
 
         # Cursors that are 1) never documented themselves, and 2) allowed
         # between the comment and the actual cursor being documented.
