@@ -9,6 +9,25 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Added tips on ad-hoc ``conf.py`` Sphinx extensions in documentation
+
+Changed
+~~~~~~~
+
+* Changed Javadoc extension to produce ``:any:`` rather than ``:ref:``
+  references
+* Switched macOS CI to run on ``macos-latest`` image and Clang 18
+* Internal docstring processing refactoring
+
+Fixed
+~~~~~
+
+* Fixed function pointer typedef documentation using ``autotype``
+* Fixed parsing with Clang 21
+
 Hawkmoth `0.21.0`_
 ------------------
 
