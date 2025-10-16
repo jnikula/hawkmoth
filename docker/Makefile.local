@@ -52,6 +52,11 @@ docker-html.%: hawkmoth-test.% FORCE
 	mkdir -p doc/_build
 	docker run $(DOCKER_TEST_OUT_MOUNT) $< make BUILDDIR=/out html
 
+DOCKER_BASE_IMAGES := $(shell grep -h "^FROM" $(docker_dir)/Dockerfile.* | sed 's/FROM *//')
+
+docker-pull-bases:
+	@for base in $(DOCKER_BASE_IMAGES); do docker pull $$base; done
+
 # Generate targets for auto-completion
 $(foreach distro,$(DOCKER_DISTROS),docker-test.$(distro) docker-check.$(distro) docker-html.$(distro)):
 
