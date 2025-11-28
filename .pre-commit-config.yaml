@@ -18,3 +18,15 @@ repos:
     rev: v6.2.0
     hooks:
       - id: reuse-lint-file
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.12
+    hooks:
+      # Keep pylock.toml in sync
+      - id: uv-export
+        args:
+          - "--frozen"
+          - "--format=pylock.toml"
+          - "--output-file=pylock.toml"
+          - "--all-extras"
+          - "--quiet"
