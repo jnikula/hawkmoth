@@ -77,7 +77,13 @@ line-length = 100
 select = [
     "E",
     "F",
+    "RUF",
     "W",
+]
+ignore = [
+    "RUF005",
+    "RUF010",
+    "RUF012",
 ]
 
 [tool.ruff.format]
