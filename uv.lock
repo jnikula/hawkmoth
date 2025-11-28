@@ -573,7 +573,7 @@ dependencies = [
     { name = "sphinx", version = "8.2.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "flake8" },
     { name = "mypy" },
@@ -589,22 +589,33 @@ dev = [
     { name = "strictyaml" },
     { name = "types-docutils" },
 ]
+test = [
+    { name = "pytest", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "pytest", version = "9.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "strictyaml" },
+]
 
 [package.metadata]
-requires-dist = [
-    { name = "flake8", marker = "extra == 'dev'" },
-    { name = "mypy", marker = "extra == 'dev'" },
-    { name = "pre-commit", marker = "extra == 'dev'" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
-    { name = "pytest-xdist", marker = "extra == 'dev'" },
-    { name = "restructuredtext-lint", marker = "extra == 'dev'" },
-    { name = "reuse", marker = "extra == 'dev'" },
-    { name = "sphinx", specifier = ">=3" },
-    { name = "strictyaml", marker = "extra == 'dev'" },
-    { name = "types-docutils", marker = "extra == 'dev'" },
+requires-dist = [{ name = "sphinx", specifier = ">=3" }]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "flake8" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
+    { name = "restructuredtext-lint" },
+    { name = "reuse" },
+    { name = "strictyaml" },
+    { name = "types-docutils" },
 ]
-provides-extras = ["dev"]
+docs = []
+test = [
+    { name = "pytest" },
+    { name = "strictyaml" },
+]
 
 [[package]]
 name = "identify"
