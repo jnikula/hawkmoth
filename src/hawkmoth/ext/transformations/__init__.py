@@ -3,9 +3,10 @@
 
 from sphinx.util import logging
 
+
 def _process_docstring(app, lines, transform, options):
     transformations = app.config.cautodoc_transformations
-    tropt = options.get('transform')
+    tropt = options.get("transform")
 
     if transformations is None:
         return
@@ -19,19 +20,20 @@ def _process_docstring(app, lines, transform, options):
     if transform is None:
         return
 
-    comment = '\n'.join(lines)
+    comment = "\n".join(lines)
     comment = transform(comment)
     lines[:] = comment.splitlines()[:]
 
+
 def setup(app):
     logger = logging.getLogger(__name__)
-    logger.warning('hawkmoth.ext.transformations extension has been deprecated.')
+    logger.warning("hawkmoth.ext.transformations extension has been deprecated.")
 
-    app.add_config_value('cautodoc_transformations', None, 'env', [dict])
+    app.add_config_value("cautodoc_transformations", None, "env", [dict])
 
     # Run before event handlers with default priority.
-    app.connect('hawkmoth-process-docstring', _process_docstring, 400)
+    app.connect("hawkmoth-process-docstring", _process_docstring, 400)
 
     return {
-        'parallel_read_safe': True,
+        "parallel_read_safe": True,
     }

@@ -14,35 +14,40 @@ from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
+
 def _removesuffix(s, suffix):
     if suffix and s.endswith(suffix):
-        return s[:-len(suffix)]
+        return s[: -len(suffix)]
     else:
         return s[:]
+
 
 def _get_paths_from_output(output):
     started = False
     for line in output.splitlines():
         if not started:
-            if line == '#include <...> search starts here:':
+            if line == "#include <...> search starts here:":
                 started = True
             continue
 
-        if line == 'End of search list.':
+        if line == "End of search list.":
             break
 
         # Clang on macOS may print this.
-        line = _removesuffix(line, '(framework directory)')
+        line = _removesuffix(line, "(framework directory)")
 
         yield line.strip()
 
+
 def _get_include_paths(cpath, lang):
     try:
-        result = subprocess.run([cpath, '-x', lang, '-E', '-Wp,-v', '-'],
-                                stdin=subprocess.DEVNULL,
-                                capture_output=True,
-                                check=True,
-                                text=True)
+        result = subprocess.run(
+            [cpath, "-x", lang, "-E", "-Wp,-v", "-"],
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
     except FileNotFoundError:
         logger.warning(f"get_include_args: {lang} compiler not found ('{cpath}')")
         return []
@@ -57,20 +62,24 @@ def _get_include_paths(cpath, lang):
 
     return _get_paths_from_output(result.stderr)
 
-def get_include_args(cpath='clang', lang='c', cc_path=None):
+
+def get_include_args(cpath="clang", lang="c", cc_path=None):
     if cc_path is not None:
         cpath = cc_path
-        logger.warning('get_include_args: `cc_path` argument has been deprecated; use `cpath` instead')  # noqa: E501
+        logger.warning(
+            "get_include_args: `cc_path` argument has been deprecated; use `cpath` instead"
+        )  # noqa: E501
 
-    return ['-nostdinc'] + [f'-isystem{path}' for path in _get_include_paths(cpath, lang)]
+    return ["-nostdinc"] + [f"-isystem{path}" for path in _get_include_paths(cpath, lang)]
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import argparse
     import pprint
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('compiler', nargs='?', default='clang')
-    parser.add_argument('--lang', choices=['c', 'c++'], default='c')
+    parser.add_argument("compiler", nargs="?", default="clang")
+    parser.add_argument("--lang", choices=["c", "c++"], default="c")
 
     args = parser.parse_args()
 

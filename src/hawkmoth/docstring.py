@@ -28,12 +28,14 @@ import re
 
 from docutils import statemachine
 
+
 def _commonprefix_len(lines):
     # common prefix
     prefix = os.path.commonprefix(lines)
 
     # common prefix length of limited characters
-    return len(prefix) - len(prefix.lstrip(' \t*'))
+    return len(prefix) - len(prefix.lstrip(" \t*"))
+
 
 def _get_prefix_len(lines):
     # ignore lines with just space
@@ -46,7 +48,8 @@ def _get_prefix_len(lines):
 
     return prefix_len
 
-class DocstringProcessor():
+
+class DocstringProcessor:
     def process_docstring(self, lines):
         pass
 
@@ -57,8 +60,8 @@ class DocstringProcessor():
         """
         line_offset = 0
 
-        lines[0] = re.sub(r'^/\*\*[ \t]*', '', lines[0])
-        lines[-1] = re.sub(r'[ \t]*\*/$', '', lines[-1])
+        lines[0] = re.sub(r"^/\*\*[ \t]*", "", lines[0])
+        lines[-1] = re.sub(r"[ \t]*\*/$", "", lines[-1])
 
         prefix_len = _get_prefix_len(lines[1:-1])
         lines[1:-1] = [line[prefix_len:] for line in lines[1:-1]]
@@ -82,11 +85,12 @@ class DocstringProcessor():
             nest (int): Nesting level. For each level, the final block is indented
                 one level. Useful for (e.g.) declaring structure members.
         """
-        lines[:] = ['   ' * nest + line if line else '' for line in lines]
+        lines[:] = ["   " * nest + line if line else "" for line in lines]
 
-class Docstring():
+
+class Docstring:
     _indent = 0
-    _fmt = ''
+    _fmt = ""
 
     def __init__(self, cursor, nest):
         if cursor:
@@ -126,7 +130,7 @@ class Docstring():
     @staticmethod
     def is_doc(comment):
         """Test if comment is a C documentation comment."""
-        return comment.startswith('/**') and comment != '/**/'
+        return comment.startswith("/**") and comment != "/**/"
 
     def _get_header_lines(self):
         name = self._get_decl_name()
@@ -150,12 +154,12 @@ class Docstring():
         processor.nest_lines(comment_lines, self._indent)
 
         # ensure we have cushion blank line before the docstring
-        if len(header_lines) == 0 or header_lines[0] != '':
-            header_lines.insert(0, '')
+        if len(header_lines) == 0 or header_lines[0] != "":
+            header_lines.insert(0, "")
 
         # ensure we have cushion blank line between header and comment
-        if header_lines[-1] != '':
-            header_lines.append('')
+        if header_lines[-1] != "":
+            header_lines.append("")
 
         line_offset -= len(header_lines)
 
@@ -164,8 +168,8 @@ class Docstring():
         processor.nest_lines(lines, self._nest)
 
         # ensure we have cushion blank line after the docstring
-        if lines[-1] != '':
-            lines.append('')
+        if lines[-1] != "":
+            lines.append("")
 
         return lines, self.get_line() + line_offset
 
@@ -179,11 +183,12 @@ class Docstring():
         return self._name
 
     def get_line(self):
-        return self._meta['line']
+        return self._meta["line"]
+
 
 class TextDocstring(Docstring):
     _indent = 0
-    _fmt = ''
+    _fmt = ""
 
     def __init__(self, text, meta):
         super().__init__(cursor=None, nest=0)
@@ -215,59 +220,68 @@ class TextDocstring(Docstring):
         if self._name:
             return self._name
 
-        mo = re.search(r'[\W_]*(?P<name>\w[^:.\n\r]*)', self._text)
+        mo = re.search(r"[\W_]*(?P<name>\w[^:.\n\r]*)", self._text)
 
-        return mo.group('name') if mo else None
+        return mo.group("name") if mo else None
+
 
 class VarDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:var:: {ttype}{type_spacer}{name}'
+    _fmt = ".. {domain}:var:: {ttype}{type_spacer}{name}"
 
     def _get_header_lines(self):
         name = self._get_decl_name()
         domain = self._domain
         ttype = self._ttype
 
-        type_spacer = ''
-        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            type_spacer = ' '
+        type_spacer = ""
+        if ttype and not (len(ttype) == 0 or ttype.endswith("*")):
+            type_spacer = " "
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer)
+        header = self._fmt.format(domain=domain, name=name, ttype=ttype, type_spacer=type_spacer)
 
         return header.splitlines()
+
 
 class TypedefDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:type:: {name}'
+    _fmt = ".. {domain}:type:: {name}"
+
 
 class TypedefFunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:type:: {ttype}{type_spacer}(*{name})({args})'
+    _fmt = ".. {domain}:type:: {ttype}{type_spacer}(*{name})({args})"
 
     def _get_header_lines(self):
         domain = self._domain
         ttype = self._ttype
         name = self._get_decl_name()
 
-        type_spacer = ''
-        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            type_spacer = ' '
+        type_spacer = ""
+        if ttype and not (len(ttype) == 0 or ttype.endswith("*")):
+            type_spacer = " "
 
-        args = ''
+        args = ""
         if self._args and len(self._args) > 0:
-            def pad_type(t): return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
-            def arg_fmt(t, n): return f'{t}{pad_type(t)}{n}'
-            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        header = self._fmt.format(domain=domain, ttype=ttype, type_spacer=type_spacer,
-                                  name=name, args=args)
+            def pad_type(t):
+                return "" if len(t) == 0 or t.endswith("*") or t.endswith("&") else " "
+
+            def arg_fmt(t, n):
+                return f"{t}{pad_type(t)}{n}"
+
+            args = ", ".join([arg_fmt(t, n) for t, n in self._args])
+
+        header = self._fmt.format(
+            domain=domain, ttype=ttype, type_spacer=type_spacer, name=name, args=args
+        )
 
         return header.splitlines()
 
+
 class TypeAliasDocstring(Docstring):
     _indent = 1
-    _fmt = '.. cpp:type:: {name} = {underlying_type}'
+    _fmt = ".. cpp:type:: {name} = {underlying_type}"
 
     def __init__(self, cursor, nest):
         self._underlying_type = cursor.value
@@ -281,15 +295,16 @@ class TypeAliasDocstring(Docstring):
 
         return header.splitlines()
 
+
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
         # If decl_name is empty, it means this is an anonymous declaration.
         if self._decl_name is None:
             # Sphinx expects @name for anonymous entities. The name must be both
             # stable and unique. Create one.
-            decl_name = hashlib.md5(f'{self._text}{self.get_line()}'.encode()).hexdigest()
+            decl_name = hashlib.md5(f"{self._text}{self.get_line()}".encode()).hexdigest()
 
-            return f'@anonymous_{decl_name}'
+            return f"@anonymous_{decl_name}"
 
         return self._decl_name
 
@@ -298,6 +313,7 @@ class _CompoundDocstring(Docstring):
 
     def add_children(self, comments):
         self._children.extend(comments)
+
 
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename, domain, clang_args):
@@ -315,70 +331,76 @@ class RootDocstring(_CompoundDocstring):
     def get_domain(self):
         return self._domain
 
+
 class StructDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '.. {domain}:struct:: {name}'
+    _fmt = ".. {domain}:struct:: {name}"
+
 
 class UnionDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '.. {domain}:union:: {name}'
+    _fmt = ".. {domain}:union:: {name}"
+
 
 class EnumDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '.. {domain}:enum:: {name}'
+    _fmt = ".. {domain}:enum:: {name}"
+
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:enumerator:: {name}{value}'
+    _fmt = ".. {domain}:enumerator:: {name}{value}"
 
     def __init__(self, cursor, nest):
         self._value = cursor.value
         super().__init__(cursor=cursor, nest=nest)
 
     def _get_header_lines(self):
-        value = f' = {self._value}' if self._value is not None else ''
-        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(),
-                                  value=value)
+        value = f" = {self._value}" if self._value is not None else ""
+        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(), value=value)
 
         return header.splitlines()
 
+
 class MemberDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:member:: {ttype}{type_spacer}{name}'
+    _fmt = ".. {domain}:member:: {ttype}{type_spacer}{name}"
 
     def _get_header_lines(self):
         name = self._get_decl_name()
         domain = self._domain
         ttype = self._ttype
 
-        type_spacer = ''
-        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            type_spacer = ' '
+        type_spacer = ""
+        if ttype and not (len(ttype) == 0 or ttype.endswith("*")):
+            type_spacer = " "
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer)
+        header = self._fmt.format(domain=domain, name=name, ttype=ttype, type_spacer=type_spacer)
 
         return header.splitlines()
 
+
 class MacroDocstring(Docstring):
     _indent = 1
-    _fmt = '.. c:macro:: {name}'
+    _fmt = ".. c:macro:: {name}"
+
 
 class MacroFunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '.. c:macro:: {name}({args})'
+    _fmt = ".. c:macro:: {name}({args})"
 
     def _get_header_lines(self):
         name = self._get_decl_name()
-        args = ', '.join([n for _, n in self._args])
+        args = ", ".join([n for _, n in self._args])
 
         header = self._fmt.format(name=name, args=args)
 
         return header.splitlines()
 
+
 class FunctionDocstring(Docstring):
     _indent = 1
-    _fmt = '.. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}'
+    _fmt = ".. {domain}:function:: {ttype}{type_spacer}{name}({args}){quals_spacer}{quals}"
 
     def _get_header_lines(self):
         name = self._get_decl_name()
@@ -386,30 +408,43 @@ class FunctionDocstring(Docstring):
         ttype = self._ttype
         quals = self._quals
 
-        type_spacer = ''
-        if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
-            type_spacer = ' '
+        type_spacer = ""
+        if ttype and not (len(ttype) == 0 or ttype.endswith("*")):
+            type_spacer = " "
 
-        quals_spacer = ''
+        quals_spacer = ""
         if quals and len(quals) > 0:
-            quals_spacer = ' '
+            quals_spacer = " "
 
-        args = ''
+        args = ""
         if self._args and len(self._args) > 0:
-            def pad_type(t): return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
-            def arg_fmt(t, n): return f'{t}{pad_type(t)}{n}'
-            args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer, args=args,
-                                  quals=quals, quals_spacer=quals_spacer)
+            def pad_type(t):
+                return "" if len(t) == 0 or t.endswith("*") or t.endswith("&") else " "
+
+            def arg_fmt(t, n):
+                return f"{t}{pad_type(t)}{n}"
+
+            args = ", ".join([arg_fmt(t, n) for t, n in self._args])
+
+        header = self._fmt.format(
+            domain=domain,
+            name=name,
+            ttype=ttype,
+            type_spacer=type_spacer,
+            args=args,
+            quals=quals,
+            quals_spacer=quals_spacer,
+        )
 
         return header.splitlines()
 
+
 class ClassDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '.. cpp:class:: {name}'
+    _fmt = ".. cpp:class:: {name}"
+
 
 class EnumClassDocstring(_CompoundDocstring):
     _indent = 1
-    _fmt = '.. cpp:enum-class:: {name}'
+    _fmt = ".. cpp:enum-class:: {name}"

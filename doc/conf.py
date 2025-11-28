@@ -12,18 +12,19 @@ import sys
 
 # Use the installed Hawkmoth package for CI, testing, and Read the Docs, while
 # allowing documentation build using Hawkmoth from the source tree.
-if not tags.has('use-installed-hawkmoth') and 'READTHEDOCS' not in os.environ:
-    sys.path.insert(0, os.path.abspath('../src'))
+if not tags.has("use-installed-hawkmoth") and "READTHEDOCS" not in os.environ:
+    sys.path.insert(0, os.path.abspath("../src"))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Hawkmoth'
-copyright = '2017-2023, Jani Nikula and contributors'
-author = 'Jani Nikula'
+project = "Hawkmoth"
+copyright = "2017-2023, Jani Nikula and contributors"
+author = "Jani Nikula"
 
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       '../src/hawkmoth/VERSION')) as version_file:
+with open(
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), "../src/hawkmoth/VERSION")
+) as version_file:
     version = version_file.read().strip()
     release = version
 
@@ -31,25 +32,25 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'hawkmoth',
-    'hawkmoth.ext.javadoc',
-    'hawkmoth.ext.napoleon',
-    'sphinx.ext.intersphinx',
+    "hawkmoth",
+    "hawkmoth.ext.javadoc",
+    "hawkmoth.ext.napoleon",
+    "sphinx.ext.intersphinx",
 ]
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # The documentation uses the intersphinx explicit external reference role. Note
 # that this is not the same as Hawkmoth extension minimum version requirement.
-needs_sphinx = '4.4'
+needs_sphinx = "4.4"
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'examples']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "examples"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -58,15 +59,15 @@ pygments_style = None
 # https://jnikula.github.io/hawkmoth/dev/extension.html#configuration
 
 # Setup Clang on Read The Docs
-if 'READTHEDOCS' in os.environ:
+if "READTHEDOCS" in os.environ:
     from hawkmoth.util import readthedocs
 
     readthedocs.clang_setup()
 
-hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../test/examples')
+hawkmoth_root = os.path.join(os.path.abspath(os.path.dirname(__file__)), "../test/examples")
 
-source_uri = 'https://github.com/jnikula/hawkmoth/tree/{version}/test/examples/{{source}}#L{{line}}'
-source_version = f'v{version}' if len(version.split('.')) == 3 else 'master'
+source_uri = "https://github.com/jnikula/hawkmoth/tree/{version}/test/examples/{{source}}#L{{line}}"
+source_version = f"v{version}" if len(version.split(".")) == 3 else "master"
 
 hawkmoth_source_uri = source_uri.format(version=source_version)
 
@@ -76,20 +77,20 @@ hawkmoth_source_uri = source_uri.format(version=source_version)
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "alabaster"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    'description': 'Sphinx Autodoc for C',
-    'extra_nav_links': {
-        'GitHub': 'https://github.com/jnikula/hawkmoth',
-        'PyPI': 'https://pypi.org/project/hawkmoth',
+    "description": "Sphinx Autodoc for C",
+    "extra_nav_links": {
+        "GitHub": "https://github.com/jnikula/hawkmoth",
+        "PyPI": "https://pypi.org/project/hawkmoth",
     },
-    'sidebar_width': '280px',
-    'page_width': '1000px',
+    "sidebar_width": "280px",
+    "page_width": "1000px",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -105,13 +106,13 @@ html_theme_options = {
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 html_sidebars = {
-    '**': [
-        'about.html',
-        'versions.html',
-        'navigation.html',
-        'relations.html',
-        'searchbox.html',
-        'donate.html',
+    "**": [
+        "about.html",
+        "versions.html",
+        "navigation.html",
+        "relations.html",
+        "searchbox.html",
+        "donate.html",
     ]
 }
 
@@ -119,10 +120,11 @@ html_sidebars = {
 # https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#configuration
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master', None)
+    "python": ("https://docs.python.org/3", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master", None),
 }
 
+
 def setup(app):
-    app.add_object_type('confval', 'confval')
-    app.add_object_type('event', 'event', 'pair: %s; event')
+    app.add_object_type("confval", "confval")
+    app.add_object_type("event", "event", "pair: %s; event")
