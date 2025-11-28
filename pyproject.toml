@@ -38,6 +38,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pre-commit",
     "flake8",
     "mypy",
     "pytest",
