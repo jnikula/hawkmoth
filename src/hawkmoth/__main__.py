@@ -12,8 +12,7 @@ import os
 import sys
 
 from hawkmoth import docstring
-from hawkmoth.ext import javadoc
-from hawkmoth.ext import napoleon
+from hawkmoth.ext import javadoc, napoleon
 from hawkmoth.parser import parse
 
 
