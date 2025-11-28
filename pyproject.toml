@@ -36,16 +36,21 @@ dependencies = [
     "sphinx >= 3",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
+test = [
+    "pytest",
+    "strictyaml",
+]
+docs = []
 dev = [
+    { include-group = "test" },
+    { include-group = "docs" },
     "flake8",
     "mypy",
-    "pytest",
     "pytest-cov",
     "pytest-xdist",
     "restructuredtext_lint",
     "reuse",
-    "strictyaml",
     "types-docutils",
 ]
 
