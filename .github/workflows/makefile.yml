@@ -18,7 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - run: pip install flake8
+      - uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+      - run: uv pip install --group dev
       - name: Style check
         run: make check-style
 
@@ -28,7 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - run: pip install restructuredtext_lint
+      - uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+      - run: uv pip install --group dev
       - name: reStructuredText check
         run: make check-rst
 
@@ -38,6 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
+      - uses: astral-sh/setup-uv@v7
       - name: Type check
         run: |
           . venv
@@ -49,6 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
       - name: Examples check
@@ -62,6 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
+      - uses: astral-sh/setup-uv@v7
       - name: REUSE compliance check
         run: |
           . venv
@@ -73,6 +82,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
       - name: Install dependencies (apt)
         run: sudo apt-get install -y python3-clang python3-pip
       - name: Test
