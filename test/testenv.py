@@ -17,6 +17,7 @@ rootdir = os.path.dirname(testdir)
 
 sys.path.insert(0, rootdir)
 
+
 class Directive:
     def __init__(self, testcase, directive_config):
         self.testcase = testcase
@@ -59,6 +60,7 @@ class Directive:
             clang_args.extend(compiler.get_include_args('clang', 'c++'))
 
         return clang_args
+
 
 class Testcase:
     _options_schema = strictyaml.Map({
@@ -126,14 +128,17 @@ class Testcase:
         assert expect_docs, 'empty expected'
         assert output_docs + output_errors == expect_docs + expect_errors
 
+
 def get_testid(testcase):
     return testcase.get_testid()
+
 
 def get_testcase_filenames(path):
     for root, dirs, files in sorted(os.walk(path)):
         for f in files:
             if f.endswith(testext):
                 yield os.path.join(root, f)
+
 
 def read_file(filename, optional=False):
     if not filename:

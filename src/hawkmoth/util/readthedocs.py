@@ -10,6 +10,7 @@ Helpers for setting up and using Hawkmoth on Read the Docs.
 import os
 import subprocess
 
+
 def clang_setup(force=False):
     """Try to find and configure libclang location on RTD."""
     if 'READTHEDOCS' in os.environ or force:

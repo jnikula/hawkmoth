@@ -7,6 +7,7 @@ from typing import Optional
 # The "operator" character, either \ or @, but not escaped with \
 OP = r'(?<!\\)(?P<op>[\\@])'
 
+
 class _handler:
     """Base class for all command handlers."""
     _indented_paragraph = False
@@ -75,13 +76,16 @@ class _handler:
 
         yield line
 
+
 class _plain(_handler):
     pass
+
 
 class _not_implemented(_plain):
     """Placeholder for commands that have not been implemented."""
     # FIXME: warn about not implemented commands
     pass
+
 
 class _block_with_end_command(_handler):
     """Paragraph with a dedicated command to end it.
@@ -99,6 +103,7 @@ class _block_with_end_command(_handler):
     def command_ends(self, command):
         return self.end_command() == command
 
+
 class _ignore_until_end_command(_block_with_end_command):
     """Ignore the paragraph until dedicated command ends it."""
     # FIXME: warn about ignored commands
@@ -108,9 +113,11 @@ class _ignore_until_end_command(_block_with_end_command):
     def convert(self, line):
         yield ''
 
+
 class _startuml(_ignore_until_end_command):
     # Needed because it's @startuml/@enduml, not @uml/@enduml.
     _end_command = 'enduml'
+
 
 class _code(_block_with_end_command):
     def header(self):
@@ -121,6 +128,7 @@ class _code(_block_with_end_command):
     def convert(self, line):
         yield f'   {line}'
 
+
 class _anchor(_handler):
     def header(self):
         anchor = self._rest.strip()
@@ -129,10 +137,12 @@ class _anchor(_handler):
         yield f'.. {anchor}:'
         yield ''
 
+
 class _strip_command(_handler):
     """Strip command, treat everything else as normal."""
     def header(self):
         yield f'{self._indent}{self.rest().strip()}'
+
 
 class _field_list(_handler):
     """Paragraph which becomes a single field list item."""
@@ -146,14 +156,18 @@ class _field_list(_handler):
         yield ''
         yield f'{self._indent}:{self.field_name()}:{self.rest()}'
 
+
 class _author(_field_list):
     _field_name = 'author'
+
 
 class _return(_field_list):
     _field_name = 'return'
 
+
 class _see(_field_list):
     _field_name = 'see'
+
 
 class _param(_field_list):
     """Parameter description."""
@@ -176,6 +190,7 @@ class _param(_field_list):
             yield f'{self._indent}:param {name}: **[{direction}]** {desc}'
         else:
             yield f'{self._indent}:param {name}: {desc}'
+
 
 class _admonition(_handler):
     """Admonitions such as @note and @warning."""
@@ -389,6 +404,7 @@ _handlers = {
 # Ensure at least this regex is compiled.
 _command_pattern = re.compile(fr'(?P<indent>\s*){OP}(?P<command>[a-zA-Z]+)(?P<rest>.*)')
 
+
 def _convert(lines, app=None):
     handler = _plain(app=app)
 
@@ -422,15 +438,18 @@ def _convert(lines, app=None):
 
         yield from handler.header()
 
+
 def _process_docstring(app, lines, transform, options):
     if transform != app.config.hawkmoth_javadoc_transform:
         return
 
     lines[:] = [line for line in _convert(app=app, lines=lines)]
 
+
 def process_docstring(lines):
     """Simple interface for CLI and testing."""
     lines[:] = [line for line in _convert(lines=lines)]
+
 
 def setup(app):
     app.setup_extension('hawkmoth')

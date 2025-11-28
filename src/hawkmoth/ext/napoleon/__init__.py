@@ -3,6 +3,7 @@
 
 from sphinx.ext import napoleon
 
+
 def _process_docstring_proxy(app, lines, transform, options):
     if transform != app.config.hawkmoth_napoleon_transform:
         return
@@ -14,12 +15,14 @@ def _process_docstring_proxy(app, lines, transform, options):
 
     return napoleon._process_docstring(app, None, None, None, options, lines)
 
+
 def process_docstring(lines):
     """Simple interface for CLI and testing."""
     comment = '\n'.join(lines)
     config = napoleon.Config(napoleon_use_rtype=False)
     comment = str(napoleon.docstring.GoogleDocstring(comment, config))
     lines[:] = comment.splitlines()[:]
+
 
 def setup(app):
     app.setup_extension('sphinx.ext.napoleon')

@@ -8,19 +8,24 @@ import sys
 
 from test import testenv
 
+
 class ExampleTestcase(testenv.Testcase):
     pass
+
 
 def get_title(testcase):
     return testcase.options.get('example-title')
 
+
 def get_title_underline(title):
     return '-' * len(title)
+
 
 def indent(s, prefix=''):
     lines = [f'{prefix}{line}'.rstrip() for line in s.splitlines()]
 
     return '\n'.join(lines)
+
 
 # Even though we're generating the file, we're generating it from sources that
 # have copyright and license, so replicate that here too.
@@ -48,6 +53,7 @@ The ``[source]`` links are optional, and can be enabled via the
 
 ''')
 
+
 def print_title(testcases):
     titles = {get_title(testcase) for testcase in testcases if get_title(testcase)}
     title = ', '.join(sorted(titles))
@@ -55,6 +61,7 @@ def print_title(testcases):
     print(f'''{title}
 {get_title_underline(title)}
 ''')
+
 
 def print_source(testcases, input_filename):
     domain = {testcase.directives[0].domain for testcase in testcases}
@@ -73,6 +80,7 @@ def print_source(testcases, input_filename):
    :language: {language}
    :caption: {input_filename}
 ''')
+
 
 def print_example(testcase):
     options = testcase.options
@@ -106,13 +114,16 @@ Output
 {namespace_push}{directive_str}{namespace_pop}
 ''')
 
+
 def testcase_key(testcase):
     return int(testcase.options.get('example-priority', 0))
+
 
 def examples_key(item):
     (_, testcases) = item
 
     return min([testcase_key(testcase) for testcase in testcases])
+
 
 def get_examples():
     examples = {}

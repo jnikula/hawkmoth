@@ -28,12 +28,14 @@ import re
 
 from docutils import statemachine
 
+
 def _commonprefix_len(lines):
     # common prefix
     prefix = os.path.commonprefix(lines)
 
     # common prefix length of limited characters
     return len(prefix) - len(prefix.lstrip(' \t*'))
+
 
 def _get_prefix_len(lines):
     # ignore lines with just space
@@ -45,6 +47,7 @@ def _get_prefix_len(lines):
     prefix_len = _commonprefix_len(lines)
 
     return prefix_len
+
 
 class DocstringProcessor():
     def process_docstring(self, lines):
@@ -83,6 +86,7 @@ class DocstringProcessor():
                 one level. Useful for (e.g.) declaring structure members.
         """
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
+
 
 class Docstring():
     _indent = 0
@@ -181,6 +185,7 @@ class Docstring():
     def get_line(self):
         return self._meta['line']
 
+
 class TextDocstring(Docstring):
     _indent = 0
     _fmt = ''
@@ -219,6 +224,7 @@ class TextDocstring(Docstring):
 
         return mo.group('name') if mo else None
 
+
 class VarDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:var:: {ttype}{type_spacer}{name}'
@@ -237,9 +243,11 @@ class VarDocstring(Docstring):
 
         return header.splitlines()
 
+
 class TypedefDocstring(Docstring):
     _indent = 1
     _fmt = '.. {domain}:type:: {name}'
+
 
 class TypedefFunctionDocstring(Docstring):
     _indent = 1
@@ -265,6 +273,7 @@ class TypedefFunctionDocstring(Docstring):
 
         return header.splitlines()
 
+
 class TypeAliasDocstring(Docstring):
     _indent = 1
     _fmt = '.. cpp:type:: {name} = {underlying_type}'
@@ -280,6 +289,7 @@ class TypeAliasDocstring(Docstring):
         header = self._fmt.format(name=name, underlying_type=underlying_type)
 
         return header.splitlines()
+
 
 class _CompoundDocstring(Docstring):
     def _get_decl_name(self):
@@ -299,6 +309,7 @@ class _CompoundDocstring(Docstring):
     def add_children(self, comments):
         self._children.extend(comments)
 
+
 class RootDocstring(_CompoundDocstring):
     def __init__(self, filename, domain, clang_args):
         super().__init__(cursor=None, nest=0)
@@ -315,17 +326,21 @@ class RootDocstring(_CompoundDocstring):
     def get_domain(self):
         return self._domain
 
+
 class StructDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. {domain}:struct:: {name}'
+
 
 class UnionDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. {domain}:union:: {name}'
 
+
 class EnumDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. {domain}:enum:: {name}'
+
 
 class EnumeratorDocstring(Docstring):
     _indent = 1
@@ -341,6 +356,7 @@ class EnumeratorDocstring(Docstring):
                                   value=value)
 
         return header.splitlines()
+
 
 class MemberDocstring(Docstring):
     _indent = 1
@@ -360,9 +376,11 @@ class MemberDocstring(Docstring):
 
         return header.splitlines()
 
+
 class MacroDocstring(Docstring):
     _indent = 1
     _fmt = '.. c:macro:: {name}'
+
 
 class MacroFunctionDocstring(Docstring):
     _indent = 1
@@ -375,6 +393,7 @@ class MacroFunctionDocstring(Docstring):
         header = self._fmt.format(name=name, args=args)
 
         return header.splitlines()
+
 
 class FunctionDocstring(Docstring):
     _indent = 1
@@ -406,9 +425,11 @@ class FunctionDocstring(Docstring):
 
         return header.splitlines()
 
+
 class ClassDocstring(_CompoundDocstring):
     _indent = 1
     _fmt = '.. cpp:class:: {name}'
+
 
 class EnumClassDocstring(_CompoundDocstring):
     _indent = 1

@@ -11,6 +11,7 @@ import pytest
 from hawkmoth.__main__ import main
 from test import testenv
 
+
 # Replace full filename in a stderr line with basename
 def _basename(line):
     mo = re.match(r'(?P<severity>[^:]+): (?P<filename>[^:]+):(?P<lineno>[^:]+):(?P<msg>.*)', line)
@@ -23,6 +24,7 @@ def _basename(line):
     msg = mo.group('msg')
 
     return f'{severity}: {os.path.basename(filename)}:{lineno}:{msg}'
+
 
 # Replace full filenames in stderr with basenames
 def _stderr_basename(errors_str):
@@ -91,11 +93,13 @@ class CliTestcase(testenv.Testcase):
         return testenv.read_file(self.get_expected_filename()), \
             testenv.read_file(self.get_stderr_filename(), optional=True)
 
+
 def _get_cli_testcases(path):
     for f in testenv.get_testcase_filenames(path):
         testcase = CliTestcase(f)
         if testcase.valid():
             yield testcase
+
 
 @pytest.mark.full
 @pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir),
