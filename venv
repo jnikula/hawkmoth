@@ -5,5 +5,4 @@
 python3 -m venv --system-site-packages ${1:-.venv}
 . ${1:-.venv}/bin/activate
 pip install --upgrade pip
-pip install --requirement requirements.txt --upgrade --upgrade-strategy eager
-pip install --editable .
+pip install --editable . --group dev
