@@ -62,7 +62,6 @@ pattern = "(?P<version>[a-zA-Z0-9._-]*)"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/setup.py",
     "/src",
 ]
 exclude = [
