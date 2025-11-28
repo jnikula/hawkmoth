@@ -100,3 +100,20 @@ markers = [
 testpaths = [
     "test",
 ]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # Previously pre-existing
+    # TODO: Document why they are needed
+    "E302",
+    "E305",
+    # Disabled checks in order to minimize impact for now
+    # TODO: Which ones should be permanently ignored and which should be adressed at some point?
+]

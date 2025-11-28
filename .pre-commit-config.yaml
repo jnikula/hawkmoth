@@ -9,10 +9,14 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
 
-  - repo: https://github.com/pycqa/flake8
-    rev: "7.3.0"
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.14.6
     hooks:
-      - id: flake8
+      - id: ruff-check
+        args:
+          - "--fix"
+          - "--show-fixes"
+      - id: ruff-format
 
   - repo: https://codeberg.org/fsfe/reuse-tool
     rev: v6.2.0
