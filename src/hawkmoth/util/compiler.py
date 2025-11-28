@@ -10,6 +10,7 @@ the Clang Python Bindings, for example system include paths.
 """
 
 import subprocess
+
 from sphinx.util import logging
 
 logger = logging.getLogger(__name__)

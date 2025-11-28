@@ -16,14 +16,13 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
 from sphinx import addnodes
-from sphinx.util.nodes import nested_parse_with_titles
-from sphinx.util.docutils import switch_source_input, SphinxDirective
 from sphinx.util import logging
+from sphinx.util.docutils import SphinxDirective, switch_source_input
+from sphinx.util.nodes import nested_parse_with_titles
 
-from hawkmoth.util import compiler
-from hawkmoth.parser import parse, ErrorLevel
-from hawkmoth.util import strutil
 from hawkmoth import docstring
+from hawkmoth.parser import ErrorLevel, parse
+from hawkmoth.util import compiler, strutil
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'VERSION')) as version_file:
     __version__ = version_file.read().strip()

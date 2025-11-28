@@ -35,18 +35,18 @@ import os
 from dataclasses import dataclass
 
 from clang.cindex import (
+    Diagnostic,
     Index,
     TranslationUnit,
     TranslationUnitLoadError,
-    Diagnostic,
     conf,
 )
 
 from hawkmoth import docstring
 from hawkmoth.doccursor import (
     CursorKind,
-    TokenKind,
     DocCursor,
+    TokenKind,
 )
 
 

@@ -3,14 +3,14 @@
 # SPDX-License-Identifier: BSD-2-Clause
 
 from clang.cindex import (
-    TokenKind,
-    CursorKind,
-    TypeKind,
-    StorageClass,
     AccessSpecifier,
+    CursorKind,
     ExceptionSpecificationKind,
     SourceLocation,
     SourceRange,
+    StorageClass,
+    TokenKind,
+    TypeKind,
 )
 
 

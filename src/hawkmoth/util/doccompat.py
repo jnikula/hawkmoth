@@ -9,6 +9,7 @@ syntaxes into 'native' reST ones.
 """
 
 import re
+
 from sphinx.util import logging
 
 logger = logging.getLogger(__name__)

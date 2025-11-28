@@ -10,8 +10,8 @@ import tempfile
 
 import pytest
 from sphinx.application import Sphinx
-from sphinx.util.docutils import docutils_namespace, patch_docutils
 from sphinx.util import console
+from sphinx.util.docutils import docutils_namespace, patch_docutils
 
 from test import testenv
 
