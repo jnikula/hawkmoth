@@ -1,0 +1,41 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:weekly",
+    ":enablePreCommit",
+    ":semanticCommitsDisabled"
+  ],
+  "separateMajorMinor": false,
+  "configMigration": true,
+  "packageRules": [
+    {
+      "description": "Group all development and CI dependencies together to check for consistencies.",
+      "groupName": "CI and devDependencies",
+      "matchManagers": [
+        "github-actions",
+        "pre-commit",
+        "pep621"
+      ],
+      "matchDepTypes": [
+        "dependency-groups"
+      ]
+    },
+    {
+      "description": "Disable container image updates.",
+      "matchDatasources": ["docker"],
+      "enabled": false
+    },
+    {
+      "description": "Runtime dependencies is it's own group to check the project's compatibility with latest dependencies.",
+      "groupName": "Runtime dependencies",
+      "matchManagers": [
+        "pep621"
+      ],
+      "matchDepTypes": [
+        "project.dependencies",
+        "project.optional-dependencies"
+      ]
+    }
+  ]
+}

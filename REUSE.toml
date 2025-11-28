@@ -32,6 +32,7 @@ SPDX-License-Identifier = "BSD-2-Clause"
 # https://codeberg.org/fsfe/reuse-tool/issues/1312
 [[annotations]]
 path = [
+	".github/renovate.json",
 	"pylock.toml",
 	"uv.lock",
 ]
