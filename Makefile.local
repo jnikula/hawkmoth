@@ -6,11 +6,12 @@ RST := $(RST) CHANGELOG.rst CONTRIBUTING.rst README.rst
 
 # Static analysis
 .PHONY: check
-check: check-style check-typing check-rst check-examples check-reuse
+check: check-style check-typing check-rst check-examples check-reuse check-pre-commit
 
 .PHONY: check-style
 check-style:
-	flake8 src/hawkmoth test
+	ruff format
+	ruff check --fix --show-fixes
 
 .PHONY: check-typing
 check-typing:
@@ -23,6 +24,10 @@ check-rst:
 .PHONY: check-reuse
 check-reuse:
 	reuse lint
+
+.PHONY: check-pre-commit
+check-pre-commit:
+	pre-commit run -a
 
 # Build and publish
 .PHONY: build

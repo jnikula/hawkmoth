@@ -36,16 +36,22 @@ dependencies = [
     "sphinx >= 3",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
+test = [
+    "pytest",
+    "strictyaml",
+]
+docs = []
 dev = [
+    { include-group = "test" },
+    { include-group = "docs" },
+    "pre-commit",
     "flake8",
     "mypy",
-    "pytest",
     "pytest-cov",
     "pytest-xdist",
     "restructuredtext_lint",
     "reuse",
-    "strictyaml",
     "types-docutils",
 ]
 
@@ -59,15 +65,6 @@ Documentation = "https://jnikula.github.io/hawkmoth/stable/"
 [tool.hatch.version]
 path = "src/hawkmoth/VERSION"
 pattern = "(?P<version>[a-zA-Z0-9._-]*)"
-
-[tool.hatch.build.targets.sdist]
-include = [
-    "/setup.py",
-    "/src",
-]
-exclude = [
-    "**/Makefile*",
-]
 
 [tool.hatch.build.targets.wheel]
 exclude = [
@@ -102,4 +99,21 @@ markers = [
 ]
 testpaths = [
     "test",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # Previously pre-existing
+    # TODO: Document why they are needed
+    "E302",
+    "E305",
+    # Disabled checks in order to minimize impact for now
+    # TODO: Which ones should be permanently ignored and which should be adressed at some point?
 ]

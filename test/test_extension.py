@@ -15,20 +15,21 @@ from sphinx.util import console
 
 from test import testenv
 
+
 class ExtensionTestcase(testenv.Testcase):
     def __init__(self, filename, buildername):
         super().__init__(filename)
         self._buildername = buildername
 
     def valid(self):
-        return 'extension' in self.options.get('test', ['extension'])
+        return "extension" in self.options.get("test", ["extension"])
 
     def _get_suffix(self):
-        return 'txt' if self._buildername == 'text' else self._buildername
+        return "txt" if self._buildername == "text" else self._buildername
 
     def _sphinx_build(self, srcdir):
         outdir = os.path.join(srcdir, self._buildername)
-        doctreedir = os.path.join(srcdir, 'doctrees')
+        doctreedir = os.path.join(srcdir, "doctrees")
         confdir = testenv.testdir
         confoverrides = self.get_conf_overrides()
 
@@ -38,9 +39,15 @@ class ExtensionTestcase(testenv.Testcase):
         warning = io.StringIO()
 
         with patch_docutils(confdir), docutils_namespace():
-            app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
-                         doctreedir=doctreedir, buildername=self._buildername,
-                         confoverrides=confoverrides, warning=warning)
+            app = Sphinx(
+                srcdir=srcdir,
+                confdir=confdir,
+                outdir=outdir,
+                doctreedir=doctreedir,
+                buildername=self._buildername,
+                confoverrides=confoverrides,
+                warning=warning,
+            )
 
             # Set root to the directory the testcase yaml is in, because the
             # filenames in yaml are relative to it.
@@ -52,27 +59,30 @@ class ExtensionTestcase(testenv.Testcase):
             app.build()
 
             output_suffix = self._get_suffix()
-            output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
+            output_filename = os.path.join(app.outdir, f"index.{output_suffix}")
 
         # Remove paths from warning output for comparison
-        output_errors = re.sub(rf'(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
-                               '\\1', warning.getvalue())
+        output_errors = re.sub(
+            rf"(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/",
+            "\\1",
+            warning.getvalue(),
+        )
 
         return testenv.read_file(output_filename), output_errors
 
     def _sphinx_build_str(self, input_str):
         with tempfile.TemporaryDirectory() as srcdir:
-            with open(os.path.join(srcdir, 'index.rst'), 'w') as f:
+            with open(os.path.join(srcdir, "index.rst"), "w") as f:
                 f.write(input_str)
             return self._sphinx_build(os.path.realpath(srcdir))
 
     def _sphinx_build_file(self, input_filename):
         with tempfile.TemporaryDirectory() as srcdir:
-            shutil.copyfile(input_filename, os.path.join(srcdir, 'index.rst'))
+            shutil.copyfile(input_filename, os.path.join(srcdir, "index.rst"))
             return self._sphinx_build(os.path.realpath(srcdir))
 
     def get_output(self):
-        input_str = ''.join([d.get_directive_string() for d in self.directives])
+        input_str = "".join([d.get_directive_string() for d in self.directives])
 
         return self._sphinx_build_str(input_str)
 
@@ -82,21 +92,26 @@ class ExtensionTestcase(testenv.Testcase):
 
         return expected_docs, expected_errors
 
+
 def _get_extension_testcases(path, buildername):
     for f in testenv.get_testcase_filenames(path):
         testcase = ExtensionTestcase(f, buildername)
         if testcase.valid():
             yield testcase
 
+
 # Test using Sphinx plain text builder
-@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    "testcase", _get_extension_testcases(testenv.testdir, "text"), ids=testenv.get_testid
+)
 def test_extension_text(testcase):
     testcase.run_test()
 
+
 # Test using Sphinx html builder
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'html'),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    "testcase", _get_extension_testcases(testenv.testdir, "html"), ids=testenv.get_testid
+)
 def test_extension_html(testcase):
     testcase.run_test()

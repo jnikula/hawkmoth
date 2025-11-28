@@ -4,4 +4,4 @@
 import pytest
 
 # Enable introspection on assertions in testenv
-pytest.register_assert_rewrite('test.testenv')
+pytest.register_assert_rewrite("test.testenv")

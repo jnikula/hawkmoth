@@ -9,25 +9,25 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Hawkmoth Test'
-copyright = '2018, Jani Nikula'
-author = 'Jani Nikula'
-version = ''
-release = ''
+project = "Hawkmoth Test"
+copyright = "2018, Jani Nikula"
+author = "Jani Nikula"
+version = ""
+release = ""
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'hawkmoth',
-    'hawkmoth.ext.javadoc',
-    'hawkmoth.ext.napoleon',
+    "hawkmoth",
+    "hawkmoth.ext.javadoc",
+    "hawkmoth.ext.napoleon",
 ]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -35,8 +35,8 @@ pygments_style = None
 # -- Options for Hawkmoth ----------------------------------------------------
 # https://jnikula.github.io/hawkmoth/dev/extension.html#configuration
 
-hawkmoth_clang_c = ['-std=c17']
-hawkmoth_clang_cpp = ['-std=c++17']
+hawkmoth_clang_c = ["-std=c17"]
+hawkmoth_clang_cpp = ["-std=c++17"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -44,14 +44,14 @@ hawkmoth_clang_cpp = ['-std=c++17']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'basic'
+html_theme = "basic"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    'nosidebar': True,
+    "nosidebar": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

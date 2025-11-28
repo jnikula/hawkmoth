@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2025 Jani Nikula <jani@nikula.org>
+# SPDX-License-Identifier: BSD-2-Clause
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.14.6
+    hooks:
+      - id: ruff-check
+        args:
+          - "--fix"
+          - "--show-fixes"
+      - id: ruff-format
+
+  - repo: https://codeberg.org/fsfe/reuse-tool
+    rev: v6.2.0
+    hooks:
+      - id: reuse-lint-file
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.12
+    hooks:
+      # Keep pylock.toml in sync
+      - id: uv-export
+        args:
+          - "--frozen"
+          - "--format=pylock.toml"
+          - "--output-file=pylock.toml"
+          - "--all-extras"
+          - "--all-groups"
+          - "--quiet"
