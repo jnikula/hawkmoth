@@ -25,8 +25,7 @@ from hawkmoth.parser import parse, ErrorLevel
 from hawkmoth.util import strutil
 from hawkmoth import docstring
 
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       'VERSION')) as version_file:
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'VERSION')) as version_file:
     __version__ = version_file.read().strip()
 
 
@@ -53,8 +52,11 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
         }
 
         for error in errors:
-            self.logger.log(log_level_map[error.level], error.get_message(),
-                            location=(self.env.docname, self.lineno))
+            self.logger.log(
+                log_level_map[error.level],
+                error.get_message(),
+                location=(self.env.docname, self.lineno),
+            )
 
     def __get_clang_args(self):
         clang_args = self.env.config.hawkmoth_clang.copy()
@@ -85,8 +87,7 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
         # Tell Sphinx about the dependency
         self.env.note_dependency(filename)
 
-        docstrings, errors = parse(filename, domain=self._domain,
-                                   clang_args=clang_args)
+        docstrings, errors = parse(filename, domain=self._domain, clang_args=clang_args)
 
         self.__display_parser_diagnostics(errors)
 
@@ -164,16 +165,21 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
         if num_matches == 0:
             if self._get_names():
                 args = ' '.join(self.arguments)
-                self.logger.warning(f'"{self.name}:: {args}" does not match documented symbols.',
-                                    location=(self.env.docname, self.lineno))
+                self.logger.warning(
+                    f'"{self.name}:: {args}" does not match documented symbols.',
+                    location=(self.env.docname, self.lineno),
+                )
             else:
                 # autodoc
-                self.logger.warning('No documented symbols were found.',
-                                    location=(self.env.docname, self.lineno))
+                self.logger.warning(
+                    'No documented symbols were found.', location=(self.env.docname, self.lineno)
+                )
         elif num_matches > 1 and self._get_names():
             args = ' '.join(self.arguments)
-            self.logger.warning(f'"{self.name}:: {args}" matches {num_matches} documented symbols.',
-                                location=(self.env.docname, self.lineno))
+            self.logger.warning(
+                f'"{self.name}:: {args}" matches {num_matches} documented symbols.',
+                location=(self.env.docname, self.lineno),
+            )
 
         return viewlist
 
@@ -206,23 +212,27 @@ class _AutoDocDirective(_AutoBaseDirective):
 
     # Allow passing a variable number of file patterns as arguments
     required_arguments = 1
-    optional_arguments = 100   # arbitrary limit
+    optional_arguments = 100  # arbitrary limit
 
     def _get_filenames(self):
         ret = []
         for pattern in self.arguments:
             filenames = glob.glob(os.path.join(self.env.config.hawkmoth_root, pattern))
             if len(filenames) == 0:
-                self.logger.warning(f'Pattern "{pattern}" does not match any files.',
-                                    location=(self.env.docname, self.lineno))
+                self.logger.warning(
+                    f'Pattern "{pattern}" does not match any files.',
+                    location=(self.env.docname, self.lineno),
+                )
                 continue
 
             for filename in filenames:
                 if os.path.isfile(filename):
                     ret.append(os.path.abspath(filename))
                 else:
-                    self.logger.warning(f'Path "{filename}" matching pattern "{pattern}" is not a file.',  # noqa: E501
-                                        location=(self.env.docname, self.lineno))
+                    self.logger.warning(
+                        f'Path "{filename}" matching pattern "{pattern}" is not a file.',
+                        location=(self.env.docname, self.lineno),
+                    )
 
         return ret
 
@@ -235,9 +245,11 @@ class _AutoSymbolDirective(_AutoBaseDirective):
     optional_arguments = 0
 
     option_spec = _AutoBaseDirective.option_spec.copy()
-    option_spec.update({
-        'file': directives.unchanged_required,
-    })
+    option_spec.update(
+        {
+            'file': directives.unchanged_required,
+        }
+    )
 
     def _get_filenames(self):
         filename = self.options.get('file')
@@ -259,9 +271,11 @@ def _members_filter(argument):
 
 class _AutoCompoundDirective(_AutoSymbolDirective):
     option_spec = _AutoSymbolDirective.option_spec.copy()
-    option_spec.update({
-        'members': _members_filter,
-    })
+    option_spec.update(
+        {
+            'members': _members_filter,
+        }
+    )
 
     def _get_members(self):
         # By default use [] as a filter that does not match any members.
@@ -332,9 +346,11 @@ class CppAutoVarDirective(_AutoSymbolDirective):
 
 class CppAutoTypeDirective(_AutoSymbolDirective):
     _domain = 'cpp'
-    _docstring_types = [docstring.TypedefDocstring,
-                        docstring.TypeAliasDocstring,
-                        docstring.TypedefFunctionDocstring]
+    _docstring_types = [
+        docstring.TypedefDocstring,
+        docstring.TypeAliasDocstring,
+        docstring.TypedefFunctionDocstring,
+    ]
 
 
 class CppAutoMacroDirective(_AutoSymbolDirective):
@@ -427,7 +443,7 @@ def _autoconf(app, config):
             config._clang_args_post_c = compiler.get_include_args(cpath, 'c')
             config._clang_args_post_cpp = compiler.get_include_args(cpath, 'c++')
         else:
-            logger.warning('autoconf: \'stdinc\' option ignored (missing compiler)')
+            logger.warning("autoconf: 'stdinc' option ignored (missing compiler)")
 
     logger.verbose(f'autoconf: Using C include args: {config._clang_args_post_c}')
     logger.verbose(f'autoconf: Using C++ include args: {config._clang_args_post_cpp}')
@@ -475,5 +491,4 @@ def setup(app):
     app.add_config_value('hawkmoth_source_uri', None, 'env', [str, type(None)])
     app.connect('doctree-read', _doctree_read)
 
-    return dict(version=__version__,
-                parallel_read_safe=True, parallel_write_safe=True)
+    return dict(version=__version__, parallel_read_safe=True, parallel_write_safe=True)

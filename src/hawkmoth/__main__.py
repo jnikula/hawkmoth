@@ -25,8 +25,9 @@ def filename(file):
 
 def _read_version():
     try:
-        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               'VERSION')) as version_file:
+        with open(
+            os.path.join(os.path.abspath(os.path.dirname(__file__)), 'VERSION')
+        ) as version_file:
             version = version_file.read().strip()
     except OSError:
         version = '(unknown version)'
@@ -50,30 +51,45 @@ class Processor(docstring.DocstringProcessor):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='hawkmoth', description="""
+    parser = argparse.ArgumentParser(
+        prog='hawkmoth',
+        description="""
     Hawkmoth parser debug tool. Print the documentation comments extracted
     from FILE, along with the generated C Domain directives, to standard
-    output. Include metadata with verbose output.""")
-    parser.add_argument('file', metavar='FILE', type=filename, action='store',
-                        help='The C or C++ source or header file to parse.')
-    parser.add_argument('--domain',
-                        choices=['c', 'cpp'],
-                        default='c',
-                        help='Sphinx domain to be used.')
+    output. Include metadata with verbose output.""",
+    )
+    parser.add_argument(
+        'file',
+        metavar='FILE',
+        type=filename,
+        action='store',
+        help='The C or C++ source or header file to parse.',
+    )
+    parser.add_argument(
+        '--domain', choices=['c', 'cpp'], default='c', help='Sphinx domain to be used.'
+    )
     compat = parser.add_mutually_exclusive_group()
-    compat.add_argument('--process-docstring',
-                        choices=[
-                            'javadoc',
-                            'napoleon',
-                        ],
-                        help='Process docstring.')
-    parser.add_argument('--clang', metavar='PARAM', action='append',
-                        help='Argument to pass to Clang. May be specified multiple times. See hawkmoth_clang.')  # noqa: E501
-    parser.add_argument('--verbose', dest='verbose', action='store_true',
-                        help='Verbose output.')
-    parser.add_argument('--version', action='version',
-                        version=f'%(prog)s {_read_version()}',
-                        help='Show version and exit')
+    compat.add_argument(
+        '--process-docstring',
+        choices=[
+            'javadoc',
+            'napoleon',
+        ],
+        help='Process docstring.',
+    )
+    parser.add_argument(
+        '--clang',
+        metavar='PARAM',
+        action='append',
+        help='Argument to pass to Clang. May be specified multiple times. See hawkmoth_clang.',
+    )
+    parser.add_argument('--verbose', dest='verbose', action='store_true', help='Verbose output.')
+    parser.add_argument(
+        '--version',
+        action='version',
+        version=f'%(prog)s {_read_version()}',
+        help='Show version and exit',
+    )
     args = parser.parse_args()
 
     comments, errors = parse(args.file, domain=args.domain, clang_args=args.clang)

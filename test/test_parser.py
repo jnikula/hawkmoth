@@ -52,8 +52,14 @@ def _filter_names(directive):
 
 
 def _filter_members(directive):
-    if directive.directive in ['autodoc', 'autosection', 'autovar', 'autotype',
-                               'automacro', 'autofunction']:
+    if directive.directive in [
+        'autodoc',
+        'autosection',
+        'autovar',
+        'autotype',
+        'automacro',
+        'autofunction',
+    ]:
         return None
 
     members = directive.options.get('members')
@@ -144,8 +150,9 @@ class ParserTestcase(testenv.Testcase):
         return docs_str, errors_str
 
     def get_expected(self):
-        return testenv.read_file(self.get_expected_filename()), \
-            testenv.read_file(self.get_stderr_filename(), optional=True)
+        return testenv.read_file(self.get_expected_filename()), testenv.read_file(
+            self.get_stderr_filename(), optional=True
+        )
 
 
 def _get_parser_testcases(path):
@@ -155,7 +162,6 @@ def _get_parser_testcases(path):
             yield testcase
 
 
-@pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir), ids=testenv.get_testid)
 def test_parser(testcase):
     testcase.run_test()

@@ -45,12 +45,12 @@ docs = []
 dev = [
     { include-group = "test" },
     { include-group = "docs" },
-    "flake8",
     "mypy",
     "pytest-cov",
     "pytest-xdist",
     "restructuredtext_lint",
     "reuse",
+    "ruff",
     "types-docutils",
 ]
 
@@ -69,6 +69,19 @@ pattern = "(?P<version>[a-zA-Z0-9._-]*)"
 exclude = [
     "**/Makefile*",
 ]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+]
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.mypy]
 mypy_path = "src:."

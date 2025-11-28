@@ -23,26 +23,30 @@ def javadoc(comment):
     """Basic javadoc conversion to reStructuredText"""
 
     # @param
-    comment = re.sub(r"(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                     "\n\\1:param\\2\\3:\\4", comment)
+    comment = re.sub(
+        r'(?m)^([ \t]*)@param([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)',
+        '\n\\1:param\\2\\3:\\4',
+        comment,
+    )
     # @param[direction]
-    comment = re.sub(r"(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)",
-                     "\n\\1:param\\3\\4: *(\\2)* \\5", comment)
+    comment = re.sub(
+        r'(?m)^([ \t]*)@param\[([^]]*)\]([ \t]+)([a-zA-Z0-9_]+|\.\.\.)([ \t]+)',
+        '\n\\1:param\\3\\4: *(\\2)* \\5',
+        comment,
+    )
     # @return
-    comment = re.sub(r"(?m)^([ \t]*)@returns?([ \t]+|$)",
-                     "\n\\1:return:\\2", comment)
+    comment = re.sub(r'(?m)^([ \t]*)@returns?([ \t]+|$)', '\n\\1:return:\\2', comment)
     # @code/@endcode blocks. Works if the code is indented.
-    comment = re.sub(r"(?m)^([ \t]*)@code([ \t]+|$)",
-                     "\n::\n", comment)
-    comment = re.sub(r"(?m)^([ \t]*)@endcode([ \t]+|$)",
-                     "\n", comment)
+    comment = re.sub(r'(?m)^([ \t]*)@code([ \t]+|$)', '\n::\n', comment)
+    comment = re.sub(r'(?m)^([ \t]*)@endcode([ \t]+|$)', '\n', comment)
     # Ignore @brief.
-    comment = re.sub(r"(?m)^([ \t]*)@brief[ \t]+", "\n\\1", comment)
+    comment = re.sub(r'(?m)^([ \t]*)@brief[ \t]+', '\n\\1', comment)
 
     # Ignore groups
-    comment = re.sub(r"(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*",
-                     "\n\\1", comment)
-    comment = re.sub(r"(?m)^([ \t]*)@(ingroup|{|}).*", "\n", comment)
+    comment = re.sub(
+        r'(?m)^([ \t]*)@(defgroup|addtogroup)[ \t]+[a-zA-Z0-9_]+[ \t]*', '\n\\1', comment
+    )
+    comment = re.sub(r'(?m)^([ \t]*)@(ingroup|{|}).*', '\n', comment)
 
     return comment
 
@@ -54,8 +58,7 @@ def javadoc_liberal(comment):
 
     # Liberal conversion of any @tags, will fail for @code etc. but don't
     # care.
-    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)",
-                     "\n\\1:\\2:\\3", comment)
+    comment = re.sub(r'(?m)^([ \t]*)@([a-zA-Z0-9_]+)([ \t]+)', '\n\\1:\\2:\\3', comment)
 
     return comment
 
@@ -63,10 +66,10 @@ def javadoc_liberal(comment):
 def kerneldoc(comment):
     """Basic kernel-doc conversion to reStructuredText"""
 
-    comment = re.sub(r"(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)",
-                     "\n\\1:return:\\3", comment)
-    comment = re.sub(r"(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)",
-                     "\n\\1:param \\2:\\3", comment)
+    comment = re.sub(r'(?m)^([ \t]*)@(returns?|RETURNS?):([ \t]+|$)', '\n\\1:return:\\3', comment)
+    comment = re.sub(
+        r'(?m)^([ \t]*)@([a-zA-Z0-9_]+|\.\.\.):([ \t]+)', '\n\\1:param \\2:\\3', comment
+    )
 
     return comment
 

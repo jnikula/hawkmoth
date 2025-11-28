@@ -12,7 +12,7 @@ import sys
 
 # Use the installed Hawkmoth package for CI, testing, and Read the Docs, while
 # allowing documentation build using Hawkmoth from the source tree.
-if not tags.has('use-installed-hawkmoth') and 'READTHEDOCS' not in os.environ:
+if not tags.has('use-installed-hawkmoth') and 'READTHEDOCS' not in os.environ:  # noqa: F821
     sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
@@ -22,8 +22,9 @@ project = 'Hawkmoth'
 copyright = '2017-2023, Jani Nikula and contributors'
 author = 'Jani Nikula'
 
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       '../src/hawkmoth/VERSION')) as version_file:
+with open(
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), '../src/hawkmoth/VERSION')
+) as version_file:
     version = version_file.read().strip()
     release = version
 
@@ -120,8 +121,9 @@ html_sidebars = {
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master', None)
+    'sphinx': ('https://www.sphinx-doc.org/en/master', None),
 }
+
 
 def setup(app):
     app.add_object_type('confval', 'confval')

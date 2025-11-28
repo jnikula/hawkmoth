@@ -30,7 +30,7 @@ def indent(s, prefix=''):
 # Even though we're generating the file, we're generating it from sources that
 # have copyright and license, so replicate that here too.
 def print_header():
-    print('''
+    print("""
 .. SPDX-FileCopyrightText: 2017 Jani Nikula <jani@nikula.org>
 .. SPDX-FileCopyrightText: 2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>
 .. SPDX-License-Identifier: BSD-2-Clause
@@ -51,16 +51,16 @@ The ``[source]`` links are optional, and can be enabled via the
    :local:
    :depth: 1
 
-''')
+""")
 
 
 def print_title(testcases):
     titles = {get_title(testcase) for testcase in testcases if get_title(testcase)}
     title = ', '.join(sorted(titles))
 
-    print(f'''{title}
+    print(f"""{title}
 {get_title_underline(title)}
-''')
+""")
 
 
 def print_source(testcases, input_filename):
@@ -73,13 +73,13 @@ def print_source(testcases, input_filename):
 
     literal_include = f'../test/examples/{input_filename}'
 
-    print(f'''Source
+    print(f"""Source
 ~~~~~~
 
 .. literalinclude:: {literal_include}
    :language: {language}
    :caption: {input_filename}
-''')
+""")
 
 
 def print_example(testcase):
@@ -101,7 +101,7 @@ def print_example(testcase):
 
     directive_str = testcase.directives[0].get_directive_string()
 
-    print(f'''Directive
+    print(f"""Directive
 ~~~~~~~~~
 
 .. code-block:: rest
@@ -112,7 +112,7 @@ Output
 ~~~~~~
 
 {namespace_push}{directive_str}{namespace_pop}
-''')
+""")
 
 
 def testcase_key(testcase):

@@ -10,6 +10,7 @@ OP = r'(?<!\\)(?P<op>[\\@])'
 
 class _handler:
     """Base class for all command handlers."""
+
     _indented_paragraph = False
 
     def __init__(self, app=None, indent=None, op=None, command=None, rest=None):
@@ -35,20 +36,20 @@ class _handler:
         tagged_phrase_regex = r'[^<]*'
 
         # italics: \a \e \em <em>...</em>
-        line = re.sub(fr'{OP}(a|e|em)\s+(?P<markup>{word_regex})', r'*\g<markup>*', line)
-        line = re.sub(fr'<em>(?P<markup>{tagged_phrase_regex})</em>', r'*\g<markup>*', line)
+        line = re.sub(rf'{OP}(a|e|em)\s+(?P<markup>{word_regex})', r'*\g<markup>*', line)
+        line = re.sub(rf'<em>(?P<markup>{tagged_phrase_regex})</em>', r'*\g<markup>*', line)
 
         # bold: \b <b>...</b>
-        line = re.sub(fr'{OP}b\s+(?P<markup>{word_regex})', r'**\g<markup>**', line)
-        line = re.sub(fr'<b>(?P<markup>{tagged_phrase_regex})</b>', r'**\g<markup>**', line)
+        line = re.sub(rf'{OP}b\s+(?P<markup>{word_regex})', r'**\g<markup>**', line)
+        line = re.sub(rf'<b>(?P<markup>{tagged_phrase_regex})</b>', r'**\g<markup>**', line)
 
         # monospace: \c \p <tt>...</tt>
-        line = re.sub(fr'{OP}(c|p)\s+(?P<markup>{word_regex})', r'``\g<markup>``', line)
-        line = re.sub(fr'<tt>(?P<markup>{tagged_phrase_regex})</tt>', r'``\g<markup>``', line)
+        line = re.sub(rf'{OP}(c|p)\s+(?P<markup>{word_regex})', r'``\g<markup>``', line)
+        line = re.sub(rf'<tt>(?P<markup>{tagged_phrase_regex})</tt>', r'``\g<markup>``', line)
 
         # references to previous anchors
         # FIXME: link title
-        line = re.sub(fr'{OP}ref\s+(?P<ref>\w+)', r':any:`\g<ref>`', line)
+        line = re.sub(rf'{OP}ref\s+(?P<ref>\w+)', r':any:`\g<ref>`', line)
 
         # FIXME:
         # - copybrief
@@ -83,6 +84,7 @@ class _plain(_handler):
 
 class _not_implemented(_plain):
     """Placeholder for commands that have not been implemented."""
+
     # FIXME: warn about not implemented commands
     pass
 
@@ -91,6 +93,7 @@ class _block_with_end_command(_handler):
     """Paragraph with a dedicated command to end it.
 
     For example, @code/@endcode."""
+
     _end_command: Optional[str] = None
 
     def end_command(self):
@@ -106,6 +109,7 @@ class _block_with_end_command(_handler):
 
 class _ignore_until_end_command(_block_with_end_command):
     """Ignore the paragraph until dedicated command ends it."""
+
     # FIXME: warn about ignored commands
     def header(self):
         yield ''
@@ -140,12 +144,14 @@ class _anchor(_handler):
 
 class _strip_command(_handler):
     """Strip command, treat everything else as normal."""
+
     def header(self):
         yield f'{self._indent}{self.rest().strip()}'
 
 
 class _field_list(_handler):
     """Paragraph which becomes a single field list item."""
+
     _field_name: Optional[str] = None
     _indented_paragraph = True
 
@@ -171,11 +177,14 @@ class _see(_field_list):
 
 class _param(_field_list):
     """Parameter description."""
+
     _field_name = 'param'
 
     def header(self):
-        mo = re.match(r'^((?P<sp0>\s*)\[(?P<direction>[a-zA-Z, ]+)\])?(?P<sp1>\s*)(?P<name>([a-zA-Z0-9_]+|\.\.\.))(?P<sp2>\s*(?P<desc>.*))',  # noqa: E501
-                      self.rest())
+        mo = re.match(
+            r'^((?P<sp0>\s*)\[(?P<direction>[a-zA-Z, ]+)\])?(?P<sp1>\s*)(?P<name>([a-zA-Z0-9_]+|\.\.\.))(?P<sp2>\s*(?P<desc>.*))',  # noqa: E501
+            self.rest(),
+        )
         if mo is None:
             # FIXME
             yield ''
@@ -194,6 +203,7 @@ class _param(_field_list):
 
 class _admonition(_handler):
     """Admonitions such as @note and @warning."""
+
     _indented_paragraph = True
     _directive = None
 
@@ -402,7 +412,7 @@ _handlers = {
 }
 
 # Ensure at least this regex is compiled.
-_command_pattern = re.compile(fr'(?P<indent>\s*){OP}(?P<command>[a-zA-Z]+)(?P<rest>.*)')
+_command_pattern = re.compile(rf'(?P<indent>\s*){OP}(?P<command>[a-zA-Z]+)(?P<rest>.*)')
 
 
 def _convert(lines, app=None):
