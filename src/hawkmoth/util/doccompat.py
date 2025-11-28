@@ -18,6 +18,7 @@ logger.warning('hawkmoth.util.doccompat module has been deprecated.')
 #
 # FIXME: try to preserve whitespace better
 
+
 def javadoc(comment):
     """Basic javadoc conversion to reStructuredText"""
 
@@ -45,6 +46,7 @@ def javadoc(comment):
 
     return comment
 
+
 def javadoc_liberal(comment):
     """Liberal javadoc conversion to reStructuredText"""
 
@@ -57,6 +59,7 @@ def javadoc_liberal(comment):
 
     return comment
 
+
 def kerneldoc(comment):
     """Basic kernel-doc conversion to reStructuredText"""
 
@@ -66,6 +69,7 @@ def kerneldoc(comment):
                      "\n\\1:param \\2:\\3", comment)
 
     return comment
+
 
 def convert(comment, **options):
     """Convert documentation from a supported syntax into reST."""

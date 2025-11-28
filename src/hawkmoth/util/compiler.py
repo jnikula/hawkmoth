@@ -14,11 +14,13 @@ from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
+
 def _removesuffix(s, suffix):
     if suffix and s.endswith(suffix):
         return s[:-len(suffix)]
     else:
         return s[:]
+
 
 def _get_paths_from_output(output):
     started = False
@@ -35,6 +37,7 @@ def _get_paths_from_output(output):
         line = _removesuffix(line, '(framework directory)')
 
         yield line.strip()
+
 
 def _get_include_paths(cpath, lang):
     try:
@@ -56,6 +59,7 @@ def _get_include_paths(cpath, lang):
         return []
 
     return _get_paths_from_output(result.stderr)
+
 
 def get_include_args(cpath='clang', lang='c', cc_path=None):
     if cc_path is not None:

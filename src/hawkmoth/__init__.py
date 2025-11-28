@@ -29,6 +29,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                        'VERSION')) as version_file:
     __version__ = version_file.read().strip()
 
+
 class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
     logger = logging.getLogger(__name__)
 
@@ -199,6 +200,7 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
 
         return node.children
 
+
 class _AutoDocDirective(_AutoBaseDirective):
     """Extract all documentation comments from the specified files"""
 
@@ -224,6 +226,7 @@ class _AutoDocDirective(_AutoBaseDirective):
 
         return ret
 
+
 # Base class for named stuff
 class _AutoSymbolDirective(_AutoBaseDirective):
     """Extract specified documentation comments from the specified file"""
@@ -246,11 +249,13 @@ class _AutoSymbolDirective(_AutoBaseDirective):
     def _get_names(self):
         return [self.arguments[0]]
 
+
 def _members_filter(argument):
     # Use None for members option without an argument to not filter.
     if argument is None:
         return None
     return strutil.string_list(argument)
+
 
 class _AutoCompoundDirective(_AutoSymbolDirective):
     option_spec = _AutoSymbolDirective.option_spec.copy()
@@ -262,8 +267,10 @@ class _AutoCompoundDirective(_AutoSymbolDirective):
         # By default use [] as a filter that does not match any members.
         return self.options.get('members', [])
 
+
 class CAutoDocDirective(_AutoDocDirective):
     _domain = 'c'
+
 
 class CAutoSectionDirective(_AutoSymbolDirective):
     # Allow spaces in the directive argument (the name)
@@ -271,36 +278,45 @@ class CAutoSectionDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.TextDocstring]
 
+
 class CAutoVarDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.VarDocstring]
+
 
 class CAutoTypeDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.TypedefDocstring, docstring.TypedefFunctionDocstring]
 
+
 class CAutoMacroDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
+
 
 class CAutoFunctionDirective(_AutoSymbolDirective):
     _domain = 'c'
     _docstring_types = [docstring.FunctionDocstring]
 
+
 class CAutoStructDirective(_AutoCompoundDirective):
     _domain = 'c'
     _docstring_types = [docstring.StructDocstring]
+
 
 class CAutoUnionDirective(_AutoCompoundDirective):
     _domain = 'c'
     _docstring_types = [docstring.UnionDocstring]
 
+
 class CAutoEnumDirective(_AutoCompoundDirective):
     _domain = 'c'
     _docstring_types = [docstring.EnumDocstring]
 
+
 class CppAutoDocDirective(_AutoDocDirective):
     _domain = 'cpp'
+
 
 class CppAutoSectionDirective(_AutoSymbolDirective):
     # Allow spaces in the directive argument (the name)
@@ -308,9 +324,11 @@ class CppAutoSectionDirective(_AutoSymbolDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.TextDocstring]
 
+
 class CppAutoVarDirective(_AutoSymbolDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.VarDocstring]
+
 
 class CppAutoTypeDirective(_AutoSymbolDirective):
     _domain = 'cpp'
@@ -318,29 +336,36 @@ class CppAutoTypeDirective(_AutoSymbolDirective):
                         docstring.TypeAliasDocstring,
                         docstring.TypedefFunctionDocstring]
 
+
 class CppAutoMacroDirective(_AutoSymbolDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.MacroDocstring, docstring.MacroFunctionDocstring]
+
 
 class CppAutoFunctionDirective(_AutoSymbolDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.FunctionDocstring]
 
+
 class CppAutoStructDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.StructDocstring]
+
 
 class CppAutoUnionDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.UnionDocstring]
 
+
 class CppAutoEnumDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.EnumDocstring]
 
+
 class CppAutoClassDirective(_AutoCompoundDirective):
     _domain = 'cpp'
     _docstring_types = [docstring.ClassDocstring]
+
 
 def _uri_format(env, signode):
     """Generate a source URI for signode"""
@@ -356,6 +381,7 @@ def _uri_format(env, signode):
     uri = uri_template.format(source=source, line=signode.line + 1)
 
     return uri
+
 
 def _doctree_read(app, doctree):
     env = app.builder.env
@@ -383,6 +409,7 @@ def _doctree_read(app, doctree):
             onlynode += nodes.reference('', '', inline, internal=False, refuri=uri)
             signode += onlynode
 
+
 def _autoconf(app, config):
     logger = logging.getLogger(__name__)
     cpath = config.hawkmoth_compiler
@@ -404,6 +431,7 @@ def _autoconf(app, config):
 
     logger.verbose(f'autoconf: Using C include args: {config._clang_args_post_c}')
     logger.verbose(f'autoconf: Using C++ include args: {config._clang_args_post_cpp}')
+
 
 def setup(app):
     app.require_sphinx('3.0')

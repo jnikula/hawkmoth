@@ -11,6 +11,7 @@ from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
 from test import testenv
 
+
 class Processor(docstring.DocstringProcessor):
     def __init__(self, transform):
         self._transform = transform
@@ -24,6 +25,7 @@ class Processor(docstring.DocstringProcessor):
         fn = transformations.get(self._transform)
         if fn:
             fn(lines)
+
 
 def _filter_types(directive):
     types = {
@@ -41,11 +43,13 @@ def _filter_types(directive):
 
     return types.get(directive)
 
+
 def _filter_names(directive):
     if directive.directive == 'autodoc':
         return None
 
     return directive.arguments
+
 
 def _filter_members(directive):
     if directive.directive in ['autodoc', 'autosection', 'autovar', 'autotype',
@@ -61,6 +65,7 @@ def _filter_members(directive):
         return None
 
     return members
+
 
 class ParserTestcase(testenv.Testcase):
     def valid(self):
@@ -142,11 +147,13 @@ class ParserTestcase(testenv.Testcase):
         return testenv.read_file(self.get_expected_filename()), \
             testenv.read_file(self.get_stderr_filename(), optional=True)
 
+
 def _get_parser_testcases(path):
     for f in testenv.get_testcase_filenames(path):
         testcase = ParserTestcase(f)
         if testcase.valid():
             yield testcase
+
 
 @pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir),
                          ids=testenv.get_testid)

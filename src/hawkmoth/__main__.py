@@ -16,10 +16,12 @@ from hawkmoth.ext import javadoc
 from hawkmoth.ext import napoleon
 from hawkmoth.parser import parse
 
+
 def filename(file):
     if os.path.isfile(file):
         return file
     raise ValueError
+
 
 def _read_version():
     try:
@@ -30,6 +32,7 @@ def _read_version():
         version = '(unknown version)'
 
     return version
+
 
 class Processor(docstring.DocstringProcessor):
     def __init__(self, transform):
@@ -44,6 +47,7 @@ class Processor(docstring.DocstringProcessor):
         fn = transformations.get(self._transform)
         if fn:
             fn(lines)
+
 
 def main():
     parser = argparse.ArgumentParser(prog='hawkmoth', description="""

@@ -3,6 +3,7 @@
 
 from sphinx.util import logging
 
+
 def _process_docstring(app, lines, transform, options):
     transformations = app.config.cautodoc_transformations
     tropt = options.get('transform')
@@ -22,6 +23,7 @@ def _process_docstring(app, lines, transform, options):
     comment = '\n'.join(lines)
     comment = transform(comment)
     lines[:] = comment.splitlines()[:]
+
 
 def setup(app):
     logger = logging.getLogger(__name__)

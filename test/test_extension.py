@@ -15,6 +15,7 @@ from sphinx.util import console
 
 from test import testenv
 
+
 class ExtensionTestcase(testenv.Testcase):
     def __init__(self, filename, buildername):
         super().__init__(filename)
@@ -82,17 +83,20 @@ class ExtensionTestcase(testenv.Testcase):
 
         return expected_docs, expected_errors
 
+
 def _get_extension_testcases(path, buildername):
     for f in testenv.get_testcase_filenames(path):
         testcase = ExtensionTestcase(f, buildername)
         if testcase.valid():
             yield testcase
 
+
 # Test using Sphinx plain text builder
 @pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),
                          ids=testenv.get_testid)
 def test_extension_text(testcase):
     testcase.run_test()
+
 
 # Test using Sphinx html builder
 @pytest.mark.full

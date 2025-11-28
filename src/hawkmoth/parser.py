@@ -49,6 +49,7 @@ from hawkmoth.doccursor import (
     DocCursor,
 )
 
+
 class ErrorLevel(enum.IntEnum):
     """
     Supported error levels. The values are an implementation detail.
@@ -58,6 +59,7 @@ class ErrorLevel(enum.IntEnum):
     WARNING = Diagnostic.Warning
     ERROR = Diagnostic.Error
     CRITICAL = Diagnostic.Fatal
+
 
 @dataclass
 class ParserError:
@@ -76,6 +78,7 @@ class ParserError:
                 return f'{filename}: {self.message}'
         else:
             return f'{self.message}'
+
 
 def _domain_is_valid(tu, domain, errors):
     """Check the derived domain of a translation unit against the expected one.
@@ -137,6 +140,7 @@ def _domain_is_valid(tu, domain, errors):
                                   f'domain ({domain}) does not match inferred domain (c)'))  # noqa: E501
         return False
     return True
+
 
 def _comment_extract(tu):
 
@@ -205,6 +209,7 @@ def _comment_extract(tu):
         top_level_comments.append(current_comment)
 
     return top_level_comments, comments
+
 
 def _recursive_parse(errors, cursor, nest):
 
@@ -299,11 +304,13 @@ def _recursive_parse(errors, cursor, nest):
 
     return [ds]
 
+
 def _clang_diagnostics(diagnostics, errors):
     for diag in diagnostics:
         filename = diag.location.file.name if diag.location.file else None
         errors.append(ParserError(ErrorLevel(diag.severity), filename,
                                   diag.location.line, diag.spelling))
+
 
 def _parse_undocumented_block(errors, cursor, nest):
     """Parse undocumented blocks.
@@ -351,6 +358,7 @@ def _parse_undocumented_block(errors, cursor, nest):
 
     return ret
 
+
 def _language_option(filename, domain):
     """Return clang -x<language> option depending on domain and filename."""
     if domain == 'cpp':
@@ -362,6 +370,7 @@ def _language_option(filename, domain):
         language += '-header'
 
     return language
+
 
 # Parse a file and return a tree of docstring.Docstring objects.
 def parse(filename, domain=None, clang_args=None):
