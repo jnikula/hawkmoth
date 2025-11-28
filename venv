@@ -1,8 +1,14 @@
 # SPDX-FileCopyrightText: 2020 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
-# source this file with '. venv [path/to/venv]'
-python3 -m venv --system-site-packages ${1:-.venv}
-. ${1:-.venv}/bin/activate
-pip install --upgrade pip
-pip install -e . --group dev
+if command -v uv; then
+    # Let uv make the environment and use the uv.lock dependencies
+    uv venv --system-site-packages
+    uv sync --locked --group dev
+else
+    # source this file with '. venv [path/to/venv]'
+    python3 -m venv --system-site-packages ${1:-.venv}
+    . ${1:-.venv}/bin/activate
+    pip install --upgrade pip
+    pip install -e . --group dev
+fi
