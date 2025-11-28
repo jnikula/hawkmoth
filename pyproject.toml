@@ -60,14 +60,6 @@ Documentation = "https://jnikula.github.io/hawkmoth/stable/"
 path = "src/hawkmoth/VERSION"
 pattern = "(?P<version>[a-zA-Z0-9._-]*)"
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "/src",
-]
-exclude = [
-    "**/Makefile*",
-]
-
 [tool.hatch.build.targets.wheel]
 exclude = [
     "**/Makefile*",
