@@ -25,6 +25,12 @@ check-rst:
 check-reuse:
 	reuse lint
 
+# Fix style
+.PHONY: fix-style
+fix-style:
+	ruff format
+	ruff check --fix
+
 # Build and publish
 .PHONY: build
 build:
