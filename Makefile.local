@@ -10,7 +10,8 @@ check: check-style check-typing check-rst check-examples check-reuse
 
 .PHONY: check-style
 check-style:
-	flake8 src/hawkmoth test
+	ruff format --check
+	ruff check
 
 .PHONY: check-typing
 check-typing:

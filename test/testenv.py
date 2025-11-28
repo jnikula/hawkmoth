@@ -63,30 +63,40 @@ class Directive:
 
 
 class Testcase:
-    _options_schema = strictyaml.Map({
-        strictyaml.Optional('test'): strictyaml.Seq(strictyaml.Str()),
-        'directives': strictyaml.Seq(strictyaml.Map({
-            'domain': strictyaml.Enum(['c', 'cpp']),
-            'directive': strictyaml.Str(),
-            strictyaml.Optional('arguments'): strictyaml.Seq(strictyaml.Str()),
-            strictyaml.Optional('options'): strictyaml.Map({
-                strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
-                strictyaml.Optional('file'): strictyaml.Str(),
-                strictyaml.Optional('members'): (strictyaml.Seq(strictyaml.Str()) |
-                                                 strictyaml.EmptyList()),
-                strictyaml.Optional('transform'): strictyaml.Str(),
-            }),
-        })),
-        strictyaml.Optional('conf-overrides'): strictyaml.MapPattern(
-            strictyaml.Str(), strictyaml.NullNone() | strictyaml.EmptyList() | strictyaml.Any(),
-        ),
-        strictyaml.Optional('expected-failure'): strictyaml.Bool(),
-        strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
-        strictyaml.Optional('example-title'): strictyaml.Str(),
-        strictyaml.Optional('example-priority'): strictyaml.Int(),
-        strictyaml.Optional('errors'): strictyaml.Str(),
-        'expected': strictyaml.Str(),
-    })
+    _options_schema = strictyaml.Map(
+        {
+            strictyaml.Optional('test'): strictyaml.Seq(strictyaml.Str()),
+            'directives': strictyaml.Seq(
+                strictyaml.Map(
+                    {
+                        'domain': strictyaml.Enum(['c', 'cpp']),
+                        'directive': strictyaml.Str(),
+                        strictyaml.Optional('arguments'): strictyaml.Seq(strictyaml.Str()),
+                        strictyaml.Optional('options'): strictyaml.Map(
+                            {
+                                strictyaml.Optional('clang'): strictyaml.Seq(strictyaml.Str()),
+                                strictyaml.Optional('file'): strictyaml.Str(),
+                                strictyaml.Optional('members'): (
+                                    strictyaml.Seq(strictyaml.Str()) | strictyaml.EmptyList()
+                                ),
+                                strictyaml.Optional('transform'): strictyaml.Str(),
+                            }
+                        ),
+                    }
+                )
+            ),
+            strictyaml.Optional('conf-overrides'): strictyaml.MapPattern(
+                strictyaml.Str(),
+                strictyaml.NullNone() | strictyaml.EmptyList() | strictyaml.Any(),
+            ),
+            strictyaml.Optional('expected-failure'): strictyaml.Bool(),
+            strictyaml.Optional('example-use-namespace'): strictyaml.Bool(),
+            strictyaml.Optional('example-title'): strictyaml.Str(),
+            strictyaml.Optional('example-priority'): strictyaml.Int(),
+            strictyaml.Optional('errors'): strictyaml.Str(),
+            'expected': strictyaml.Str(),
+        }
+    )
 
     def __init__(self, filename):
         self.filename = filename
@@ -96,8 +106,9 @@ class Testcase:
                 self.options['test'] = ['cli', 'parser', 'extension']
         self.testid = os.path.splitext(os.path.relpath(self.filename, testdir))[0]
 
-        self.directives = [Directive(self, directive_config) for
-                           directive_config in self.options.get('directives')]
+        self.directives = [
+            Directive(self, directive_config) for directive_config in self.options.get('directives')
+        ]
 
     def get_testid(self):
         return self.testid

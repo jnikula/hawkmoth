@@ -39,9 +39,15 @@ class ExtensionTestcase(testenv.Testcase):
         warning = io.StringIO()
 
         with patch_docutils(confdir), docutils_namespace():
-            app = Sphinx(srcdir=srcdir, confdir=confdir, outdir=outdir,
-                         doctreedir=doctreedir, buildername=self._buildername,
-                         confoverrides=confoverrides, warning=warning)
+            app = Sphinx(
+                srcdir=srcdir,
+                confdir=confdir,
+                outdir=outdir,
+                doctreedir=doctreedir,
+                buildername=self._buildername,
+                confoverrides=confoverrides,
+                warning=warning,
+            )
 
             # Set root to the directory the testcase yaml is in, because the
             # filenames in yaml are relative to it.
@@ -56,8 +62,11 @@ class ExtensionTestcase(testenv.Testcase):
             output_filename = os.path.join(app.outdir, f'index.{output_suffix}')
 
         # Remove paths from warning output for comparison
-        output_errors = re.sub(rf'(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
-                               '\\1', warning.getvalue())
+        output_errors = re.sub(
+            rf'(?m)^{srcdir}/index.rst:[0-9]+: ([^:]*: )(/[a-zA-Z0-9._-]+)*/',
+            '\\1',
+            warning.getvalue(),
+        )
 
         return testenv.read_file(output_filename), output_errors
 
@@ -92,15 +101,17 @@ def _get_extension_testcases(path, buildername):
 
 
 # Test using Sphinx plain text builder
-@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'text'),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    'testcase', _get_extension_testcases(testenv.testdir, 'text'), ids=testenv.get_testid
+)
 def test_extension_text(testcase):
     testcase.run_test()
 
 
 # Test using Sphinx html builder
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', _get_extension_testcases(testenv.testdir, 'html'),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    'testcase', _get_extension_testcases(testenv.testdir, 'html'), ids=testenv.get_testid
+)
 def test_extension_html(testcase):
     testcase.run_test()

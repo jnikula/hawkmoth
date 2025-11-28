@@ -49,7 +49,7 @@ def _get_prefix_len(lines):
     return prefix_len
 
 
-class DocstringProcessor():
+class DocstringProcessor:
     def process_docstring(self, lines):
         pass
 
@@ -88,7 +88,7 @@ class DocstringProcessor():
         lines[:] = ['   ' * nest + line if line else '' for line in lines]
 
 
-class Docstring():
+class Docstring:
     _indent = 0
     _fmt = ''
 
@@ -238,8 +238,7 @@ class VarDocstring(Docstring):
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
             type_spacer = ' '
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer)
+        header = self._fmt.format(domain=domain, name=name, ttype=ttype, type_spacer=type_spacer)
 
         return header.splitlines()
 
@@ -264,12 +263,18 @@ class TypedefFunctionDocstring(Docstring):
 
         args = ''
         if self._args and len(self._args) > 0:
-            def pad_type(t): return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
-            def arg_fmt(t, n): return f'{t}{pad_type(t)}{n}'
+
+            def pad_type(t):
+                return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+
+            def arg_fmt(t, n):
+                return f'{t}{pad_type(t)}{n}'
+
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        header = self._fmt.format(domain=domain, ttype=ttype, type_spacer=type_spacer,
-                                  name=name, args=args)
+        header = self._fmt.format(
+            domain=domain, ttype=ttype, type_spacer=type_spacer, name=name, args=args
+        )
 
         return header.splitlines()
 
@@ -352,8 +357,7 @@ class EnumeratorDocstring(Docstring):
 
     def _get_header_lines(self):
         value = f' = {self._value}' if self._value is not None else ''
-        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(),
-                                  value=value)
+        header = self._fmt.format(domain=self._domain, name=self._get_decl_name(), value=value)
 
         return header.splitlines()
 
@@ -371,8 +375,7 @@ class MemberDocstring(Docstring):
         if ttype and not (len(ttype) == 0 or ttype.endswith('*')):
             type_spacer = ' '
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer)
+        header = self._fmt.format(domain=domain, name=name, ttype=ttype, type_spacer=type_spacer)
 
         return header.splitlines()
 
@@ -415,13 +418,24 @@ class FunctionDocstring(Docstring):
 
         args = ''
         if self._args and len(self._args) > 0:
-            def pad_type(t): return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
-            def arg_fmt(t, n): return f'{t}{pad_type(t)}{n}'
+
+            def pad_type(t):
+                return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+
+            def arg_fmt(t, n):
+                return f'{t}{pad_type(t)}{n}'
+
             args = ', '.join([arg_fmt(t, n) for t, n in self._args])
 
-        header = self._fmt.format(domain=domain, name=name, ttype=ttype,
-                                  type_spacer=type_spacer, args=args,
-                                  quals=quals, quals_spacer=quals_spacer)
+        header = self._fmt.format(
+            domain=domain,
+            name=name,
+            ttype=ttype,
+            type_spacer=type_spacer,
+            args=args,
+            quals=quals,
+            quals_spacer=quals_spacer,
+        )
 
         return header.splitlines()
 

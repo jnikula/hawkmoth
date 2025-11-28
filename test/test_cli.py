@@ -35,7 +35,6 @@ def _stderr_basename(errors_str):
 
 
 class CliTestcase(testenv.Testcase):
-
     def valid(self):
         return 'cli' in self.options.get('test', ['cli'])
 
@@ -90,8 +89,9 @@ class CliTestcase(testenv.Testcase):
         return docs_str, errors_str
 
     def get_expected(self):
-        return testenv.read_file(self.get_expected_filename()), \
-            testenv.read_file(self.get_stderr_filename(), optional=True)
+        return testenv.read_file(self.get_expected_filename()), testenv.read_file(
+            self.get_stderr_filename(), optional=True
+        )
 
 
 def _get_cli_testcases(path):
@@ -102,8 +102,7 @@ def _get_cli_testcases(path):
 
 
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir),
-                         ids=testenv.get_testid)
+@pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir), ids=testenv.get_testid)
 def test_cli(testcase, monkeypatch, capsys):
     testcase.set_monkeypatch(monkeypatch)
     testcase.set_capsys(capsys)

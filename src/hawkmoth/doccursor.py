@@ -89,12 +89,14 @@ class DocCursor:
     def decl_name(self):
         if self._cc.kind in [CursorKind.VAR_DECL, CursorKind.FIELD_DECL]:
             return self._var_type_fixup(self)[1]
-        if self._cc.kind in [CursorKind.STRUCT_DECL,
-                             CursorKind.UNION_DECL,
-                             CursorKind.ENUM_DECL,
-                             CursorKind.CLASS_DECL,
-                             CursorKind.CLASS_TEMPLATE,
-                             CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
+        if self._cc.kind in [
+            CursorKind.STRUCT_DECL,
+            CursorKind.UNION_DECL,
+            CursorKind.ENUM_DECL,
+            CursorKind.CLASS_DECL,
+            CursorKind.CLASS_TEMPLATE,
+            CursorKind.TYPE_ALIAS_TEMPLATE_DECL,
+        ]:
             return self._type_definition_fixup()
         else:
             # self.name would recurse back here if self._cc.spelling is None
@@ -115,10 +117,12 @@ class DocCursor:
         if self._cc.kind == CursorKind.FUNCTION_DECL:
             return self._function_fixup()
 
-        if self._cc.kind in [CursorKind.CONSTRUCTOR,
-                             CursorKind.DESTRUCTOR,
-                             CursorKind.CXX_METHOD,
-                             CursorKind.FUNCTION_TEMPLATE]:
+        if self._cc.kind in [
+            CursorKind.CONSTRUCTOR,
+            CursorKind.DESTRUCTOR,
+            CursorKind.CXX_METHOD,
+            CursorKind.FUNCTION_TEMPLATE,
+        ]:
             return self._method_fixup()
 
         if self.is_function_pointer_typedef:
@@ -135,11 +139,13 @@ class DocCursor:
         if self._cc.kind == CursorKind.MACRO_DEFINITION:
             return self._get_macro_args()
 
-        if self._cc.kind in [CursorKind.FUNCTION_DECL,
-                             CursorKind.CONSTRUCTOR,
-                             CursorKind.DESTRUCTOR,
-                             CursorKind.CXX_METHOD,
-                             CursorKind.FUNCTION_TEMPLATE]:
+        if self._cc.kind in [
+            CursorKind.FUNCTION_DECL,
+            CursorKind.CONSTRUCTOR,
+            CursorKind.DESTRUCTOR,
+            CursorKind.CXX_METHOD,
+            CursorKind.FUNCTION_TEMPLATE,
+        ]:
             return self._get_fn_args()
 
         if self.is_function_pointer_typedef:
@@ -152,10 +158,12 @@ class DocCursor:
         if self._cc.kind == CursorKind.FUNCTION_DECL:
             return ''
 
-        if self._cc.kind in [CursorKind.CONSTRUCTOR,
-                             CursorKind.DESTRUCTOR,
-                             CursorKind.CXX_METHOD,
-                             CursorKind.FUNCTION_TEMPLATE]:
+        if self._cc.kind in [
+            CursorKind.CONSTRUCTOR,
+            CursorKind.DESTRUCTOR,
+            CursorKind.CXX_METHOD,
+            CursorKind.FUNCTION_TEMPLATE,
+        ]:
             return ' '.join(self._get_method_quals()[1])
 
         return None
@@ -196,8 +204,7 @@ class DocCursor:
         # Identify `extern "C"` blocks and change domain accordingly.
         # Prior to Clang 18, the Python bindings don't return the cursor kind
         # LINKAGE_SPEC as one would expect, so we need to do it the hard way.
-        if domain == 'cpp' and self.kind in [CursorKind.LINKAGE_SPEC,
-                                             CursorKind.UNEXPOSED_DECL]:
+        if domain == 'cpp' and self.kind in [CursorKind.LINKAGE_SPEC, CursorKind.UNEXPOSED_DECL]:
             tokens = self.get_tokens()
             ntoken = next(tokens, None)
             if ntoken and ntoken.spelling == 'extern':
@@ -312,9 +319,11 @@ class DocCursor:
         type_elem.extend(self._specifiers_fixup(self._cc.type))
 
         colon_suffix = ''
-        if self._cc.kind in [CursorKind.STRUCT_DECL,
-                             CursorKind.CLASS_DECL,
-                             CursorKind.CLASS_TEMPLATE]:
+        if self._cc.kind in [
+            CursorKind.STRUCT_DECL,
+            CursorKind.CLASS_DECL,
+            CursorKind.CLASS_TEMPLATE,
+        ]:
             inheritance = self._get_inheritance()
             if inheritance:
                 colon_suffix = inheritance
@@ -473,7 +482,7 @@ class DocCursor:
         # type spelling by default.
         if 'constexpr' in tokens:
             type_elem.append('constexpr')
-            type_elem.append(basetype.spelling[len('const '):])
+            type_elem.append(basetype.spelling[len('const ') :])
         else:
             type_elem.append(basetype.spelling)
 
@@ -518,10 +527,12 @@ class DocCursor:
         # not part of the template arguments.
         name = ''
 
-        if self._cc.kind not in [CursorKind.CLASS_TEMPLATE,
-                                 CursorKind.FUNCTION_TEMPLATE,
-                                 CursorKind.TEMPLATE_TEMPLATE_PARAMETER,
-                                 CursorKind.TYPE_ALIAS_TEMPLATE_DECL]:
+        if self._cc.kind not in [
+            CursorKind.CLASS_TEMPLATE,
+            CursorKind.FUNCTION_TEMPLATE,
+            CursorKind.TEMPLATE_TEMPLATE_PARAMETER,
+            CursorKind.TYPE_ALIAS_TEMPLATE_DECL,
+        ]:
             return None
 
         # The type of type parameters can be 'typename' and 'class'. These are
@@ -564,7 +575,10 @@ class DocCursor:
         inherited = []
         for child in self.get_children():
             if child._cc.kind == CursorKind.CXX_BASE_SPECIFIER:
-                def pad(s): return s + ' ' if s else ''
+
+                def pad(s):
+                    return s + ' ' if s else ''
+
                 access_spec = child._get_access_specifier()
                 if child._cc.referenced.kind == CursorKind.CLASS_DECL:
                     # use referenced type if possible for full namespace
@@ -636,7 +650,9 @@ class DocCursor:
             type_elem.append(access_spec)
 
         if cursor_type.kind == TypeKind.FUNCTIONPROTO:
-            def pad(s): return s if s.endswith('*') or s.endswith('&') else s + ' '
+
+            def pad(s):
+                return s if s.endswith('*') or s.endswith('&') else s + ' '
 
             args = []
             for c in cursor.get_children():
@@ -650,9 +666,8 @@ class DocCursor:
 
             ret_type = cursor._normalize_type(cursor_type.get_result().spelling)
 
-            name = f'''{pad(ret_type)}({pad(stars_and_quals)}{cursor._cc.spelling}{dims})({', '.join(args)})'''  # noqa: E501
+            name = f'{pad(ret_type)}({pad(stars_and_quals)}{cursor._cc.spelling}{dims})({", ".join(args)})'  # noqa: E501
         else:
-
             storage_class = cursor._get_storage_class()
             if storage_class:
                 type_elem.append(storage_class)
