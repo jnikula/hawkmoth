@@ -100,7 +100,7 @@ class _AutoBaseDirective(SphinxDirective, docstring.DocstringProcessor):
     def process_docstring(self, lines):
         transform = self.options.get('transform', self.env.config.hawkmoth_transform_default)
 
-        self.env.app.emit('hawkmoth-process-docstring', lines, transform, self.options)
+        self.env.events.emit('hawkmoth-process-docstring', lines, transform, self.options)
 
     def __add_docstring_to_viewlist(self, viewlist, root, ds):
         lines, line_number = ds.get_docstring(processor=self)
