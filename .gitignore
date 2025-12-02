@@ -4,3 +4,7 @@
 .venv
 dist
 test/coverage-report
+
+## RPM stuff
+*.tar.gz
+*.rpm
