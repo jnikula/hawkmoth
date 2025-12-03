@@ -12,6 +12,19 @@ on:
       - 'master'
 
 jobs:
+  lockfile:
+    name: Check lockfiles are in sync with pyproject.toml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
+      - name: Lockfile check
+        run: |
+          make check-lockfile
+          # Fail test if the make command updated either file
+          git diff --exit-code
+
   style:
     name: Check style
     runs-on: ubuntu-latest
