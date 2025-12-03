@@ -27,3 +27,14 @@ SPDX-FileCopyrightText = [
 	"2019 Bruno Santos <brunomanuelsantos@tecnico.ulisboa.pt>",
 ]
 SPDX-License-Identifier = "BSD-2-Clause"
+
+# Generated files that we cannot include license/copyright
+# https://codeberg.org/fsfe/reuse-tool/issues/1312
+[[annotations]]
+path = [
+	"pylock.toml",
+	"uv.lock",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
