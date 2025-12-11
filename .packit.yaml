@@ -1,0 +1,46 @@
+files_to_sync:
+  - src: .distro/
+    dest: ./
+    delete: true
+    filters:
+      - "protect .git*"
+      - "protect sources"
+      - "protect changelog"
+      - "protect gating.yaml"
+  - .packit.yaml
+
+upstream_package_name: hawkmoth
+specfile_path: .distro/hawkmoth.spec
+downstream_package_name: hawkmoth
+upstream_tag_template: v{version}
+
+targets: &targets
+  - fedora-all
+  - epel-10
+  - epel-9
+
+jobs:
+  # Upstream jobs
+  - job: copr_build
+    trigger: commit
+    branch: master
+  - job: copr_build
+    trigger: pull_request
+  # Downstream jobs
+  - job: propose_downstream
+    trigger: release
+    dist_git_branches:
+      rawhide:
+        fast_forward_merge_into:
+          - fedora-branched
+          - epel-10
+          - epel-9
+  - job: koji_build
+    trigger: commit
+    dist_git_branches: *targets
+  - job: bodhi_update
+    trigger: commit
+    dist_git_branches:
+      - fedora-branched
+      - epel-9
+      - epel-10
