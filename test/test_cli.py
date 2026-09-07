@@ -102,7 +102,9 @@ def _get_cli_testcases(path):
 
 
 @pytest.mark.full
-@pytest.mark.parametrize('testcase', _get_cli_testcases(testenv.testdir), ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    'testcase', list(_get_cli_testcases(testenv.testdir)), ids=testenv.get_testid
+)
 def test_cli(testcase, monkeypatch, capsys):
     testcase.set_monkeypatch(monkeypatch)
     testcase.set_capsys(capsys)

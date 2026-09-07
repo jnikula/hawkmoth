@@ -102,7 +102,7 @@ def _get_extension_testcases(path, buildername):
 
 # Test using Sphinx plain text builder
 @pytest.mark.parametrize(
-    'testcase', _get_extension_testcases(testenv.testdir, 'text'), ids=testenv.get_testid
+    'testcase', list(_get_extension_testcases(testenv.testdir, 'text')), ids=testenv.get_testid
 )
 def test_extension_text(testcase):
     testcase.run_test()
@@ -111,7 +111,7 @@ def test_extension_text(testcase):
 # Test using Sphinx html builder
 @pytest.mark.full
 @pytest.mark.parametrize(
-    'testcase', _get_extension_testcases(testenv.testdir, 'html'), ids=testenv.get_testid
+    'testcase', list(_get_extension_testcases(testenv.testdir, 'html')), ids=testenv.get_testid
 )
 def test_extension_html(testcase):
     testcase.run_test()

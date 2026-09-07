@@ -161,6 +161,8 @@ def _get_parser_testcases(path):
             yield testcase
 
 
-@pytest.mark.parametrize('testcase', _get_parser_testcases(testenv.testdir), ids=testenv.get_testid)
+@pytest.mark.parametrize(
+    'testcase', list(_get_parser_testcases(testenv.testdir)), ids=testenv.get_testid
+)
 def test_parser(testcase):
     testcase.run_test()
