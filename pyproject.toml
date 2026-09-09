@@ -74,7 +74,7 @@ exclude = [
 line-length = 100
 
 [tool.ruff.lint]
-select = [
+extend-select = [
     "E",
     "F",
     "I",
@@ -82,7 +82,15 @@ select = [
     "W",
 ]
 ignore = [
+    "B023",
+    "BLE001",
+    "C408",
+    "EXE001",
+    "PIE790",
+    "PIE810",
     "RUF012",
+    "SIM",
+    "UP045",
 ]
 
 [tool.ruff.format]
