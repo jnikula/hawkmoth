@@ -113,7 +113,7 @@ class ParserTestcase(testenv.Testcase):
 
             processor = Processor(directive.options.get('transform'))
 
-            def get_docstring(ds):
+            def get_docstring(ds, processor):
                 lines, _ = ds.get_docstring(processor=processor)
                 return '\n'.join(lines) + '\n'
 
@@ -137,14 +137,14 @@ class ParserTestcase(testenv.Testcase):
                     if skip(primary.get_name(), _filter_names(directive)):
                         continue
 
-                    docs_str += get_docstring(primary)
+                    docs_str += get_docstring(primary, processor)
 
                     for member in primary:
                         if skip(member.get_name(), _filter_members(directive)):
                             continue
 
                         for ds in member.walk():
-                            docs_str += get_docstring(ds)
+                            docs_str += get_docstring(ds, processor)
 
         return docs_str, errors_str
 
