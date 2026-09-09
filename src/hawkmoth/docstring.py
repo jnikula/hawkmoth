@@ -265,7 +265,7 @@ class TypedefFunctionDocstring(Docstring):
         if self._args and len(self._args) > 0:
 
             def pad_type(t):
-                return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+                return '' if len(t) == 0 or t.endswith(('*', '&')) else ' '
 
             def arg_fmt(t, n):
                 return f'{t}{pad_type(t)}{n}'
@@ -420,7 +420,7 @@ class FunctionDocstring(Docstring):
         if self._args and len(self._args) > 0:
 
             def pad_type(t):
-                return '' if len(t) == 0 or t.endswith('*') or t.endswith('&') else ' '
+                return '' if len(t) == 0 or t.endswith(('*', '&')) else ' '
 
             def arg_fmt(t, n):
                 return f'{t}{pad_type(t)}{n}'
