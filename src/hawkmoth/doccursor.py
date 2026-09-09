@@ -652,7 +652,7 @@ class DocCursor:
         if cursor_type.kind == TypeKind.FUNCTIONPROTO:
 
             def pad(s):
-                return s if s.endswith('*') or s.endswith('&') else s + ' '
+                return s if s.endswith(('*', '&')) else s + ' '
 
             args = []
             for c in cursor.get_children():
