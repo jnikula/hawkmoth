@@ -44,7 +44,7 @@ class CliTestcase(testenv.Testcase):
 
     # Mock sys.argv for cli
     def mock_args(self, args):
-        self.monkeypatch.setattr('sys.argv', ['dummy'] + args)
+        self.monkeypatch.setattr('sys.argv', ['dummy', *args])
 
     def set_capsys(self, capsys):
         self.capsys = capsys
