@@ -306,9 +306,7 @@ def _recursive_parse(errors, cursor, nest):
 
     # If we reach here, nothing matched i.e. there's a documentation comment
     # above an unexpected cursor.
-    message = (
-        f'documentation comment attached to unexpected cursor {str(cursor.kind)} {cursor.name}'
-    )
+    message = f'documentation comment attached to unexpected cursor {cursor.kind!s} {cursor.name}'
     errors.append(
         ParserError(ErrorLevel.WARNING, cursor.location.file.name, cursor.location.line, message)
     )
@@ -412,7 +410,7 @@ def parse(filename, domain=None, clang_args=None):
         # File not found is a common problem, but not properly reported by
         # clang. Try to be a bit more helpful.
         if not os.path.isfile(filename):
-            message = f'File not found. {str(e)}'
+            message = f'File not found. {e!s}'
         else:
             message = str(e)
 
