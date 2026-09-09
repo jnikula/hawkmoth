@@ -85,7 +85,6 @@ class _not_implemented(_plain):
     """Placeholder for commands that have not been implemented."""
 
     # FIXME: warn about not implemented commands
-    pass
 
 
 class _block_with_end_command(_handler):
