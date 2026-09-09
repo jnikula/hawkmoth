@@ -11,7 +11,7 @@ dynamic = ["version"]
 description = "Hawkmoth - Sphinx Autodoc for C"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 license = {text = "BSD-2-Clause"}
-requires-python = "~=3.9"
+requires-python = "~=3.10"
 authors = [
     {name = "Jani Nikula", email = "jani@nikula.org"},
 ]
