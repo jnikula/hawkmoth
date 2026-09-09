@@ -87,7 +87,6 @@ ignore = [
     "PIE810",
     "RUF012",
     "SIM",
-    "UP045",
 ]
 
 [tool.ruff.format]
