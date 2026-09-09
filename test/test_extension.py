@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2018 Jani Nikula <jani@nikula.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
