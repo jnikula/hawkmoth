@@ -490,4 +490,4 @@ def setup(app):
     app.add_config_value('hawkmoth_source_uri', None, 'env', [str, type(None)])
     app.connect('doctree-read', _doctree_read)
 
-    return dict(version=__version__, parallel_read_safe=True, parallel_write_safe=True)
+    return {'version': __version__, 'parallel_read_safe': True, 'parallel_write_safe': True}

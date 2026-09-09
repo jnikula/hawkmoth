@@ -83,7 +83,6 @@ extend-select = [
 ]
 ignore = [
     "BLE001",
-    "C408",
     "EXE001",
     "PIE790",
     "PIE810",
