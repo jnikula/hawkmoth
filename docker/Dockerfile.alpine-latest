@@ -7,6 +7,7 @@ RUN apk add \
     py3-clang \
     clang-dev \
     musl-dev \
+    g++ \
     make
 
 ARG UID=1000
