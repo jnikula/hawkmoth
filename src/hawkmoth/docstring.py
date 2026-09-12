@@ -23,15 +23,24 @@ conversions:
 """
 
 import hashlib
-import os
 import re
 
 from docutils import statemachine
 
 
+def _commonprefix(lines):
+    prefix = lines[0] if lines else ''
+    for line in lines:
+        while not line.startswith(prefix):
+            prefix = prefix[:-1]
+            if not prefix:
+                return prefix
+    return prefix
+
+
 def _commonprefix_len(lines):
     # common prefix
-    prefix = os.path.commonprefix(lines)
+    prefix = _commonprefix(lines)
 
     # common prefix length of limited characters
     return len(prefix) - len(prefix.lstrip(' \t*'))
