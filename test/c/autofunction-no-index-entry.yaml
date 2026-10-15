@@ -1,0 +1,9 @@
+directives:
+- domain: c
+  directive: autofunction
+  arguments:
+  - foo
+  options:
+    file: function.c
+    no-index-entry:
+expected: autofunction-no-index-entry.rst

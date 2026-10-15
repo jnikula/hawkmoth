@@ -28,12 +28,14 @@ included.
    separated list of filename patterns given as arguments. The patterns are
    interpreted relative to the :data:`hawkmoth_root` configuration option.
 
+   .. _option-transform:
    .. rst:directive:option:: transform
       :type: text
 
       Override :data:`hawkmoth_transform_default` for the ``transform``
       parameter value of the :event:`hawkmoth-process-docstring` event.
 
+   .. _option-clang:
    .. rst:directive:option:: clang
       :type: text
 
@@ -57,17 +59,20 @@ The :rst:dir:`c:autovar`, :rst:dir:`c:autotype`, :rst:dir:`c:automacro`, and
 incorporate the documentation comment for the specified object in the specified
 file.
 
-The directives support all the same directive options as :rst:dir:`c:autodoc`
-and :rst:dir:`cpp:autodoc`, adding the ``file`` option.
-
 .. rst:directive:: .. c:autovar:: name
 .. rst:directive:: .. cpp:autovar:: name
 
    Incorporate the documentation comment for the variable ``name``.
 
-   If ``file`` is specified, look up ``name`` there, otherwise look up ``name``
-   in all previously parsed files in the current document.
+   .. rst:directive:option:: transform
 
+      See :ref:`transform <option-transform>`.
+
+   .. rst:directive:option:: clang
+
+      See :ref:`clang <option-clang>`.
+
+   .. _option-file:
    .. rst:directive:option:: file
       :type: text
 
@@ -77,6 +82,19 @@ and :rst:dir:`cpp:autodoc`, adding the ``file`` option.
 
       The filename is interpreted relative to the :data:`hawkmoth_root`
       configuration option.
+
+   .. _option-no-index-entry:
+   .. rst:directive:option:: no-index-entry
+      :type: no argument
+
+      Do not generate index entries for the documented object. The object can
+      still be cross-referenced.
+
+   .. _option-no-contents-entry:
+   .. rst:directive:option:: no-contents-entry
+      :type: no argument
+
+      Do not generate a table of contents entry for the documented object.
 
    For example:
 
@@ -144,9 +162,27 @@ The directives support all the same directive options as :rst:dir:`c:autodoc`,
    Incorporate the documentation comment for the structure ``name``, optionally
    including member documentation as specified by ``members``.
 
-   The ``file`` option is as in :rst:dir:`c:autovar`. If ``file`` is specified,
-   look up ``name`` there, otherwise look up ``name`` in all previously parsed
-   files in the current document.
+   .. rst:directive:option:: transform
+
+      See :ref:`transform <option-transform>`.
+
+   .. rst:directive:option:: clang
+
+      See :ref:`clang <option-clang>`.
+
+   .. rst:directive:option:: file
+
+      See :ref:`file <option-file>`.
+
+   .. rst:directive:option:: no-index-entry
+
+      See :ref:`no-index-entry <option-no-index-entry>`. This applies to members
+      too when included.
+
+   .. rst:directive:option:: no-contents-entry
+
+      See :ref:`no-index-entry <option-no-contents-entry>`. This applies to
+      members too when included.
 
    .. rst:directive:option:: members
       :type: text
@@ -229,9 +265,13 @@ specified file.
    contain whitespace. It starts from the first alphanumeric character,
    inclusive, and extends to the next ``:``, ``.``, or newline, non-inclusive.
 
-   The ``file`` option is as in :rst:dir:`c:autovar`. If ``file`` is specified,
-   look up ``name`` there, otherwise look up ``name`` in all previously parsed
-   files in the current document.
+   .. rst:directive:option:: clang
+
+      See :ref:`clang <option-clang>`.
+
+   .. rst:directive:option:: file
+
+      See :ref:`file <option-file>`.
 
    For example:
 

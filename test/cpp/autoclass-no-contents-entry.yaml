@@ -1,0 +1,11 @@
+directives:
+- domain: cpp
+  directive: autoclass
+  arguments:
+  - foo
+  options:
+    file: class.cpp
+    members:
+    - mutable_member
+    no-contents-entry:
+expected: autoclass-no-contents-entry.rst

@@ -62,6 +62,17 @@ class DocstringProcessor:
     def process_docstring(self, lines):
         pass
 
+    def get_directive_options(self):
+        """Get the options to add to the generated domain directives.
+
+        By default no options are passed through to the underlying domain
+        directives. Each directive may however override it.
+
+        Returns:
+            List[str]: Directive option lines, e.g. ``[':no-index-entry:']``.
+        """
+        return []
+
     def remove_comment_markers(self, lines):
         """Remove comment markers and line prefixes from comment lines.
 
@@ -155,6 +166,12 @@ class Docstring:
     def get_docstring(self, processor):
         header_lines = self._get_header_lines()
         comment_lines = self._get_comment_lines()
+
+        # Add domain directives, if any.
+        if header_lines:
+            option_lines = list(processor.get_directive_options())
+            processor.nest_lines(option_lines, self._indent)
+            header_lines.extend(option_lines)
 
         line_offset = processor.remove_comment_markers(comment_lines)
 

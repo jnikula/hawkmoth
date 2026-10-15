@@ -40,7 +40,9 @@ class Directive:
         directive_str = f'.. {self.domain}:{self.directive}:: {arguments_str}\n'
 
         for key, value in self.options.items():
-            if isinstance(value, list):
+            if value is None:
+                value = ''
+            elif isinstance(value, list):
                 value = ', '.join(value)
             space = ' ' if len(value) else ''
             directive_str += f'   :{key}:{space}{value}\n'
@@ -79,6 +81,8 @@ class Testcase:
                                 strictyaml.Optional('members'): (
                                     strictyaml.Seq(strictyaml.Str()) | strictyaml.EmptyList()
                                 ),
+                                strictyaml.Optional('no-index-entry'): strictyaml.EmptyNone(),
+                                strictyaml.Optional('no-contents-entry'): strictyaml.EmptyNone(),
                                 strictyaml.Optional('transform'): strictyaml.Str(),
                             }
                         ),

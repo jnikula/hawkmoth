@@ -9,6 +9,13 @@ Unreleased `master`_
 
 :Date: YYYY-MM-DD
 
+Added
+~~~~~
+
+* Added ``no-index-entry`` and ``no-contents-entry`` options to directives
+  documenting symbols, passed through to the Sphinx C and C++ Domain directives'
+  namesakes.
+
 Hawkmoth `0.22.0`_
 ------------------
 

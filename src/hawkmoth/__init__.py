@@ -11,6 +11,7 @@ Sphinx C Domain autodoc directive extension.
 import glob
 import os
 
+import sphinx
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import ViewList
@@ -236,7 +237,7 @@ class _AutoDocDirective(_AutoBaseDirective):
 
 
 # Base class for named stuff
-class _AutoSymbolDirective(_AutoBaseDirective):
+class _AutoNamedDirective(_AutoBaseDirective):
     """Extract specified documentation comments from the specified file"""
 
     required_arguments = 1
@@ -258,6 +259,53 @@ class _AutoSymbolDirective(_AutoBaseDirective):
 
     def _get_names(self):
         return [self.arguments[0]]
+
+
+# Base class for C/C++ symbols.
+class _AutoSymbolDirective(_AutoNamedDirective):
+    @staticmethod
+    def _get_option_name(history, version):
+        for since, impl in history:
+            if version >= since:
+                return impl
+        return None
+
+    _passthrough_options = {
+        'no-index-entry': (
+            _get_option_name(
+                [((3, 2), 'noindexentry'), ((7, 2), 'no-index-entry')],
+                sphinx.version_info,
+            ),
+            directives.flag,
+        ),
+        'no-contents-entry': (
+            _get_option_name(
+                [((5, 2), 'nocontentsentry'), ((7, 2), 'no-contents-entry')],
+                sphinx.version_info,
+            ),
+            directives.flag,
+        ),
+    }
+
+    option_spec = _AutoNamedDirective.option_spec.copy()
+    option_spec.update(
+        {option: converter for option, (_, converter) in _passthrough_options.items()}
+    )
+
+    def get_directive_options(self):
+        lines = []
+        for option, (spelling, _) in self._passthrough_options.items():
+            if option not in self.options:
+                continue
+
+            # Flags have None, and converters may return lists of arguments
+            value = self.options[option]
+            if isinstance(value, list):
+                value = ', '.join(value)
+
+            lines.append(f':{spelling}: {value}' if value else f':{spelling}:')
+
+        return lines
 
 
 def _members_filter(argument):
@@ -284,7 +332,7 @@ class CAutoDocDirective(_AutoDocDirective):
     _domain = 'c'
 
 
-class CAutoSectionDirective(_AutoSymbolDirective):
+class CAutoSectionDirective(_AutoNamedDirective):
     # Allow spaces in the directive argument (the name)
     final_argument_whitespace = True
     _domain = 'c'
@@ -330,7 +378,7 @@ class CppAutoDocDirective(_AutoDocDirective):
     _domain = 'cpp'
 
 
-class CppAutoSectionDirective(_AutoSymbolDirective):
+class CppAutoSectionDirective(_AutoNamedDirective):
     # Allow spaces in the directive argument (the name)
     final_argument_whitespace = True
     _domain = 'cpp'

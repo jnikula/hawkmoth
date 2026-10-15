@@ -11,8 +11,9 @@ from test import testenv
 
 
 class Processor(docstring.DocstringProcessor):
-    def __init__(self, transform):
+    def __init__(self, transform, options):
         self._transform = transform
+        self._options = options
 
     def process_docstring(self, lines):
         transformations = {
@@ -23,6 +24,11 @@ class Processor(docstring.DocstringProcessor):
         fn = transformations.get(self._transform)
         if fn:
             fn(lines)
+
+    def get_directive_options(self):
+        options = ['no-index-entry', 'no-contents-entry']
+
+        return [f':{option}:' for option in options if option in self._options]
 
 
 def _filter_types(directive):
@@ -110,7 +116,7 @@ class ParserTestcase(testenv.Testcase):
             if filter_filenames is None and 'clang' not in directive.options:
                 filter_clang_args = None
 
-            processor = Processor(directive.options.get('transform'))
+            processor = Processor(directive.options.get('transform'), directive.options)
 
             def get_docstring(ds, processor):
                 lines, _ = ds.get_docstring(processor=processor)
